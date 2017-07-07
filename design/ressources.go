@@ -27,6 +27,24 @@ var JWTAuth = JWTSecurity("JWTSec", func() {
 	Description("Use JWT t oauthenticate")
 })
 
+var _ = Resource("authenticate", func() {
+	BasePath("")
+	DefaultMedia(UserMedia)
+	Action("auth", func() {
+		Description("Get users")
+		Routing(POST(""))
+		Payload(func() {
+			Member("login", String, "email or nickname", func() {
+				MinLength(5)
+			})
+			Required("login")
+			passwordAttribute()
+			Required("password")
+		})
+		Response(OK, TokenMedia)
+	})
+})
+
 var _ = Resource("users", func() {
 	BasePath("/users")
 	DefaultMedia(UserMedia)

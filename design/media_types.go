@@ -14,14 +14,9 @@ var UserMedia = MediaType("application/vnd.user+json", func() {
 		Attribute("id", Integer, "Unique user ID", func() {
 			Minimum(1)
 		})
-		Attribute("email", String, "user email", func() {
-			Format("email")
-			Example("me@foo.bar")
-		})
-		Attribute("nickname", String, "user nickname", func() {
-			MinLength(1)
-			MaxLength(32)
-		})
+		emailAttribute()
+		nicknameAttribute()
+		passwordAttribute()
 		Attribute("href", String, "API href for making requests on the user")
 		Attribute("is_admin", Boolean)
 		Attribute("is_verified", Boolean)
@@ -34,6 +29,21 @@ var UserMedia = MediaType("application/vnd.user+json", func() {
 		Attribute("email")
 		Attribute("nickname")
 		Attribute("href") // have a "default" view.
+	})
+})
+
+// TokenMedia defines the media type used to render users.
+var TokenMedia = MediaType("application/vnd.token+json", func() {
+	Description("A token")
+
+	Attributes(func() {
+		Attribute("token", String, "Unique user ID", func() {
+			Format("regexp")
+		})
+	})
+
+	View("default", func() {
+		Attribute("token")
 	})
 })
 
@@ -71,7 +81,7 @@ var BookMedia = MediaType("application/vnd.book+json", func() {
 var OwnershipMedia = MediaType("application/vnd.ownership+json", func() {
 	Description("A User ownership")
 
-	Attributes(func() { // Attributes define the media type shape.
+	Attributes(func() {
 		Attribute("user_id", Integer, "Unique user ID", func() {
 			Minimum(1)
 		})

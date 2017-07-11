@@ -6,21 +6,8 @@ import (
 )
 
 var (
-	userIDPath = "/:userID"
-	bookIDPath = "/:bookID"
-)
-
-var (
-	userParam = func() {
-		Param("userID", Integer, "User ID", func() {
-			Minimum(1)
-		})
-	}
-	bookParam = func() {
-		Param("bookID", Integer, "Book ID", func() {
-			Minimum(1)
-		})
-	}
+	userIDPath = "/:user_id"
+	bookIDPath = "/:book_id"
 )
 
 var JWTAuth = JWTSecurity("JWTSec", func() {
@@ -28,20 +15,62 @@ var JWTAuth = JWTSecurity("JWTSec", func() {
 })
 
 var _ = Resource("authenticate", func() {
-	BasePath("")
-	DefaultMedia(UserMedia)
+	BasePath("/authenticate")
 	Action("auth", func() {
 		Description("Get users")
 		Routing(POST(""))
-		Payload(func() {
-			Member("login", String, "email or nickname", func() {
-				MinLength(5)
-			})
-			Required("login")
-			passwordAttribute()
-			Required("password")
-		})
+		Payload(AuthenticatePayload)
 		Response(OK, TokenMedia)
+		Response(InternalServerError)
+		Response(ServiceUnavailable)
+		Response(BadRequest, ErrorMedia)
+	})
+})
+
+var _ = Resource("password", func() {
+	BasePath("/password")
+	Action("get", func() {
+		Description("Get password reset")
+		Routing(GET(""))
+		Response(NoContent)
+		Response(InternalServerError)
+		Response(ServiceUnavailable)
+		Response(BadRequest, ErrorMedia)
+	})
+	Action("update", func() {
+		Description("Update user password")
+		Routing(POST(""))
+		Payload(PasswordPayload)
+		Security(JWTAuth)
+		Response(Unauthorized)
+		Response(NoContent)
+		Response(BadRequest, ErrorMedia)
+	})
+})
+
+var _ = Resource("validation", func() {
+	BasePath("/validation")
+	Parent("users")
+	Action("get", func() {
+		Description("Get validation token")
+		Routing(GET(""))
+		Security(JWTAuth)
+		Response(Unauthorized)
+		Response(NoContent)
+		Response(BadRequest, ErrorMedia)
+	})
+	Action("validate", func() {
+		Description("Validate user")
+		Routing(POST(""))
+		Payload(func() {
+			Attribute("token", String, "validation token", func() {
+				MinLength(1)
+				MaxLength(32)
+			})
+		},
+		)
+		Response(NoContent)
+		Response(BadRequest, ErrorMedia)
 	})
 })
 
@@ -56,9 +85,11 @@ var _ = Resource("users", func() {
 	Action("show", func() {
 		Description("Get user by id")
 		Routing(GET(userIDPath))
-		Params(userParam)
+		Params(UserIDParam)
 		Response(OK)
 		Response(NotFound)
+		Response(InternalServerError)
+		Response(ServiceUnavailable)
 		Response(BadRequest, ErrorMedia)
 	})
 	Action("create", func() {
@@ -71,28 +102,34 @@ var _ = Resource("users", func() {
 			Required("nickname")
 		})
 		Response(Created, "/users/[0-9]+")
+		Response(InternalServerError)
+		Response(ServiceUnavailable)
 		Response(BadRequest, ErrorMedia)
 	})
 	Action("update", func() {
 		Description("Update user by id")
 		Routing(PUT(userIDPath))
-		Params(userParam)
+		Params(UserIDParam)
 		Payload(func() {
 			Member("nickname")
 			Required("nickname")
 		})
 		Response(NoContent)
 		Response(NotFound)
+		Response(InternalServerError)
+		Response(ServiceUnavailable)
 		Response(BadRequest, ErrorMedia)
 	})
 	Action("delete", func() {
 		Description("delete user by id")
 		Routing(DELETE(userIDPath))
-		Params(userParam)
+		Params(UserIDParam)
 		Security(JWTAuth)
+		Response(Unauthorized)
 		Response(NoContent)
 		Response(NotFound)
-		Response(Unauthorized)
+		Response(InternalServerError)
+		Response(ServiceUnavailable)
 		Response(BadRequest, ErrorMedia)
 	})
 })
@@ -108,7 +145,7 @@ var _ = Resource("books", func() {
 	Action("show", func() {
 		Description("Get book by id")
 		Routing(GET(bookIDPath))
-		Params(bookParam)
+		Params(BookIDParam)
 		Response(OK)
 		Response(NotFound)
 		Response(BadRequest, ErrorMedia)
@@ -121,32 +158,35 @@ var _ = Resource("books", func() {
 			Required("name")
 		})
 		Security(JWTAuth)
-		Response(Created, "/books/[0-9]+")
 		Response(Unauthorized)
+		Response(Created, "/books/[0-9]+")
+
 		Response(BadRequest, ErrorMedia)
 	})
 	Action("update", func() {
 		Description("Update book by id")
 		Routing(PUT(bookIDPath))
-		Params(bookParam)
+		Params(BookIDParam)
 		Payload(func() {
 			Member("name")
 			Required("name")
 		})
 		Security(JWTAuth)
+		Response(Unauthorized)
 		Response(NoContent)
 		Response(NotFound)
-		Response(Unauthorized)
+
 		Response(BadRequest, ErrorMedia)
 	})
 	Action("delete", func() {
 		Description("delete book by id")
 		Routing(DELETE(bookIDPath))
-		Params(bookParam)
+		Params(BookIDParam)
 		Security(JWTAuth)
+		Response(Unauthorized)
 		Response(NoContent)
 		Response(NotFound)
-		Response(Unauthorized)
+
 		Response(BadRequest, ErrorMedia)
 	})
 })
@@ -159,8 +199,11 @@ var _ = Resource("ownerships", func() {
 		Description("Get ownerships")
 		Routing(GET(""))
 		Security(JWTAuth)
-		Response(OK, CollectionOf(BookMedia))
 		Response(Unauthorized)
+		Response(OK, CollectionOf(BookMedia))
+		Response(NotFound)
+		Response(InternalServerError)
+		Response(ServiceUnavailable)
 		Response(BadRequest, ErrorMedia)
 	})
 	Action("create", func() {
@@ -173,28 +216,35 @@ var _ = Resource("ownerships", func() {
 			Required("book_id")
 		})
 		Security(JWTAuth)
-		Response(Created, "/books/[0-9]+")
 		Response(Unauthorized)
+		Response(Created, "/books/[0-9]+")
+		Response(NotFound)
+		Response(InternalServerError)
+		Response(ServiceUnavailable)
 		Response(BadRequest, ErrorMedia)
 	})
 	Action("show", func() {
 		Description("Get ownerships by ids")
 		Routing(GET(bookIDPath))
-		Params(bookParam)
+		Params(BookIDParam)
 		Security(JWTAuth)
+		Response(Unauthorized)
 		Response(OK)
 		Response(NotFound)
-		Response(Unauthorized)
+		Response(InternalServerError)
+		Response(ServiceUnavailable)
 		Response(BadRequest, ErrorMedia)
 	})
 	Action("delete", func() {
 		Description("delete ownerships by ids")
 		Routing(DELETE(bookIDPath))
-		Params(bookParam)
+		Params(BookIDParam)
 		Security(JWTAuth)
+		Response(Unauthorized)
 		Response(NoContent)
 		Response(NotFound)
-		Response(Unauthorized)
+		Response(InternalServerError)
+		Response(ServiceUnavailable)
 		Response(BadRequest, ErrorMedia)
 	})
 })

@@ -11,17 +11,13 @@ var UserMedia = MediaType("application/vnd.user+json", func() {
 	Description("A User")
 
 	Attributes(func() {
-		Attribute("id", Integer, "Unique user ID", func() {
-			Minimum(1)
-		})
-		emailAttribute()
-		nicknameAttribute()
-		passwordAttribute()
+		Attribute("user_id", UserIDAttribute)
+		Attribute("email", EmailAttribute)
+		Attribute("nickname", NicknameAttribute)
 		Attribute("href", String, "API href for making requests on the user")
 		Attribute("is_admin", Boolean)
 		Attribute("is_verified", Boolean)
-
-		Required("id", "email", "nickname", "href")
+		Required("user_id", "email", "nickname", "href")
 	})
 
 	View("default", func() {
@@ -52,15 +48,9 @@ var BookMedia = MediaType("application/vnd.book+json", func() {
 	Description("A Book")
 
 	Attributes(func() {
-		Attribute("id", Integer, "Unique book ID", func() {
-			Minimum(1)
-		})
-		Attribute("name", String, "Book name", func() {
-			MinLength(1)
-			MaxLength(128)
-		})
+		Attribute("id", BookIDAttribute)
+		Attribute("name", BookNameAttribute)
 		Attribute("href", String, "API href for making requests on the book")
-
 		Required("id", "name", "href")
 	})
 
@@ -82,15 +72,10 @@ var OwnershipMedia = MediaType("application/vnd.ownership+json", func() {
 	Description("A User ownership")
 
 	Attributes(func() {
-		Attribute("user_id", Integer, "Unique user ID", func() {
-			Minimum(1)
-		})
-		Attribute("book_id", Integer, "Unique book ID", func() {
-			Minimum(1)
-		})
+		Attribute("user_id", UserIDAttribute)
+		Attribute("book_id", BookIDAttribute)
 		Attribute("book", BookMedia, "book struct")
 		Attribute("href", String, "API href for making requests on the ownership")
-
 		Required("user_id", "book_id", "href")
 	})
 

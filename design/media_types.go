@@ -11,13 +11,13 @@ var UserMedia = MediaType("application/vnd.user+json", func() {
 	Description("A User")
 
 	Attributes(func() {
-		Attribute("user_id", UserIDAttribute)
+		Attribute("id", UserIDAttribute)
 		Attribute("email", EmailAttribute)
 		Attribute("nickname", NicknameAttribute)
 		Attribute("href", String, "API href for making requests on the user")
 		Attribute("is_admin", Boolean)
 		Attribute("is_verified", Boolean)
-		Required("user_id", "email", "nickname", "href")
+		Required("id", "email", "nickname", "href")
 	})
 
 	View("default", func() {

@@ -13,20 +13,12 @@ var (
 		})
 	})
 
-	UserIDParam = func() {
-		Param("user_id", UserIDAttribute)
-	}
-
 	BookIDAttribute = Type("BookIDAttribute", func() {
 		Description("BookID Attribute Type")
 		Attribute("book_id", Integer, "Unique Book ID", func() {
 			Minimum(1)
 		})
 	})
-
-	BookIDParam = func() {
-		Param("book_id", BookIDAttribute)
-	}
 
 	BookNameAttribute = Type("BookNameAttribute", func() {
 		Description("Book Name Attribute type")
@@ -61,7 +53,7 @@ var (
 	})
 
 	PasswordPayload = Type("PasswordPayload", func() {
-		Reference(PasswordAttribute)
+		Member("password", PasswordAttribute)
 		Required("password")
 	})
 

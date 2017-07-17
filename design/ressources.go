@@ -85,7 +85,9 @@ var _ = Resource("users", func() {
 	Action("show", func() {
 		Description("Get user by id")
 		Routing(GET(userIDPath))
-		Params(UserIDParam)
+		Params(func() {
+			Param("user_id")
+		})
 		Response(OK)
 		Response(NotFound)
 		Response(InternalServerError)
@@ -109,7 +111,9 @@ var _ = Resource("users", func() {
 	Action("update", func() {
 		Description("Update user by id")
 		Routing(PUT(userIDPath))
-		Params(UserIDParam)
+		Params(func() {
+			Param("user_id")
+		})
 		Payload(func() {
 			Member("nickname")
 			Required("nickname")
@@ -123,7 +127,9 @@ var _ = Resource("users", func() {
 	Action("delete", func() {
 		Description("delete user by id")
 		Routing(DELETE(userIDPath))
-		Params(UserIDParam)
+		Params(func() {
+			Param("user_id")
+		})
 		Security(JWTAuth)
 		Response(Unauthorized)
 		Response(NoContent)
@@ -145,7 +151,9 @@ var _ = Resource("books", func() {
 	Action("show", func() {
 		Description("Get book by id")
 		Routing(GET(bookIDPath))
-		Params(BookIDParam)
+		Params(func() {
+			Param("book_id")
+		})
 		Response(OK)
 		Response(NotFound)
 		Response(BadRequest, ErrorMedia)
@@ -166,7 +174,9 @@ var _ = Resource("books", func() {
 	Action("update", func() {
 		Description("Update book by id")
 		Routing(PUT(bookIDPath))
-		Params(BookIDParam)
+		Params(func() {
+			Param("book_id")
+		})
 		Payload(func() {
 			Member("name")
 			Required("name")
@@ -181,7 +191,9 @@ var _ = Resource("books", func() {
 	Action("delete", func() {
 		Description("delete book by id")
 		Routing(DELETE(bookIDPath))
-		Params(BookIDParam)
+		Params(func() {
+			Param("book_id")
+		})
 		Security(JWTAuth)
 		Response(Unauthorized)
 		Response(NoContent)
@@ -226,7 +238,11 @@ var _ = Resource("ownerships", func() {
 	Action("show", func() {
 		Description("Get ownerships by ids")
 		Routing(GET(bookIDPath))
-		Params(BookIDParam)
+		Params(func() {
+			Param("book_id", Integer, "Unique Book ID", func() {
+				Minimum(1)
+			})
+		})
 		Security(JWTAuth)
 		Response(Unauthorized)
 		Response(OK)
@@ -238,7 +254,11 @@ var _ = Resource("ownerships", func() {
 	Action("delete", func() {
 		Description("delete ownerships by ids")
 		Routing(DELETE(bookIDPath))
-		Params(BookIDParam)
+		Params(func() {
+			Param("book_id", Integer, "Unique Book ID", func() {
+				Minimum(1)
+			})
+		})
 		Security(JWTAuth)
 		Response(Unauthorized)
 		Response(NoContent)

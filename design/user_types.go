@@ -52,9 +52,24 @@ var (
 		})
 	})
 
+	TokenAttribute = Type("TokenAttribute", func() {
+		Description("Token Attribute Type")
+		Attribute("token", String, "token", func() {
+			MinLength(1)
+		})
+	})
+
 	PasswordPayload = Type("PasswordPayload", func() {
 		Member("password", PasswordAttribute)
 		Required("password")
+	})
+
+	PasswordChangePayload = Type("PasswordChangePayload", func() {
+		Member("password", PasswordAttribute)
+		Required("password")
+		Member("confirm", PasswordAttribute)
+		Required("confirm")
+		Member("token", TokenAttribute)
 	})
 
 	AuthenticatePayload = Type("AuthenticatePayload", func() {

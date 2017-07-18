@@ -94,7 +94,9 @@ var _ = Resource("validation", func() {
 		Routing(POST(""))
 		Payload(
 			func() {
-				Member("token", TokenAttribute)
+				Member("token", String, "token", func() {
+					MinLength(1)
+				})
 				Required("token")
 			},
 		)
@@ -126,7 +128,9 @@ var _ = Resource("users", func() {
 		Description("Get user by id")
 		Routing(GET(userIDPath))
 		Params(func() {
-			Param("user_id")
+			Param("user_id", Integer, "Unique User ID", func() {
+				Minimum(1)
+			})
 		})
 		// OK
 		Response(OK)
@@ -161,7 +165,9 @@ var _ = Resource("users", func() {
 		Description("Update user by id")
 		Routing(PUT(userIDPath))
 		Params(func() {
-			Param("user_id")
+			Param("user_id", Integer, "Unique User ID", func() {
+				Minimum(1)
+			})
 		})
 		Payload(func() {
 			Member("nickname")
@@ -181,7 +187,9 @@ var _ = Resource("users", func() {
 		Description("delete user by id")
 		Routing(DELETE(userIDPath))
 		Params(func() {
-			Param("user_id")
+			Param("user_id", Integer, "Unique User ID", func() {
+				Minimum(1)
+			})
 		})
 		Security(JWTAuth)
 		// unauthorized
@@ -215,7 +223,9 @@ var _ = Resource("books", func() {
 		Description("Get book by id")
 		Routing(GET(bookIDPath))
 		Params(func() {
-			Param("book_id")
+			Param("book_id", Integer, "Unique Book ID", func() {
+				Minimum(1)
+			})
 		})
 		// ok
 		Response(OK)
@@ -276,7 +286,9 @@ var _ = Resource("books", func() {
 		Description("delete book by id")
 		Routing(DELETE(bookIDPath))
 		Params(func() {
-			Param("book_id")
+			Param("book_id", Integer, "Unique Book ID", func() {
+				Minimum(1)
+			})
 		})
 		Security(JWTAuth)
 		// Unauthorized
@@ -317,7 +329,9 @@ var _ = Resource("ownerships", func() {
 		Description("Create new ownership")
 		Routing(POST(""))
 		Payload(func() {
-			Member("book_id")
+			Member("book_id", Integer, "Unique Book ID", func() {
+				Minimum(1)
+			})
 			Required("book_id")
 		})
 		Security(JWTAuth)

@@ -1,6 +1,7 @@
 package design
 
 import (
+	// All symbols
 	. "github.com/goadesign/goa/design"
 	. "github.com/goadesign/goa/design/apidsl"
 )

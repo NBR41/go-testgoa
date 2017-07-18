@@ -2,7 +2,8 @@ package design
 
 // package "design"
 import (
-	. "github.com/goadesign/goa/design" // Use . imports to enable the DSL
+	// Use . imports to enable the DSL
+	. "github.com/goadesign/goa/design"
 	. "github.com/goadesign/goa/design/apidsl"
 )
 
@@ -11,9 +12,17 @@ var UserMedia = MediaType("application/vnd.user+json", func() {
 	Description("A User")
 
 	Attributes(func() {
-		Attribute("id", UserIDAttribute)
-		Attribute("email", EmailAttribute)
-		Attribute("nickname", NicknameAttribute)
+		Attribute("id", Integer, "Unique User ID", func() {
+			Minimum(1)
+		})
+		Attribute("email", String, "user email", func() {
+			Format("email")
+			Example("me@foo.bar")
+		})
+		Attribute("nickname", String, "user nickname", func() {
+			MinLength(1)
+			MaxLength(32)
+		})
 		Attribute("href", String, "API href for making requests on the user")
 		Attribute("is_admin", Boolean)
 		Attribute("is_verified", Boolean)
@@ -48,8 +57,13 @@ var BookMedia = MediaType("application/vnd.book+json", func() {
 	Description("A Book")
 
 	Attributes(func() {
-		Attribute("id", BookIDAttribute)
-		Attribute("name", BookNameAttribute)
+		Attribute("id", Integer, "Unique Book ID", func() {
+			Minimum(1)
+		})
+		Attribute("name", String, "Book Name", func() {
+			MinLength(1)
+			MaxLength(128)
+		})
 		Attribute("href", String, "API href for making requests on the book")
 		Required("id", "name", "href")
 	})
@@ -72,8 +86,12 @@ var OwnershipMedia = MediaType("application/vnd.ownership+json", func() {
 	Description("A User ownership")
 
 	Attributes(func() {
-		Attribute("user_id", UserIDAttribute)
-		Attribute("book_id", BookIDAttribute)
+		Attribute("user_id", Integer, "Unique User ID", func() {
+			Minimum(1)
+		})
+		Attribute("book_id", Integer, "Unique Book ID", func() {
+			Minimum(1)
+		})
 		Attribute("book", BookMedia, "book struct")
 		Attribute("href", String, "API href for making requests on the ownership")
 		Required("user_id", "book_id", "href")

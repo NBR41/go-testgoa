@@ -24,6 +24,51 @@ func (m *Model) Close() error {
 	return m.db.Close()
 }
 
+func (m *Model) exec(query string, params ...interface{}) error {
+	res, err := m.db.Exec(query, params...)
+	if err != nil {
+		return err
+	}
+
+	nb, err := res.RowsAffected()
+	switch {
+	case err != nil:
+		return err
+	case nb == 0:
+		return ErrNotFound
+	default:
+		return nil
+	}
+}
+
+func (m *Model) getUser(query string, params ...interface{}) (*User, error) {
+	var u = User{}
+	err := m.db.QueryRow(query, params...).Scan(
+		&u.ID, &u.Nickname, &u.Email, &u.IsVerified, &u.IsAdmin,
+	)
+	switch {
+	case err == sql.ErrNoRows:
+		return nil, ErrNotFound
+	case err != nil:
+		return nil, err
+	default:
+		return &u, nil
+	}
+}
+
+func (m *Model) getBook(query string, params ...interface{}) (*Book, error) {
+	var b = Book{}
+	err := m.db.QueryRow(query, params...).Scan(&b.ID, &b.Name)
+	switch {
+	case err == sql.ErrNoRows:
+		return nil, ErrNotFound
+	case err != nil:
+		return nil, err
+	default:
+		return &b, nil
+	}
+}
+
 // GetUserList returns user list
 func (m *Model) GetUserList() ([]User, error) {
 	rows, err := m.db.Query(`SELECT user_id, nickname, email, verified, admin FROM users`)
@@ -46,21 +91,6 @@ func (m *Model) GetUserList() ([]User, error) {
 	return l, nil
 }
 
-func (m *Model) getUser(query string, params ...interface{}) (*User, error) {
-	var u = User{}
-	err := m.db.QueryRow(query, params...).Scan(
-		&u.ID, &u.Nickname, &u.Email, &u.IsVerified, &u.IsAdmin,
-	)
-	switch {
-	case err == sql.ErrNoRows:
-		return nil, nil
-	case err != nil:
-		return nil, err
-	default:
-		return &u, nil
-	}
-}
-
 // GetUserByID returns user by ID
 func (m *Model) GetUserByID(id int) (*User, error) {
 	return m.getUser(
@@ -78,7 +108,7 @@ func (m *Model) GetUserByEmailOrNickname(email, nickname string) (*User, error) 
 }
 
 // GetAuthenticatedUser returns user if password matches email or nickname
-func (m *Model) GetAuthenticatedUser(password, email, nickname string) (*User, error) {
+func (m *Model) GetAuthenticatedUser(email, nickname, password string) (*User, error) {
 	return m.getUser(
 		`
 SELECT user_id, nickname, email, activated, admin
@@ -89,7 +119,14 @@ WHERE password = ? AND (email = ? OR nickname =?)`,
 }
 
 // InsertUser insert user
-func (m *Model) InsertUser(nickname, email, password string) (*User, error) {
+func (m *Model) InsertUser(email, nickname, password string) (*User, error) {
+	_, err := m.GetUserByEmailOrNickname(email, nickname)
+	switch {
+	case err != nil && err != ErrNotFound:
+		return nil, err
+	case err == nil:
+		return nil, ErrDuplicateKey
+	}
 	res, err := m.db.Exec(
 		`
 INSERT INTO users (user_id, nickname, email, password, activated, admin, create_ts, update_ts)
@@ -110,39 +147,42 @@ ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`,
 
 // UpdateUserNickname updates user nickname by ID
 func (m *Model) UpdateUserNickname(id int, nickname string) error {
-	_, err := m.db.Exec(
+	return m.exec(
 		`UPDATE users set nickname = ?, update_ts = NOW() where user_id = ?`,
 		nickname, id,
 	)
-	return err
 }
 
 // UpdateUserPassword updates user password by ID
 func (m *Model) UpdateUserPassword(id int, password string) error {
-	_, err := m.db.Exec(
+	return m.exec(
 		`UPDATE users set password = ?, update_ts = NOW() where user_id = ?`,
 		password, id,
 	)
-	return err
 }
 
 // UpdateUserActivation update user activation by ID
 func (m *Model) UpdateUserActivation(id int, activated bool) error {
-	_, err := m.db.Exec(
+	return m.exec(
 		`UPDATE users set activated = ?, update_ts = NOW() where user_id = ?`,
 		activated, id,
 	)
-	return err
 }
 
 // DeleteUser deletes user by ID
 func (m *Model) DeleteUser(id int) error {
-	_, err := m.db.Exec(`DELETE FROM users where user_id = ?`, id)
-	return err
+	return m.exec(`DELETE FROM users where user_id = ?`, id)
 }
 
 // InsertBook inserts book
 func (m *Model) InsertBook(name string) (*Book, error) {
+	_, err := m.GetBookByName(name)
+	switch {
+	case err != nil && err != ErrNotFound:
+		return nil, err
+	case err == nil:
+		return nil, ErrDuplicateKey
+	}
 	res, err := m.db.Exec(
 		`
 INSERT INTO books (book_id, name, create_ts, update_ts)
@@ -161,22 +201,14 @@ ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`,
 	return &Book{ID: id, Name: name}, nil
 }
 
-func (m *Model) getBook(query string, params ...interface{}) (*Book, error) {
-	var b = Book{}
-	err := m.db.QueryRow(query, params...).Scan(&b.ID, &b.Name)
-	switch {
-	case err == sql.ErrNoRows:
-		return nil, nil
-	case err != nil:
-		return nil, err
-	default:
-		return &b, nil
-	}
-}
-
 // GetBookByID returns book by ID
 func (m *Model) GetBookByID(id int) (*Book, error) {
 	return m.getBook(`SELECT book_id, name from books where id = ?`, id)
+}
+
+// GetBookByName returns book by name
+func (m *Model) GetBookByName(name string) (*Book, error) {
+	return m.getBook(`SELECT book_id, name from books where name = ?`, name)
 }
 
 // GetBookList returns book list
@@ -203,17 +235,15 @@ func (m *Model) GetBookList() ([]Book, error) {
 
 // UpdateBook update book infos
 func (m *Model) UpdateBook(id int, name string) error {
-	_, err := m.db.Exec(
+	return m.exec(
 		`UPDATE books set name = ?, update_ts = NOW() where book_id = ?`,
 		name, id,
 	)
-	return err
 }
 
 // DeleteBook delete book by ID
 func (m *Model) DeleteBook(id int) error {
-	_, err := m.db.Exec(`DELETE FROM books where book_id = ?`, id)
-	return err
+	return m.exec(`DELETE FROM books where book_id = ?`, id)
 }
 
 // GetOwnershipList returns book list by user ID
@@ -283,15 +313,13 @@ ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`,
 }
 
 func (m *Model) UpdateOwnership(userID, bookID int) error {
-	_, err := m.db.Exec(
+	return m.exec(
 		`UPDATE ownerships set update_ts = NOW() where user_id = ? and book_id = ?`,
 		userID, bookID,
 	)
-	return err
 }
 
 // DeleteOwnership deletes user book association
 func (m *Model) DeleteOwnership(userID, bookID int) error {
-	_, err := m.db.Exec(`DELETE FROM ownerships where user_id = ? and book_id = ?`, userID, bookID)
-	return err
+	return m.exec(`DELETE FROM ownerships where user_id = ? and book_id = ?`, userID, bookID)
 }

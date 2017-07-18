@@ -5,10 +5,9 @@ import (
 	"os"
 )
 
+// List of errors
 var (
-	ErrUserNotFound       = errors.New("user not found")
-	ErrBookNotFound       = errors.New("book not found")
-	ErrOwnershipNotFound  = errors.New("ownership not found")
+	ErrNotFound           = errors.New("not found")
 	ErrInvalidCredentials = errors.New("invalid credentials")
 	ErrDuplicateKey       = errors.New("duplicate key")
 )
@@ -37,19 +36,21 @@ type Ownership struct {
 	Book   *Book
 }
 
+// Modeler interface for model
 type Modeler interface {
 	Close() error
 	GetUserList() ([]User, error)
 	GetUserByID(id int) (*User, error)
 	GetUserByEmailOrNickname(email, nickname string) (*User, error)
-	GetAuthenticatedUser(password, email, nickname string) (*User, error)
-	InsertUser(nickname, email, password string) (*User, error)
+	GetAuthenticatedUser(email, nickname, password string) (*User, error)
+	InsertUser(email, nickname, password string) (*User, error)
 	UpdateUserNickname(id int, nickname string) error
 	UpdateUserPassword(id int, password string) error
 	UpdateUserActivation(id int, activated bool) error
 	DeleteUser(id int) error
 	InsertBook(name string) (*Book, error)
 	GetBookByID(id int) (*Book, error)
+	GetBookByName(name string) (*Book, error)
 	GetBookList() ([]Book, error)
 	UpdateBook(id int, name string) error
 	DeleteBook(id int) error

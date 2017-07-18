@@ -68,7 +68,7 @@ func (db *Local) GetUserByID(id int) (*User, error) {
 	if p, ok := db.users[id]; ok {
 		return p, nil
 	}
-	return nil, ErrUserNotFound
+	return nil, ErrNotFound
 }
 
 // GetUserByEmailOrNickname returns user by email or nickname
@@ -80,11 +80,11 @@ func (db *Local) GetUserByEmailOrNickname(email, nickname string) (*User, error)
 			return db.users[i], nil
 		}
 	}
-	return nil, ErrUserNotFound
+	return nil, ErrNotFound
 }
 
 // GetAuthenticatedUser returns user if password matches email or nickname
-func (db *Local) GetAuthenticatedUser(password, email, nickname string) (*User, error) {
+func (db *Local) GetAuthenticatedUser(email, nickname, password string) (*User, error) {
 	db.Lock()
 	defer db.Unlock()
 	for i := range db.users {
@@ -95,13 +95,20 @@ func (db *Local) GetAuthenticatedUser(password, email, nickname string) (*User, 
 			return nil, ErrInvalidCredentials
 		}
 	}
-	return nil, ErrUserNotFound
+	return nil, ErrNotFound
 }
 
 // InsertUser insert user
-func (db *Local) InsertUser(nickname, email, password string) (*User, error) {
+func (db *Local) InsertUser(email, nickname, password string) (*User, error) {
 	db.Lock()
 	defer db.Unlock()
+	_, err := db.GetUserByEmailOrNickname(email, nickname)
+	switch {
+	case err != nil && err != ErrNotFound:
+		return nil, err
+	case err == nil:
+		return nil, ErrDuplicateKey
+	}
 	idx := len(db.users)
 	u := &User{ID: int64(idx), Email: email, Nickname: nickname, Password: password}
 	db.users[idx] = u
@@ -114,7 +121,7 @@ func (db *Local) UpdateUserNickname(id int, nickname string) error {
 	defer db.Unlock()
 	u, ok := db.users[id]
 	if !ok {
-		return ErrUserNotFound
+		return ErrNotFound
 	}
 	u.Nickname = nickname
 	return nil
@@ -126,7 +133,7 @@ func (db *Local) UpdateUserPassword(id int, password string) error {
 	defer db.Unlock()
 	u, ok := db.users[id]
 	if !ok {
-		return ErrUserNotFound
+		return ErrNotFound
 	}
 	u.Password = password
 	return nil
@@ -138,7 +145,7 @@ func (db *Local) UpdateUserActivation(id int, activated bool) error {
 	defer db.Unlock()
 	u, ok := db.users[id]
 	if !ok {
-		return ErrUserNotFound
+		return ErrNotFound
 	}
 	u.IsVerified = activated
 	return nil
@@ -150,7 +157,7 @@ func (db *Local) DeleteUser(id int) error {
 	defer db.Unlock()
 	_, ok := db.users[id]
 	if !ok {
-		return ErrUserNotFound
+		return ErrNotFound
 	}
 	delete(db.users, id)
 	return nil
@@ -160,6 +167,13 @@ func (db *Local) DeleteUser(id int) error {
 func (db *Local) InsertBook(name string) (*Book, error) {
 	db.Lock()
 	defer db.Unlock()
+	_, err := db.GetBookByName(name)
+	switch {
+	case err != nil && err != ErrNotFound:
+		return nil, err
+	case err == nil:
+		return nil, ErrDuplicateKey
+	}
 	idx := len(db.books)
 	b := &Book{ID: int64(idx), Name: name}
 	db.books[idx] = b
@@ -173,7 +187,19 @@ func (db *Local) GetBookByID(id int) (*Book, error) {
 	if p, ok := db.books[id]; ok {
 		return p, nil
 	}
-	return nil, ErrBookNotFound
+	return nil, ErrNotFound
+}
+
+// GetBookByName returns book by name
+func (db *Local) GetBookByName(name string) (*Book, error) {
+	db.Lock()
+	defer db.Unlock()
+	for i := range db.books {
+		if db.books[i].Name == name {
+			return db.books[i], nil
+		}
+	}
+	return nil, ErrNotFound
 }
 
 // GetBookList returns book list
@@ -200,7 +226,7 @@ func (db *Local) UpdateBook(id int, name string) error {
 	defer db.Unlock()
 	b, ok := db.books[id]
 	if !ok {
-		return ErrBookNotFound
+		return ErrNotFound
 	}
 	b.Name = name
 	return nil
@@ -212,7 +238,7 @@ func (db *Local) DeleteBook(id int) error {
 	defer db.Unlock()
 	_, ok := db.books[id]
 	if !ok {
-		return ErrBookNotFound
+		return ErrNotFound
 	}
 	delete(db.books, id)
 	return nil
@@ -224,7 +250,7 @@ func (db *Local) GetOwnershipList(userID int) ([]Ownership, error) {
 	defer db.Unlock()
 	l, ok := db.ownerships[userID]
 	if !ok {
-		return nil, ErrUserNotFound
+		return nil, ErrNotFound
 	}
 
 	var list = []Ownership{}
@@ -247,7 +273,7 @@ func (db *Local) GetOwnership(userID, bookID int) (*Ownership, error) {
 	defer db.Unlock()
 	l, ok := db.ownerships[userID]
 	if !ok {
-		return nil, ErrUserNotFound
+		return nil, ErrNotFound
 	}
 
 	for i := range l {
@@ -255,7 +281,7 @@ func (db *Local) GetOwnership(userID, bookID int) (*Ownership, error) {
 			return &Ownership{UserID: int64(userID), BookID: int64(bookID), Book: l[i]}, nil
 		}
 	}
-	return nil, ErrOwnershipNotFound
+	return nil, ErrNotFound
 }
 
 // InsertOwnership inserts user book association
@@ -264,12 +290,12 @@ func (db *Local) InsertOwnership(userID, bookID int) (*Ownership, error) {
 	defer db.Unlock()
 	l, ok := db.ownerships[userID]
 	if !ok {
-		return nil, ErrUserNotFound
+		return nil, ErrNotFound
 	}
 
 	b, ok := db.books[bookID]
 	if !ok {
-		return nil, ErrBookNotFound
+		return nil, ErrNotFound
 	}
 
 	for i := range l {
@@ -292,7 +318,7 @@ func (db *Local) DeleteOwnership(userID, bookID int) error {
 	defer db.Unlock()
 	l, ok := db.ownerships[userID]
 	if !ok {
-		return ErrUserNotFound
+		return ErrNotFound
 	}
 
 	for i := range l {
@@ -301,5 +327,5 @@ func (db *Local) DeleteOwnership(userID, bookID int) error {
 			break
 		}
 	}
-	return ErrOwnershipNotFound
+	return ErrNotFound
 }

@@ -39,6 +39,9 @@ func main() {
 	// Mount "validation" controller
 	c7 := NewValidationController(service)
 	app.MountValidationController(service, c7)
+	// Mount swagger controller onto service
+	c8 := NewSwagger(service)
+	app.MountSwaggerController(service, c8)
 
 	// Start service
 	if err := service.ListenAndServe(":8089"); err != nil {

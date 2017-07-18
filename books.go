@@ -6,18 +6,27 @@ import (
 	"github.com/goadesign/goa"
 )
 
-// BooksController implements the books resource.
-type BooksController struct {
-	*goa.Controller
-}
-
 // ToBookMedia converts a book model into a book media type
 func ToBookMedia(a *store.Book) *app.Book {
 	return &app.Book{
 		Href: app.BooksHref(a.ID),
-		ID:   a.ID,
+		ID:   int(a.ID),
 		Name: a.Name,
 	}
+}
+
+// ToBookLinkMedia converts a book model into a book link media type
+func ToBookLinkMedia(a *store.Book) *app.BookLink {
+	return &app.BookLink{
+		Href: app.BooksHref(a.ID),
+		ID:   int(a.ID),
+		Name: a.Name,
+	}
+}
+
+// BooksController implements the books resource.
+type BooksController struct {
+	*goa.Controller
 }
 
 // NewBooksController creates a books controller.
@@ -32,18 +41,21 @@ func (c *BooksController) Create(ctx *app.CreateBooksContext) error {
 	// Put your logic here
 	m, err := store.GetModeler()
 	if err != nil {
-
+		return ctx.ServiceUnavailable()
 	}
+	defer func() { m.Close() }()
 
-	b, err := m.InsertBook(*ctx.Payload.Name.BookName)
+	b, err := m.InsertBook(ctx.Payload.Name)
 	if err != nil {
-
+		if err == store.ErrDuplicateKey {
+			return ctx.UnprocessableEntity()
+		}
+		return ctx.InternalServerError()
 	}
 
 	ctx.ResponseData.Header().Set("Location", app.BooksHref(b.ID))
 	return ctx.Created()
 	// BooksController_Create: end_implement
-	return nil
 }
 
 // Delete runs the delete action.
@@ -53,17 +65,20 @@ func (c *BooksController) Delete(ctx *app.DeleteBooksContext) error {
 	// Put your logic here
 	m, err := store.GetModeler()
 	if err != nil {
-
+		return ctx.ServiceUnavailable()
 	}
+	defer func() { m.Close() }()
 
 	err = m.DeleteBook(ctx.BookID)
 	if err != nil {
-
+		if err == store.ErrNotFound {
+			return ctx.NotFound()
+		}
+		return ctx.InternalServerError()
 	}
 
 	return ctx.NoContent()
 	// BooksController_Delete: end_implement
-	return nil
 }
 
 // List runs the list action.
@@ -73,12 +88,13 @@ func (c *BooksController) List(ctx *app.ListBooksContext) error {
 	// Put your logic here
 	m, err := store.GetModeler()
 	if err != nil {
-
+		return ctx.ServiceUnavailable()
 	}
+	defer func() { m.Close() }()
 
 	books, err := m.GetBookList()
 	if err != nil {
-
+		return ctx.InternalServerError()
 	}
 
 	bs := make(app.BookCollection, len(books))
@@ -86,10 +102,7 @@ func (c *BooksController) List(ctx *app.ListBooksContext) error {
 		bs[i] = ToBookMedia(&bk)
 	}
 	return ctx.OK(bs)
-
 	// BooksController_List: end_implement
-	res := app.BookCollection{}
-	return ctx.OK(res)
 }
 
 // Show runs the show action.
@@ -97,10 +110,22 @@ func (c *BooksController) Show(ctx *app.ShowBooksContext) error {
 	// BooksController_Show: start_implement
 
 	// Put your logic here
+	m, err := store.GetModeler()
+	if err != nil {
+		return ctx.ServiceUnavailable()
+	}
+	defer func() { m.Close() }()
 
+	b, err := m.GetBookByID(ctx.BookID)
+	if err != nil {
+		if err == store.ErrNotFound {
+			return ctx.NotFound()
+		}
+		return ctx.InternalServerError()
+	}
+
+	return ctx.OK(ToBookMedia(b))
 	// BooksController_Show: end_implement
-	res := &app.Book{}
-	return ctx.OK(res)
 }
 
 // Update runs the update action.
@@ -108,7 +133,20 @@ func (c *BooksController) Update(ctx *app.UpdateBooksContext) error {
 	// BooksController_Update: start_implement
 
 	// Put your logic here
+	m, err := store.GetModeler()
+	if err != nil {
+		return ctx.ServiceUnavailable()
+	}
+	defer func() { m.Close() }()
 
+	err = m.UpdateBook(ctx.BookID, ctx.Payload.Name)
+	if err != nil {
+		if err == store.ErrNotFound {
+			return ctx.NotFound()
+		}
+		return ctx.InternalServerError()
+	}
+
+	return ctx.NoContent()
 	// BooksController_Update: end_implement
-	return nil
 }

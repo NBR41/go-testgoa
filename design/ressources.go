@@ -145,12 +145,7 @@ var _ = Resource("users", func() {
 	Action("create", func() {
 		Description("Create new user")
 		Routing(POST(""))
-		Payload(func() {
-			Member("email")
-			Required("email")
-			Member("nickname")
-			Required("nickname")
-		})
+		Payload(UserCreatePayload)
 		// OK
 		Response(Created, "/users/[0-9]+")
 		// App error
@@ -261,7 +256,9 @@ var _ = Resource("books", func() {
 		Description("Update book by id")
 		Routing(PUT(bookIDPath))
 		Params(func() {
-			Param("book_id")
+			Param("book_id", Integer, "Unique Book ID", func() {
+				Minimum(1)
+			})
 		})
 		Payload(func() {
 			Member("name")
@@ -390,4 +387,11 @@ var _ = Resource("ownerships", func() {
 		Response(ServiceUnavailable)
 		Response(BadRequest, ErrorMedia)
 	})
+})
+
+var _ = Resource("swagger", func() {
+	Origin("*", func() {
+		Methods("GET", "OPTIONS")
+	})
+	Files("/swagger.json", "public/swagger/swagger.json")
 })

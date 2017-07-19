@@ -85,24 +85,31 @@ func (db *Local) GetUserByEmailOrNickname(email, nickname string) (*User, error)
 
 // GetAuthenticatedUser returns user if password matches email or nickname
 func (db *Local) GetAuthenticatedUser(email, nickname, password string) (*User, error) {
-	db.Lock()
-	defer db.Unlock()
-	for i := range db.users {
-		if db.users[i].Nickname == nickname || db.users[i].Email == email {
-			if db.users[i].Password == password {
-				return db.users[i], nil
-			}
-			return nil, ErrInvalidCredentials
-		}
+	u, err := db.GetUserByEmailOrNickname(email, nickname)
+	if err != nil {
+		return nil, err
 	}
-	return nil, ErrNotFound
+
+	ok, err := comparePassword(password, u.salt, u.password)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, ErrInvalidCredentials
+	}
+	return u, nil
 }
 
 // InsertUser insert user
 func (db *Local) InsertUser(email, nickname, password string) (*User, error) {
+	salt, hash, err := cryptPassword(password)
+	if err != nil {
+		return nil, err
+	}
+
 	db.Lock()
 	defer db.Unlock()
-	_, err := db.GetUserByEmailOrNickname(email, nickname)
+	_, err = db.GetUserByEmailOrNickname(email, nickname)
 	switch {
 	case err != nil && err != ErrNotFound:
 		return nil, err
@@ -110,7 +117,7 @@ func (db *Local) InsertUser(email, nickname, password string) (*User, error) {
 		return nil, ErrDuplicateKey
 	}
 	idx := len(db.users)
-	u := &User{ID: int64(idx), Email: email, Nickname: nickname, Password: password}
+	u := &User{ID: int64(idx), Email: email, Nickname: nickname, salt: salt, password: hash}
 	db.users[idx] = u
 	return u, nil
 }
@@ -129,13 +136,19 @@ func (db *Local) UpdateUserNickname(id int, nickname string) error {
 
 // UpdateUserPassword updates user password by ID
 func (db *Local) UpdateUserPassword(id int, password string) error {
+	salt, hash, err := cryptPassword(password)
+	if err != nil {
+		return err
+	}
+
 	db.Lock()
 	defer db.Unlock()
 	u, ok := db.users[id]
 	if !ok {
 		return ErrNotFound
 	}
-	u.Password = password
+	u.salt = salt
+	u.password = hash
 	return nil
 }
 

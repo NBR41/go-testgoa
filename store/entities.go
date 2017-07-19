@@ -9,6 +9,7 @@ import (
 var (
 	ErrNotFound           = errors.New("not found")
 	ErrInvalidCredentials = errors.New("invalid credentials")
+	ErrInvalidID          = errors.New("invalid id")
 	ErrDuplicateKey       = errors.New("duplicate key")
 )
 
@@ -17,9 +18,10 @@ type User struct {
 	ID         int64
 	Email      string
 	Nickname   string
-	Password   string
 	IsVerified bool
 	IsAdmin    bool
+	password   []byte
+	salt       []byte
 }
 
 // Book struct for books

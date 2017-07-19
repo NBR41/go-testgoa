@@ -2,8 +2,19 @@ package main
 
 import (
 	"github.com/NBR41/go-testgoa/app"
+	"github.com/NBR41/go-testgoa/store"
 	"github.com/goadesign/goa"
 )
+
+// ToBookMedia converts a book model into a book media type
+func ToOwnershipMedia(a *store.Ownership) *app.Ownership {
+	return &app.Ownership{
+		Book:   ToBookMedia(a.Book),
+		BookID: int(a.BookID),
+		Href:   app.OwnershipsHref(a.UserID, a.BookID),
+		UserID: int(a.UserID),
+	}
+}
 
 // OwnershipsController implements the ownerships resource.
 type OwnershipsController struct {
@@ -20,9 +31,26 @@ func (c *OwnershipsController) Create(ctx *app.CreateOwnershipsContext) error {
 	// OwnershipsController_Create: start_implement
 
 	// Put your logic here
+	m, err := store.GetModeler()
+	if err != nil {
+		return ctx.ServiceUnavailable()
+	}
+	defer func() { m.Close() }()
 
+	o, err := m.InsertOwnership(ctx.UserID, ctx.Payload.BookID)
+	if err != nil {
+		if err == store.ErrNotFound {
+			return ctx.NotFound()
+		}
+		if err == store.ErrDuplicateKey || err == store.ErrInvalidID {
+			return ctx.UnprocessableEntity()
+		}
+		return ctx.InternalServerError()
+	}
+
+	ctx.ResponseData.Header().Set("Location", app.OwnershipsHref(ctx.UserID, o.BookID))
+	return ctx.Created()
 	// OwnershipsController_Create: end_implement
-	return nil
 }
 
 // Delete runs the delete action.
@@ -30,9 +58,22 @@ func (c *OwnershipsController) Delete(ctx *app.DeleteOwnershipsContext) error {
 	// OwnershipsController_Delete: start_implement
 
 	// Put your logic here
+	m, err := store.GetModeler()
+	if err != nil {
+		return ctx.ServiceUnavailable()
+	}
+	defer func() { m.Close() }()
 
+	err = m.DeleteOwnership(ctx.UserID, ctx.BookID)
+	if err != nil {
+		if err == store.ErrNotFound {
+			return ctx.NotFound()
+		}
+		return ctx.InternalServerError()
+	}
+
+	return ctx.NoContent()
 	// OwnershipsController_Delete: end_implement
-	return nil
 }
 
 // List runs the list action.
@@ -51,8 +92,20 @@ func (c *OwnershipsController) Show(ctx *app.ShowOwnershipsContext) error {
 	// OwnershipsController_Show: start_implement
 
 	// Put your logic here
+	m, err := store.GetModeler()
+	if err != nil {
+		return ctx.ServiceUnavailable()
+	}
+	defer func() { m.Close() }()
 
+	o, err := m.GetOwnership(ctx.UserID, ctx.BookID)
+	if err != nil {
+		if err == store.ErrNotFound {
+			return ctx.NotFound()
+		}
+		return ctx.InternalServerError()
+	}
+
+	return ctx.OK(ToOwnershipMedia(o))
 	// OwnershipsController_Show: end_implement
-	res := &app.Ownership{}
-	return ctx.OK(res)
 }

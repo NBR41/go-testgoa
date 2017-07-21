@@ -12,6 +12,7 @@ var (
 
 var JWTAuth = JWTSecurity("JWTSec", func() {
 	Description("Use JWT t oauthenticate")
+	Header("Authorization")
 })
 
 var _ = Resource("authenticate", func() {
@@ -313,7 +314,7 @@ var _ = Resource("ownerships", func() {
 		// Unauthorized
 		Response(Unauthorized)
 		// OK
-		Response(OK, CollectionOf(BookMedia))
+		Response(OK, CollectionOf(OwnershipMedia))
 		// user NotFound
 		Response(NotFound)
 		// Errors

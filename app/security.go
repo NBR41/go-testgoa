@@ -29,8 +29,8 @@ func UseJWTSecMiddleware(service *goa.Service, middleware goa.Middleware) {
 // NewJWTSecSecurity creates a JWTSec security definition.
 func NewJWTSecSecurity() *goa.JWTSecurity {
 	def := goa.JWTSecurity{
-		In:       goa.LocQuery,
-		Name:     "",
+		In:       goa.LocHeader,
+		Name:     "Authorization",
 		TokenURL: "",
 	}
 	def.Description = "Use JWT t oauthenticate"

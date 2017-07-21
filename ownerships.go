@@ -6,7 +6,7 @@ import (
 	"github.com/goadesign/goa"
 )
 
-// ToBookMedia converts a book model into a book media type
+// ToOwnershipMedia converts a book model into a book media type
 func ToOwnershipMedia(a *store.Ownership) *app.Ownership {
 	return &app.Ownership{
 		Book:   ToBookMedia(a.Book),
@@ -81,10 +81,23 @@ func (c *OwnershipsController) List(ctx *app.ListOwnershipsContext) error {
 	// OwnershipsController_List: start_implement
 
 	// Put your logic here
+	m, err := store.GetModeler()
+	if err != nil {
+		return ctx.ServiceUnavailable()
+	}
+	defer func() { m.Close() }()
 
+	books, err := m.GetOwnershipList(ctx.UserID)
+	if err != nil {
+		return ctx.InternalServerError()
+	}
+
+	bs := make(app.OwnershipCollection, len(books))
+	for i, bk := range books {
+		bs[i] = ToOwnershipMedia(&bk)
+	}
+	return ctx.OK(bs)
 	// OwnershipsController_List: end_implement
-	res := app.BookCollection{}
-	return ctx.OK(res)
 }
 
 // Show runs the show action.

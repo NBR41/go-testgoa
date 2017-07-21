@@ -748,19 +748,10 @@ func NewListOwnershipsContext(ctx context.Context, r *http.Request, service *goa
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ListOwnershipsContext) OK(r BookCollection) error {
-	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+func (ctx *ListOwnershipsContext) OK(r OwnershipCollection) error {
+	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.ownership+json; type=collection")
 	if r == nil {
-		r = BookCollection{}
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// OKLink sends a HTTP response with status code 200.
-func (ctx *ListOwnershipsContext) OKLink(r BookLinkCollection) error {
-	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
-	if r == nil {
-		r = BookLinkCollection{}
+		r = OwnershipCollection{}
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }

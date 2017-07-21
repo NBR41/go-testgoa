@@ -149,20 +149,38 @@ func (mt *Ownership) Validate() (err error) {
 	return
 }
 
+// OwnershipCollection is the media type for an array of Ownership (default view)
+//
+// Identifier: application/vnd.ownership+json; type=collection; view=default
+type OwnershipCollection []*Ownership
+
+// Validate validates the OwnershipCollection media type instance.
+func (mt OwnershipCollection) Validate() (err error) {
+	for _, e := range mt {
+		if e != nil {
+			if err2 := e.Validate(); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
 // A token (default view)
 //
 // Identifier: application/vnd.token+json; view=default
 type Token struct {
 	// Unique user ID
-	Token *string `form:"token,omitempty" json:"token,omitempty" xml:"token,omitempty"`
+	Token string `form:"token" json:"token" xml:"token"`
 }
 
 // Validate validates the Token media type instance.
 func (mt *Token) Validate() (err error) {
-	if mt.Token != nil {
-		if err2 := goa.ValidateFormat(goa.FormatRegexp, *mt.Token); err2 != nil {
-			err = goa.MergeErrors(err, goa.InvalidFormatError(`response.token`, *mt.Token, goa.FormatRegexp, err2))
-		}
+	if mt.Token == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "token"))
+	}
+	if err2 := goa.ValidateFormat(goa.FormatRegexp, mt.Token); err2 != nil {
+		err = goa.MergeErrors(err, goa.InvalidFormatError(`response.token`, mt.Token, goa.FormatRegexp, err2))
 	}
 	return
 }

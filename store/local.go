@@ -84,8 +84,8 @@ func (db *Local) GetUserByEmailOrNickname(email, nickname string) (*User, error)
 }
 
 // GetAuthenticatedUser returns user if password matches email or nickname
-func (db *Local) GetAuthenticatedUser(email, nickname, password string) (*User, error) {
-	u, err := db.GetUserByEmailOrNickname(email, nickname)
+func (db *Local) GetAuthenticatedUser(login, password string) (*User, error) {
+	u, err := db.GetUserByEmailOrNickname(login, login)
 	if err != nil {
 		return nil, err
 	}

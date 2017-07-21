@@ -6,6 +6,7 @@ import (
 	"github.com/NBR41/go-testgoa/app"
 	"github.com/goadesign/goa"
 	"github.com/goadesign/goa/middleware"
+	goajwt "github.com/goadesign/goa/middleware/security/jwt"
 )
 
 func main() {
@@ -17,6 +18,16 @@ func main() {
 	service.Use(middleware.LogRequest(true))
 	service.Use(middleware.ErrorHandler(service, true))
 	service.Use(middleware.Recover())
+
+	customMiddleware, err := goa.NewMiddleware(jwtUserValiadtion)
+	if err != nil {
+		service.LogError("security middleware", "err", err)
+	}
+
+	app.UseJWTSecMiddleware(
+		service,
+		goajwt.New(goajwt.NewSimpleResolver([]goajwt.Key{"secret"}), customMiddleware, app.NewJWTSecSecurity()),
+	)
 
 	// Mount "authenticate" controller
 	c := NewAuthenticateController(service)

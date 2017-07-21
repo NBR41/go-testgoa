@@ -108,13 +108,13 @@ func (m *Model) GetUserByEmailOrNickname(email, nickname string) (*User, error) 
 }
 
 // GetAuthenticatedUser returns user if password matches email or nickname
-func (m *Model) GetAuthenticatedUser(email, nickname, password string) (*User, error) {
+func (m *Model) GetAuthenticatedUser(login, password string) (*User, error) {
 	return m.getUser(
 		`
 SELECT user_id, nickname, email, activated, admin
 FROM users
 WHERE password = ? AND (email = ? OR nickname =?)`,
-		password, email, nickname,
+		password, login, login,
 	)
 }
 

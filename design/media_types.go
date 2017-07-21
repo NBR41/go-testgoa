@@ -47,6 +47,8 @@ var TokenMedia = MediaType("application/vnd.token+json", func() {
 		})
 	})
 
+	Required("token")
+
 	View("default", func() {
 		Attribute("token")
 	})
@@ -65,6 +67,7 @@ var BookMedia = MediaType("application/vnd.book+json", func() {
 			MaxLength(128)
 		})
 		Attribute("href", String, "API href for making requests on the book")
+
 		Required("id", "name", "href")
 	})
 
@@ -94,6 +97,7 @@ var OwnershipMedia = MediaType("application/vnd.ownership+json", func() {
 		})
 		Attribute("book", BookMedia, "book struct")
 		Attribute("href", String, "API href for making requests on the ownership")
+
 		Required("user_id", "book_id", "href")
 	})
 

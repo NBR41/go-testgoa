@@ -2,6 +2,8 @@ package main
 
 import (
 	"github.com/NBR41/go-testgoa/app"
+	"github.com/NBR41/go-testgoa/appmail"
+	"github.com/NBR41/go-testgoa/appsec"
 	"github.com/NBR41/go-testgoa/store"
 	"github.com/goadesign/goa"
 )
@@ -43,6 +45,11 @@ func (c *UsersController) Create(ctx *app.CreateUsersContext) error {
 			return ctx.UnprocessableEntity()
 		}
 		return ctx.InternalServerError()
+	}
+
+	token, err := appsec.GetValidationToken(u.ID, u.Email)
+	if err == nil {
+		_ = appmail.SendNewUserMail(u, token)
 	}
 
 	ctx.ResponseData.Header().Set("Location", app.UsersHref(u.ID))

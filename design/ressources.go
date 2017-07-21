@@ -44,6 +44,7 @@ var _ = Resource("password", func() {
 				Format("email")
 				Example("me@foo.bar")
 			})
+			Required("email")
 		})
 		// OK
 		Response(NoContent)
@@ -82,6 +83,8 @@ var _ = Resource("validation", func() {
 		Response(Unauthorized)
 		// OK
 		Response(NoContent)
+		// Not Found
+		Response(NotFound)
 		// App error
 		Response(UnprocessableEntity)
 		// Errors
@@ -104,6 +107,7 @@ var _ = Resource("validation", func() {
 		//OK
 		Response(NoContent)
 		// user not found
+		Response(NotFound)
 		Response(UnprocessableEntity)
 		// Errors
 		Response(InternalServerError)

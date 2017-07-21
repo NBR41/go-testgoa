@@ -6,13 +6,13 @@ import (
 
 	goajwt "github.com/goadesign/goa/middleware/security/jwt"
 
-	appjwt "github.com/NBR41/go-testgoa/jwt"
+	"github.com/NBR41/go-testgoa/appsec"
 )
 
 var jwtUserValiadtion = func(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	token := goajwt.ContextJWT(ctx)
 
-	claims, ok := token.Claims.(appjwt.AppClaims)
+	claims, ok := token.Claims.(appsec.AuthClaims)
 	if !ok {
 		return goajwt.ErrJWTError("wrong type of claims")
 	}

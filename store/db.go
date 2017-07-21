@@ -107,6 +107,14 @@ func (m *Model) GetUserByEmailOrNickname(email, nickname string) (*User, error) 
 	)
 }
 
+// GetUserByEmail returns user by email
+func (m *Model) GetUserByEmail(email string) (*User, error) {
+	return m.getUser(
+		`SELECT user_id, nickname, email, activated, admin FROM users WHERE email = ?`,
+		email,
+	)
+}
+
 // GetAuthenticatedUser returns user if password matches email or nickname
 func (m *Model) GetAuthenticatedUser(login, password string) (*User, error) {
 	return m.getUser(

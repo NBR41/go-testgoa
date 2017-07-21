@@ -3,6 +3,8 @@ package store
 import (
 	"sort"
 	"sync"
+
+	"github.com/NBR41/go-testgoa/appsec"
 )
 
 // Local emulates a database driver using in-memory data structures.
@@ -83,6 +85,18 @@ func (db *Local) GetUserByEmailOrNickname(email, nickname string) (*User, error)
 	return nil, ErrNotFound
 }
 
+// GetUserByEmail returns user by email
+func (db *Local) GetUserByEmail(email string) (*User, error) {
+	db.Lock()
+	defer db.Unlock()
+	for i := range db.users {
+		if db.users[i].Email == email {
+			return db.users[i], nil
+		}
+	}
+	return nil, ErrNotFound
+}
+
 // GetAuthenticatedUser returns user if password matches email or nickname
 func (db *Local) GetAuthenticatedUser(login, password string) (*User, error) {
 	u, err := db.GetUserByEmailOrNickname(login, login)
@@ -90,7 +104,7 @@ func (db *Local) GetAuthenticatedUser(login, password string) (*User, error) {
 		return nil, err
 	}
 
-	ok, err := comparePassword(password, u.salt, u.password)
+	ok, err := appsec.ComparePassword(password, u.salt, u.password)
 	if err != nil {
 		return nil, err
 	}
@@ -102,7 +116,7 @@ func (db *Local) GetAuthenticatedUser(login, password string) (*User, error) {
 
 // InsertUser insert user
 func (db *Local) InsertUser(email, nickname, password string) (*User, error) {
-	salt, hash, err := cryptPassword(password)
+	salt, hash, err := appsec.CryptPassword(password)
 	if err != nil {
 		return nil, err
 	}
@@ -136,7 +150,7 @@ func (db *Local) UpdateUserNickname(id int, nickname string) error {
 
 // UpdateUserPassword updates user password by ID
 func (db *Local) UpdateUserPassword(id int, password string) error {
-	salt, hash, err := cryptPassword(password)
+	salt, hash, err := appsec.CryptPassword(password)
 	if err != nil {
 		return err
 	}

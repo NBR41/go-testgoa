@@ -1,4 +1,4 @@
-package store
+package appsec
 
 import (
 	"bytes"
@@ -21,7 +21,8 @@ func getSaltNPepper(salt []byte) []byte {
 	return append(salt, pepper...)
 }
 
-func cryptPassword(password string) ([]byte, []byte, error) {
+// CryptPassword returns a hash and the salt
+func CryptPassword(password string) ([]byte, []byte, error) {
 	salt, err := getNewSalt()
 	if err != nil {
 		return nil, nil, err
@@ -42,7 +43,8 @@ func cryptPasswordWithSalt(password string, salt []byte) ([]byte, error) {
 	return hp, nil
 }
 
-func comparePassword(password string, salt, hash []byte) (bool, error) {
+// ComparePassword return true if the hashed password with salt is equal to hash
+func ComparePassword(password string, salt, hash []byte) (bool, error) {
 	hp, err := cryptPasswordWithSalt(password, salt)
 	if err != nil {
 		return false, err

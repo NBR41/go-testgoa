@@ -872,7 +872,7 @@ type GetPasswordContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
-	Email *string
+	Email string
 }
 
 // NewGetPasswordContext parses the incoming request URL and body, performs validations and creates the
@@ -885,13 +885,13 @@ func NewGetPasswordContext(ctx context.Context, r *http.Request, service *goa.Se
 	req.Request = r
 	rctx := GetPasswordContext{Context: ctx, ResponseData: resp, RequestData: req}
 	paramEmail := req.Params["email"]
-	if len(paramEmail) > 0 {
+	if len(paramEmail) == 0 {
+		err = goa.MergeErrors(err, goa.MissingParamError("email"))
+	} else {
 		rawEmail := paramEmail[0]
-		rctx.Email = &rawEmail
-		if rctx.Email != nil {
-			if err2 := goa.ValidateFormat(goa.FormatEmail, *rctx.Email); err2 != nil {
-				err = goa.MergeErrors(err, goa.InvalidFormatError(`email`, *rctx.Email, goa.FormatEmail, err2))
-			}
+		rctx.Email = rawEmail
+		if err2 := goa.ValidateFormat(goa.FormatEmail, rctx.Email); err2 != nil {
+			err = goa.MergeErrors(err, goa.InvalidFormatError(`email`, rctx.Email, goa.FormatEmail, err2))
 		}
 	}
 	return &rctx, err
@@ -1363,6 +1363,12 @@ func (ctx *GetValidationContext) Unauthorized() error {
 	return nil
 }
 
+// NotFound sends a HTTP response with status code 404.
+func (ctx *GetValidationContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
 // UnprocessableEntity sends a HTTP response with status code 422.
 func (ctx *GetValidationContext) UnprocessableEntity() error {
 	ctx.ResponseData.WriteHeader(422)
@@ -1469,6 +1475,12 @@ func (ctx *ValidateValidationContext) NoContent() error {
 func (ctx *ValidateValidationContext) BadRequest(r error) error {
 	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
 	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ValidateValidationContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
 }
 
 // UnprocessableEntity sends a HTTP response with status code 422.

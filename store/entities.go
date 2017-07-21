@@ -43,6 +43,7 @@ type Modeler interface {
 	Close() error
 	GetUserList() ([]User, error)
 	GetUserByID(id int) (*User, error)
+	GetUserByEmail(email string) (*User, error)
 	GetUserByEmailOrNickname(email, nickname string) (*User, error)
 	GetAuthenticatedUser(login, password string) (*User, error)
 	InsertUser(email, nickname, password string) (*User, error)

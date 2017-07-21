@@ -28,7 +28,7 @@ import (
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func GetPasswordBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.PasswordController, email *string) (http.ResponseWriter, error) {
+func GetPasswordBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.PasswordController, email string) (http.ResponseWriter, error) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -49,8 +49,8 @@ func GetPasswordBadRequest(t goatest.TInterface, ctx context.Context, service *g
 	// Setup request context
 	rw := httptest.NewRecorder()
 	query := url.Values{}
-	if email != nil {
-		sliceVal := []string{*email}
+	{
+		sliceVal := []string{email}
 		query["email"] = sliceVal
 	}
 	u := &url.URL{
@@ -62,8 +62,8 @@ func GetPasswordBadRequest(t goatest.TInterface, ctx context.Context, service *g
 		panic("invalid test " + err.Error()) // bug
 	}
 	prms := url.Values{}
-	if email != nil {
-		sliceVal := []string{*email}
+	{
+		sliceVal := []string{email}
 		prms["email"] = sliceVal
 	}
 	if ctx == nil {
@@ -90,7 +90,7 @@ func GetPasswordBadRequest(t goatest.TInterface, ctx context.Context, service *g
 		var ok bool
 		mt, ok = resp.(error)
 		if !ok {
-			t.Fatalf("invalid response media: got %+v, expected instance of error", resp)
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of error", resp, resp)
 		}
 	}
 
@@ -102,7 +102,7 @@ func GetPasswordBadRequest(t goatest.TInterface, ctx context.Context, service *g
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func GetPasswordInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.PasswordController, email *string) http.ResponseWriter {
+func GetPasswordInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.PasswordController, email string) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -123,8 +123,8 @@ func GetPasswordInternalServerError(t goatest.TInterface, ctx context.Context, s
 	// Setup request context
 	rw := httptest.NewRecorder()
 	query := url.Values{}
-	if email != nil {
-		sliceVal := []string{*email}
+	{
+		sliceVal := []string{email}
 		query["email"] = sliceVal
 	}
 	u := &url.URL{
@@ -136,8 +136,8 @@ func GetPasswordInternalServerError(t goatest.TInterface, ctx context.Context, s
 		panic("invalid test " + err.Error()) // bug
 	}
 	prms := url.Values{}
-	if email != nil {
-		sliceVal := []string{*email}
+	{
+		sliceVal := []string{email}
 		prms["email"] = sliceVal
 	}
 	if ctx == nil {
@@ -168,7 +168,7 @@ func GetPasswordInternalServerError(t goatest.TInterface, ctx context.Context, s
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func GetPasswordNoContent(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.PasswordController, email *string) http.ResponseWriter {
+func GetPasswordNoContent(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.PasswordController, email string) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -189,8 +189,8 @@ func GetPasswordNoContent(t goatest.TInterface, ctx context.Context, service *go
 	// Setup request context
 	rw := httptest.NewRecorder()
 	query := url.Values{}
-	if email != nil {
-		sliceVal := []string{*email}
+	{
+		sliceVal := []string{email}
 		query["email"] = sliceVal
 	}
 	u := &url.URL{
@@ -202,8 +202,8 @@ func GetPasswordNoContent(t goatest.TInterface, ctx context.Context, service *go
 		panic("invalid test " + err.Error()) // bug
 	}
 	prms := url.Values{}
-	if email != nil {
-		sliceVal := []string{*email}
+	{
+		sliceVal := []string{email}
 		prms["email"] = sliceVal
 	}
 	if ctx == nil {
@@ -234,7 +234,7 @@ func GetPasswordNoContent(t goatest.TInterface, ctx context.Context, service *go
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func GetPasswordServiceUnavailable(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.PasswordController, email *string) http.ResponseWriter {
+func GetPasswordServiceUnavailable(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.PasswordController, email string) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -255,8 +255,8 @@ func GetPasswordServiceUnavailable(t goatest.TInterface, ctx context.Context, se
 	// Setup request context
 	rw := httptest.NewRecorder()
 	query := url.Values{}
-	if email != nil {
-		sliceVal := []string{*email}
+	{
+		sliceVal := []string{email}
 		query["email"] = sliceVal
 	}
 	u := &url.URL{
@@ -268,8 +268,8 @@ func GetPasswordServiceUnavailable(t goatest.TInterface, ctx context.Context, se
 		panic("invalid test " + err.Error()) // bug
 	}
 	prms := url.Values{}
-	if email != nil {
-		sliceVal := []string{*email}
+	{
+		sliceVal := []string{email}
 		prms["email"] = sliceVal
 	}
 	if ctx == nil {
@@ -300,7 +300,7 @@ func GetPasswordServiceUnavailable(t goatest.TInterface, ctx context.Context, se
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func GetPasswordUnprocessableEntity(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.PasswordController, email *string) http.ResponseWriter {
+func GetPasswordUnprocessableEntity(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.PasswordController, email string) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -321,8 +321,8 @@ func GetPasswordUnprocessableEntity(t goatest.TInterface, ctx context.Context, s
 	// Setup request context
 	rw := httptest.NewRecorder()
 	query := url.Values{}
-	if email != nil {
-		sliceVal := []string{*email}
+	{
+		sliceVal := []string{email}
 		query["email"] = sliceVal
 	}
 	u := &url.URL{
@@ -334,8 +334,8 @@ func GetPasswordUnprocessableEntity(t goatest.TInterface, ctx context.Context, s
 		panic("invalid test " + err.Error()) // bug
 	}
 	prms := url.Values{}
-	if email != nil {
-		sliceVal := []string{*email}
+	{
+		sliceVal := []string{email}
 		prms["email"] = sliceVal
 	}
 	if ctx == nil {
@@ -429,7 +429,7 @@ func UpdatePasswordBadRequest(t goatest.TInterface, ctx context.Context, service
 		var _ok bool
 		mt, _ok = resp.(error)
 		if !_ok {
-			t.Fatalf("invalid response media: got %+v, expected instance of error", resp)
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of error", resp, resp)
 		}
 	}
 

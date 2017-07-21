@@ -2,6 +2,9 @@ package main
 
 import (
 	"github.com/NBR41/go-testgoa/app"
+	"github.com/NBR41/go-testgoa/appmail"
+	"github.com/NBR41/go-testgoa/appsec"
+	"github.com/NBR41/go-testgoa/store"
 	"github.com/goadesign/goa"
 )
 
@@ -20,9 +23,30 @@ func (c *ValidationController) Get(ctx *app.GetValidationContext) error {
 	// ValidationController_Get: start_implement
 
 	// Put your logic here
+	m, err := store.GetModeler()
+	if err != nil {
+		return ctx.ServiceUnavailable()
+	}
+	defer func() { m.Close() }()
 
+	u, err := m.GetUserByID(int(ctx.UserID))
+	if err != nil {
+		if err == store.ErrNotFound {
+			return ctx.NotFound()
+		}
+		return ctx.InternalServerError()
+	}
+	token, err := appsec.GetValidationToken(u.ID, u.Email)
+	if err != nil {
+		return ctx.InternalServerError()
+	}
+
+	err = appmail.SendActivationMail(u, token)
+	if err != nil {
+		return ctx.InternalServerError()
+	}
+	return ctx.NoContent()
 	// ValidationController_Get: end_implement
-	return nil
 }
 
 // Validate runs the validate action.
@@ -30,7 +54,25 @@ func (c *ValidationController) Validate(ctx *app.ValidateValidationContext) erro
 	// ValidationController_Validate: start_implement
 
 	// Put your logic here
+	uID, uEmail, err := appsec.ValidateValidationToken(ctx.Payload.Token)
+	if err != nil {
+		return ctx.UnprocessableEntity()
+	}
 
+	m, err := store.GetModeler()
+	if err != nil {
+		return ctx.ServiceUnavailable()
+	}
+	defer func() { m.Close() }()
+
+	err = m.UpdateUserActivation(int(uID), true)
+	if err != nil {
+		if err == store.ErrNotFound {
+			return ctx.NotFound()
+		}
+		return ctx.InternalServerError()
+	}
+	_ = appmail.SendUserActivatedMail(uEmail)
+	return ctx.NoContent()
 	// ValidationController_Validate: end_implement
-	return nil
 }

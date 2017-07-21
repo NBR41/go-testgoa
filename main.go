@@ -4,8 +4,11 @@ package main
 
 import (
 	"github.com/NBR41/go-testgoa/app"
+	"github.com/NBR41/go-testgoa/appsec"
+
 	"github.com/goadesign/goa"
 	"github.com/goadesign/goa/middleware"
+
 	goajwt "github.com/goadesign/goa/middleware/security/jwt"
 )
 
@@ -26,7 +29,7 @@ func main() {
 
 	app.UseJWTSecMiddleware(
 		service,
-		goajwt.New(goajwt.NewSimpleResolver([]goajwt.Key{"secret"}), customMiddleware, app.NewJWTSecSecurity()),
+		goajwt.New(goajwt.NewSimpleResolver([]goajwt.Key{appsec.JWTAuthKey}), customMiddleware, app.NewJWTSecSecurity()),
 	)
 
 	// Mount "authenticate" controller

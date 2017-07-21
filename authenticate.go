@@ -2,11 +2,9 @@ package main
 
 import (
 	"github.com/NBR41/go-testgoa/app"
-	appjwt "github.com/NBR41/go-testgoa/jwt"
+	"github.com/NBR41/go-testgoa/appsec"
 	"github.com/NBR41/go-testgoa/store"
-	jwtgo "github.com/dgrijalva/jwt-go"
 	"github.com/goadesign/goa"
-	"time"
 )
 
 // AuthenticateController implements the authenticate resource.
@@ -38,17 +36,7 @@ func (c *AuthenticateController) Auth(ctx *app.AuthAuthenticateContext) error {
 		return ctx.InternalServerError()
 	}
 
-	// Create the Claims
-	claims := appjwt.AppClaims{
-		UserID:  u.ID,
-		IsAdmin: &u.IsAdmin,
-		StandardClaims: jwtgo.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Hour * 72).Unix(),
-			Issuer:    "test",
-		},
-	}
-	token := jwtgo.NewWithClaims(jwtgo.SigningMethodHS256, claims)
-	ss, err := token.SignedString("AllYourBase")
+	ss, err := appsec.GetAuthToken(u.ID, u.IsAdmin)
 	if err != nil {
 		return ctx.InternalServerError()
 	}

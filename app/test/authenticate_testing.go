@@ -171,7 +171,7 @@ func AuthAuthenticateInternalServerError(t goatest.TInterface, ctx context.Conte
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func AuthAuthenticateOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.AuthenticateController, payload *app.AuthenticatePayload) (http.ResponseWriter, *app.Token) {
+func AuthAuthenticateOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.AuthenticateController, payload *app.AuthenticatePayload) (http.ResponseWriter, *app.Authtoken) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -230,12 +230,12 @@ func AuthAuthenticateOK(t goatest.TInterface, ctx context.Context, service *goa.
 	if rw.Code != 200 {
 		t.Errorf("invalid response status code: got %+v, expected 200", rw.Code)
 	}
-	var mt *app.Token
+	var mt *app.Authtoken
 	if resp != nil {
 		var _ok bool
-		mt, _ok = resp.(*app.Token)
+		mt, _ok = resp.(*app.Authtoken)
 		if !_ok {
-			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.Token", resp, resp)
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.Authtoken", resp, resp)
 		}
 		__err = mt.Validate()
 		if __err != nil {

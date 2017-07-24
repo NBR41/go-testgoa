@@ -1,4 +1,4 @@
-package store
+package appmodel
 
 import (
 	"sort"
@@ -93,8 +93,28 @@ func (db *Local) getUserByEmailOrNickname(email, nickname string) (*User, error)
 func (db *Local) GetUserByEmail(email string) (*User, error) {
 	db.Lock()
 	defer db.Unlock()
+	return db.getUserByEmail(email)
+}
+
+func (db *Local) getUserByEmail(email string) (*User, error) {
 	for i := range db.users {
 		if db.users[i].Email == email {
+			return db.users[i], nil
+		}
+	}
+	return nil, ErrNotFound
+}
+
+// GetUserByNickname returns user by nickname
+func (db *Local) GetUserByNickname(nickname string) (*User, error) {
+	db.Lock()
+	defer db.Unlock()
+	return db.getUserByNickname(nickname)
+}
+
+func (db *Local) getUserByNickname(nickname string) (*User, error) {
+	for i := range db.users {
+		if db.users[i].Nickname == nickname {
 			return db.users[i], nil
 		}
 	}
@@ -144,11 +164,22 @@ func (db *Local) InsertUser(email, nickname, password string) (*User, error) {
 func (db *Local) UpdateUserNickname(id int, nickname string) error {
 	db.Lock()
 	defer db.Unlock()
-	u, ok := db.users[id]
-	if !ok {
-		return ErrNotFound
+	exU, err := db.getUserByNickname(nickname)
+	if err != nil {
+		if err == ErrNotFound {
+			u, ok := db.users[id]
+			if !ok {
+				return ErrNotFound
+			}
+			u.Nickname = nickname
+			return nil
+		}
+		return err
 	}
-	u.Nickname = nickname
+
+	if exU.ID != int64(id) {
+		return ErrDuplicateKey
+	}
 	return nil
 }
 

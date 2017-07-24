@@ -1,4 +1,4 @@
-package store
+package appmodel
 
 import (
 	"github.com/pkg/errors"
@@ -44,6 +44,7 @@ type Modeler interface {
 	GetUserList() ([]User, error)
 	GetUserByID(id int) (*User, error)
 	GetUserByEmail(email string) (*User, error)
+	GetUserByNickname(nickname string) (*User, error)
 	GetUserByEmailOrNickname(email, nickname string) (*User, error)
 	GetAuthenticatedUser(login, password string) (*User, error)
 	InsertUser(email, nickname, password string) (*User, error)

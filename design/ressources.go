@@ -23,7 +23,7 @@ var _ = Resource("authenticate", func() {
 		Routing(POST(""))
 		Payload(AuthenticatePayload)
 		// OK
-		Response(OK, TokenMedia)
+		Response(OK, AuthTokenMedia)
 		// wrong credentials
 		Response(UnprocessableEntity)
 		// Errors
@@ -121,9 +121,16 @@ var _ = Resource("users", func() {
 	DefaultMedia(UserMedia)
 
 	Action("list", func() {
-		Description("Get users")
+		Description("Get users, optionnaly filtering by nickname or email ")
 		Routing(GET(""))
-		Response(OK, CollectionOf(UserMedia))
+		Params(func() {
+			Param("nickname")
+			Param("email")
+		})
+		Response(OK, CollectionOf(UserMedia, func() {
+			View("default")
+			View("tiny")
+		}))
 		// Errors
 		Response(InternalServerError)
 		Response(ServiceUnavailable)
@@ -173,10 +180,15 @@ var _ = Resource("users", func() {
 			Member("nickname")
 			Required("nickname")
 		})
+		Security(JWTAuth)
+		// unauthorized
+		Response(Unauthorized)
 		// OK
 		Response(NoContent)
 		// user not found
 		Response(NotFound)
+		// App error
+		Response(UnprocessableEntity)
 		// Errors
 		Response(InternalServerError)
 		Response(ServiceUnavailable)

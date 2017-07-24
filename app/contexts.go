@@ -39,8 +39,8 @@ func NewAuthAuthenticateContext(ctx context.Context, r *http.Request, service *g
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *AuthAuthenticateContext) OK(r *Token) error {
-	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.token+json")
+func (ctx *AuthAuthenticateContext) OK(r *Authtoken) error {
+	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.authtoken+json")
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
 
@@ -1100,6 +1100,8 @@ type ListUsersContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
+	Email    *string
+	Nickname *string
 }
 
 // NewListUsersContext parses the incoming request URL and body, performs validations and creates the
@@ -1111,6 +1113,31 @@ func NewListUsersContext(ctx context.Context, r *http.Request, service *goa.Serv
 	req := goa.ContextRequest(ctx)
 	req.Request = r
 	rctx := ListUsersContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEmail := req.Params["email"]
+	if len(paramEmail) > 0 {
+		rawEmail := paramEmail[0]
+		rctx.Email = &rawEmail
+		if rctx.Email != nil {
+			if err2 := goa.ValidateFormat(goa.FormatEmail, *rctx.Email); err2 != nil {
+				err = goa.MergeErrors(err, goa.InvalidFormatError(`email`, *rctx.Email, goa.FormatEmail, err2))
+			}
+		}
+	}
+	paramNickname := req.Params["nickname"]
+	if len(paramNickname) > 0 {
+		rawNickname := paramNickname[0]
+		rctx.Nickname = &rawNickname
+		if rctx.Nickname != nil {
+			if utf8.RuneCountInString(*rctx.Nickname) < 1 {
+				err = goa.MergeErrors(err, goa.InvalidLengthError(`nickname`, *rctx.Nickname, utf8.RuneCountInString(*rctx.Nickname), 1, true))
+			}
+		}
+		if rctx.Nickname != nil {
+			if utf8.RuneCountInString(*rctx.Nickname) > 32 {
+				err = goa.MergeErrors(err, goa.InvalidLengthError(`nickname`, *rctx.Nickname, utf8.RuneCountInString(*rctx.Nickname), 32, false))
+			}
+		}
+	}
 	return &rctx, err
 }
 
@@ -1119,6 +1146,15 @@ func (ctx *ListUsersContext) OK(r UserCollection) error {
 	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.user+json; type=collection")
 	if r == nil {
 		r = UserCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKTiny sends a HTTP response with status code 200.
+func (ctx *ListUsersContext) OKTiny(r UserTinyCollection) error {
+	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.user+json; type=collection")
+	if r == nil {
+		r = UserTinyCollection{}
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
@@ -1169,6 +1205,12 @@ func NewShowUsersContext(ctx context.Context, r *http.Request, service *goa.Serv
 
 // OK sends a HTTP response with status code 200.
 func (ctx *ShowUsersContext) OK(r *User) error {
+	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.user+json")
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKTiny sends a HTTP response with status code 200.
+func (ctx *ShowUsersContext) OKTiny(r *UserTiny) error {
 	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.user+json")
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
@@ -1295,9 +1337,21 @@ func (ctx *UpdateUsersContext) BadRequest(r error) error {
 	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
 }
 
+// Unauthorized sends a HTTP response with status code 401.
+func (ctx *UpdateUsersContext) Unauthorized() error {
+	ctx.ResponseData.WriteHeader(401)
+	return nil
+}
+
 // NotFound sends a HTTP response with status code 404.
 func (ctx *UpdateUsersContext) NotFound() error {
 	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// UnprocessableEntity sends a HTTP response with status code 422.
+func (ctx *UpdateUsersContext) UnprocessableEntity() error {
+	ctx.ResponseData.WriteHeader(422)
 	return nil
 }
 

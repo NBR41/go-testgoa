@@ -3,15 +3,24 @@ package main
 import (
 	"github.com/NBR41/go-testgoa/app"
 	"github.com/NBR41/go-testgoa/appmail"
+	"github.com/NBR41/go-testgoa/appmodel"
 	"github.com/NBR41/go-testgoa/appsec"
-	"github.com/NBR41/go-testgoa/store"
 	"github.com/goadesign/goa"
 )
 
 // ToUserMedia converts a user model into a user media type
-func ToUserMedia(a *store.User) *app.User {
+func ToUserMedia(a *appmodel.User) *app.User {
 	return &app.User{
 		Email:    a.Email,
+		Href:     app.UsersHref(a.ID),
+		ID:       int(a.ID),
+		Nickname: a.Nickname,
+	}
+}
+
+// ToUserTinyMedia converts a user model into a user media type
+func ToUserTinyMedia(a *appmodel.User) *app.UserTiny {
+	return &app.UserTiny{
 		Href:     app.UsersHref(a.ID),
 		ID:       int(a.ID),
 		Nickname: a.Nickname,
@@ -33,7 +42,7 @@ func (c *UsersController) Create(ctx *app.CreateUsersContext) error {
 	// UsersController_Create: start_implement
 
 	// Put your logic here
-	m, err := store.GetModeler()
+	m, err := appmodel.GetModeler()
 	if err != nil {
 		return ctx.ServiceUnavailable()
 	}
@@ -41,7 +50,7 @@ func (c *UsersController) Create(ctx *app.CreateUsersContext) error {
 
 	u, err := m.InsertUser(ctx.Payload.Email, ctx.Payload.Nickname, ctx.Payload.Password)
 	if err != nil {
-		if err == store.ErrDuplicateKey {
+		if err == appmodel.ErrDuplicateKey {
 			return ctx.UnprocessableEntity()
 		}
 		return ctx.InternalServerError()
@@ -62,7 +71,7 @@ func (c *UsersController) Delete(ctx *app.DeleteUsersContext) error {
 	// UsersController_Delete: start_implement
 
 	// Put your logic here
-	m, err := store.GetModeler()
+	m, err := appmodel.GetModeler()
 	if err != nil {
 		return ctx.ServiceUnavailable()
 	}
@@ -70,7 +79,7 @@ func (c *UsersController) Delete(ctx *app.DeleteUsersContext) error {
 
 	err = m.DeleteUser(ctx.UserID)
 	if err != nil {
-		if err == store.ErrNotFound {
+		if err == appmodel.ErrNotFound {
 			return ctx.NotFound()
 		}
 		return ctx.InternalServerError()
@@ -85,22 +94,48 @@ func (c *UsersController) List(ctx *app.ListUsersContext) error {
 	// UsersController_List: start_implement
 
 	// Put your logic here
-	m, err := store.GetModeler()
+	m, err := appmodel.GetModeler()
 	if err != nil {
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
-	users, err := m.GetUserList()
-	if err != nil {
-		return ctx.InternalServerError()
+	var users []appmodel.User
+	if ctx.Email != nil || ctx.Nickname != nil {
+		var user *appmodel.User
+		switch {
+		case ctx.Email != nil && ctx.Nickname == nil:
+			user, err = m.GetUserByEmail(*ctx.Email)
+			if err != nil && err != appmodel.ErrNotFound {
+				return ctx.InternalServerError()
+			}
+		case ctx.Email == nil && ctx.Nickname != nil:
+			user, err = m.GetUserByNickname(*ctx.Nickname)
+			if err != nil && err != appmodel.ErrNotFound {
+				return ctx.InternalServerError()
+			}
+		default:
+			user, err = m.GetUserByEmailOrNickname(*ctx.Email, *ctx.Nickname)
+			if err != nil && err != appmodel.ErrNotFound {
+				return ctx.InternalServerError()
+			}
+		case ctx.Email != nil && ctx.Nickname != nil:
+		}
+		if err == nil {
+			users = append(users, *user)
+		}
+	} else {
+		users, err = m.GetUserList()
+		if err != nil {
+			return ctx.InternalServerError()
+		}
 	}
 
-	us := make(app.UserCollection, len(users))
+	us := make(app.UserTinyCollection, len(users))
 	for i, u := range users {
-		us[i] = ToUserMedia(&u)
+		us[i] = ToUserTinyMedia(&u)
 	}
-	return ctx.OK(us)
+	return ctx.OKTiny(us)
 	// UsersController_List: end_implement
 }
 
@@ -109,7 +144,7 @@ func (c *UsersController) Show(ctx *app.ShowUsersContext) error {
 	// UsersController_Show: start_implement
 
 	// Put your logic here
-	m, err := store.GetModeler()
+	m, err := appmodel.GetModeler()
 	if err != nil {
 		return ctx.ServiceUnavailable()
 	}
@@ -117,7 +152,7 @@ func (c *UsersController) Show(ctx *app.ShowUsersContext) error {
 
 	u, err := m.GetUserByID(ctx.UserID)
 	if err != nil {
-		if err == store.ErrNotFound {
+		if err == appmodel.ErrNotFound {
 			return ctx.NotFound()
 		}
 		return ctx.InternalServerError()
@@ -132,20 +167,22 @@ func (c *UsersController) Update(ctx *app.UpdateUsersContext) error {
 	// UsersController_Update: start_implement
 
 	// Put your logic here
-	m, err := store.GetModeler()
+	m, err := appmodel.GetModeler()
 	if err != nil {
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
-
-	err = m.UpdateBook(ctx.UserID, ctx.Payload.Nickname)
+	err = m.UpdateUserNickname(ctx.UserID, ctx.Payload.Nickname)
 	if err != nil {
-		if err == store.ErrNotFound {
+		switch {
+		case err == appmodel.ErrDuplicateKey:
+			return ctx.UnprocessableEntity()
+		case err == appmodel.ErrNotFound:
 			return ctx.NotFound()
+		default:
+			return ctx.InternalServerError()
 		}
-		return ctx.InternalServerError()
 	}
-
 	return ctx.NoContent()
 	// UsersController_Update: end_implement
 }

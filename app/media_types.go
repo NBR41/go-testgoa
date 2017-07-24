@@ -15,6 +15,35 @@ import (
 	"unicode/utf8"
 )
 
+// An auth token (default view)
+//
+// Identifier: application/vnd.authtoken+json; view=default
+type Authtoken struct {
+	// Unique user ID
+	Token string `form:"token" json:"token" xml:"token"`
+	// user struct
+	User *User `form:"user" json:"user" xml:"user"`
+}
+
+// Validate validates the Authtoken media type instance.
+func (mt *Authtoken) Validate() (err error) {
+	if mt.User == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "user"))
+	}
+	if mt.Token == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "token"))
+	}
+	if utf8.RuneCountInString(mt.Token) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.token`, mt.Token, utf8.RuneCountInString(mt.Token), 1, true))
+	}
+	if mt.User != nil {
+		if err2 := mt.User.Validate(); err2 != nil {
+			err = goa.MergeErrors(err, err2)
+		}
+	}
+	return
+}
+
 // A Book (default view)
 //
 // Identifier: application/vnd.book+json; view=default
@@ -179,8 +208,8 @@ func (mt *Token) Validate() (err error) {
 	if mt.Token == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "token"))
 	}
-	if err2 := goa.ValidateFormat(goa.FormatRegexp, mt.Token); err2 != nil {
-		err = goa.MergeErrors(err, goa.InvalidFormatError(`response.token`, mt.Token, goa.FormatRegexp, err2))
+	if utf8.RuneCountInString(mt.Token) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.token`, mt.Token, utf8.RuneCountInString(mt.Token), 1, true))
 	}
 	return
 }
@@ -226,6 +255,39 @@ func (mt *User) Validate() (err error) {
 	return
 }
 
+// A User (tiny view)
+//
+// Identifier: application/vnd.user+json; view=tiny
+type UserTiny struct {
+	// API href for making requests on the user
+	Href string `form:"href" json:"href" xml:"href"`
+	// Unique User ID
+	ID int `form:"id" json:"id" xml:"id"`
+	// user nickname
+	Nickname string `form:"nickname" json:"nickname" xml:"nickname"`
+}
+
+// Validate validates the UserTiny media type instance.
+func (mt *UserTiny) Validate() (err error) {
+
+	if mt.Nickname == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "nickname"))
+	}
+	if mt.Href == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "href"))
+	}
+	if mt.ID < 1 {
+		err = goa.MergeErrors(err, goa.InvalidRangeError(`response.id`, mt.ID, 1, true))
+	}
+	if utf8.RuneCountInString(mt.Nickname) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.nickname`, mt.Nickname, utf8.RuneCountInString(mt.Nickname), 1, true))
+	}
+	if utf8.RuneCountInString(mt.Nickname) > 32 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.nickname`, mt.Nickname, utf8.RuneCountInString(mt.Nickname), 32, false))
+	}
+	return
+}
+
 // UserCollection is the media type for an array of User (default view)
 //
 // Identifier: application/vnd.user+json; type=collection; view=default
@@ -233,6 +295,23 @@ type UserCollection []*User
 
 // Validate validates the UserCollection media type instance.
 func (mt UserCollection) Validate() (err error) {
+	for _, e := range mt {
+		if e != nil {
+			if err2 := e.Validate(); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
+// UserCollection is the media type for an array of User (tiny view)
+//
+// Identifier: application/vnd.user+json; type=collection; view=tiny
+type UserTinyCollection []*UserTiny
+
+// Validate validates the UserTinyCollection media type instance.
+func (mt UserTinyCollection) Validate() (err error) {
 	for _, e := range mt {
 		if e != nil {
 			if err2 := e.Validate(); err2 != nil {

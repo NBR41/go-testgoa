@@ -2,12 +2,12 @@ package main
 
 import (
 	"github.com/NBR41/go-testgoa/app"
-	"github.com/NBR41/go-testgoa/store"
+	"github.com/NBR41/go-testgoa/appmodel"
 	"github.com/goadesign/goa"
 )
 
 // ToBookMedia converts a book model into a book media type
-func ToBookMedia(a *store.Book) *app.Book {
+func ToBookMedia(a *appmodel.Book) *app.Book {
 	return &app.Book{
 		Href: app.BooksHref(a.ID),
 		ID:   int(a.ID),
@@ -16,7 +16,7 @@ func ToBookMedia(a *store.Book) *app.Book {
 }
 
 // ToBookLinkMedia converts a book model into a book link media type
-func ToBookLinkMedia(a *store.Book) *app.BookLink {
+func ToBookLinkMedia(a *appmodel.Book) *app.BookLink {
 	return &app.BookLink{
 		Href: app.BooksHref(a.ID),
 		ID:   int(a.ID),
@@ -39,7 +39,7 @@ func (c *BooksController) Create(ctx *app.CreateBooksContext) error {
 	// BooksController_Create: start_implement
 
 	// Put your logic here
-	m, err := store.GetModeler()
+	m, err := appmodel.GetModeler()
 	if err != nil {
 		return ctx.ServiceUnavailable()
 	}
@@ -47,7 +47,7 @@ func (c *BooksController) Create(ctx *app.CreateBooksContext) error {
 
 	b, err := m.InsertBook(ctx.Payload.Name)
 	if err != nil {
-		if err == store.ErrDuplicateKey {
+		if err == appmodel.ErrDuplicateKey {
 			return ctx.UnprocessableEntity()
 		}
 		return ctx.InternalServerError()
@@ -63,7 +63,7 @@ func (c *BooksController) Delete(ctx *app.DeleteBooksContext) error {
 	// BooksController_Delete: start_implement
 
 	// Put your logic here
-	m, err := store.GetModeler()
+	m, err := appmodel.GetModeler()
 	if err != nil {
 		return ctx.ServiceUnavailable()
 	}
@@ -71,7 +71,7 @@ func (c *BooksController) Delete(ctx *app.DeleteBooksContext) error {
 
 	err = m.DeleteBook(ctx.BookID)
 	if err != nil {
-		if err == store.ErrNotFound {
+		if err == appmodel.ErrNotFound {
 			return ctx.NotFound()
 		}
 		return ctx.InternalServerError()
@@ -86,7 +86,7 @@ func (c *BooksController) List(ctx *app.ListBooksContext) error {
 	// BooksController_List: start_implement
 
 	// Put your logic here
-	m, err := store.GetModeler()
+	m, err := appmodel.GetModeler()
 	if err != nil {
 		return ctx.ServiceUnavailable()
 	}
@@ -110,7 +110,7 @@ func (c *BooksController) Show(ctx *app.ShowBooksContext) error {
 	// BooksController_Show: start_implement
 
 	// Put your logic here
-	m, err := store.GetModeler()
+	m, err := appmodel.GetModeler()
 	if err != nil {
 		return ctx.ServiceUnavailable()
 	}
@@ -118,7 +118,7 @@ func (c *BooksController) Show(ctx *app.ShowBooksContext) error {
 
 	b, err := m.GetBookByID(ctx.BookID)
 	if err != nil {
-		if err == store.ErrNotFound {
+		if err == appmodel.ErrNotFound {
 			return ctx.NotFound()
 		}
 		return ctx.InternalServerError()
@@ -133,7 +133,7 @@ func (c *BooksController) Update(ctx *app.UpdateBooksContext) error {
 	// BooksController_Update: start_implement
 
 	// Put your logic here
-	m, err := store.GetModeler()
+	m, err := appmodel.GetModeler()
 	if err != nil {
 		return ctx.ServiceUnavailable()
 	}
@@ -141,7 +141,7 @@ func (c *BooksController) Update(ctx *app.UpdateBooksContext) error {
 
 	err = m.UpdateBook(ctx.BookID, ctx.Payload.Name)
 	if err != nil {
-		if err == store.ErrNotFound {
+		if err == appmodel.ErrNotFound {
 			return ctx.NotFound()
 		}
 		return ctx.InternalServerError()

@@ -1,7 +1,7 @@
 package appmail
 
 import (
-	"github.com/NBR41/go-testgoa/store"
+	"github.com/NBR41/go-testgoa/appmodel"
 )
 
 // SendResetPasswordMail send reset password link mail
@@ -15,12 +15,12 @@ func SendPasswordUpdatedMail(email string) error {
 }
 
 // SendNewUserMail send user creation mail
-func SendNewUserMail(u *store.User, token string) error {
+func SendNewUserMail(u *appmodel.User, token string) error {
 	return nil
 }
 
 // SendActivationMail send user activation mail
-func SendActivationMail(u *store.User, token string) error {
+func SendActivationMail(u *appmodel.User, token string) error {
 	return nil
 }
 

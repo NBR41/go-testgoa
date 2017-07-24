@@ -35,6 +35,12 @@ var UserMedia = MediaType("application/vnd.user+json", func() {
 		Attribute("nickname")
 		Attribute("href") // have a "default" view.
 	})
+
+	View("tiny", func() {
+		Attribute("id")
+		Attribute("nickname")
+		Attribute("href") // have a "default" view.
+	})
 })
 
 // TokenMedia defines the media type used to render users.
@@ -43,13 +49,29 @@ var TokenMedia = MediaType("application/vnd.token+json", func() {
 
 	Attributes(func() {
 		Attribute("token", String, "Unique user ID", func() {
-			Format("regexp")
+			MinLength(1)
 		})
+		Required("token")
 	})
 
-	Required("token")
+	View("default", func() {
+		Attribute("token")
+	})
+})
+
+// AuthTokenMedia defines the media type used to render authenticated users.
+var AuthTokenMedia = MediaType("application/vnd.authtoken+json", func() {
+	Description("An auth token")
+	Attributes(func() {
+		Attribute("user", UserMedia, "user struct")
+		Attribute("token", String, "Unique user ID", func() {
+			MinLength(1)
+		})
+		Required("user", "token")
+	})
 
 	View("default", func() {
+		Attribute("user")
 		Attribute("token")
 	})
 })

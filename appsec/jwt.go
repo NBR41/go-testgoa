@@ -7,15 +7,15 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
-const (
+var (
 	// JWTAuthKey key for auth
-	JWTAuthKey = "AllYourBase"
+	JWTAuthKey = []byte("AllYourBase")
 
 	// jwtPasswordKey key for password
-	jwtPasswordKey = "AllYourBase"
+	jwtPasswordKey = []byte("AllYourBase")
 
 	// jwtValidationKey key for password
-	jwtValidationKey = "AllYourBase"
+	jwtValidationKey = []byte("AllYourBase")
 
 	scopePassword   = "password"
 	scopeValidation = "validation"
@@ -58,9 +58,9 @@ func getUserToken(userID int64, email, scope string, key interface{}) (string, e
 	)
 }
 
-func validateUserToken(rawtoken, scope, key string) (int64, string, error) {
+func validateUserToken(rawtoken, scope string, key []byte) (int64, string, error) {
 	token, err := jwt.ParseWithClaims(rawtoken, &UserClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(key), nil
+		return key, nil
 	})
 	if err != nil {
 		return 0, "", err

@@ -1,4 +1,4 @@
-package store
+package appmodel
 
 import (
 	"database/sql"
@@ -112,6 +112,14 @@ func (m *Model) GetUserByEmail(email string) (*User, error) {
 	return m.getUser(
 		`SELECT user_id, nickname, email, activated, admin FROM users WHERE email = ?`,
 		email,
+	)
+}
+
+// GetUserByNickname returns user by email
+func (m *Model) GetUserByNickname(nickname string) (*User, error) {
+	return m.getUser(
+		`SELECT user_id, nickname, email, activated, admin FROM users WHERE nickname = ?`,
+		nickname,
 	)
 }
 

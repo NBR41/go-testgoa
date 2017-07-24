@@ -2,12 +2,12 @@ package main
 
 import (
 	"github.com/NBR41/go-testgoa/app"
-	"github.com/NBR41/go-testgoa/store"
+	"github.com/NBR41/go-testgoa/appmodel"
 	"github.com/goadesign/goa"
 )
 
 // ToOwnershipMedia converts a book model into a book media type
-func ToOwnershipMedia(a *store.Ownership) *app.Ownership {
+func ToOwnershipMedia(a *appmodel.Ownership) *app.Ownership {
 	return &app.Ownership{
 		Book:   ToBookMedia(a.Book),
 		BookID: int(a.BookID),
@@ -31,7 +31,7 @@ func (c *OwnershipsController) Create(ctx *app.CreateOwnershipsContext) error {
 	// OwnershipsController_Create: start_implement
 
 	// Put your logic here
-	m, err := store.GetModeler()
+	m, err := appmodel.GetModeler()
 	if err != nil {
 		return ctx.ServiceUnavailable()
 	}
@@ -39,10 +39,10 @@ func (c *OwnershipsController) Create(ctx *app.CreateOwnershipsContext) error {
 
 	o, err := m.InsertOwnership(ctx.UserID, ctx.Payload.BookID)
 	if err != nil {
-		if err == store.ErrNotFound {
+		if err == appmodel.ErrNotFound {
 			return ctx.NotFound()
 		}
-		if err == store.ErrDuplicateKey || err == store.ErrInvalidID {
+		if err == appmodel.ErrDuplicateKey || err == appmodel.ErrInvalidID {
 			return ctx.UnprocessableEntity()
 		}
 		return ctx.InternalServerError()
@@ -58,7 +58,7 @@ func (c *OwnershipsController) Delete(ctx *app.DeleteOwnershipsContext) error {
 	// OwnershipsController_Delete: start_implement
 
 	// Put your logic here
-	m, err := store.GetModeler()
+	m, err := appmodel.GetModeler()
 	if err != nil {
 		return ctx.ServiceUnavailable()
 	}
@@ -66,7 +66,7 @@ func (c *OwnershipsController) Delete(ctx *app.DeleteOwnershipsContext) error {
 
 	err = m.DeleteOwnership(ctx.UserID, ctx.BookID)
 	if err != nil {
-		if err == store.ErrNotFound {
+		if err == appmodel.ErrNotFound {
 			return ctx.NotFound()
 		}
 		return ctx.InternalServerError()
@@ -81,7 +81,7 @@ func (c *OwnershipsController) List(ctx *app.ListOwnershipsContext) error {
 	// OwnershipsController_List: start_implement
 
 	// Put your logic here
-	m, err := store.GetModeler()
+	m, err := appmodel.GetModeler()
 	if err != nil {
 		return ctx.ServiceUnavailable()
 	}
@@ -105,7 +105,7 @@ func (c *OwnershipsController) Show(ctx *app.ShowOwnershipsContext) error {
 	// OwnershipsController_Show: start_implement
 
 	// Put your logic here
-	m, err := store.GetModeler()
+	m, err := appmodel.GetModeler()
 	if err != nil {
 		return ctx.ServiceUnavailable()
 	}
@@ -113,7 +113,7 @@ func (c *OwnershipsController) Show(ctx *app.ShowOwnershipsContext) error {
 
 	o, err := m.GetOwnership(ctx.UserID, ctx.BookID)
 	if err != nil {
-		if err == store.ErrNotFound {
+		if err == appmodel.ErrNotFound {
 			return ctx.NotFound()
 		}
 		return ctx.InternalServerError()

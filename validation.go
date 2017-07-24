@@ -3,8 +3,8 @@ package main
 import (
 	"github.com/NBR41/go-testgoa/app"
 	"github.com/NBR41/go-testgoa/appmail"
+	"github.com/NBR41/go-testgoa/appmodel"
 	"github.com/NBR41/go-testgoa/appsec"
-	"github.com/NBR41/go-testgoa/store"
 	"github.com/goadesign/goa"
 )
 
@@ -23,7 +23,7 @@ func (c *ValidationController) Get(ctx *app.GetValidationContext) error {
 	// ValidationController_Get: start_implement
 
 	// Put your logic here
-	m, err := store.GetModeler()
+	m, err := appmodel.GetModeler()
 	if err != nil {
 		return ctx.ServiceUnavailable()
 	}
@@ -31,7 +31,7 @@ func (c *ValidationController) Get(ctx *app.GetValidationContext) error {
 
 	u, err := m.GetUserByID(int(ctx.UserID))
 	if err != nil {
-		if err == store.ErrNotFound {
+		if err == appmodel.ErrNotFound {
 			return ctx.NotFound()
 		}
 		return ctx.InternalServerError()
@@ -59,7 +59,7 @@ func (c *ValidationController) Validate(ctx *app.ValidateValidationContext) erro
 		return ctx.UnprocessableEntity()
 	}
 
-	m, err := store.GetModeler()
+	m, err := appmodel.GetModeler()
 	if err != nil {
 		return ctx.ServiceUnavailable()
 	}
@@ -67,7 +67,7 @@ func (c *ValidationController) Validate(ctx *app.ValidateValidationContext) erro
 
 	err = m.UpdateUserActivation(int(uID), true)
 	if err != nil {
-		if err == store.ErrNotFound {
+		if err == appmodel.ErrNotFound {
 			return ctx.NotFound()
 		}
 		return ctx.InternalServerError()

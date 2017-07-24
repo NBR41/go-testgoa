@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/NBR41/go-testgoa/app"
-	"github.com/NBR41/go-testgoa/store"
+	"github.com/NBR41/go-testgoa/appmodel"
 	"github.com/goadesign/goa"
 )
 
@@ -23,7 +23,7 @@ func (c *HealthController) Health(ctx *app.HealthHealthContext) error {
 	// HealthController_Health: start_implement
 
 	// Put your logic here
-	m, err := store.GetModeler()
+	m, err := appmodel.GetModeler()
 	if err != nil {
 		return fmt.Errorf("failed to connect to DB")
 	}

@@ -77,6 +77,10 @@ func (db *Local) GetUserByID(id int) (*User, error) {
 func (db *Local) GetUserByEmailOrNickname(email, nickname string) (*User, error) {
 	db.Lock()
 	defer db.Unlock()
+	return db.getUserByEmailOrNickname(email, nickname)
+}
+
+func (db *Local) getUserByEmailOrNickname(email, nickname string) (*User, error) {
 	for i := range db.users {
 		if db.users[i].Nickname == nickname || db.users[i].Email == email {
 			return db.users[i], nil
@@ -99,7 +103,7 @@ func (db *Local) GetUserByEmail(email string) (*User, error) {
 
 // GetAuthenticatedUser returns user if password matches email or nickname
 func (db *Local) GetAuthenticatedUser(login, password string) (*User, error) {
-	u, err := db.GetUserByEmailOrNickname(login, login)
+	u, err := db.getUserByEmailOrNickname(login, login)
 	if err != nil {
 		return nil, err
 	}
@@ -123,7 +127,7 @@ func (db *Local) InsertUser(email, nickname, password string) (*User, error) {
 
 	db.Lock()
 	defer db.Unlock()
-	_, err = db.GetUserByEmailOrNickname(email, nickname)
+	_, err = db.getUserByEmailOrNickname(email, nickname)
 	switch {
 	case err != nil && err != ErrNotFound:
 		return nil, err
@@ -194,7 +198,7 @@ func (db *Local) DeleteUser(id int) error {
 func (db *Local) InsertBook(name string) (*Book, error) {
 	db.Lock()
 	defer db.Unlock()
-	_, err := db.GetBookByName(name)
+	_, err := db.getBookByName(name)
 	switch {
 	case err != nil && err != ErrNotFound:
 		return nil, err
@@ -221,6 +225,10 @@ func (db *Local) GetBookByID(id int) (*Book, error) {
 func (db *Local) GetBookByName(name string) (*Book, error) {
 	db.Lock()
 	defer db.Unlock()
+	return db.getBookByName(name)
+}
+
+func (db *Local) getBookByName(name string) (*Book, error) {
 	for i := range db.books {
 		if db.books[i].Name == name {
 			return db.books[i], nil

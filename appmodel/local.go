@@ -154,7 +154,7 @@ func (db *Local) InsertUser(email, nickname, password string) (*User, error) {
 	case err == nil:
 		return nil, ErrDuplicateKey
 	}
-	idx := len(db.users)
+	idx := len(db.users) + 1
 	u := &User{ID: int64(idx), Email: email, Nickname: nickname, salt: salt, password: hash}
 	db.users[idx] = u
 	return u, nil
@@ -236,7 +236,7 @@ func (db *Local) InsertBook(name string) (*Book, error) {
 	case err == nil:
 		return nil, ErrDuplicateKey
 	}
-	idx := len(db.books)
+	idx := len(db.books) + 1
 	b := &Book{ID: int64(idx), Name: name}
 	db.books[idx] = b
 	return b, nil
@@ -290,11 +290,22 @@ func (db *Local) GetBookList() ([]Book, error) {
 func (db *Local) UpdateBook(id int, name string) error {
 	db.Lock()
 	defer db.Unlock()
-	b, ok := db.books[id]
-	if !ok {
-		return ErrNotFound
+	exB, err := db.getBookByName(name)
+	if err != nil {
+		if err == ErrNotFound {
+			b, ok := db.books[id]
+			if !ok {
+				return ErrNotFound
+			}
+			b.Name = name
+			return nil
+		}
+		return err
 	}
-	b.Name = name
+
+	if exB.ID != int64(id) {
+		return ErrDuplicateKey
+	}
 	return nil
 }
 

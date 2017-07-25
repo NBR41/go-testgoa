@@ -1,7 +1,14 @@
 package main
 
 /*
-TODO reduce visibility link of users list
+TODO error type for model
+TODO error type for Unprocessable Entity
+TODO testing store
+TODO testing controller user
+TODO testing controller book
+TODO testing controller ownership
+TODO testing controller auth
+TODO testing controller validate
 TODO set consumes in designs
 
 

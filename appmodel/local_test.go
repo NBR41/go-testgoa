@@ -5,6 +5,16 @@ import (
 	"testing"
 )
 
+func expectingError(t *testing.T, err, exp error) {
+	if err == nil {
+		t.Fatal("expecting error got nil")
+	} else {
+		if err != exp {
+			t.Fatal("unexpected error", err)
+		}
+	}
+}
+
 func TestGetUserList(t *testing.T) {
 
 }
@@ -22,14 +32,7 @@ func TestGetUserByID(t *testing.T) {
 	}
 
 	u, err = l.GetUserByID(10)
-	if err == nil {
-		t.Fatal("expecting error got nil")
-	} else {
-		if err != ErrNotFound {
-			t.Fatal("unexpected error", err)
-		}
-	}
-
+	expectingError(t, err, ErrNotFound)
 }
 
 func TestGetUserByEmailOrNickname(t *testing.T) {
@@ -53,13 +56,7 @@ func TestGetUserByEmailOrNickname(t *testing.T) {
 	}
 
 	_, err := l.GetUserByEmailOrNickname("foo", "bar")
-	if err == nil {
-		t.Fatal("expecting error got nil")
-	} else {
-		if err != ErrNotFound {
-			t.Fatal("unexpected error", err)
-		}
-	}
+	expectingError(t, err, ErrNotFound)
 }
 
 func TestGetUserByEmail(t *testing.T) {
@@ -76,13 +73,7 @@ func TestGetUserByEmail(t *testing.T) {
 
 	// not found
 	_, err = l.GetUserByEmail("foo")
-	if err == nil {
-		t.Fatal("expecting error got nil")
-	} else {
-		if err != ErrNotFound {
-			t.Fatal("unexpected error", err)
-		}
-	}
+	expectingError(t, err, ErrNotFound)
 }
 
 func TestGetUserByNickname(t *testing.T) {
@@ -99,13 +90,7 @@ func TestGetUserByNickname(t *testing.T) {
 
 	// not found
 	_, err = l.GetUserByNickname("foo")
-	if err == nil {
-		t.Fatal("expecting error got nil")
-	} else {
-		if err != ErrNotFound {
-			t.Fatal("unexpected error", err)
-		}
-	}
+	expectingError(t, err, ErrNotFound)
 }
 
 func TestGetAuthenticatedUser(t *testing.T) {
@@ -132,23 +117,11 @@ func TestInsertUser(t *testing.T) {
 
 	// duplicate email
 	u, err = l.InsertUser("foo", "foobar", "barfoo")
-	if err == nil {
-		t.Fatal("expecting error got nil")
-	} else {
-		if err != ErrDuplicateKey {
-			t.Fatal("unexpected error", err)
-		}
-	}
+	expectingError(t, err, ErrDuplicateKey)
 
 	// duplicate nickname
 	u, err = l.InsertUser("foobar", "bar", "barfoo")
-	if err == nil {
-		t.Fatal("expecting error got nil")
-	} else {
-		if err != ErrDuplicateKey {
-			t.Fatal("unexpected error", err)
-		}
-	}
+	expectingError(t, err, ErrDuplicateKey)
 }
 
 func TestUpdateUserNickname(t *testing.T) {
@@ -156,23 +129,10 @@ func TestUpdateUserNickname(t *testing.T) {
 
 	// nickname exist
 	err := l.UpdateUserNickname(2, "admin")
-	if err == nil {
-		t.Fatal("expecting error got nil")
-	} else {
-		if err != ErrDuplicateKey {
-			t.Fatal("unexpected error", err)
-		}
-	}
-
+	expectingError(t, err, ErrDuplicateKey)
 	// user doesn't exist
 	err = l.UpdateUserNickname(10, "admin2")
-	if err == nil {
-		t.Fatal("expecting error got nil")
-	} else {
-		if err != ErrNotFound {
-			t.Fatal("unexpected error", err)
-		}
-	}
+	expectingError(t, err, ErrNotFound)
 
 	// update with existing nickname but same user
 	err = l.UpdateUserNickname(1, "admin")
@@ -202,13 +162,7 @@ func TestUpdateUserActivation(t *testing.T) {
 
 	// user doesn't exists
 	err := l.UpdateUserActivation(10, true)
-	if err == nil {
-		t.Fatal("expecting error got nil")
-	} else {
-		if err != ErrNotFound {
-			t.Fatal("unexpected error", err)
-		}
-	}
+	expectingError(t, err, ErrNotFound)
 
 	// user activation
 	err = l.UpdateUserActivation(1, false)
@@ -241,13 +195,7 @@ func TestDeleteUser(t *testing.T) {
 
 	// user doesn't exists
 	err := l.DeleteUser(10)
-	if err == nil {
-		t.Fatal("expecting error got nil")
-	} else {
-		if err != ErrNotFound {
-			t.Fatal("unexpected error", err)
-		}
-	}
+	expectingError(t, err, ErrNotFound)
 
 	// user delete
 	err = l.DeleteUser(1)
@@ -255,18 +203,61 @@ func TestDeleteUser(t *testing.T) {
 		t.Fatal("unexpected error", err)
 	}
 	_, err = l.GetUserByID(1)
-	if err != ErrNotFound {
-		t.Fatal("expecting ErrNotFound, got %s", err)
-	}
+	expectingError(t, err, ErrNotFound)
 }
 
 func TestInsertBook(t *testing.T) {
+	l := NewLocal()
+
+	// insert
+	b, err := l.InsertBook("foo")
+	if err != nil {
+		t.Fatal("unexpected error", err)
+	}
+	if b.ID != 5 {
+		t.Fatalf("expecting ID 5, got %v", b.ID)
+	}
+	b2, err := l.GetBookByID(5)
+	if err != nil {
+		t.Fatal("unexpected error", err)
+	}
+	if !reflect.DeepEqual(b, b2) {
+		t.Fatal("unexpected user value")
+	}
+
+	// duplicate book name
+	b, err = l.InsertBook("foo")
+	expectingError(t, err, ErrDuplicateKey)
 }
 
 func TestGetBookByID(t *testing.T) {
+	l := NewLocal()
+
+	b, err := l.GetBookByID(5)
+	expectingError(t, err, ErrNotFound)
+
+	b, err = l.GetBookByID(1)
+	if err != nil {
+		t.Fatal("unexpected error", err)
+	}
+	if b.ID != 1 {
+		t.Fatalf("expecting ID 1, got %v", b.ID)
+	}
 }
 
 func TestGetBookByName(t *testing.T) {
+	l := NewLocal()
+
+	b, err := l.GetBookByName("test5")
+	expectingError(t, err, ErrNotFound)
+
+	b, err = l.GetBookByName("test1")
+	if err != nil {
+		t.Fatal("unexpected error", err)
+	}
+	if b.ID != 1 {
+		t.Fatalf("expecting ID 1, got %v", b.ID)
+	}
 }
 
 func TestGetBookList(t *testing.T) {
@@ -277,23 +268,10 @@ func TestUpdateBook(t *testing.T) {
 
 	// bookname exist
 	err := l.UpdateBook(2, "test1")
-	if err == nil {
-		t.Fatal("expecting error got nil")
-	} else {
-		if err != ErrDuplicateKey {
-			t.Fatal("unexpected error", err)
-		}
-	}
-
+	expectingError(t, err, ErrDuplicateKey)
 	// user doesn't exist
 	err = l.UpdateBook(10, "test10")
-	if err == nil {
-		t.Fatal("expecting error got nil")
-	} else {
-		if err != ErrNotFound {
-			t.Fatal("unexpected error", err)
-		}
-	}
+	expectingError(t, err, ErrNotFound)
 
 	// update with existing nickname but same user
 	err = l.UpdateBook(1, "test1")
@@ -321,13 +299,7 @@ func TestDeleteBook(t *testing.T) {
 
 	// book doesn't exists
 	err := l.DeleteBook(10)
-	if err == nil {
-		t.Fatal("expecting error got nil")
-	} else {
-		if err != ErrNotFound {
-			t.Fatal("unexpected error", err)
-		}
-	}
+	expectingError(t, err, ErrNotFound)
 
 	// book delete
 	err = l.DeleteBook(1)
@@ -335,22 +307,90 @@ func TestDeleteBook(t *testing.T) {
 		t.Fatal("unexpected error", err)
 	}
 	_, err = l.GetBookByID(1)
-	if err != ErrNotFound {
-		t.Fatal("expecting ErrNotFound, got %s", err)
-	}
+	expectingError(t, err, ErrNotFound)
 }
 
 func TestGetOwnershipList(t *testing.T) {
+	l := NewLocal()
+
+	_, err := l.GetOwnershipList(5)
+	expectingError(t, err, ErrNotFound)
 }
 
 func TestGetOwnership(t *testing.T) {
+	l := NewLocal()
+
+	// not found
+	o, err := l.GetOwnership(5, 5)
+	expectingError(t, err, ErrNotFound)
+	// user not found
+	o, err = l.GetOwnership(5, 1)
+	expectingError(t, err, ErrNotFound)
+	// book not found
+	o, err = l.GetOwnership(1, 5)
+	expectingError(t, err, ErrNotFound)
+
+	//  found
+	o, err = l.GetOwnership(1, 1)
+	if err != nil {
+		t.Fatal("unexpected error", err)
+	}
+
+	if o.UserID != 1 || o.BookID != 1 || o.Book.ID != 1 {
+		t.Fatal("unexpected value", o)
+	}
 }
 
 func TestInsertOwnership(t *testing.T) {
+	l := NewLocal()
+
+	// not found
+	o, err := l.InsertOwnership(5, 5)
+	expectingError(t, err, ErrNotFound)
+	// user not found
+	o, err = l.InsertOwnership(5, 1)
+	expectingError(t, err, ErrNotFound)
+	// book not found
+	o, err = l.InsertOwnership(1, 5)
+	expectingError(t, err, ErrNotFound)
+	//  duplicate key
+	o, err = l.InsertOwnership(1, 1)
+	expectingError(t, err, ErrDuplicateKey)
+
+	//  found
+	o, err = l.InsertOwnership(1, 2)
+	if err != nil {
+		t.Fatal("unexpected error", err)
+	}
+
+	if o.UserID != 1 || o.BookID != 2 || o.Book.ID != 2 {
+		t.Fatal("unexpected value", o)
+	}
 }
 
 func TestUpdateOwnership(t *testing.T) {
 
 }
+
 func TestDeleteOwnership(t *testing.T) {
+	l := NewLocal()
+
+	// not found
+	err := l.DeleteOwnership(5, 5)
+	expectingError(t, err, ErrNotFound)
+	// user not found
+	err = l.DeleteOwnership(5, 1)
+	expectingError(t, err, ErrNotFound)
+	// book not found
+	err = l.DeleteOwnership(1, 5)
+	expectingError(t, err, ErrNotFound)
+
+	//  found
+	err = l.DeleteOwnership(1, 1)
+	if err != nil {
+		t.Fatal("unexpected error", err)
+	}
+
+	_, err = l.GetOwnership(1, 1)
+	expectingError(t, err, ErrNotFound)
 }

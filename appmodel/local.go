@@ -17,9 +17,9 @@ type Local struct {
 
 func NewLocal() *Local {
 	book := &Book{ID: 1, Name: "test1"}
-	book2 := &Book{ID: 1, Name: "test2"}
-	book3 := &Book{ID: 1, Name: "test3"}
-	book4 := &Book{ID: 1, Name: "test4"}
+	book2 := &Book{ID: 2, Name: "test2"}
+	book3 := &Book{ID: 3, Name: "test3"}
+	book4 := &Book{ID: 4, Name: "test4"}
 	return &Local{
 		users: map[int]*User{
 			1: &User{ID: 1, Email: `admin@myinventory.com`, Nickname: `admin`, IsVerified: true, IsAdmin: true},
@@ -401,7 +401,7 @@ func (db *Local) DeleteOwnership(userID, bookID int) error {
 	for i := range l {
 		if l[i].ID == int64(bookID) {
 			db.ownerships[userID] = append(l[:i], l[i+1:]...)
-			break
+			return nil
 		}
 	}
 	return ErrNotFound

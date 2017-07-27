@@ -16,7 +16,17 @@ func expectingError(t *testing.T, err, exp error) {
 }
 
 func TestGetUserList(t *testing.T) {
+	l := NewLocal()
+	us, err := l.GetUserList()
+	if err != nil {
+		t.Fatal("unexpected error", err)
+	}
 
+	for i := range us {
+		if int64(i)+1 != us[i].ID {
+			t.Fatal("unexpected ID , list must be sorted")
+		}
+	}
 }
 
 func TestGetUserByID(t *testing.T) {
@@ -94,6 +104,32 @@ func TestGetUserByNickname(t *testing.T) {
 }
 
 func TestGetAuthenticatedUser(t *testing.T) {
+	l := NewLocal()
+
+	u, err := l.GetAuthenticatedUser("foo", "bar")
+	expectingError(t, err, ErrNotFound)
+
+	u, err = l.GetAuthenticatedUser("admin", "bar")
+	expectingError(t, err, ErrInvalidCredentials)
+
+	u, err = l.GetAuthenticatedUser(`admin@myinventory.com`, "bar")
+	expectingError(t, err, ErrInvalidCredentials)
+
+	u, err = l.GetAuthenticatedUser("admin", "passwordadmin")
+	if err != nil {
+		t.Fatal("unexpected error", err)
+	}
+	if u.ID != 1 {
+		t.Fatalf("expecting ID 1, got %v", u.ID)
+	}
+
+	u, err = l.GetAuthenticatedUser(`admin@myinventory.com`, "passwordadmin")
+	if err != nil {
+		t.Fatal("unexpected error", err)
+	}
+	if u.ID != 1 {
+		t.Fatalf("expecting ID 1, got %v", u.ID)
+	}
 }
 
 func TestInsertUser(t *testing.T) {
@@ -155,6 +191,20 @@ func TestUpdateUserNickname(t *testing.T) {
 }
 
 func TestUpdateUserPassword(t *testing.T) {
+	l := NewLocal()
+
+	err := l.UpdateUserPassword(5, "foo")
+	expectingError(t, err, ErrNotFound)
+
+	err = l.UpdateUserPassword(1, "")
+	if err != nil {
+		t.Fatal("unexpected error", err)
+	}
+
+	_, err = l.GetAuthenticatedUser("admin", "")
+	if err != nil {
+		t.Fatal("unexpected error", err)
+	}
 }
 
 func TestUpdateUserActivation(t *testing.T) {
@@ -261,6 +311,17 @@ func TestGetBookByName(t *testing.T) {
 }
 
 func TestGetBookList(t *testing.T) {
+	l := NewLocal()
+	bs, err := l.GetBookList()
+	if err != nil {
+		t.Fatal("unexpected error", err)
+	}
+
+	for i := range bs {
+		if int64(i)+1 != bs[i].ID {
+			t.Fatal("unexpected ID , list must be sorted")
+		}
+	}
 }
 
 func TestUpdateBook(t *testing.T) {
@@ -315,6 +376,20 @@ func TestGetOwnershipList(t *testing.T) {
 
 	_, err := l.GetOwnershipList(5)
 	expectingError(t, err, ErrNotFound)
+
+	ows, err := l.GetOwnershipList(1)
+	if err != nil {
+		t.Fatal("unexpected error", err)
+	}
+	for i := range ows {
+		if ows[i].UserID != 1 {
+			t.Fatalf("unexpected user ID, expecting 1, got %d", ows[i].UserID)
+		}
+
+		if ows[i].BookID != l.ownerships[1][i].ID {
+			t.Fatalf("unexpected user ID, expecting %d, got %d", l.ownerships[1][i].ID, ows[i].BookID)
+		}
+	}
 }
 
 func TestGetOwnership(t *testing.T) {

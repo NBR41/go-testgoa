@@ -222,6 +222,11 @@ func (m *Model) GetBookByID(id int) (*Book, error) {
 	return m.getBook(`SELECT book_id, name from books where id = ?`, id)
 }
 
+// GetBookByID returns book by ID
+func (m *Model) GetBookByISBN(isbn string) (*Book, error) {
+	return m.getBook(`SELECT book_id, name from books where id = ?`, isbn)
+}
+
 // GetBookByName returns book by name
 func (m *Model) GetBookByName(name string) (*Book, error) {
 	return m.getBook(`SELECT book_id, name from books where name = ?`, name)

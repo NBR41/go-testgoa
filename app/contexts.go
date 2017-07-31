@@ -582,7 +582,7 @@ func NewAddOwnershipsContext(ctx context.Context, r *http.Request, service *goa.
 // addOwnershipsPayload is the ownerships add action payload.
 type addOwnershipsPayload struct {
 	// Unique ISBN ID
-	Isbn *int `form:"isbn,omitempty" json:"isbn,omitempty" xml:"isbn,omitempty"`
+	Isbn *string `form:"isbn,omitempty" json:"isbn,omitempty" xml:"isbn,omitempty"`
 }
 
 // Validate runs the validation rules defined in the design.
@@ -591,8 +591,13 @@ func (payload *addOwnershipsPayload) Validate() (err error) {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "isbn"))
 	}
 	if payload.Isbn != nil {
-		if *payload.Isbn < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`raw.isbn`, *payload.Isbn, 1, true))
+		if utf8.RuneCountInString(*payload.Isbn) < 1 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.isbn`, *payload.Isbn, utf8.RuneCountInString(*payload.Isbn), 1, true))
+		}
+	}
+	if payload.Isbn != nil {
+		if utf8.RuneCountInString(*payload.Isbn) > 128 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.isbn`, *payload.Isbn, utf8.RuneCountInString(*payload.Isbn), 128, false))
 		}
 	}
 	return
@@ -610,13 +615,19 @@ func (payload *addOwnershipsPayload) Publicize() *AddOwnershipsPayload {
 // AddOwnershipsPayload is the ownerships add action payload.
 type AddOwnershipsPayload struct {
 	// Unique ISBN ID
-	Isbn int `form:"isbn" json:"isbn" xml:"isbn"`
+	Isbn string `form:"isbn" json:"isbn" xml:"isbn"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *AddOwnershipsPayload) Validate() (err error) {
-	if payload.Isbn < 1 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError(`raw.isbn`, payload.Isbn, 1, true))
+	if payload.Isbn == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "isbn"))
+	}
+	if utf8.RuneCountInString(payload.Isbn) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.isbn`, payload.Isbn, utf8.RuneCountInString(payload.Isbn), 1, true))
+	}
+	if utf8.RuneCountInString(payload.Isbn) > 128 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.isbn`, payload.Isbn, utf8.RuneCountInString(payload.Isbn), 128, false))
 	}
 	return
 }

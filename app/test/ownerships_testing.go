@@ -92,7 +92,7 @@ func AddOwnershipsBadRequest(t goatest.TInterface, ctx context.Context, service 
 		var _ok bool
 		mt, _ok = resp.(error)
 		if !_ok {
-			t.Fatalf("invalid response media: got %+v, expected instance of error", resp)
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of error", resp, resp)
 		}
 	}
 
@@ -582,7 +582,7 @@ func CreateOwnershipsBadRequest(t goatest.TInterface, ctx context.Context, servi
 		var _ok bool
 		mt, _ok = resp.(error)
 		if !_ok {
-			t.Fatalf("invalid response media: got %+v, expected instance of error", resp)
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of error", resp, resp)
 		}
 	}
 
@@ -1062,7 +1062,7 @@ func DeleteOwnershipsBadRequest(t goatest.TInterface, ctx context.Context, servi
 		var ok bool
 		mt, ok = resp.(error)
 		if !ok {
-			t.Fatalf("invalid response media: got %+v, expected instance of error", resp)
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of error", resp, resp)
 		}
 	}
 
@@ -1417,7 +1417,7 @@ func ListOwnershipsBadRequest(t goatest.TInterface, ctx context.Context, service
 		var ok bool
 		mt, ok = resp.(error)
 		if !ok {
-			t.Fatalf("invalid response media: got %+v, expected instance of error", resp)
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of error", resp, resp)
 		}
 	}
 
@@ -1596,7 +1596,7 @@ func ListOwnershipsOK(t goatest.TInterface, ctx context.Context, service *goa.Se
 		var ok bool
 		mt, ok = resp.(app.OwnershipCollection)
 		if !ok {
-			t.Fatalf("invalid response media: got %+v, expected instance of app.OwnershipCollection", resp)
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.OwnershipCollection", resp, resp)
 		}
 		_err = mt.Validate()
 		if _err != nil {
@@ -1780,7 +1780,7 @@ func ShowOwnershipsBadRequest(t goatest.TInterface, ctx context.Context, service
 		var ok bool
 		mt, ok = resp.(error)
 		if !ok {
-			t.Fatalf("invalid response media: got %+v, expected instance of error", resp)
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of error", resp, resp)
 		}
 	}
 
@@ -1962,7 +1962,7 @@ func ShowOwnershipsOK(t goatest.TInterface, ctx context.Context, service *goa.Se
 		var ok bool
 		mt, ok = resp.(*app.Ownership)
 		if !ok {
-			t.Fatalf("invalid response media: got %+v, expected instance of app.Ownership", resp)
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.Ownership", resp, resp)
 		}
 		_err = mt.Validate()
 		if _err != nil {

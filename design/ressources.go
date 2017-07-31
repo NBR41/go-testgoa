@@ -368,8 +368,9 @@ var _ = Resource("ownerships", func() {
 		Description("Create new book and ownership by isbn")
 		Routing(POST(""))
 		Payload(func() {
-			Member("isbn", Integer, "Unique ISBN ID", func() {
-				Minimum(1)
+			Member("isbn", String, "Unique ISBN ID", func() {
+				MinLength(1)
+				MaxLength(128)
 			})
 			Required("isbn")
 		})

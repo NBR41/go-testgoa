@@ -55,6 +55,7 @@ type Modeler interface {
 	DeleteUser(id int) error
 	InsertBook(isbn, name string) (*Book, error)
 	GetBookByID(id int) (*Book, error)
+	GetBookByISBN(isbn string) (*Book, error)
 	GetBookByName(name string) (*Book, error)
 	GetBookList() ([]Book, error)
 	UpdateBook(id int, name string) error

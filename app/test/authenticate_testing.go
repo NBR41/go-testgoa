@@ -91,7 +91,7 @@ func AuthAuthenticateBadRequest(t goatest.TInterface, ctx context.Context, servi
 		var _ok bool
 		mt, _ok = resp.(error)
 		if !_ok {
-			t.Fatalf("invalid response media: got %+v, expected instance of error", resp)
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of error", resp, resp)
 		}
 	}
 
@@ -235,7 +235,7 @@ func AuthAuthenticateOK(t goatest.TInterface, ctx context.Context, service *goa.
 		var _ok bool
 		mt, _ok = resp.(*app.Authtoken)
 		if !_ok {
-			t.Fatalf("invalid response media: got %+v, expected instance of app.Authtoken", resp)
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.Authtoken", resp, resp)
 		}
 		__err = mt.Validate()
 		if __err != nil {

@@ -17,10 +17,10 @@ type Local struct {
 
 // NewLocal returns new instance of Local storage
 func NewLocal() *Local {
-	book := &Book{ID: 1, Name: "test1"}
-	book2 := &Book{ID: 2, Name: "test2"}
-	book3 := &Book{ID: 3, Name: "test3"}
-	book4 := &Book{ID: 4, Name: "test4"}
+	book := &Book{ID: 1, ISBN: "isbn-123", Name: "test1"}
+	book2 := &Book{ID: 2, ISBN: "isbn-456", Name: "test2"}
+	book3 := &Book{ID: 3, ISBN: "isbn-789", Name: "test3"}
+	book4 := &Book{ID: 4, ISBN: "isbn-135", Name: "test4"}
 	return &Local{
 		users: map[int]*User{
 			3: &User{ID: 3, Email: `user@myinventory.com`, Nickname: `user`, IsVerified: true, IsAdmin: false},
@@ -236,10 +236,10 @@ func (db *Local) DeleteUser(id int) error {
 }
 
 // InsertBook inserts book
-func (db *Local) InsertBook(name string) (*Book, error) {
+func (db *Local) InsertBook(isbn, name string) (*Book, error) {
 	db.Lock()
 	defer db.Unlock()
-	_, err := db.getBookByName(name)
+	_, err := db.getBookByISBN(isbn)
 	switch {
 	case err != nil && err != ErrNotFound:
 		return nil, err
@@ -247,7 +247,7 @@ func (db *Local) InsertBook(name string) (*Book, error) {
 		return nil, ErrDuplicateKey
 	}
 	idx := len(db.books) + 1
-	b := &Book{ID: int64(idx), Name: name}
+	b := &Book{ID: int64(idx), ISBN: isbn, Name: name}
 	db.books[idx] = b
 	return b, nil
 }
@@ -256,6 +256,10 @@ func (db *Local) InsertBook(name string) (*Book, error) {
 func (db *Local) GetBookByID(id int) (*Book, error) {
 	db.Lock()
 	defer db.Unlock()
+	return db.getBookByID(id)
+}
+
+func (db *Local) getBookByID(id int) (*Book, error) {
 	if p, ok := db.books[id]; ok {
 		return p, nil
 	}
@@ -266,12 +270,24 @@ func (db *Local) GetBookByID(id int) (*Book, error) {
 func (db *Local) GetBookByName(name string) (*Book, error) {
 	db.Lock()
 	defer db.Unlock()
-	return db.getBookByName(name)
-}
-
-func (db *Local) getBookByName(name string) (*Book, error) {
 	for i := range db.books {
 		if db.books[i].Name == name {
+			return db.books[i], nil
+		}
+	}
+	return nil, ErrNotFound
+}
+
+// GetBookByISBN returns book by isbn
+func (db *Local) GetBookByISBN(isbn string) (*Book, error) {
+	db.Lock()
+	defer db.Unlock()
+	return db.getBookByISBN(isbn)
+}
+
+func (db *Local) getBookByISBN(isbn string) (*Book, error) {
+	for i := range db.books {
+		if db.books[i].ISBN == isbn {
 			return db.books[i], nil
 		}
 	}
@@ -300,23 +316,13 @@ func (db *Local) GetBookList() ([]Book, error) {
 func (db *Local) UpdateBook(id int, name string) error {
 	db.Lock()
 	defer db.Unlock()
-	exB, err := db.getBookByName(name)
+	b, err := db.getBookByID(id)
 	if err != nil {
-		if err == ErrNotFound {
-			b, ok := db.books[id]
-			if !ok {
-				return ErrNotFound
-			}
-			b.Name = name
-			return nil
-		}
 		return err
 	}
-
-	if exB.ID != int64(id) {
-		return ErrDuplicateKey
-	}
+	b.Name = name
 	return nil
+
 }
 
 // DeleteBook delete book by ID

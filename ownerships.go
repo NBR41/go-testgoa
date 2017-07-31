@@ -53,6 +53,16 @@ func (c *OwnershipsController) Create(ctx *app.CreateOwnershipsContext) error {
 	// OwnershipsController_Create: end_implement
 }
 
+// Create runs the create action.
+func (c *OwnershipsController) Add(ctx *app.AddOwnershipsContext) error {
+	// OwnershipsController_Create: start_implement
+
+	// Put your logic here
+
+	return ctx.Created()
+	// OwnershipsController_Create: end_implement
+}
+
 // Delete runs the delete action.
 func (c *OwnershipsController) Delete(ctx *app.DeleteOwnershipsContext) error {
 	// OwnershipsController_Delete: start_implement

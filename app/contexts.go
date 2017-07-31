@@ -90,14 +90,29 @@ func NewCreateBooksContext(ctx context.Context, r *http.Request, service *goa.Se
 
 // createBooksPayload is the books create action payload.
 type createBooksPayload struct {
+	// Book ISBN
+	Isbn *string `form:"isbn,omitempty" json:"isbn,omitempty" xml:"isbn,omitempty"`
 	// Book Name
 	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *createBooksPayload) Validate() (err error) {
+	if payload.Isbn == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "isbn"))
+	}
 	if payload.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	}
+	if payload.Isbn != nil {
+		if utf8.RuneCountInString(*payload.Isbn) < 1 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.isbn`, *payload.Isbn, utf8.RuneCountInString(*payload.Isbn), 1, true))
+		}
+	}
+	if payload.Isbn != nil {
+		if utf8.RuneCountInString(*payload.Isbn) > 128 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.isbn`, *payload.Isbn, utf8.RuneCountInString(*payload.Isbn), 128, false))
+		}
 	}
 	if payload.Name != nil {
 		if utf8.RuneCountInString(*payload.Name) < 1 {
@@ -115,6 +130,9 @@ func (payload *createBooksPayload) Validate() (err error) {
 // Publicize creates CreateBooksPayload from createBooksPayload
 func (payload *createBooksPayload) Publicize() *CreateBooksPayload {
 	var pub CreateBooksPayload
+	if payload.Isbn != nil {
+		pub.Isbn = *payload.Isbn
+	}
 	if payload.Name != nil {
 		pub.Name = *payload.Name
 	}
@@ -123,14 +141,25 @@ func (payload *createBooksPayload) Publicize() *CreateBooksPayload {
 
 // CreateBooksPayload is the books create action payload.
 type CreateBooksPayload struct {
+	// Book ISBN
+	Isbn string `form:"isbn" json:"isbn" xml:"isbn"`
 	// Book Name
 	Name string `form:"name" json:"name" xml:"name"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *CreateBooksPayload) Validate() (err error) {
+	if payload.Isbn == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "isbn"))
+	}
 	if payload.Name == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	}
+	if utf8.RuneCountInString(payload.Isbn) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.isbn`, payload.Isbn, utf8.RuneCountInString(payload.Isbn), 1, true))
+	}
+	if utf8.RuneCountInString(payload.Isbn) > 128 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.isbn`, payload.Isbn, utf8.RuneCountInString(payload.Isbn), 128, false))
 	}
 	if utf8.RuneCountInString(payload.Name) < 1 {
 		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.name`, payload.Name, utf8.RuneCountInString(payload.Name), 1, true))
@@ -515,6 +544,123 @@ func (ctx *HealthHealthContext) OK(resp []byte) error {
 	ctx.ResponseData.WriteHeader(200)
 	_, err := ctx.ResponseData.Write(resp)
 	return err
+}
+
+// AddOwnershipsContext provides the ownerships add action context.
+type AddOwnershipsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	UserID  int
+	Payload *AddOwnershipsPayload
+}
+
+// NewAddOwnershipsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the ownerships controller add action.
+func NewAddOwnershipsContext(ctx context.Context, r *http.Request, service *goa.Service) (*AddOwnershipsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := AddOwnershipsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramUserID := req.Params["user_id"]
+	if len(paramUserID) > 0 {
+		rawUserID := paramUserID[0]
+		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+			rctx.UserID = userID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("user_id", rawUserID, "integer"))
+		}
+		if rctx.UserID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`user_id`, rctx.UserID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// addOwnershipsPayload is the ownerships add action payload.
+type addOwnershipsPayload struct {
+	// Unique ISBN ID
+	Isbn *int `form:"isbn,omitempty" json:"isbn,omitempty" xml:"isbn,omitempty"`
+}
+
+// Validate runs the validation rules defined in the design.
+func (payload *addOwnershipsPayload) Validate() (err error) {
+	if payload.Isbn == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "isbn"))
+	}
+	if payload.Isbn != nil {
+		if *payload.Isbn < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`raw.isbn`, *payload.Isbn, 1, true))
+		}
+	}
+	return
+}
+
+// Publicize creates AddOwnershipsPayload from addOwnershipsPayload
+func (payload *addOwnershipsPayload) Publicize() *AddOwnershipsPayload {
+	var pub AddOwnershipsPayload
+	if payload.Isbn != nil {
+		pub.Isbn = *payload.Isbn
+	}
+	return &pub
+}
+
+// AddOwnershipsPayload is the ownerships add action payload.
+type AddOwnershipsPayload struct {
+	// Unique ISBN ID
+	Isbn int `form:"isbn" json:"isbn" xml:"isbn"`
+}
+
+// Validate runs the validation rules defined in the design.
+func (payload *AddOwnershipsPayload) Validate() (err error) {
+	if payload.Isbn < 1 {
+		err = goa.MergeErrors(err, goa.InvalidRangeError(`raw.isbn`, payload.Isbn, 1, true))
+	}
+	return
+}
+
+// Created sends a HTTP response with status code 201.
+func (ctx *AddOwnershipsContext) Created() error {
+	ctx.ResponseData.WriteHeader(201)
+	return nil
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *AddOwnershipsContext) BadRequest(r error) error {
+	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// Unauthorized sends a HTTP response with status code 401.
+func (ctx *AddOwnershipsContext) Unauthorized() error {
+	ctx.ResponseData.WriteHeader(401)
+	return nil
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *AddOwnershipsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// UnprocessableEntity sends a HTTP response with status code 422.
+func (ctx *AddOwnershipsContext) UnprocessableEntity() error {
+	ctx.ResponseData.WriteHeader(422)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *AddOwnershipsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *AddOwnershipsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
 }
 
 // CreateOwnershipsContext provides the ownerships create action context.

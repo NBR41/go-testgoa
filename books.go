@@ -45,7 +45,7 @@ func (c *BooksController) Create(ctx *app.CreateBooksContext) error {
 	}
 	defer func() { m.Close() }()
 
-	b, err := m.InsertBook(ctx.Payload.Name)
+	b, err := m.InsertBook(ctx.Payload.Isbn, ctx.Payload.Name)
 	if err != nil {
 		if err == appmodel.ErrDuplicateKey {
 			return ctx.UnprocessableEntity()

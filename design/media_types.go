@@ -84,6 +84,10 @@ var BookMedia = MediaType("application/vnd.book+json", func() {
 		Attribute("id", Integer, "Unique Book ID", func() {
 			Minimum(1)
 		})
+		Attribute("isbn", String, "Book ISBN", func() {
+			MinLength(1)
+			MaxLength(128)
+		})
 		Attribute("name", String, "Book Name", func() {
 			MinLength(1)
 			MaxLength(128)
@@ -95,12 +99,14 @@ var BookMedia = MediaType("application/vnd.book+json", func() {
 
 	View("default", func() {
 		Attribute("id")
+		Attribute("isbn")
 		Attribute("name")
 		Attribute("href")
 	})
 
 	View("link", func() {
 		Attribute("id")
+		Attribute("isbn")
 		Attribute("name")
 		Attribute("href")
 	})

@@ -191,7 +191,7 @@ func (m *Model) DeleteUser(id int) error {
 }
 
 // InsertBook inserts book
-func (m *Model) InsertBook(name string) (*Book, error) {
+func (m *Model) InsertBook(isbn, name string) (*Book, error) {
 	_, err := m.GetBookByName(name)
 	switch {
 	case err != nil && err != ErrNotFound:

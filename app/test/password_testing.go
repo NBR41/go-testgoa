@@ -90,7 +90,7 @@ func GetPasswordBadRequest(t goatest.TInterface, ctx context.Context, service *g
 		var ok bool
 		mt, ok = resp.(error)
 		if !ok {
-			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of error", resp, resp)
+			t.Fatalf("invalid response media: got %+v, expected instance of error", resp)
 		}
 	}
 
@@ -429,7 +429,7 @@ func UpdatePasswordBadRequest(t goatest.TInterface, ctx context.Context, service
 		var _ok bool
 		mt, _ok = resp.(error)
 		if !_ok {
-			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of error", resp, resp)
+			t.Fatalf("invalid response media: got %+v, expected instance of error", resp)
 		}
 	}
 

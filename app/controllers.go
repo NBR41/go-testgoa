@@ -335,6 +335,7 @@ func handleHealthOrigin(h goa.Handler) goa.Handler {
 // OwnershipsController is the controller interface for the Ownerships actions.
 type OwnershipsController interface {
 	goa.Muxer
+	Add(*AddOwnershipsContext) error
 	Create(*CreateOwnershipsContext) error
 	Delete(*DeleteOwnershipsContext) error
 	List(*ListOwnershipsContext) error
@@ -347,6 +348,29 @@ func MountOwnershipsController(service *goa.Service, ctrl OwnershipsController) 
 	var h goa.Handler
 	service.Mux.Handle("OPTIONS", "/users/:user_id/ownerships", ctrl.MuxHandler("preflight", handleOwnershipsOrigin(cors.HandlePreflight()), nil))
 	service.Mux.Handle("OPTIONS", "/users/:user_id/ownerships/:book_id", ctrl.MuxHandler("preflight", handleOwnershipsOrigin(cors.HandlePreflight()), nil))
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewAddOwnershipsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*AddOwnershipsPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Add(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleOwnershipsOrigin(h)
+	service.Mux.Handle("POST", "/users/:user_id/ownerships", ctrl.MuxHandler("add", h, unmarshalAddOwnershipsPayload))
+	service.LogInfo("mount", "ctrl", "Ownerships", "action", "Add", "route", "POST /users/:user_id/ownerships", "security", "JWTSec")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -447,6 +471,21 @@ func handleOwnershipsOrigin(h goa.Handler) goa.Handler {
 
 		return h(ctx, rw, req)
 	}
+}
+
+// unmarshalAddOwnershipsPayload unmarshals the request body into the context request data Payload field.
+func unmarshalAddOwnershipsPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &addOwnershipsPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
 }
 
 // unmarshalCreateOwnershipsPayload unmarshals the request body into the context request data Payload field.

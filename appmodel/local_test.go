@@ -260,7 +260,7 @@ func TestInsertBook(t *testing.T) {
 	l := NewLocal()
 
 	// insert
-	b, err := l.InsertBook("foo")
+	b, err := l.InsertBook("isbn-foo", "foo")
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}
@@ -276,7 +276,7 @@ func TestInsertBook(t *testing.T) {
 	}
 
 	// duplicate book name
-	b, err = l.InsertBook("foo")
+	b, err = l.InsertBook("isbn-foo", "foo")
 	expectingError(t, err, ErrDuplicateKey)
 }
 
@@ -310,6 +310,21 @@ func TestGetBookByName(t *testing.T) {
 	}
 }
 
+func TestGetBookByISBN(t *testing.T) {
+	l := NewLocal()
+
+	b, err := l.GetBookByISBN("test5")
+	expectingError(t, err, ErrNotFound)
+
+	b, err = l.GetBookByISBN("isbn-123")
+	if err != nil {
+		t.Fatal("unexpected error", err)
+	}
+	if b.ID != 1 {
+		t.Fatalf("expecting ID 1, got %v", b.ID)
+	}
+}
+
 func TestGetBookList(t *testing.T) {
 	l := NewLocal()
 	bs, err := l.GetBookList()
@@ -327,11 +342,8 @@ func TestGetBookList(t *testing.T) {
 func TestUpdateBook(t *testing.T) {
 	l := NewLocal()
 
-	// bookname exist
-	err := l.UpdateBook(2, "test1")
-	expectingError(t, err, ErrDuplicateKey)
 	// user doesn't exist
-	err = l.UpdateBook(10, "test10")
+	err := l.UpdateBook(10, "test10")
 	expectingError(t, err, ErrNotFound)
 
 	// update with existing nickname but same user
@@ -352,7 +364,6 @@ func TestUpdateBook(t *testing.T) {
 	if u.Name != "test10" {
 		t.Fatalf("expecting test10, got %s", u.Name)
 	}
-
 }
 
 func TestDeleteBook(t *testing.T) {

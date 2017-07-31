@@ -91,7 +91,7 @@ func CreateBooksBadRequest(t goatest.TInterface, ctx context.Context, service *g
 		var _ok bool
 		mt, _ok = resp.(error)
 		if !_ok {
-			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of error", resp, resp)
+			t.Fatalf("invalid response media: got %+v, expected instance of error", resp)
 		}
 	}
 
@@ -496,7 +496,7 @@ func DeleteBooksBadRequest(t goatest.TInterface, ctx context.Context, service *g
 		var ok bool
 		mt, ok = resp.(error)
 		if !ok {
-			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of error", resp, resp)
+			t.Fatalf("invalid response media: got %+v, expected instance of error", resp)
 		}
 	}
 
@@ -901,7 +901,7 @@ func ListBooksOK(t goatest.TInterface, ctx context.Context, service *goa.Service
 		var ok bool
 		mt, ok = resp.(app.BookCollection)
 		if !ok {
-			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.BookCollection", resp, resp)
+			t.Fatalf("invalid response media: got %+v, expected instance of app.BookCollection", resp)
 		}
 		_err = mt.Validate()
 		if _err != nil {
@@ -969,7 +969,7 @@ func ListBooksOKLink(t goatest.TInterface, ctx context.Context, service *goa.Ser
 		var ok bool
 		mt, ok = resp.(app.BookLinkCollection)
 		if !ok {
-			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.BookLinkCollection", resp, resp)
+			t.Fatalf("invalid response media: got %+v, expected instance of app.BookLinkCollection", resp)
 		}
 		_err = mt.Validate()
 		if _err != nil {
@@ -1094,7 +1094,7 @@ func ShowBooksBadRequest(t goatest.TInterface, ctx context.Context, service *goa
 		var ok bool
 		mt, ok = resp.(error)
 		if !ok {
-			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of error", resp, resp)
+			t.Fatalf("invalid response media: got %+v, expected instance of error", resp)
 		}
 	}
 
@@ -1273,7 +1273,7 @@ func ShowBooksOK(t goatest.TInterface, ctx context.Context, service *goa.Service
 		var ok bool
 		mt, ok = resp.(*app.Book)
 		if !ok {
-			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.Book", resp, resp)
+			t.Fatalf("invalid response media: got %+v, expected instance of app.Book", resp)
 		}
 		_err = mt.Validate()
 		if _err != nil {
@@ -1342,7 +1342,7 @@ func ShowBooksOKLink(t goatest.TInterface, ctx context.Context, service *goa.Ser
 		var ok bool
 		mt, ok = resp.(*app.BookLink)
 		if !ok {
-			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of app.BookLink", resp, resp)
+			t.Fatalf("invalid response media: got %+v, expected instance of app.BookLink", resp)
 		}
 		_err = mt.Validate()
 		if _err != nil {
@@ -1479,7 +1479,7 @@ func UpdateBooksBadRequest(t goatest.TInterface, ctx context.Context, service *g
 		var _ok bool
 		mt, _ok = resp.(error)
 		if !_ok {
-			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of error", resp, resp)
+			t.Fatalf("invalid response media: got %+v, expected instance of error", resp)
 		}
 	}
 

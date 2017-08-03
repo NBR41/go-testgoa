@@ -191,7 +191,7 @@ func (m *Model) DeleteUser(id int) error {
 }
 
 // InsertBook inserts book
-func (m *Model) InsertBook(name string) (*Book, error) {
+func (m *Model) InsertBook(isbn, name string) (*Book, error) {
 	_, err := m.GetBookByName(name)
 	switch {
 	case err != nil && err != ErrNotFound:
@@ -220,6 +220,11 @@ ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`,
 // GetBookByID returns book by ID
 func (m *Model) GetBookByID(id int) (*Book, error) {
 	return m.getBook(`SELECT book_id, name from books where id = ?`, id)
+}
+
+// GetBookByID returns book by ID
+func (m *Model) GetBookByISBN(isbn string) (*Book, error) {
+	return m.getBook(`SELECT book_id, name from books where id = ?`, isbn)
 }
 
 // GetBookByName returns book by name

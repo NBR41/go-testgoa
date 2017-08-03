@@ -27,6 +27,7 @@ type User struct {
 // Book struct for books
 type Book struct {
 	ID   int64
+	ISBN string
 	Name string
 	URL  string
 }
@@ -52,8 +53,9 @@ type Modeler interface {
 	UpdateUserPassword(id int, password string) error
 	UpdateUserActivation(id int, activated bool) error
 	DeleteUser(id int) error
-	InsertBook(name string) (*Book, error)
+	InsertBook(isbn, name string) (*Book, error)
 	GetBookByID(id int) (*Book, error)
+	GetBookByISBN(isbn string) (*Book, error)
 	GetBookByName(name string) (*Book, error)
 	GetBookList() ([]Book, error)
 	UpdateBook(id int, name string) error

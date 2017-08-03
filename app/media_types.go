@@ -52,6 +52,8 @@ type Book struct {
 	Href string `form:"href" json:"href" xml:"href"`
 	// Unique Book ID
 	ID int `form:"id" json:"id" xml:"id"`
+	// Book ISBN
+	Isbn *string `form:"isbn,omitempty" json:"isbn,omitempty" xml:"isbn,omitempty"`
 	// Book Name
 	Name string `form:"name" json:"name" xml:"name"`
 }
@@ -67,6 +69,16 @@ func (mt *Book) Validate() (err error) {
 	}
 	if mt.ID < 1 {
 		err = goa.MergeErrors(err, goa.InvalidRangeError(`response.id`, mt.ID, 1, true))
+	}
+	if mt.Isbn != nil {
+		if utf8.RuneCountInString(*mt.Isbn) < 1 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.isbn`, *mt.Isbn, utf8.RuneCountInString(*mt.Isbn), 1, true))
+		}
+	}
+	if mt.Isbn != nil {
+		if utf8.RuneCountInString(*mt.Isbn) > 128 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.isbn`, *mt.Isbn, utf8.RuneCountInString(*mt.Isbn), 128, false))
+		}
 	}
 	if utf8.RuneCountInString(mt.Name) < 1 {
 		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.name`, mt.Name, utf8.RuneCountInString(mt.Name), 1, true))
@@ -85,6 +97,8 @@ type BookLink struct {
 	Href string `form:"href" json:"href" xml:"href"`
 	// Unique Book ID
 	ID int `form:"id" json:"id" xml:"id"`
+	// Book ISBN
+	Isbn *string `form:"isbn,omitempty" json:"isbn,omitempty" xml:"isbn,omitempty"`
 	// Book Name
 	Name string `form:"name" json:"name" xml:"name"`
 }
@@ -100,6 +114,16 @@ func (mt *BookLink) Validate() (err error) {
 	}
 	if mt.ID < 1 {
 		err = goa.MergeErrors(err, goa.InvalidRangeError(`response.id`, mt.ID, 1, true))
+	}
+	if mt.Isbn != nil {
+		if utf8.RuneCountInString(*mt.Isbn) < 1 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.isbn`, *mt.Isbn, utf8.RuneCountInString(*mt.Isbn), 1, true))
+		}
+	}
+	if mt.Isbn != nil {
+		if utf8.RuneCountInString(*mt.Isbn) > 128 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.isbn`, *mt.Isbn, utf8.RuneCountInString(*mt.Isbn), 128, false))
+		}
 	}
 	if utf8.RuneCountInString(mt.Name) < 1 {
 		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.name`, mt.Name, utf8.RuneCountInString(mt.Name), 1, true))

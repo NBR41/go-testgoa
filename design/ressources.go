@@ -253,8 +253,9 @@ var _ = Resource("books", func() {
 		Description("Create new book")
 		Routing(POST(""))
 		Payload(func() {
+			Member("isbn")
 			Member("name")
-			Required("name")
+			Required("isbn", "name")
 		})
 		Security(JWTAuth)
 		// unauthorized
@@ -347,6 +348,31 @@ var _ = Resource("ownerships", func() {
 				Minimum(1)
 			})
 			Required("book_id")
+		})
+		Security(JWTAuth)
+		// Unauthorized
+		Response(Unauthorized)
+		// OK
+		Response(Created, "/books/[0-9]+")
+		// user NotFound
+		Response(NotFound)
+		// App error
+		Response(UnprocessableEntity)
+		// Errors
+		Response(InternalServerError)
+		Response(ServiceUnavailable)
+		Response(BadRequest, ErrorMedia)
+	})
+
+	Action("add", func() {
+		Description("Create new book and ownership by isbn")
+		Routing(POST(""))
+		Payload(func() {
+			Member("isbn", String, "Unique ISBN ID", func() {
+				MinLength(1)
+				MaxLength(128)
+			})
+			Required("isbn")
 		})
 		Security(JWTAuth)
 		// Unauthorized

@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/NBR41/go-testgoa/app"
+	"github.com/NBR41/go-testgoa/appapi"
 	"github.com/NBR41/go-testgoa/appmodel"
 	"github.com/goadesign/goa"
 )
@@ -38,6 +39,55 @@ func (c *OwnershipsController) Create(ctx *app.CreateOwnershipsContext) error {
 	defer func() { m.Close() }()
 
 	o, err := m.InsertOwnership(ctx.UserID, ctx.Payload.BookID)
+	if err != nil {
+		if err == appmodel.ErrNotFound {
+			return ctx.NotFound()
+		}
+		if err == appmodel.ErrDuplicateKey || err == appmodel.ErrInvalidID {
+			return ctx.UnprocessableEntity()
+		}
+		return ctx.InternalServerError()
+	}
+
+	ctx.ResponseData.Header().Set("Location", app.OwnershipsHref(ctx.UserID, o.BookID))
+	return ctx.Created()
+	// OwnershipsController_Create: end_implement
+}
+
+// Create runs the create action.
+func (c *OwnershipsController) Add(ctx *app.AddOwnershipsContext) error {
+	// OwnershipsController_Create: start_implement
+
+	// Put your logic here
+	m, err := appmodel.GetModeler()
+	if err != nil {
+		return ctx.ServiceUnavailable()
+	}
+	defer func() { m.Close() }()
+
+	book, err := m.GetBookByISBN(ctx.Payload.Isbn)
+	if err != nil {
+		if err == appmodel.ErrNotFound {
+			// Get the book name
+			bookName, err := appapi.GetBookName(ctx.Payload.Isbn)
+			if err != nil {
+				return ctx.InternalServerError()
+			}
+
+			// insert the new book
+			book, err = m.InsertBook(ctx.Payload.Isbn, bookName)
+			if err != nil {
+				if err == appmodel.ErrDuplicateKey {
+					return ctx.UnprocessableEntity()
+				}
+				return ctx.InternalServerError()
+			}
+		} else {
+			return ctx.InternalServerError()
+		}
+	}
+
+	o, err := m.InsertOwnership(ctx.UserID, int(book.ID))
 	if err != nil {
 		if err == appmodel.ErrNotFound {
 			return ctx.NotFound()

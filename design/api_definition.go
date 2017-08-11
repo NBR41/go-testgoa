@@ -25,9 +25,10 @@ var _ = API("my-inventory", func() {
 	Host("localhost:8089")
 	Scheme("http")
 
-	Origin("http://swagger.goa.design", func() {
+	Origin("http://localhost:4200", func() {
 		Methods("GET", "POST", "PUT", "PATCH", "DELETE")
 		MaxAge(600)
+		Headers("Authorization", "Origin", "Content-Type", "Accept")
 		Credentials()
 	})
 

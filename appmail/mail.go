@@ -4,12 +4,17 @@ import (
 	"fmt"
 	"net/mail"
 	"net/smtp"
+	"os"
 	"strings"
 
 	"github.com/NBR41/go-testgoa/appmodel"
 )
 
+type sender func(email, subject, body string) error
+
 var (
+	fSend sender
+
 	defaultemail = "fabien@localhost"
 	baseURL      = "http://localhost"
 
@@ -20,32 +25,42 @@ var (
 	fmtValidatedUserBody    = "Your account has been successfully validated.\r\n Visit: %s"
 )
 
+func init() {
+	switch os.Getenv("ISPROD") {
+	case "1":
+		fSend = sendMail
+
+	default:
+		fSend = displayMail
+	}
+}
+
 // SendResetPasswordMail send reset password link mail
 func SendResetPasswordMail(email, token string) error {
-	return send(email, "MyInventory: Reset Password", fmt.Sprintf(fmtResetPasswordBody, baseURL, token))
+	return fSend(email, "MyInventory: Reset Password", fmt.Sprintf(fmtResetPasswordBody, baseURL, token))
 }
 
 // SendPasswordUpdatedMail send reset password notification mail
 func SendPasswordUpdatedMail(email string) error {
-	return send(email, "MyInventory: Password update", fmt.Sprintf(fmtResetPasswordBody, baseURL))
+	return fSend(email, "MyInventory: Password update", fmt.Sprintf(fmtResetPasswordBody, baseURL))
 }
 
 // SendNewUserMail send user creation mail
 func SendNewUserMail(u *appmodel.User, token string) error {
-	return send(u.Email, "MyInventory: New Account", fmt.Sprintf(fmtNewUserBody, u.Nickname, baseURL))
+	return fSend(u.Email, "MyInventory: New Account", fmt.Sprintf(fmtNewUserBody, u.Nickname, baseURL))
 }
 
 // SendActivationMail send user activation mail
 func SendActivationMail(u *appmodel.User, token string) error {
-	return send(u.Email, "MyInventory: Validate your Account", fmt.Sprintf(fmtValidateUserBody, u.Nickname, baseURL, token))
+	return fSend(u.Email, "MyInventory: Validate your Account", fmt.Sprintf(fmtValidateUserBody, u.Nickname, baseURL, token))
 }
 
 // SendUserActivatedMail send activated user notification mail
 func SendUserActivatedMail(email string) error {
-	return send(email, "MyInventory: Your account is validated", fmt.Sprintf(fmtValidatedUserBody, baseURL))
+	return fSend(email, "MyInventory: Your account is validated", fmt.Sprintf(fmtValidatedUserBody, baseURL))
 }
 
-func send(email, subject, body string) error {
+func sendMail(email, subject, body string) error {
 	addr := "localhost:25"
 	//toNames := []string{}
 	toEmails := []string{defaultemail}
@@ -105,5 +120,12 @@ func send(email, subject, body string) error {
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+func displayMail(email, subject, body string) error {
+	fmt.Println(fmt.Sprintf("to: %s", email))
+	fmt.Println(fmt.Sprintf("Subject: %s", subject))
+	fmt.Println(fmt.Sprintf("Body: %s", body))
 	return nil
 }

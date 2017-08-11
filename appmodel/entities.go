@@ -72,15 +72,16 @@ var modeler Modeler
 func GetModeler() (Modeler, error) {
 	var err error
 	if modeler == nil {
-		switch os.Getenv("ISDEV") {
+		switch os.Getenv("ISPROD") {
 		case "1":
-			modeler = NewLocal()
-		default:
 			connString := os.Getenv("DB_CONN_STR")
 			if connString == "" {
 				panic("no connexion string")
 			}
 			modeler, err = NewModel(connString)
+
+		default:
+			modeler = NewLocal()
 		}
 	}
 	return modeler, err

@@ -346,6 +346,7 @@ type OwnershipsController interface {
 func MountOwnershipsController(service *goa.Service, ctrl OwnershipsController) {
 	initService(service)
 	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/users/:user_id/ownerships/isbn", ctrl.MuxHandler("preflight", handleOwnershipsOrigin(cors.HandlePreflight()), nil))
 	service.Mux.Handle("OPTIONS", "/users/:user_id/ownerships", ctrl.MuxHandler("preflight", handleOwnershipsOrigin(cors.HandlePreflight()), nil))
 	service.Mux.Handle("OPTIONS", "/users/:user_id/ownerships/:book_id", ctrl.MuxHandler("preflight", handleOwnershipsOrigin(cors.HandlePreflight()), nil))
 
@@ -369,8 +370,8 @@ func MountOwnershipsController(service *goa.Service, ctrl OwnershipsController) 
 	}
 	h = handleSecurity("JWTSec", h)
 	h = handleOwnershipsOrigin(h)
-	service.Mux.Handle("POST", "/users/:user_id/ownerships", ctrl.MuxHandler("add", h, unmarshalAddOwnershipsPayload))
-	service.LogInfo("mount", "ctrl", "Ownerships", "action", "Add", "route", "POST /users/:user_id/ownerships", "security", "JWTSec")
+	service.Mux.Handle("POST", "/users/:user_id/ownerships/isbn", ctrl.MuxHandler("add", h, unmarshalAddOwnershipsPayload))
+	service.LogInfo("mount", "ctrl", "Ownerships", "action", "Add", "route", "POST /users/:user_id/ownerships/isbn", "security", "JWTSec")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request

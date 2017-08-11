@@ -59,7 +59,7 @@ func AddOwnershipsBadRequest(t goatest.TInterface, ctx context.Context, service 
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/users/%v/ownerships", userID),
+		Path: fmt.Sprintf("/users/%v/ownerships/isbn", userID),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -136,7 +136,7 @@ func AddOwnershipsCreated(t goatest.TInterface, ctx context.Context, service *go
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/users/%v/ownerships", userID),
+		Path: fmt.Sprintf("/users/%v/ownerships/isbn", userID),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -205,7 +205,7 @@ func AddOwnershipsInternalServerError(t goatest.TInterface, ctx context.Context,
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/users/%v/ownerships", userID),
+		Path: fmt.Sprintf("/users/%v/ownerships/isbn", userID),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -274,7 +274,7 @@ func AddOwnershipsNotFound(t goatest.TInterface, ctx context.Context, service *g
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/users/%v/ownerships", userID),
+		Path: fmt.Sprintf("/users/%v/ownerships/isbn", userID),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -343,7 +343,7 @@ func AddOwnershipsServiceUnavailable(t goatest.TInterface, ctx context.Context, 
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/users/%v/ownerships", userID),
+		Path: fmt.Sprintf("/users/%v/ownerships/isbn", userID),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -412,7 +412,7 @@ func AddOwnershipsUnauthorized(t goatest.TInterface, ctx context.Context, servic
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/users/%v/ownerships", userID),
+		Path: fmt.Sprintf("/users/%v/ownerships/isbn", userID),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -481,7 +481,7 @@ func AddOwnershipsUnprocessableEntity(t goatest.TInterface, ctx context.Context,
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/users/%v/ownerships", userID),
+		Path: fmt.Sprintf("/users/%v/ownerships/isbn", userID),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {

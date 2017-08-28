@@ -19,10 +19,10 @@ var (
 	baseURL      = "http://localhost"
 
 	fmtResetPasswordBody    = "You have forgotten your password ?\r\nCopy the link below in your favorite browser:\r\n\r\n%s/password/reset?t=%s"
-	fmtModifiedPasswordBody = "Your password has been successfully updated.\r\n Visit: %s"
-	fmtNewUserBody          = "Hello %s,\r\nYour account has been successfully created.\r\n Visit: %s"
+	fmtModifiedPasswordBody = "Your password has been successfully updated.\r\nVisit: %s"
+	fmtNewUserBody          = "Hello %s,\r\nYour account has been successfully created.\r\nVisit: %s"
 	fmtValidateUserBody     = "Hello %s,\r\nYour account need to be validated.\r\nCopy the link below in your favorite browser:\r\n\r\n%s/user/activate?t=%s"
-	fmtValidatedUserBody    = "Your account has been successfully validated.\r\n Visit: %s"
+	fmtValidatedUserBody    = "Your account has been successfully validated.\r\nVisit: %s"
 )
 
 func init() {

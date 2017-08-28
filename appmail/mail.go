@@ -16,11 +16,11 @@ var (
 	fSend sender
 
 	defaultemail = "fabien@localhost"
-	baseURL      = "http://localhost"
+	baseURL      = "http://localhost:4200"
 
 	fmtResetPasswordBody    = "You have forgotten your password ?\r\nCopy the link below in your favorite browser:\r\n\r\n%s/password/reset?t=%s"
 	fmtModifiedPasswordBody = "Your password has been successfully updated.\r\nVisit: %s"
-	fmtNewUserBody          = "Hello %s,\r\nYour account has been successfully created.\r\nVisit: %s"
+	fmtNewUserBody          = "Hello %s,\r\nYour account has been successfully created.\r\nVisit to activate your account: %s/user/activate?t=%s"
 	fmtValidateUserBody     = "Hello %s,\r\nYour account need to be validated.\r\nCopy the link below in your favorite browser:\r\n\r\n%s/user/activate?t=%s"
 	fmtValidatedUserBody    = "Your account has been successfully validated.\r\nVisit: %s"
 )
@@ -47,7 +47,7 @@ func SendPasswordUpdatedMail(email string) error {
 
 // SendNewUserMail send user creation mail
 func SendNewUserMail(u *appmodel.User, token string) error {
-	return fSend(u.Email, "MyInventory: New Account", fmt.Sprintf(fmtNewUserBody, u.Nickname, baseURL))
+	return fSend(u.Email, "MyInventory: New Account", fmt.Sprintf(fmtNewUserBody, u.Nickname, baseURL, token))
 }
 
 // SendActivationMail send user activation mail

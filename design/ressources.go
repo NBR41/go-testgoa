@@ -161,7 +161,7 @@ var _ = Resource("users", func() {
 		// OK
 		Response(Created, "/users/[0-9]+")
 		// App error
-		Response(UnprocessableEntity)
+		Response(UnprocessableEntity, ErrorMedia)
 		// Errors
 		Response(InternalServerError)
 		Response(ServiceUnavailable)

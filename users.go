@@ -27,6 +27,8 @@ func ToUserTinyMedia(a *appmodel.User) *app.UserTiny {
 	}
 }
 
+var errDuplicateKey = goa.NewErrorClass("duplicate_key", 422)
+
 // UsersController implements the users resource.
 type UsersController struct {
 	*goa.Controller
@@ -50,10 +52,16 @@ func (c *UsersController) Create(ctx *app.CreateUsersContext) error {
 
 	u, err := m.InsertUser(ctx.Payload.Email, ctx.Payload.Nickname, ctx.Payload.Password)
 	if err != nil {
-		if err == appmodel.ErrDuplicateKey {
-			return ctx.UnprocessableEntity()
+		switch err {
+		case appmodel.ErrDuplicateKey:
+			return errDuplicateKey(err)
+		case appmodel.ErrDuplicateEmail:
+			return errDuplicateKey(err)
+		case appmodel.ErrDuplicateNickname:
+			return errDuplicateKey(err)
+		default:
+			return ctx.InternalServerError()
 		}
-		return ctx.InternalServerError()
 	}
 
 	token, err := appsec.GetValidationToken(u.ID, u.Email)

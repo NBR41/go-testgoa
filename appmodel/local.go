@@ -157,15 +157,21 @@ func (db *Local) InsertUser(email, nickname, password string) (*User, error) {
 
 	db.Lock()
 	defer db.Unlock()
-	_, err = db.getUserByEmailOrNickname(email, nickname)
+	u, err := db.getUserByEmailOrNickname(email, nickname)
 	switch {
 	case err != nil && err != ErrNotFound:
 		return nil, err
 	case err == nil:
-		return nil, ErrDuplicateKey
+		if u.Email == email {
+			if u.Nickname == nickname {
+				return nil, ErrDuplicateKey
+			}
+			return nil, ErrDuplicateEmail
+		}
+		return nil, ErrDuplicateNickname
 	}
 	idx := len(db.users) + 1
-	u := &User{ID: int64(idx), Email: email, Nickname: nickname, salt: salt, password: hash}
+	u = &User{ID: int64(idx), Email: email, Nickname: nickname, salt: salt, password: hash}
 	db.users[idx] = u
 	return u, nil
 }

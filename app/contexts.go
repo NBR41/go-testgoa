@@ -1167,9 +1167,9 @@ func (ctx *CreateUsersContext) BadRequest(r error) error {
 }
 
 // UnprocessableEntity sends a HTTP response with status code 422.
-func (ctx *CreateUsersContext) UnprocessableEntity() error {
-	ctx.ResponseData.WriteHeader(422)
-	return nil
+func (ctx *CreateUsersContext) UnprocessableEntity(r error) error {
+	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	return ctx.ResponseData.Service.Send(ctx.Context, 422, r)
 }
 
 // InternalServerError sends a HTTP response with status code 500.

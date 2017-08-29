@@ -153,10 +153,14 @@ func TestInsertUser(t *testing.T) {
 
 	// duplicate email
 	u, err = l.InsertUser("foo", "foobar", "barfoo")
-	expectingError(t, err, ErrDuplicateKey)
+	expectingError(t, err, ErrDuplicateEmail)
 
 	// duplicate nickname
 	u, err = l.InsertUser("foobar", "bar", "barfoo")
+	expectingError(t, err, ErrDuplicateNickname)
+
+	// duplicate both
+	u, err = l.InsertUser("foo", "bar", "barfoo")
 	expectingError(t, err, ErrDuplicateKey)
 }
 

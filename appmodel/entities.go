@@ -11,6 +11,8 @@ var (
 	ErrInvalidCredentials = errors.New("invalid credentials")
 	ErrInvalidID          = errors.New("invalid id")
 	ErrDuplicateKey       = errors.New("duplicate key")
+	ErrDuplicateEmail     = errors.New("duplicate email")
+	ErrDuplicateNickname  = errors.New("duplicate nickname")
 )
 
 // User struct for users

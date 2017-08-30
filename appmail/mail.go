@@ -20,7 +20,7 @@ var (
 
 	fmtResetPasswordBody    = "You have forgotten your password ?\r\nCopy the link below in your favorite browser:\r\n\r\n%s/password/reset?t=%s"
 	fmtModifiedPasswordBody = "Your password has been successfully updated.\r\nVisit: %s"
-	fmtNewUserBody          = "Hello %s,\r\nYour account has been successfully created.\r\nVisit to activate your account: %s/user/activate?t=%s"
+	fmtNewUserBody          = "Hello %s,\r\nYour account has been successfully created.\r\nVisit to activate your account: %s/user/validate?t=%s"
 	fmtValidateUserBody     = "Hello %s,\r\nYour account need to be validated.\r\nCopy the link below in your favorite browser:\r\n\r\n%s/user/activate?t=%s"
 	fmtValidatedUserBody    = "Your account has been successfully validated.\r\nVisit: %s"
 )

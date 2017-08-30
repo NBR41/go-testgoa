@@ -85,8 +85,6 @@ var _ = Resource("validation", func() {
 		Response(NoContent)
 		// Not Found
 		Response(NotFound)
-		// App error
-		Response(UnprocessableEntity)
 		// Errors
 		Response(InternalServerError)
 		Response(ServiceUnavailable)

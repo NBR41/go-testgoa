@@ -42,7 +42,7 @@ func SendResetPasswordMail(email, token string) error {
 
 // SendPasswordUpdatedMail send reset password notification mail
 func SendPasswordUpdatedMail(email string) error {
-	return fSend(email, "MyInventory: Password update", fmt.Sprintf(fmtResetPasswordBody, baseURL))
+	return fSend(email, "MyInventory: Password update", fmt.Sprintf(fmtModifiedPasswordBody, baseURL))
 }
 
 // SendNewUserMail send user creation mail

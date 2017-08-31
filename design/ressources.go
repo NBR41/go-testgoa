@@ -73,11 +73,15 @@ var _ = Resource("password", func() {
 
 var _ = Resource("validation", func() {
 	BasePath("/validation")
-	Parent("users")
 
 	Action("get", func() {
 		Description("Get validation token")
-		Routing(GET(""))
+		Routing(GET(userIDPath))
+		Params(func() {
+			Param("user_id", Integer, "Unique User ID", func() {
+				Minimum(1)
+			})
+		})
 		// only admins
 		Security(JWTAuth)
 		Response(Unauthorized)

@@ -17,13 +17,13 @@ var (
 
 // User struct for users
 type User struct {
-	ID         int64
-	Email      string
-	Nickname   string
-	IsVerified bool
-	IsAdmin    bool
-	password   []byte
-	salt       []byte
+	ID          int64
+	Email       string
+	Nickname    string
+	IsValidated bool
+	IsAdmin     bool
+	password    []byte
+	salt        []byte
 }
 
 // Book struct for books

@@ -23,19 +23,19 @@ func NewLocal() *Local {
 	book4 := &Book{ID: 4, ISBN: "isbn-135", Name: "test4"}
 	return &Local{
 		users: map[int]*User{
-			3: &User{ID: 3, Email: `user@myinventory.com`, Nickname: `user`, IsVerified: true, IsAdmin: false},
-			2: &User{ID: 2, Email: `new@myinventory.com`, Nickname: `new`, IsVerified: false, IsAdmin: false},
+			3: &User{ID: 3, Email: `user@myinventory.com`, Nickname: `user`, IsValidated: true, IsAdmin: false},
+			2: &User{ID: 2, Email: `new@myinventory.com`, Nickname: `new`, IsValidated: false, IsAdmin: false},
 			1: &User{
-				ID:         1,
-				Email:      `admin@myinventory.com`,
-				Nickname:   `admin`,
-				IsVerified: true,
-				IsAdmin:    true,
-				salt:       []byte("hq\xc1\xf1?\x9cC\xd8\xe3Hb\xa8\\\xda8_6I\x89\xdec,V\x06\xd5\xf9\x9dB\xcd\xff\xbdO"),
-				password:   []byte("K\xa5\xe1\x13@'\x84i\xafB\xc1\xd3\x16Q\x82\xf5\xfa8\xbeT\xddPt\x035\x0e\xdae\x10\x97\xf7J\x9f\x81\x9c\xa2\x91d\xd7\x02\x9a4\xa1c\xf1\x98\xfb֏\xdf\xf4\xe4.E\x9b\xec(Z\x87e\xdb\x1f\xd4\xc9"),
+				ID:          1,
+				Email:       `admin@myinventory.com`,
+				Nickname:    `admin`,
+				IsValidated: true,
+				IsAdmin:     true,
+				salt:        []byte("hq\xc1\xf1?\x9cC\xd8\xe3Hb\xa8\\\xda8_6I\x89\xdec,V\x06\xd5\xf9\x9dB\xcd\xff\xbdO"),
+				password:    []byte("K\xa5\xe1\x13@'\x84i\xafB\xc1\xd3\x16Q\x82\xf5\xfa8\xbeT\xddPt\x035\x0e\xdae\x10\x97\xf7J\x9f\x81\x9c\xa2\x91d\xd7\x02\x9a4\xa1c\xf1\x98\xfb֏\xdf\xf4\xe4.E\x9b\xec(Z\x87e\xdb\x1f\xd4\xc9"),
 			},
 
-			4: &User{ID: 4, Email: `nobooks@myinventory.com`, Nickname: `nobooks`, IsVerified: true, IsAdmin: false},
+			4: &User{ID: 4, Email: `nobooks@myinventory.com`, Nickname: `nobooks`, IsValidated: true, IsAdmin: false},
 		},
 		books: map[int]*Book{
 			1: book,
@@ -218,14 +218,14 @@ func (db *Local) UpdateUserPassword(id int, password string) error {
 }
 
 // UpdateUserActivation update user activation by ID
-func (db *Local) UpdateUserActivation(id int, activated bool) error {
+func (db *Local) UpdateUserActivation(id int, validated bool) error {
 	db.Lock()
 	defer db.Unlock()
 	u, ok := db.users[id]
 	if !ok {
 		return ErrNotFound
 	}
-	u.IsVerified = activated
+	u.IsValidated = validated
 	return nil
 }
 

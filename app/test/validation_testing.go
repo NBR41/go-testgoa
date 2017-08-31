@@ -49,7 +49,7 @@ func GetValidationBadRequest(t goatest.TInterface, ctx context.Context, service 
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/users/%v/validation", userID),
+		Path: fmt.Sprintf("/validation/%v", userID),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
@@ -114,7 +114,7 @@ func GetValidationInternalServerError(t goatest.TInterface, ctx context.Context,
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/users/%v/validation", userID),
+		Path: fmt.Sprintf("/validation/%v", userID),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
@@ -171,7 +171,7 @@ func GetValidationNoContent(t goatest.TInterface, ctx context.Context, service *
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/users/%v/validation", userID),
+		Path: fmt.Sprintf("/validation/%v", userID),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
@@ -228,7 +228,7 @@ func GetValidationNotFound(t goatest.TInterface, ctx context.Context, service *g
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/users/%v/validation", userID),
+		Path: fmt.Sprintf("/validation/%v", userID),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
@@ -285,7 +285,7 @@ func GetValidationServiceUnavailable(t goatest.TInterface, ctx context.Context, 
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/users/%v/validation", userID),
+		Path: fmt.Sprintf("/validation/%v", userID),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
@@ -342,7 +342,7 @@ func GetValidationUnauthorized(t goatest.TInterface, ctx context.Context, servic
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/users/%v/validation", userID),
+		Path: fmt.Sprintf("/validation/%v", userID),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
@@ -374,68 +374,11 @@ func GetValidationUnauthorized(t goatest.TInterface, ctx context.Context, servic
 	return rw
 }
 
-// GetValidationUnprocessableEntity runs the method Get of the given controller with the given parameters.
-// It returns the response writer so it's possible to inspect the response headers.
-// If ctx is nil then context.Background() is used.
-// If service is nil then a default service is created.
-func GetValidationUnprocessableEntity(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.ValidationController, userID int) http.ResponseWriter {
-	// Setup service
-	var (
-		logBuf bytes.Buffer
-		resp   interface{}
-
-		respSetter goatest.ResponseSetterFunc = func(r interface{}) { resp = r }
-	)
-	if service == nil {
-		service = goatest.Service(&logBuf, respSetter)
-	} else {
-		logger := log.New(&logBuf, "", log.Ltime)
-		service.WithLogger(goa.NewLogger(logger))
-		newEncoder := func(io.Writer) goa.Encoder { return respSetter }
-		service.Encoder = goa.NewHTTPEncoder() // Make sure the code ends up using this decoder
-		service.Encoder.Register(newEncoder, "*/*")
-	}
-
-	// Setup request context
-	rw := httptest.NewRecorder()
-	u := &url.URL{
-		Path: fmt.Sprintf("/users/%v/validation", userID),
-	}
-	req, err := http.NewRequest("GET", u.String(), nil)
-	if err != nil {
-		panic("invalid test " + err.Error()) // bug
-	}
-	prms := url.Values{}
-	prms["user_id"] = []string{fmt.Sprintf("%v", userID)}
-	if ctx == nil {
-		ctx = context.Background()
-	}
-	goaCtx := goa.NewContext(goa.WithAction(ctx, "ValidationTest"), rw, req, prms)
-	getCtx, _err := app.NewGetValidationContext(goaCtx, req, service)
-	if _err != nil {
-		panic("invalid test data " + _err.Error()) // bug
-	}
-
-	// Perform action
-	_err = ctrl.Get(getCtx)
-
-	// Validate response
-	if _err != nil {
-		t.Fatalf("controller returned %+v, logs:\n%s", _err, logBuf.String())
-	}
-	if rw.Code != 422 {
-		t.Errorf("invalid response status code: got %+v, expected 422", rw.Code)
-	}
-
-	// Return results
-	return rw
-}
-
 // ValidateValidationBadRequest runs the method Validate of the given controller with the given parameters and payload.
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ValidateValidationBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.ValidationController, userID int, payload *app.ValidateValidationPayload) (http.ResponseWriter, error) {
+func ValidateValidationBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.ValidationController, payload *app.ValidateValidationPayload) (http.ResponseWriter, error) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -466,14 +409,13 @@ func ValidateValidationBadRequest(t goatest.TInterface, ctx context.Context, ser
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/users/%v/validation", userID),
+		Path: fmt.Sprintf("/validation"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
 		panic("invalid test " + _err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["user_id"] = []string{fmt.Sprintf("%v", userID)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -511,7 +453,7 @@ func ValidateValidationBadRequest(t goatest.TInterface, ctx context.Context, ser
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ValidateValidationInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.ValidationController, userID int, payload *app.ValidateValidationPayload) http.ResponseWriter {
+func ValidateValidationInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.ValidationController, payload *app.ValidateValidationPayload) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -543,14 +485,13 @@ func ValidateValidationInternalServerError(t goatest.TInterface, ctx context.Con
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/users/%v/validation", userID),
+		Path: fmt.Sprintf("/validation"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
 		panic("invalid test " + _err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["user_id"] = []string{fmt.Sprintf("%v", userID)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -580,7 +521,7 @@ func ValidateValidationInternalServerError(t goatest.TInterface, ctx context.Con
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ValidateValidationNoContent(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.ValidationController, userID int, payload *app.ValidateValidationPayload) http.ResponseWriter {
+func ValidateValidationNoContent(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.ValidationController, payload *app.ValidateValidationPayload) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -612,14 +553,13 @@ func ValidateValidationNoContent(t goatest.TInterface, ctx context.Context, serv
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/users/%v/validation", userID),
+		Path: fmt.Sprintf("/validation"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
 		panic("invalid test " + _err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["user_id"] = []string{fmt.Sprintf("%v", userID)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -649,7 +589,7 @@ func ValidateValidationNoContent(t goatest.TInterface, ctx context.Context, serv
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ValidateValidationNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.ValidationController, userID int, payload *app.ValidateValidationPayload) http.ResponseWriter {
+func ValidateValidationNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.ValidationController, payload *app.ValidateValidationPayload) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -681,14 +621,13 @@ func ValidateValidationNotFound(t goatest.TInterface, ctx context.Context, servi
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/users/%v/validation", userID),
+		Path: fmt.Sprintf("/validation"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
 		panic("invalid test " + _err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["user_id"] = []string{fmt.Sprintf("%v", userID)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -718,7 +657,7 @@ func ValidateValidationNotFound(t goatest.TInterface, ctx context.Context, servi
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ValidateValidationServiceUnavailable(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.ValidationController, userID int, payload *app.ValidateValidationPayload) http.ResponseWriter {
+func ValidateValidationServiceUnavailable(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.ValidationController, payload *app.ValidateValidationPayload) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -750,14 +689,13 @@ func ValidateValidationServiceUnavailable(t goatest.TInterface, ctx context.Cont
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/users/%v/validation", userID),
+		Path: fmt.Sprintf("/validation"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
 		panic("invalid test " + _err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["user_id"] = []string{fmt.Sprintf("%v", userID)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -787,7 +725,7 @@ func ValidateValidationServiceUnavailable(t goatest.TInterface, ctx context.Cont
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ValidateValidationUnprocessableEntity(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.ValidationController, userID int, payload *app.ValidateValidationPayload) http.ResponseWriter {
+func ValidateValidationUnprocessableEntity(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.ValidationController, payload *app.ValidateValidationPayload) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -819,14 +757,13 @@ func ValidateValidationUnprocessableEntity(t goatest.TInterface, ctx context.Con
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/users/%v/validation", userID),
+		Path: fmt.Sprintf("/validation"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
 		panic("invalid test " + _err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["user_id"] = []string{fmt.Sprintf("%v", userID)}
 	if ctx == nil {
 		ctx = context.Background()
 	}

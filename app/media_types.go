@@ -247,7 +247,9 @@ type User struct {
 	// API href for making requests on the user
 	Href string `form:"href" json:"href" xml:"href"`
 	// Unique User ID
-	ID int `form:"id" json:"id" xml:"id"`
+	ID          int  `form:"id" json:"id" xml:"id"`
+	IsAdmin     bool `form:"is_admin" json:"is_admin" xml:"is_admin"`
+	IsValidated bool `form:"is_validated" json:"is_validated" xml:"is_validated"`
 	// user nickname
 	Nickname string `form:"nickname" json:"nickname" xml:"nickname"`
 }
@@ -261,6 +263,7 @@ func (mt *User) Validate() (err error) {
 	if mt.Nickname == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "nickname"))
 	}
+
 	if mt.Href == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "href"))
 	}

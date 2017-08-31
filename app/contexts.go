@@ -1580,12 +1580,6 @@ func (ctx *GetValidationContext) NotFound() error {
 	return nil
 }
 
-// UnprocessableEntity sends a HTTP response with status code 422.
-func (ctx *GetValidationContext) UnprocessableEntity() error {
-	ctx.ResponseData.WriteHeader(422)
-	return nil
-}
-
 // InternalServerError sends a HTTP response with status code 500.
 func (ctx *GetValidationContext) InternalServerError() error {
 	ctx.ResponseData.WriteHeader(500)
@@ -1603,7 +1597,6 @@ type ValidateValidationContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
-	UserID  int
 	Payload *ValidateValidationPayload
 }
 
@@ -1616,18 +1609,6 @@ func NewValidateValidationContext(ctx context.Context, r *http.Request, service 
 	req := goa.ContextRequest(ctx)
 	req.Request = r
 	rctx := ValidateValidationContext{Context: ctx, ResponseData: resp, RequestData: req}
-	paramUserID := req.Params["user_id"]
-	if len(paramUserID) > 0 {
-		rawUserID := paramUserID[0]
-		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-			rctx.UserID = userID
-		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("user_id", rawUserID, "integer"))
-		}
-		if rctx.UserID < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`user_id`, rctx.UserID, 1, true))
-		}
-	}
 	return &rctx, err
 }
 

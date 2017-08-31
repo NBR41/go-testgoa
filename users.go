@@ -11,10 +11,12 @@ import (
 // ToUserMedia converts a user model into a user media type
 func ToUserMedia(a *appmodel.User) *app.User {
 	return &app.User{
-		Email:    a.Email,
-		Href:     app.UsersHref(a.ID),
-		ID:       int(a.ID),
-		Nickname: a.Nickname,
+		Email:       a.Email,
+		Href:        app.UsersHref(a.ID),
+		ID:          int(a.ID),
+		Nickname:    a.Nickname,
+		IsAdmin:     a.IsAdmin,
+		IsValidated: a.IsValidated,
 	}
 }
 

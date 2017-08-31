@@ -227,7 +227,7 @@ func TestUpdateUserActivation(t *testing.T) {
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}
-	if u.IsVerified {
+	if u.IsValidated {
 		t.Fatal("expecting false got true")
 	}
 
@@ -239,7 +239,7 @@ func TestUpdateUserActivation(t *testing.T) {
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}
-	if !u.IsVerified {
+	if !u.IsValidated {
 		t.Fatal("expecting true got false")
 	}
 }

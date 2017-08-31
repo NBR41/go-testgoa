@@ -44,7 +44,7 @@ func (m *Model) exec(query string, params ...interface{}) error {
 func (m *Model) getUser(query string, params ...interface{}) (*User, error) {
 	var u = User{}
 	err := m.db.QueryRow(query, params...).Scan(
-		&u.ID, &u.Nickname, &u.Email, &u.IsVerified, &u.IsAdmin,
+		&u.ID, &u.Nickname, &u.Email, &u.IsValidated, &u.IsAdmin,
 	)
 	switch {
 	case err == sql.ErrNoRows:
@@ -79,7 +79,7 @@ func (m *Model) GetUserList() ([]User, error) {
 	var l = []User{}
 	for rows.Next() {
 		u := User{}
-		if err := rows.Scan(&u.ID, &u.Nickname, &u.Email, &u.IsVerified, &u.IsAdmin); err != nil {
+		if err := rows.Scan(&u.ID, &u.Nickname, &u.Email, &u.IsValidated, &u.IsAdmin); err != nil {
 			return nil, err
 		}
 		l = append(l, u)

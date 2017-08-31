@@ -837,7 +837,8 @@ type ValidationController interface {
 func MountValidationController(service *goa.Service, ctrl ValidationController) {
 	initService(service)
 	var h goa.Handler
-	service.Mux.Handle("OPTIONS", "/users/:user_id/validation", ctrl.MuxHandler("preflight", handleValidationOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/validation/:user_id", ctrl.MuxHandler("preflight", handleValidationOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/validation", ctrl.MuxHandler("preflight", handleValidationOrigin(cors.HandlePreflight()), nil))
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -853,8 +854,8 @@ func MountValidationController(service *goa.Service, ctrl ValidationController) 
 	}
 	h = handleSecurity("JWTSec", h)
 	h = handleValidationOrigin(h)
-	service.Mux.Handle("GET", "/users/:user_id/validation", ctrl.MuxHandler("get", h, nil))
-	service.LogInfo("mount", "ctrl", "Validation", "action", "Get", "route", "GET /users/:user_id/validation", "security", "JWTSec")
+	service.Mux.Handle("GET", "/validation/:user_id", ctrl.MuxHandler("get", h, nil))
+	service.LogInfo("mount", "ctrl", "Validation", "action", "Get", "route", "GET /validation/:user_id", "security", "JWTSec")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -875,8 +876,8 @@ func MountValidationController(service *goa.Service, ctrl ValidationController) 
 		return ctrl.Validate(rctx)
 	}
 	h = handleValidationOrigin(h)
-	service.Mux.Handle("POST", "/users/:user_id/validation", ctrl.MuxHandler("validate", h, unmarshalValidateValidationPayload))
-	service.LogInfo("mount", "ctrl", "Validation", "action", "Validate", "route", "POST /users/:user_id/validation")
+	service.Mux.Handle("POST", "/validation", ctrl.MuxHandler("validate", h, unmarshalValidateValidationPayload))
+	service.LogInfo("mount", "ctrl", "Validation", "action", "Validate", "route", "POST /validation")
 }
 
 // handleValidationOrigin applies the CORS response headers corresponding to the origin.

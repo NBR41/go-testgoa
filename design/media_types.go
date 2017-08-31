@@ -25,14 +25,16 @@ var UserMedia = MediaType("application/vnd.user+json", func() {
 		})
 		Attribute("href", String, "API href for making requests on the user")
 		Attribute("is_admin", Boolean)
-		Attribute("is_verified", Boolean)
-		Required("id", "email", "nickname", "href")
+		Attribute("is_validated", Boolean)
+		Required("id", "email", "nickname", "is_admin", "is_validated", "href")
 	})
 
 	View("default", func() {
 		Attribute("id")
 		Attribute("email")
 		Attribute("nickname")
+		Attribute("is_admin")
+		Attribute("is_validated")
 		Attribute("href") // have a "default" view.
 	})
 

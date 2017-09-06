@@ -74,6 +74,9 @@ func (c *OwnershipsController) Add(ctx *app.AddOwnershipsContext) error {
 			bookName, err = appapi.GetBookName(ctx.Payload.Isbn)
 			if err != nil {
 				goa.ContextLogger(ctx).Error(`unable to get book name`, `error`, err)
+				if err == appapi.ErrNoResult {
+					return ctx.UnprocessableEntity()
+				}
 				return ctx.InternalServerError()
 			}
 

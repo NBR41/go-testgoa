@@ -1,10 +1,14 @@
 package appapi
 
 import (
+	"errors"
 	"net/http"
 
 	"google.golang.org/api/books/v1"
 )
+
+// ErrNoResult error when no result
+var ErrNoResult = errors.New("no volume found")
 
 // GetBookName returns book name by calling Google Book API
 func GetBookName(isbn string) (string, error) {
@@ -18,7 +22,7 @@ func GetBookName(isbn string) (string, error) {
 	}
 
 	if vols.TotalItems == 0 {
-		return "", err
+		return "", ErrNoResult
 	}
 
 	var title = vols.Items[0].VolumeInfo.Title

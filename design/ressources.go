@@ -384,7 +384,7 @@ var _ = Resource("ownerships", func() {
 		// user NotFound
 		Response(NotFound)
 		// App error
-		Response(UnprocessableEntity)
+		Response(UnprocessableEntity, ErrorMedia)
 		// Errors
 		Response(InternalServerError)
 		Response(ServiceUnavailable)

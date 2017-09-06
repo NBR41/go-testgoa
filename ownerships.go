@@ -56,9 +56,9 @@ func (c *OwnershipsController) Create(ctx *app.CreateOwnershipsContext) error {
 	// OwnershipsController_Create: end_implement
 }
 
-// Add runs the create action.
+// Add runs the add action.
 func (c *OwnershipsController) Add(ctx *app.AddOwnershipsContext) error {
-	// OwnershipsController_Create: start_implement
+	// OwnershipsController_Add: start_implement
 	m, err := appmodel.GetModeler()
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
@@ -106,7 +106,7 @@ func (c *OwnershipsController) Add(ctx *app.AddOwnershipsContext) error {
 
 	ctx.ResponseData.Header().Set("Location", app.OwnershipsHref(ctx.UserID, o.BookID))
 	return ctx.Created()
-	// OwnershipsController_Create: end_implement
+	// OwnershipsController_Add: end_implement
 }
 
 // Delete runs the delete action.

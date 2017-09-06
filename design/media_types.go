@@ -96,7 +96,7 @@ var BookMedia = MediaType("application/vnd.book+json", func() {
 		})
 		Attribute("href", String, "API href for making requests on the book")
 
-		Required("id", "name", "href")
+		Required("id", "isbn", "name", "href")
 	})
 
 	View("default", func() {

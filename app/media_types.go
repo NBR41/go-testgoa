@@ -53,7 +53,7 @@ type Book struct {
 	// Unique Book ID
 	ID int `form:"id" json:"id" xml:"id"`
 	// Book ISBN
-	Isbn *string `form:"isbn,omitempty" json:"isbn,omitempty" xml:"isbn,omitempty"`
+	Isbn string `form:"isbn" json:"isbn" xml:"isbn"`
 	// Book Name
 	Name string `form:"name" json:"name" xml:"name"`
 }
@@ -61,6 +61,9 @@ type Book struct {
 // Validate validates the Book media type instance.
 func (mt *Book) Validate() (err error) {
 
+	if mt.Isbn == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "isbn"))
+	}
 	if mt.Name == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "name"))
 	}
@@ -70,15 +73,11 @@ func (mt *Book) Validate() (err error) {
 	if mt.ID < 1 {
 		err = goa.MergeErrors(err, goa.InvalidRangeError(`response.id`, mt.ID, 1, true))
 	}
-	if mt.Isbn != nil {
-		if utf8.RuneCountInString(*mt.Isbn) < 1 {
-			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.isbn`, *mt.Isbn, utf8.RuneCountInString(*mt.Isbn), 1, true))
-		}
+	if utf8.RuneCountInString(mt.Isbn) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.isbn`, mt.Isbn, utf8.RuneCountInString(mt.Isbn), 1, true))
 	}
-	if mt.Isbn != nil {
-		if utf8.RuneCountInString(*mt.Isbn) > 128 {
-			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.isbn`, *mt.Isbn, utf8.RuneCountInString(*mt.Isbn), 128, false))
-		}
+	if utf8.RuneCountInString(mt.Isbn) > 128 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.isbn`, mt.Isbn, utf8.RuneCountInString(mt.Isbn), 128, false))
 	}
 	if utf8.RuneCountInString(mt.Name) < 1 {
 		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.name`, mt.Name, utf8.RuneCountInString(mt.Name), 1, true))
@@ -98,7 +97,7 @@ type BookLink struct {
 	// Unique Book ID
 	ID int `form:"id" json:"id" xml:"id"`
 	// Book ISBN
-	Isbn *string `form:"isbn,omitempty" json:"isbn,omitempty" xml:"isbn,omitempty"`
+	Isbn string `form:"isbn" json:"isbn" xml:"isbn"`
 	// Book Name
 	Name string `form:"name" json:"name" xml:"name"`
 }
@@ -106,6 +105,9 @@ type BookLink struct {
 // Validate validates the BookLink media type instance.
 func (mt *BookLink) Validate() (err error) {
 
+	if mt.Isbn == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "isbn"))
+	}
 	if mt.Name == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "name"))
 	}
@@ -115,15 +117,11 @@ func (mt *BookLink) Validate() (err error) {
 	if mt.ID < 1 {
 		err = goa.MergeErrors(err, goa.InvalidRangeError(`response.id`, mt.ID, 1, true))
 	}
-	if mt.Isbn != nil {
-		if utf8.RuneCountInString(*mt.Isbn) < 1 {
-			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.isbn`, *mt.Isbn, utf8.RuneCountInString(*mt.Isbn), 1, true))
-		}
+	if utf8.RuneCountInString(mt.Isbn) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.isbn`, mt.Isbn, utf8.RuneCountInString(mt.Isbn), 1, true))
 	}
-	if mt.Isbn != nil {
-		if utf8.RuneCountInString(*mt.Isbn) > 128 {
-			err = goa.MergeErrors(err, goa.InvalidLengthError(`response.isbn`, *mt.Isbn, utf8.RuneCountInString(*mt.Isbn), 128, false))
-		}
+	if utf8.RuneCountInString(mt.Isbn) > 128 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.isbn`, mt.Isbn, utf8.RuneCountInString(mt.Isbn), 128, false))
 	}
 	if utf8.RuneCountInString(mt.Name) < 1 {
 		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.name`, mt.Name, utf8.RuneCountInString(mt.Name), 1, true))

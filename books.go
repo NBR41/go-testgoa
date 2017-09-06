@@ -12,6 +12,7 @@ func ToBookMedia(a *appmodel.Book) *app.Book {
 		Href: app.BooksHref(a.ID),
 		ID:   int(a.ID),
 		Name: a.Name,
+		Isbn: a.ISBN,
 	}
 }
 

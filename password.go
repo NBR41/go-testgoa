@@ -21,16 +21,16 @@ func NewPasswordController(service *goa.Service) *PasswordController {
 // Get runs the get action.
 func (c *PasswordController) Get(ctx *app.GetPasswordContext) error {
 	// PasswordController_Get: start_implement
-
-	// Put your logic here
 	m, err := appmodel.GetModeler()
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	u, err := m.GetUserByEmail(ctx.Email)
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to get user`, `error`, err)
 		if err == appmodel.ErrNotFound {
 			return ctx.UnprocessableEntity()
 		}
@@ -39,11 +39,13 @@ func (c *PasswordController) Get(ctx *app.GetPasswordContext) error {
 
 	token, err := appsec.GetPasswordToken(u.ID, u.Email)
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`failed to get password token`, `error`, err)
 		return ctx.InternalServerError()
 	}
 
 	err = appmail.SendResetPasswordMail(u.Email, token)
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to send password email`, `error`, err)
 		return ctx.InternalServerError()
 	}
 
@@ -54,21 +56,22 @@ func (c *PasswordController) Get(ctx *app.GetPasswordContext) error {
 // Update runs the update action.
 func (c *PasswordController) Update(ctx *app.UpdatePasswordContext) error {
 	// PasswordController_Update: start_implement
-
-	// Put your logic here
 	uID, uEmail, err := appsec.ValidatePasswordToken(ctx.Payload.Token)
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`invalid password token`, `error`, err)
 		return ctx.UnprocessableEntity()
 	}
 
 	m, err := appmodel.GetModeler()
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	err = m.UpdateUserPassword(int(uID), ctx.Payload.Password)
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to update user password`, `error`, err)
 		if err == appmodel.ErrNotFound {
 			return ctx.UnprocessableEntity()
 		}

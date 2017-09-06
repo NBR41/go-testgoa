@@ -34,12 +34,14 @@ func (c *OwnershipsController) Create(ctx *app.CreateOwnershipsContext) error {
 	// Put your logic here
 	m, err := appmodel.GetModeler()
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	o, err := m.InsertOwnership(ctx.UserID, ctx.Payload.BookID)
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to insert ownership`, `error`, err)
 		if err == appmodel.ErrNotFound {
 			return ctx.NotFound()
 		}
@@ -54,13 +56,12 @@ func (c *OwnershipsController) Create(ctx *app.CreateOwnershipsContext) error {
 	// OwnershipsController_Create: end_implement
 }
 
-// Create runs the create action.
+// Add runs the create action.
 func (c *OwnershipsController) Add(ctx *app.AddOwnershipsContext) error {
 	// OwnershipsController_Create: start_implement
-
-	// Put your logic here
 	m, err := appmodel.GetModeler()
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
@@ -69,26 +70,31 @@ func (c *OwnershipsController) Add(ctx *app.AddOwnershipsContext) error {
 	if err != nil {
 		if err == appmodel.ErrNotFound {
 			// Get the book name
-			bookName, err := appapi.GetBookName(ctx.Payload.Isbn)
+			var bookName string
+			bookName, err = appapi.GetBookName(ctx.Payload.Isbn)
 			if err != nil {
+				goa.ContextLogger(ctx).Error(`unable to get book name`, `error`, err)
 				return ctx.InternalServerError()
 			}
 
 			// insert the new book
 			book, err = m.InsertBook(ctx.Payload.Isbn, bookName)
 			if err != nil {
+				goa.ContextLogger(ctx).Error(`unable to insert book`, `error`, err)
 				if err == appmodel.ErrDuplicateKey {
 					return ctx.UnprocessableEntity()
 				}
 				return ctx.InternalServerError()
 			}
 		} else {
+			goa.ContextLogger(ctx).Error(`unable to get book by isbn`, `error`, err)
 			return ctx.InternalServerError()
 		}
 	}
 
 	o, err := m.InsertOwnership(ctx.UserID, int(book.ID))
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to insert ownership`, `error`, err)
 		if err == appmodel.ErrNotFound {
 			return ctx.NotFound()
 		}
@@ -106,16 +112,16 @@ func (c *OwnershipsController) Add(ctx *app.AddOwnershipsContext) error {
 // Delete runs the delete action.
 func (c *OwnershipsController) Delete(ctx *app.DeleteOwnershipsContext) error {
 	// OwnershipsController_Delete: start_implement
-
-	// Put your logic here
 	m, err := appmodel.GetModeler()
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	err = m.DeleteOwnership(ctx.UserID, ctx.BookID)
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to delete ownership`, `error`, err)
 		if err == appmodel.ErrNotFound {
 			return ctx.NotFound()
 		}
@@ -129,16 +135,16 @@ func (c *OwnershipsController) Delete(ctx *app.DeleteOwnershipsContext) error {
 // List runs the list action.
 func (c *OwnershipsController) List(ctx *app.ListOwnershipsContext) error {
 	// OwnershipsController_List: start_implement
-
-	// Put your logic here
 	m, err := appmodel.GetModeler()
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	books, err := m.GetOwnershipList(ctx.UserID)
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to get ownership list`, `error`, err)
 		return ctx.InternalServerError()
 	}
 
@@ -153,16 +159,16 @@ func (c *OwnershipsController) List(ctx *app.ListOwnershipsContext) error {
 // Show runs the show action.
 func (c *OwnershipsController) Show(ctx *app.ShowOwnershipsContext) error {
 	// OwnershipsController_Show: start_implement
-
-	// Put your logic here
 	m, err := appmodel.GetModeler()
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	o, err := m.GetOwnership(ctx.UserID, ctx.BookID)
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to get ownership`, `error`, err)
 		if err == appmodel.ErrNotFound {
 			return ctx.NotFound()
 		}

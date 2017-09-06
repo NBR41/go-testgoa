@@ -37,16 +37,16 @@ func NewBooksController(service *goa.Service) *BooksController {
 // Create runs the create action.
 func (c *BooksController) Create(ctx *app.CreateBooksContext) error {
 	// BooksController_Create: start_implement
-
-	// Put your logic here
 	m, err := appmodel.GetModeler()
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	b, err := m.InsertBook(ctx.Payload.Isbn, ctx.Payload.Name)
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`failed to insert book`, `error`, err)
 		if err == appmodel.ErrDuplicateKey {
 			return ctx.UnprocessableEntity()
 		}
@@ -61,16 +61,16 @@ func (c *BooksController) Create(ctx *app.CreateBooksContext) error {
 // Delete runs the delete action.
 func (c *BooksController) Delete(ctx *app.DeleteBooksContext) error {
 	// BooksController_Delete: start_implement
-
-	// Put your logic here
 	m, err := appmodel.GetModeler()
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	err = m.DeleteBook(ctx.BookID)
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`failed to delete book`, `error`, err)
 		if err == appmodel.ErrNotFound {
 			return ctx.NotFound()
 		}
@@ -84,16 +84,16 @@ func (c *BooksController) Delete(ctx *app.DeleteBooksContext) error {
 // List runs the list action.
 func (c *BooksController) List(ctx *app.ListBooksContext) error {
 	// BooksController_List: start_implement
-
-	// Put your logic here
 	m, err := appmodel.GetModeler()
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	books, err := m.GetBookList()
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`failed to get book list`, `error`, err)
 		return ctx.InternalServerError()
 	}
 
@@ -108,16 +108,16 @@ func (c *BooksController) List(ctx *app.ListBooksContext) error {
 // Show runs the show action.
 func (c *BooksController) Show(ctx *app.ShowBooksContext) error {
 	// BooksController_Show: start_implement
-
-	// Put your logic here
 	m, err := appmodel.GetModeler()
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	b, err := m.GetBookByID(ctx.BookID)
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`failed to get book`, `error`, err)
 		if err == appmodel.ErrNotFound {
 			return ctx.NotFound()
 		}
@@ -131,16 +131,16 @@ func (c *BooksController) Show(ctx *app.ShowBooksContext) error {
 // Update runs the update action.
 func (c *BooksController) Update(ctx *app.UpdateBooksContext) error {
 	// BooksController_Update: start_implement
-
-	// Put your logic here
 	m, err := appmodel.GetModeler()
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	err = m.UpdateBook(ctx.BookID, ctx.Payload.Name)
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`failed to update book`, `error`, err)
 		if err == appmodel.ErrNotFound {
 			return ctx.NotFound()
 		}

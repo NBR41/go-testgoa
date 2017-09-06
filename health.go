@@ -25,6 +25,7 @@ func (c *HealthController) Health(ctx *app.HealthHealthContext) error {
 	// Put your logic here
 	m, err := appmodel.GetModeler()
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
 		return fmt.Errorf("failed to connect to DB")
 	}
 	defer func() { m.Close() }()

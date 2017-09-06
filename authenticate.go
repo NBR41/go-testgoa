@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/NBR41/go-testgoa/app"
 	"github.com/NBR41/go-testgoa/appmodel"
 	"github.com/NBR41/go-testgoa/appsec"
@@ -29,16 +28,16 @@ func NewAuthenticateController(service *goa.Service) *AuthenticateController {
 // Auth runs the auth action.
 func (c *AuthenticateController) Auth(ctx *app.AuthAuthenticateContext) error {
 	// AuthenticateController_Auth: start_implement
-
-	// Put your logic here
 	m, err := appmodel.GetModeler()
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	u, err := m.GetAuthenticatedUser(ctx.Payload.Login, ctx.Payload.Password)
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`failed to auth`, `error`, err)
 		if err == appmodel.ErrNotFound || err == appmodel.ErrInvalidCredentials {
 			return ctx.UnprocessableEntity()
 		}
@@ -47,7 +46,7 @@ func (c *AuthenticateController) Auth(ctx *app.AuthAuthenticateContext) error {
 
 	token, err := appsec.GetAuthToken(u.ID, u.IsAdmin)
 	if err != nil {
-		fmt.Println(err)
+		goa.ContextLogger(ctx).Error(`failed to get token`, `error`, err)
 		return ctx.InternalServerError()
 	}
 

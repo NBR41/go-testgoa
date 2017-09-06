@@ -25,6 +25,7 @@ func (c *ValidationController) Get(ctx *app.GetValidationContext) error {
 	// Put your logic here
 	m, err := appmodel.GetModeler()
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
@@ -61,6 +62,7 @@ func (c *ValidationController) Validate(ctx *app.ValidateValidationContext) erro
 
 	m, err := appmodel.GetModeler()
 	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()

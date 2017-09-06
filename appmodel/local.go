@@ -34,7 +34,6 @@ func NewLocal() *Local {
 				salt:        []byte("hq\xc1\xf1?\x9cC\xd8\xe3Hb\xa8\\\xda8_6I\x89\xdec,V\x06\xd5\xf9\x9dB\xcd\xff\xbdO"),
 				password:    []byte("K\xa5\xe1\x13@'\x84i\xafB\xc1\xd3\x16Q\x82\xf5\xfa8\xbeT\xddPt\x035\x0e\xdae\x10\x97\xf7J\x9f\x81\x9c\xa2\x91d\xd7\x02\x9a4\xa1c\xf1\x98\xfb֏\xdf\xf4\xe4.E\x9b\xec(Z\x87e\xdb\x1f\xd4\xc9"),
 			},
-
 			4: &User{ID: 4, Email: `nobooks@myinventory.com`, Nickname: `nobooks`, IsValidated: true, IsAdmin: false},
 		},
 		books: map[int]*Book{
@@ -45,6 +44,7 @@ func NewLocal() *Local {
 		},
 		ownerships: map[int][]*Book{
 			1: []*Book{book, book4},
+			2: []*Book{},
 			3: []*Book{book2, book3},
 		},
 	}
@@ -173,6 +173,7 @@ func (db *Local) InsertUser(email, nickname, password string) (*User, error) {
 	idx := len(db.users) + 1
 	u = &User{ID: int64(idx), Email: email, Nickname: nickname, salt: salt, password: hash}
 	db.users[idx] = u
+	db.ownerships[idx] = []*Book{}
 	return u, nil
 }
 

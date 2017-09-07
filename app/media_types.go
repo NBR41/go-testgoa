@@ -19,8 +19,10 @@ import (
 //
 // Identifier: application/vnd.authtoken+json; view=default
 type Authtoken struct {
-	// Unique user ID
-	Token string `form:"token" json:"token" xml:"token"`
+	// Access Token
+	AccessToken string `form:"access_token" json:"access_token" xml:"access_token"`
+	// Refresh Token
+	RefreshToken string `form:"refresh_token" json:"refresh_token" xml:"refresh_token"`
 	// user struct
 	User *User `form:"user" json:"user" xml:"user"`
 }
@@ -30,11 +32,17 @@ func (mt *Authtoken) Validate() (err error) {
 	if mt.User == nil {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "user"))
 	}
-	if mt.Token == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "token"))
+	if mt.RefreshToken == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "refresh_token"))
 	}
-	if utf8.RuneCountInString(mt.Token) < 1 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.token`, mt.Token, utf8.RuneCountInString(mt.Token), 1, true))
+	if mt.AccessToken == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "access_token"))
+	}
+	if utf8.RuneCountInString(mt.AccessToken) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.access_token`, mt.AccessToken, utf8.RuneCountInString(mt.AccessToken), 1, true))
+	}
+	if utf8.RuneCountInString(mt.RefreshToken) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.refresh_token`, mt.RefreshToken, utf8.RuneCountInString(mt.RefreshToken), 1, true))
 	}
 	if mt.User != nil {
 		if err2 := mt.User.Validate(); err2 != nil {

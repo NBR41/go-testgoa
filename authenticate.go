@@ -8,10 +8,11 @@ import (
 )
 
 // ToAuthTokenMedia converts a user model and token into a auth token media type
-func ToAuthTokenMedia(a *appmodel.User, token string) *app.Authtoken {
+func ToAuthTokenMedia(a *appmodel.User, accToken, refToken string) *app.Authtoken {
 	return &app.Authtoken{
-		User:  ToUserMedia(a),
-		Token: token,
+		User:         ToUserMedia(a),
+		AccessToken:  accToken,
+		RefreshToken: refToken,
 	}
 }
 
@@ -44,12 +45,18 @@ func (c *AuthenticateController) Auth(ctx *app.AuthAuthenticateContext) error {
 		return ctx.InternalServerError()
 	}
 
-	token, err := appsec.GetAuthToken(u.ID, u.IsAdmin)
+	accToken, err := appsec.GetAuthToken(u.ID, u.IsAdmin)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get token`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to get access token`, `error`, err)
 		return ctx.InternalServerError()
 	}
 
-	return ctx.OK(ToAuthTokenMedia(u, token))
+	refToken, err := appsec.GetRefreshToken(u.ID, u.IsAdmin)
+	if err != nil {
+		goa.ContextLogger(ctx).Error(`failed to get refresh token`, `error`, err)
+		return ctx.InternalServerError()
+	}
+
+	return ctx.OK(ToAuthTokenMedia(u, accToken, refToken))
 	// AuthenticateController_Auth: end_implement
 }

@@ -66,15 +66,19 @@ var AuthTokenMedia = MediaType("application/vnd.authtoken+json", func() {
 	Description("An auth token")
 	Attributes(func() {
 		Attribute("user", UserMedia, "user struct")
-		Attribute("token", String, "Unique user ID", func() {
+		Attribute("access_token", String, "Access Token", func() {
 			MinLength(1)
 		})
-		Required("user", "token")
+		Attribute("refresh_token", String, "Refresh Token", func() {
+			MinLength(1)
+		})
+		Required("user", "refresh_token", "access_token")
 	})
 
 	View("default", func() {
 		Attribute("user")
-		Attribute("token")
+		Attribute("refresh_token")
+		Attribute("access_token")
 	})
 })
 

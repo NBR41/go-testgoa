@@ -56,6 +56,9 @@ func main() {
 	// Mount swagger controller onto service
 	c8 := NewSwagger(service)
 	app.MountSwaggerController(service, c8)
+	// Mount "token" controller
+	c9 := NewTokenController(service)
+	app.MountTokenController(service, c9)
 
 	// Start service
 	if err := service.ListenAndServe(":8089"); err != nil {

@@ -17,6 +17,8 @@ func ToOwnershipMedia(a *appmodel.Ownership) *app.Ownership {
 	}
 }
 
+var newISBNError = goa.NewErrorClass("isbn_error", 422)
+
 // OwnershipsController implements the ownerships resource.
 type OwnershipsController struct {
 	*goa.Controller
@@ -75,7 +77,7 @@ func (c *OwnershipsController) Add(ctx *app.AddOwnershipsContext) error {
 			if err != nil {
 				goa.ContextLogger(ctx).Error(`unable to get book name`, `error`, err)
 				if err == appapi.ErrNoResult {
-					return ctx.UnprocessableEntity()
+					return newISBNError(err)
 				}
 				return ctx.InternalServerError()
 			}
@@ -85,7 +87,7 @@ func (c *OwnershipsController) Add(ctx *app.AddOwnershipsContext) error {
 			if err != nil {
 				goa.ContextLogger(ctx).Error(`unable to insert book`, `error`, err)
 				if err == appmodel.ErrDuplicateKey {
-					return ctx.UnprocessableEntity()
+					return newISBNError(err)
 				}
 				return ctx.InternalServerError()
 			}
@@ -102,7 +104,7 @@ func (c *OwnershipsController) Add(ctx *app.AddOwnershipsContext) error {
 			return ctx.NotFound()
 		}
 		if err == appmodel.ErrDuplicateKey || err == appmodel.ErrInvalidID {
-			return ctx.UnprocessableEntity()
+			return newISBNError(err)
 		}
 		return ctx.InternalServerError()
 	}

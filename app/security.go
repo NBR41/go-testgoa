@@ -33,7 +33,7 @@ func NewJWTSecSecurity() *goa.JWTSecurity {
 		Name:     "Authorization",
 		TokenURL: "",
 	}
-	def.Description = "Use JWT t oauthenticate"
+	def.Description = "Use JWT to authenticate"
 	return &def
 }
 

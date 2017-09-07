@@ -31,7 +31,6 @@ var (
 		})
 		Member("password")
 		Required("login", "password")
-
 	})
 
 	UserCreatePayload = Type("UserCreatePayload", func() {

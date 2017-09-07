@@ -657,9 +657,9 @@ func (ctx *AddOwnershipsContext) NotFound() error {
 }
 
 // UnprocessableEntity sends a HTTP response with status code 422.
-func (ctx *AddOwnershipsContext) UnprocessableEntity() error {
-	ctx.ResponseData.WriteHeader(422)
-	return nil
+func (ctx *AddOwnershipsContext) UnprocessableEntity(r error) error {
+	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	return ctx.ResponseData.Service.Send(ctx.Context, 422, r)
 }
 
 // InternalServerError sends a HTTP response with status code 500.
@@ -1130,6 +1130,104 @@ func (ctx *UpdatePasswordContext) InternalServerError() error {
 
 // ServiceUnavailable sends a HTTP response with status code 503.
 func (ctx *UpdatePasswordContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// AccessTokenContext provides the token access action context.
+type AccessTokenContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+}
+
+// NewAccessTokenContext parses the incoming request URL and body, performs validations and creates the
+// context used by the token controller access action.
+func NewAccessTokenContext(ctx context.Context, r *http.Request, service *goa.Service) (*AccessTokenContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := AccessTokenContext{Context: ctx, ResponseData: resp, RequestData: req}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *AccessTokenContext) OK(r *Token) error {
+	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.token+json")
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *AccessTokenContext) BadRequest(r error) error {
+	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// UnprocessableEntity sends a HTTP response with status code 422.
+func (ctx *AccessTokenContext) UnprocessableEntity() error {
+	ctx.ResponseData.WriteHeader(422)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *AccessTokenContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *AccessTokenContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// AuthTokenContext provides the token auth action context.
+type AuthTokenContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+}
+
+// NewAuthTokenContext parses the incoming request URL and body, performs validations and creates the
+// context used by the token controller auth action.
+func NewAuthTokenContext(ctx context.Context, r *http.Request, service *goa.Service) (*AuthTokenContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := AuthTokenContext{Context: ctx, ResponseData: resp, RequestData: req}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *AuthTokenContext) OK(r *Authtoken) error {
+	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.authtoken+json")
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *AuthTokenContext) BadRequest(r error) error {
+	ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// UnprocessableEntity sends a HTTP response with status code 422.
+func (ctx *AuthTokenContext) UnprocessableEntity() error {
+	ctx.ResponseData.WriteHeader(422)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *AuthTokenContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *AuthTokenContext) ServiceUnavailable() error {
 	ctx.ResponseData.WriteHeader(503)
 	return nil
 }

@@ -446,10 +446,10 @@ func AddOwnershipsUnauthorized(t goatest.TInterface, ctx context.Context, servic
 }
 
 // AddOwnershipsUnprocessableEntity runs the method Add of the given controller with the given parameters and payload.
-// It returns the response writer so it's possible to inspect the response headers.
+// It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func AddOwnershipsUnprocessableEntity(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.OwnershipsController, userID int, payload *app.AddOwnershipsPayload) http.ResponseWriter {
+func AddOwnershipsUnprocessableEntity(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.OwnershipsController, userID int, payload *app.AddOwnershipsPayload) (http.ResponseWriter, error) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -474,8 +474,7 @@ func AddOwnershipsUnprocessableEntity(t goatest.TInterface, ctx context.Context,
 		if !ok {
 			panic(err) // bug
 		}
-		t.Errorf("unexpected payload validation error: %+v", e)
-		return nil
+		return nil, e
 	}
 
 	// Setup request context
@@ -509,9 +508,17 @@ func AddOwnershipsUnprocessableEntity(t goatest.TInterface, ctx context.Context,
 	if rw.Code != 422 {
 		t.Errorf("invalid response status code: got %+v, expected 422", rw.Code)
 	}
+	var mt error
+	if resp != nil {
+		var _ok bool
+		mt, _ok = resp.(error)
+		if !_ok {
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of error", resp, resp)
+		}
+	}
 
 	// Return results
-	return rw
+	return rw, mt
 }
 
 // CreateOwnershipsBadRequest runs the method Create of the given controller with the given parameters and payload.

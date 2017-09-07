@@ -10,8 +10,9 @@ var (
 	bookIDPath = "/:book_id"
 )
 
+// JWTAuth jwt security
 var JWTAuth = JWTSecurity("JWTSec", func() {
-	Description("Use JWT t oauthenticate")
+	Description("Use JWT to authenticate")
 	Header("Authorization")
 })
 
@@ -25,6 +26,38 @@ var _ = Resource("authenticate", func() {
 		// OK
 		Response(OK, AuthTokenMedia)
 		// wrong credentials
+		Response(UnprocessableEntity)
+		// Errors
+		Response(InternalServerError)
+		Response(ServiceUnavailable)
+		Response(BadRequest, ErrorMedia)
+	})
+})
+
+var _ = Resource("token", func() {
+	BasePath("/token")
+
+	Action("access", func() {
+		Description("Get users")
+		Routing(GET("/access_token"))
+		Security(JWTAuth)
+		// OK
+		Response(OK, TokenMedia)
+		// App error
+		Response(UnprocessableEntity)
+		// Errors
+		Response(InternalServerError)
+		Response(ServiceUnavailable)
+		Response(BadRequest, ErrorMedia)
+	})
+
+	Action("auth", func() {
+		Description("Get users")
+		Routing(GET("/auth"))
+		Security(JWTAuth)
+		// OK
+		Response(OK, AuthTokenMedia)
+		// App error
 		Response(UnprocessableEntity)
 		// Errors
 		Response(InternalServerError)

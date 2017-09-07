@@ -657,6 +657,82 @@ func handleSwaggerOrigin(h goa.Handler) goa.Handler {
 	}
 }
 
+// TokenController is the controller interface for the Token actions.
+type TokenController interface {
+	goa.Muxer
+	Access(*AccessTokenContext) error
+	Auth(*AuthTokenContext) error
+}
+
+// MountTokenController "mounts" a Token resource controller on the given service.
+func MountTokenController(service *goa.Service, ctrl TokenController) {
+	initService(service)
+	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/token/access_token", ctrl.MuxHandler("preflight", handleTokenOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/token/auth", ctrl.MuxHandler("preflight", handleTokenOrigin(cors.HandlePreflight()), nil))
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewAccessTokenContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Access(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleTokenOrigin(h)
+	service.Mux.Handle("GET", "/token/access_token", ctrl.MuxHandler("access", h, nil))
+	service.LogInfo("mount", "ctrl", "Token", "action", "Access", "route", "GET /token/access_token", "security", "JWTSec")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewAuthTokenContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Auth(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleTokenOrigin(h)
+	service.Mux.Handle("GET", "/token/auth", ctrl.MuxHandler("auth", h, nil))
+	service.LogInfo("mount", "ctrl", "Token", "action", "Auth", "route", "GET /token/auth", "security", "JWTSec")
+}
+
+// handleTokenOrigin applies the CORS response headers corresponding to the origin.
+func handleTokenOrigin(h goa.Handler) goa.Handler {
+
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "http://localhost:4200") {
+			ctx = goa.WithLogContext(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Vary", "Origin")
+			rw.Header().Set("Access-Control-Max-Age", "600")
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+				rw.Header().Set("Access-Control-Allow-Headers", "Authorization, Origin, Content-Type, Accept")
+			}
+			return h(ctx, rw, req)
+		}
+
+		return h(ctx, rw, req)
+	}
+}
+
 // UsersController is the controller interface for the Users actions.
 type UsersController interface {
 	goa.Muxer

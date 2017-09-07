@@ -29,7 +29,7 @@ func ToUserTinyMedia(a *appmodel.User) *app.UserTiny {
 	}
 }
 
-var errDuplicateKey = goa.NewErrorClass("duplicate_key", 422)
+var newDuplicateKey = goa.NewErrorClass("duplicate_key", 422)
 
 // UsersController implements the users resource.
 type UsersController struct {
@@ -58,11 +58,11 @@ func (c *UsersController) Create(ctx *app.CreateUsersContext) error {
 		goa.ContextLogger(ctx).Error(`unable to insert user`, `error`, err)
 		switch err {
 		case appmodel.ErrDuplicateKey:
-			return errDuplicateKey(err)
+			return newDuplicateKey(err)
 		case appmodel.ErrDuplicateEmail:
-			return errDuplicateKey(err)
+			return newDuplicateKey(err)
 		case appmodel.ErrDuplicateNickname:
-			return errDuplicateKey(err)
+			return newDuplicateKey(err)
 		default:
 			return ctx.InternalServerError()
 		}

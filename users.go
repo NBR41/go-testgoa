@@ -150,11 +150,11 @@ func (c *UsersController) List(ctx *app.ListUsersContext) error {
 		}
 	}
 
-	us := make(app.UserTinyCollection, len(users))
+	us := make(app.UserCollection, len(users))
 	for i, u := range users {
-		us[i] = ToUserTinyMedia(&u)
+		us[i] = ToUserMedia(&u)
 	}
-	return ctx.OKTiny(us)
+	return ctx.OK(us)
 	// UsersController_List: end_implement
 }
 

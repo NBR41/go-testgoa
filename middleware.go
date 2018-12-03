@@ -5,13 +5,12 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/NBR41/go-testgoa/appsec"
+	"github.com/NBR41/go-testgoa/controllers"
+	"github.com/NBR41/go-testgoa/internal/security"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/goadesign/goa"
 	goajwt "github.com/goadesign/goa/middleware/security/jwt"
 )
-
-type ctxKey string
 
 func jwtUserValiadtion(h goa.Handler) goa.Handler {
 	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
@@ -34,18 +33,18 @@ func jwtUserValiadtion(h goa.Handler) goa.Handler {
 
 		// check scopes
 		if req.URL != nil && (req.URL.Path == "/token/auth" || req.URL.Path == "/token/access") {
-			if claims["scope"] != appsec.ScopeRefresh {
+			if claims["scope"] != security.ScopeRefresh {
 				return goajwt.ErrJWTError("unauthorized")
 			}
 		} else {
-			if claims["scope"] != appsec.ScopeAccess {
+			if claims["scope"] != security.ScopeAccess {
 				return goajwt.ErrJWTError("unauthorized")
 			}
 		}
 
 		// store values from claims
-		ctx = context.WithValue(ctx, ctxKey("is_admin"), claims["is_admin"])
-		ctx = context.WithValue(ctx, ctxKey("user_id"), int64(claims["user_id"].(float64)))
+		ctx = context.WithValue(ctx, controllers.CtxKey("is_admin"), claims["is_admin"])
+		ctx = context.WithValue(ctx, controllers.CtxKey("user_id"), int64(claims["user_id"].(float64)))
 
 		if claims["is_admin"] == true {
 			return h(ctx, rw, req)

@@ -65,12 +65,12 @@ func (c *OwnershipsController) Add(ctx *app.AddOwnershipsContext) error {
 	}
 	defer func() { m.Close() }()
 
-	book, err := m.GetBookByISBN(ctx.Payload.Isbn)
+	book, err := m.GetBookByISBN(ctx.Payload.BookIsbn)
 	if err != nil {
 		if err == model.ErrNotFound {
 			// Get the book name
 			var bookName string
-			bookName, err = c.api.GetBookName(ctx.Payload.Isbn)
+			bookName, err = c.api.GetBookName(ctx.Payload.BookIsbn)
 			if err != nil {
 				goa.ContextLogger(ctx).Error(`unable to get book name`, `error`, err)
 				if err == api.ErrNoResult {
@@ -80,7 +80,7 @@ func (c *OwnershipsController) Add(ctx *app.AddOwnershipsContext) error {
 			}
 
 			// insert the new book
-			book, err = m.InsertBook(ctx.Payload.Isbn, bookName)
+			book, err = m.InsertBook(ctx.Payload.BookIsbn, bookName)
 			if err != nil {
 				goa.ContextLogger(ctx).Error(`unable to insert book`, `error`, err)
 				if err == model.ErrDuplicateKey {

@@ -36,32 +36,39 @@ func main() {
 	app.UseJWTSecMiddleware(service, goajwt.New(security.JWTAuthKey, customMiddleware, app.NewJWTSecSecurity()))
 
 	// Mount "authenticate" controller
-	c := controllers.NewAuthenticateController(service, conf.fmod, conf.token)
-	app.MountAuthenticateController(service, c)
+	app.MountAuthenticateController(service, controllers.NewAuthenticateController(service, conf.fmod, conf.token))
 	// Mount "books" controller
-	c2 := controllers.NewBooksController(service, conf.fmod)
-	app.MountBooksController(service, c2)
+	app.MountBooksController(service, controllers.NewBooksController(service, conf.fmod))
 	// Mount "health" controller
-	c3 := controllers.NewHealthController(service, conf.fmod)
-	app.MountHealthController(service, c3)
+	app.MountHealthController(service, controllers.NewHealthController(service, conf.fmod))
 	// Mount "ownerships" controller
-	c4 := controllers.NewOwnershipsController(service, conf.fmod, conf.api)
-	app.MountOwnershipsController(service, c4)
+	app.MountOwnershipsController(service, controllers.NewOwnershipsController(service, conf.fmod, conf.api))
 	// Mount "password" controller
-	c5 := controllers.NewPasswordController(service, conf.fmod, conf.token, conf.mail)
-	app.MountPasswordController(service, c5)
+	app.MountPasswordController(service, controllers.NewPasswordController(service, conf.fmod, conf.token, conf.mail))
 	// Mount "users" controller
-	c6 := controllers.NewUsersController(service, conf.fmod, conf.token, conf.mail)
-	app.MountUsersController(service, c6)
+	app.MountUsersController(service, controllers.NewUsersController(service, conf.fmod, conf.token, conf.mail))
 	// Mount "validation" controller
-	c7 := controllers.NewValidationController(service, conf.fmod, conf.token, conf.mail)
-	app.MountValidationController(service, c7)
+	app.MountValidationController(service, controllers.NewValidationController(service, conf.fmod, conf.token, conf.mail))
 	// Mount swagger controller onto service
-	c8 := controllers.NewSwagger(service)
-	app.MountSwaggerController(service, c8)
+	app.MountSwaggerController(service, controllers.NewSwagger(service))
 	// Mount "token" controller
-	c9 := controllers.NewTokenController(service, conf.fmod, conf.token)
-	app.MountTokenController(service, c9)
+	app.MountTokenController(service, controllers.NewTokenController(service, conf.fmod, conf.token))
+	// Mount "authors" controller
+	app.MountAuthorsController(service, controllers.NewAuthorsController(service))
+	// Mount "categories" controller
+	app.MountCategoriesController(service, controllers.NewCategoriesController(service))
+	// Mount "collections" controller
+	app.MountCollectionsController(service, controllers.NewCollectionsController(service))
+	// Mount "edition_types" controller
+	app.MountEditionTypesController(service, controllers.NewEditionTypesController(service))
+	// Mount "editors" controller
+	app.MountEditorsController(service, controllers.NewEditorsController(service))
+	// Mount "genres" controller
+	app.MountGenresController(service, controllers.NewGenresController(service))
+	// Mount "roles" controller
+	app.MountRolesController(service, controllers.NewRolesController(service))
+	// Mount "series" controller
+	app.MountSeriesController(service, controllers.NewSeriesController(service))
 
 	// Start service
 	if err := service.ListenAndServe(":8089"); err != nil {

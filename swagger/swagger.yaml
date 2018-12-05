@@ -1,0 +1,3135 @@
+consumes:
+- application/json
+- application/xml
+- application/gob
+- application/x-gob
+definitions:
+  AddOwnershipsPayload:
+    example:
+      book_isbn: 0jx
+    properties:
+      book_isbn:
+        description: Book ISBN
+        example: 0jx
+        maxLength: 128
+        minLength: 1
+        type: string
+    required:
+    - book_isbn
+    title: AddOwnershipsPayload
+    type: object
+  AuthenticatePayload:
+    example:
+      login: atzq5c
+      password: rd2gmo
+    properties:
+      login:
+        description: email or nickname
+        example: atzq5c
+        minLength: 5
+        type: string
+      password:
+        description: user password
+        example: rd2gmo
+        maxLength: 32
+        minLength: 1
+        type: string
+    required:
+    - login
+    - password
+    title: AuthenticatePayload
+    type: object
+  Author:
+    description: An Author (default view)
+    example:
+      author_id: 1
+      author_name: 8rt
+      href: Autem est eaque itaque sed aut debitis.
+    properties:
+      author_id:
+        description: Unique Author ID
+        example: 1
+        minimum: 1
+        type: integer
+      author_name:
+        description: Author Name
+        example: 8rt
+        maxLength: 128
+        minLength: 1
+        type: string
+      href:
+        description: API href for making requests
+        example: Autem est eaque itaque sed aut debitis.
+        type: string
+    required:
+    - author_id
+    - author_name
+    - href
+    title: 'Mediatype identifier: application/vnd.author+json; view=default'
+    type: object
+  AuthorCollection:
+    description: AuthorCollection is the media type for an array of Author (default
+      view)
+    example:
+    - author_id: 1
+      author_name: 8rt
+      href: Autem est eaque itaque sed aut debitis.
+    items:
+      $ref: '#/definitions/Author'
+    title: 'Mediatype identifier: application/vnd.author+json; type=collection; view=default'
+    type: array
+  Authtoken:
+    description: An auth token (default view)
+    example:
+      access_token: dv
+      refresh_token: 8yb
+      user:
+        email: me@foo.bar
+        href: Illum omnis sit asperiores eligendi ipsum quia.
+        is_admin: true
+        is_validated: true
+        nickname: j6033t41m5
+        user_id: 1
+    properties:
+      access_token:
+        description: Access Token
+        example: dv
+        minLength: 1
+        type: string
+      refresh_token:
+        description: Refresh Token
+        example: 8yb
+        minLength: 1
+        type: string
+      user:
+        $ref: '#/definitions/User'
+    required:
+    - user
+    - refresh_token
+    - access_token
+    title: 'Mediatype identifier: application/vnd.authtoken+json; view=default'
+    type: object
+  Book:
+    description: A Book (default view)
+    example:
+      book_id: 1
+      book_isbn: uuhe
+      book_name: jnpsp
+      href: Numquam quod nesciunt incidunt tempore.
+    properties:
+      book_id:
+        description: Unique Book ID
+        example: 1
+        minimum: 1
+        type: integer
+      book_isbn:
+        description: Book ISBN
+        example: uuhe
+        maxLength: 128
+        minLength: 1
+        type: string
+      book_name:
+        description: Book Name
+        example: jnpsp
+        maxLength: 128
+        minLength: 1
+        type: string
+      href:
+        description: API href for making requests
+        example: Numquam quod nesciunt incidunt tempore.
+        type: string
+    required:
+    - book_id
+    - book_isbn
+    - book_name
+    - href
+    title: 'Mediatype identifier: application/vnd.book+json; view=default'
+    type: object
+  BookCollection:
+    description: BookCollection is the media type for an array of Book (default view)
+    example:
+    - book_id: 1
+      book_isbn: uuhe
+      book_name: jnpsp
+      href: Numquam quod nesciunt incidunt tempore.
+    - book_id: 1
+      book_isbn: uuhe
+      book_name: jnpsp
+      href: Numquam quod nesciunt incidunt tempore.
+    - book_id: 1
+      book_isbn: uuhe
+      book_name: jnpsp
+      href: Numquam quod nesciunt incidunt tempore.
+    items:
+      $ref: '#/definitions/Book'
+    title: 'Mediatype identifier: application/vnd.book+json; type=collection; view=default'
+    type: array
+  Category:
+    description: A Category (default view)
+    example:
+      category_id: 1
+      category_name: ncc0zbos
+      href: Eligendi quas laborum qui.
+    properties:
+      category_id:
+        description: Unique Category ID
+        example: 1
+        minimum: 1
+        type: integer
+      category_name:
+        description: Category Name (Thriller/Romance/...)
+        example: ncc0zbos
+        maxLength: 128
+        minLength: 1
+        type: string
+      href:
+        description: API href for making requests
+        example: Eligendi quas laborum qui.
+        type: string
+    required:
+    - category_id
+    - category_name
+    - href
+    title: 'Mediatype identifier: application/vnd.category+json; view=default'
+    type: object
+  CategoryCollection:
+    description: CategoryCollection is the media type for an array of Category (default
+      view)
+    example:
+    - category_id: 1
+      category_name: ncc0zbos
+      href: Eligendi quas laborum qui.
+    items:
+      $ref: '#/definitions/Category'
+    title: 'Mediatype identifier: application/vnd.category+json; type=collection;
+      view=default'
+    type: array
+  Collection:
+    description: A Collection (default view)
+    example:
+      collection_id: 1
+      collection_name: t3t
+      href: Aperiam sapiente tenetur deleniti non non.
+    properties:
+      collection_id:
+        description: Unique Collection ID
+        example: 1
+        minimum: 1
+        type: integer
+      collection_name:
+        description: Collection Name (Découverte/Shonen)
+        example: t3t
+        maxLength: 128
+        minLength: 1
+        type: string
+      href:
+        description: API href for making requests
+        example: Aperiam sapiente tenetur deleniti non non.
+        type: string
+    required:
+    - collection_id
+    - collection_name
+    - href
+    title: 'Mediatype identifier: application/vnd.collection+json; view=default'
+    type: object
+  CollectionCollection:
+    description: CollectionCollection is the media type for an array of Collection
+      (default view)
+    example:
+    - collection_id: 1
+      collection_name: t3t
+      href: Aperiam sapiente tenetur deleniti non non.
+    - collection_id: 1
+      collection_name: t3t
+      href: Aperiam sapiente tenetur deleniti non non.
+    items:
+      $ref: '#/definitions/Collection'
+    title: 'Mediatype identifier: application/vnd.collection+json; type=collection;
+      view=default'
+    type: array
+  CreateAuthorsPayload:
+    example:
+      name: Sapiente rerum molestiae voluptatem voluptatem neque.
+    properties:
+      name:
+        example: Sapiente rerum molestiae voluptatem voluptatem neque.
+        type: string
+    required:
+    - name
+    title: CreateAuthorsPayload
+    type: object
+  CreateBooksPayload:
+    example:
+      isbn: Sequi harum.
+      name: Vitae quam in omnis.
+    properties:
+      isbn:
+        example: Sequi harum.
+        type: string
+      name:
+        example: Vitae quam in omnis.
+        type: string
+    required:
+    - isbn
+    - name
+    title: CreateBooksPayload
+    type: object
+  CreateCategoriesPayload:
+    example:
+      name: A ea qui sed ex quae.
+    properties:
+      name:
+        example: A ea qui sed ex quae.
+        type: string
+    required:
+    - name
+    title: CreateCategoriesPayload
+    type: object
+  CreateCollectionsPayload:
+    example:
+      name: Aut sit quia.
+    properties:
+      name:
+        example: Aut sit quia.
+        type: string
+    required:
+    - name
+    title: CreateCollectionsPayload
+    type: object
+  CreateEditionTypesPayload:
+    example:
+      name: Et pariatur sunt consequatur.
+    properties:
+      name:
+        example: Et pariatur sunt consequatur.
+        type: string
+    required:
+    - name
+    title: CreateEditionTypesPayload
+    type: object
+  CreateEditorsPayload:
+    example:
+      name: Ut natus quia harum.
+    properties:
+      name:
+        example: Ut natus quia harum.
+        type: string
+    required:
+    - name
+    title: CreateEditorsPayload
+    type: object
+  CreateGenresPayload:
+    example:
+      name: Dicta dolores consequatur et quod.
+    properties:
+      name:
+        example: Dicta dolores consequatur et quod.
+        type: string
+    required:
+    - name
+    title: CreateGenresPayload
+    type: object
+  CreateOwnershipsPayload:
+    example:
+      book_id: 1
+    properties:
+      book_id:
+        description: Unique Book ID
+        example: 1
+        minimum: 1
+        type: integer
+    required:
+    - book_id
+    title: CreateOwnershipsPayload
+    type: object
+  CreateRolesPayload:
+    example:
+      name: Voluptas officia est eius optio.
+    properties:
+      name:
+        example: Voluptas officia est eius optio.
+        type: string
+    required:
+    - name
+    title: CreateRolesPayload
+    type: object
+  CreateSeriesPayload:
+    example:
+      name: Assumenda quibusdam fugit labore aut sunt.
+    properties:
+      name:
+        example: Assumenda quibusdam fugit labore aut sunt.
+        type: string
+    required:
+    - name
+    title: CreateSeriesPayload
+    type: object
+  Editiontype:
+    description: An Edition Type (default view)
+    example:
+      edition_type_id: 1
+      edition_type_name: he
+      href: Tempore excepturi vitae expedita.
+    properties:
+      edition_type_id:
+        description: Unique Edition type ID
+        example: 1
+        minimum: 1
+        type: integer
+      edition_type_name:
+        description: Editor Name (Deluxe/Ultimate/Pocket)
+        example: he
+        maxLength: 128
+        minLength: 1
+        type: string
+      href:
+        description: API href for making requests
+        example: Tempore excepturi vitae expedita.
+        type: string
+    required:
+    - edition_type_id
+    - edition_type_name
+    - href
+    title: 'Mediatype identifier: application/vnd.editiontype+json; view=default'
+    type: object
+  EditiontypeCollection:
+    description: EditiontypeCollection is the media type for an array of Editiontype
+      (default view)
+    example:
+    - edition_type_id: 1
+      edition_type_name: he
+      href: Tempore excepturi vitae expedita.
+    - edition_type_id: 1
+      edition_type_name: he
+      href: Tempore excepturi vitae expedita.
+    - edition_type_id: 1
+      edition_type_name: he
+      href: Tempore excepturi vitae expedita.
+    items:
+      $ref: '#/definitions/Editiontype'
+    title: 'Mediatype identifier: application/vnd.editiontype+json; type=collection;
+      view=default'
+    type: array
+  Editor:
+    description: An Editor (default view)
+    example:
+      editor_id: 1
+      editor_name: xfcn05gh
+      href: Eos magni dolorem inventore quia.
+    properties:
+      editor_id:
+        description: Unique Editor ID
+        example: 1
+        minimum: 1
+        type: integer
+      editor_name:
+        description: Editor Name (Glénat/Delcourt)
+        example: xfcn05gh
+        maxLength: 128
+        minLength: 1
+        type: string
+      href:
+        description: API href for making requests
+        example: Eos magni dolorem inventore quia.
+        type: string
+    required:
+    - editor_id
+    - editor_name
+    - href
+    title: 'Mediatype identifier: application/vnd.editor+json; view=default'
+    type: object
+  EditorCollection:
+    description: EditorCollection is the media type for an array of Editor (default
+      view)
+    example:
+    - editor_id: 1
+      editor_name: xfcn05gh
+      href: Eos magni dolorem inventore quia.
+    items:
+      $ref: '#/definitions/Editor'
+    title: 'Mediatype identifier: application/vnd.editor+json; type=collection; view=default'
+    type: array
+  Genre:
+    description: A Genre (default view)
+    example:
+      genre_id: 1
+      genre_name: syonxl
+      href: Suscipit numquam amet ut error consequuntur.
+    properties:
+      genre_id:
+        description: Unique Genre ID
+        example: 1
+        minimum: 1
+        type: integer
+      genre_name:
+        description: Genre Name (Shonen/Shojo/Seinen)
+        example: syonxl
+        maxLength: 128
+        minLength: 1
+        type: string
+      href:
+        description: API href for making requests
+        example: Suscipit numquam amet ut error consequuntur.
+        type: string
+    required:
+    - genre_id
+    - genre_name
+    - href
+    title: 'Mediatype identifier: application/vnd.genre+json; view=default'
+    type: object
+  GenreCollection:
+    description: GenreCollection is the media type for an array of Genre (default
+      view)
+    example:
+    - genre_id: 1
+      genre_name: syonxl
+      href: Suscipit numquam amet ut error consequuntur.
+    - genre_id: 1
+      genre_name: syonxl
+      href: Suscipit numquam amet ut error consequuntur.
+    - genre_id: 1
+      genre_name: syonxl
+      href: Suscipit numquam amet ut error consequuntur.
+    items:
+      $ref: '#/definitions/Genre'
+    title: 'Mediatype identifier: application/vnd.genre+json; type=collection; view=default'
+    type: array
+  Ownership:
+    description: A User ownership (default view)
+    example:
+      book:
+        book_id: 1
+        book_isbn: uuhe
+        book_name: jnpsp
+        href: Numquam quod nesciunt incidunt tempore.
+      book_id: 1
+      href: Et et voluptas.
+      user_id: 1
+    properties:
+      book:
+        $ref: '#/definitions/Book'
+      book_id:
+        description: Unique Book ID
+        example: 1
+        minimum: 1
+        type: integer
+      href:
+        description: API href for making requests
+        example: Et et voluptas.
+        type: string
+      user_id:
+        description: Unique User ID
+        example: 1
+        minimum: 1
+        type: integer
+    required:
+    - user_id
+    - book_id
+    - href
+    title: 'Mediatype identifier: application/vnd.ownership+json; view=default'
+    type: object
+  OwnershipCollection:
+    description: OwnershipCollection is the media type for an array of Ownership (default
+      view)
+    example:
+    - book:
+        book_id: 1
+        book_isbn: uuhe
+        book_name: jnpsp
+        href: Numquam quod nesciunt incidunt tempore.
+      book_id: 1
+      href: Et et voluptas.
+      user_id: 1
+    - book:
+        book_id: 1
+        book_isbn: uuhe
+        book_name: jnpsp
+        href: Numquam quod nesciunt incidunt tempore.
+      book_id: 1
+      href: Et et voluptas.
+      user_id: 1
+    - book:
+        book_id: 1
+        book_isbn: uuhe
+        book_name: jnpsp
+        href: Numquam quod nesciunt incidunt tempore.
+      book_id: 1
+      href: Et et voluptas.
+      user_id: 1
+    items:
+      $ref: '#/definitions/Ownership'
+    title: 'Mediatype identifier: application/vnd.ownership+json; type=collection;
+      view=default'
+    type: array
+  PasswordChangePayload:
+    example:
+      password: 15y1
+      token: 7ni
+    properties:
+      password:
+        description: user password
+        example: 15y1
+        maxLength: 32
+        minLength: 1
+        type: string
+      token:
+        description: token
+        example: 7ni
+        minLength: 1
+        type: string
+    required:
+    - password
+    - token
+    title: PasswordChangePayload
+    type: object
+  Role:
+    description: A Role (default view)
+    example:
+      href: Dolorem quae quo neque provident.
+      role_id: 1
+      role_name: mdm5da
+    properties:
+      href:
+        description: API href for making requests
+        example: Dolorem quae quo neque provident.
+        type: string
+      role_id:
+        description: Unique Role ID
+        example: 1
+        minimum: 1
+        type: integer
+      role_name:
+        description: Role Name (Author/Scenarist/Cartoonist)
+        example: mdm5da
+        maxLength: 128
+        minLength: 1
+        type: string
+    required:
+    - role_id
+    - role_name
+    - href
+    title: 'Mediatype identifier: application/vnd.role+json; view=default'
+    type: object
+  RoleCollection:
+    description: RoleCollection is the media type for an array of Role (default view)
+    example:
+    - href: Dolorem quae quo neque provident.
+      role_id: 1
+      role_name: mdm5da
+    - href: Dolorem quae quo neque provident.
+      role_id: 1
+      role_name: mdm5da
+    items:
+      $ref: '#/definitions/Role'
+    title: 'Mediatype identifier: application/vnd.role+json; type=collection; view=default'
+    type: array
+  Series:
+    description: A Serie (default view)
+    example:
+      href: Impedit eos harum.
+      series_id: 1
+      series_name: 94r3n5bx3p
+    properties:
+      href:
+        description: API href for making requests
+        example: Impedit eos harum.
+        type: string
+      series_id:
+        description: Unique Series ID
+        example: 1
+        minimum: 1
+        type: integer
+      series_name:
+        description: Series Name (Akira/Dragon ball)
+        example: 94r3n5bx3p
+        maxLength: 128
+        minLength: 1
+        type: string
+    required:
+    - series_id
+    - series_name
+    - href
+    title: 'Mediatype identifier: application/vnd.series+json; view=default'
+    type: object
+  SeriesCollection:
+    description: SeriesCollection is the media type for an array of Series (default
+      view)
+    example:
+    - href: Impedit eos harum.
+      series_id: 1
+      series_name: 94r3n5bx3p
+    - href: Impedit eos harum.
+      series_id: 1
+      series_name: 94r3n5bx3p
+    items:
+      $ref: '#/definitions/Series'
+    title: 'Mediatype identifier: application/vnd.series+json; type=collection; view=default'
+    type: array
+  Token:
+    description: A token (default view)
+    example:
+      token: wa
+    properties:
+      token:
+        description: token
+        example: wa
+        minLength: 1
+        type: string
+    required:
+    - token
+    title: 'Mediatype identifier: application/vnd.token+json; view=default'
+    type: object
+  UpdateAuthorsPayload:
+    example:
+      name: Nostrum assumenda omnis eius iure quam in.
+    properties:
+      name:
+        example: Nostrum assumenda omnis eius iure quam in.
+        type: string
+    required:
+    - name
+    title: UpdateAuthorsPayload
+    type: object
+  UpdateBooksPayload:
+    example:
+      name: Maxime quia dolorem nobis qui.
+    properties:
+      name:
+        example: Maxime quia dolorem nobis qui.
+        type: string
+    required:
+    - name
+    title: UpdateBooksPayload
+    type: object
+  UpdateCategoriesPayload:
+    example:
+      name: Porro magnam.
+    properties:
+      name:
+        example: Porro magnam.
+        type: string
+    required:
+    - name
+    title: UpdateCategoriesPayload
+    type: object
+  UpdateCollectionsPayload:
+    example:
+      name: Et qui eligendi.
+    properties:
+      name:
+        example: Et qui eligendi.
+        type: string
+    required:
+    - name
+    title: UpdateCollectionsPayload
+    type: object
+  UpdateEditionTypesPayload:
+    example:
+      name: Placeat voluptatem aut ea.
+    properties:
+      name:
+        example: Placeat voluptatem aut ea.
+        type: string
+    required:
+    - name
+    title: UpdateEditionTypesPayload
+    type: object
+  UpdateEditorsPayload:
+    example:
+      name: Facilis deleniti quia aut est.
+    properties:
+      name:
+        example: Facilis deleniti quia aut est.
+        type: string
+    required:
+    - name
+    title: UpdateEditorsPayload
+    type: object
+  UpdateGenresPayload:
+    example:
+      name: Voluptatem iusto dolores omnis ducimus aut dolorum.
+    properties:
+      name:
+        example: Voluptatem iusto dolores omnis ducimus aut dolorum.
+        type: string
+    required:
+    - name
+    title: UpdateGenresPayload
+    type: object
+  UpdateRolesPayload:
+    example:
+      name: Repudiandae labore ducimus et deserunt consequatur.
+    properties:
+      name:
+        example: Repudiandae labore ducimus et deserunt consequatur.
+        type: string
+    required:
+    - name
+    title: UpdateRolesPayload
+    type: object
+  UpdateSeriesPayload:
+    example:
+      name: Veniam natus vitae ea enim.
+    properties:
+      name:
+        example: Veniam natus vitae ea enim.
+        type: string
+    required:
+    - name
+    title: UpdateSeriesPayload
+    type: object
+  UpdateUsersPayload:
+    example:
+      nickname: dw649
+    properties:
+      nickname:
+        description: user nickname
+        example: dw649
+        maxLength: 32
+        minLength: 1
+        type: string
+    required:
+    - nickname
+    title: UpdateUsersPayload
+    type: object
+  User:
+    description: A User (default view)
+    example:
+      email: me@foo.bar
+      href: Illum omnis sit asperiores eligendi ipsum quia.
+      is_admin: true
+      is_validated: true
+      nickname: j6033t41m5
+      user_id: 1
+    properties:
+      email:
+        description: user email
+        example: me@foo.bar
+        format: email
+        type: string
+      href:
+        description: API href for making requests
+        example: Illum omnis sit asperiores eligendi ipsum quia.
+        type: string
+      is_admin:
+        example: true
+        type: boolean
+      is_validated:
+        example: true
+        type: boolean
+      nickname:
+        description: user nickname
+        example: j6033t41m5
+        maxLength: 32
+        minLength: 1
+        type: string
+      user_id:
+        description: Unique User ID
+        example: 1
+        minimum: 1
+        type: integer
+    required:
+    - user_id
+    - email
+    - nickname
+    - is_admin
+    - is_validated
+    - href
+    title: 'Mediatype identifier: application/vnd.user+json; view=default'
+    type: object
+  UserCollection:
+    description: UserCollection is the media type for an array of User (default view)
+    example:
+    - email: me@foo.bar
+      href: Illum omnis sit asperiores eligendi ipsum quia.
+      is_admin: true
+      is_validated: true
+      nickname: j6033t41m5
+      user_id: 1
+    - email: me@foo.bar
+      href: Illum omnis sit asperiores eligendi ipsum quia.
+      is_admin: true
+      is_validated: true
+      nickname: j6033t41m5
+      user_id: 1
+    - email: me@foo.bar
+      href: Illum omnis sit asperiores eligendi ipsum quia.
+      is_admin: true
+      is_validated: true
+      nickname: j6033t41m5
+      user_id: 1
+    items:
+      $ref: '#/definitions/User'
+    title: 'Mediatype identifier: application/vnd.user+json; type=collection; view=default'
+    type: array
+  UserCreatePayload:
+    example:
+      email: me@foo.bar
+      nickname: "4"
+      password: h4
+    properties:
+      email:
+        description: user email
+        example: me@foo.bar
+        format: email
+        type: string
+      nickname:
+        description: user nickname
+        example: "4"
+        maxLength: 32
+        minLength: 1
+        type: string
+      password:
+        description: user password
+        example: h4
+        maxLength: 32
+        minLength: 1
+        type: string
+    required:
+    - email
+    - nickname
+    - password
+    title: UserCreatePayload
+    type: object
+  ValidateValidationPayload:
+    example:
+      token: q0
+    properties:
+      token:
+        description: token
+        example: q0
+        minLength: 1
+        type: string
+    required:
+    - token
+    title: ValidateValidationPayload
+    type: object
+  error:
+    description: Error response media type (default view)
+    example:
+      code: invalid_value
+      detail: Value of ID must be an integer
+      id: 3F1FKVRR
+      meta:
+        timestamp: 1.458609066e+09
+      status: "400"
+    properties:
+      code:
+        description: an application-specific error code, expressed as a string value.
+        example: invalid_value
+        type: string
+      detail:
+        description: a human-readable explanation specific to this occurrence of the
+          problem.
+        example: Value of ID must be an integer
+        type: string
+      id:
+        description: a unique identifier for this particular occurrence of the problem.
+        example: 3F1FKVRR
+        type: string
+      meta:
+        additionalProperties: true
+        description: a meta object containing non-standard meta-information about
+          the error.
+        example:
+          timestamp: 1.458609066e+09
+        type: object
+      status:
+        description: the HTTP status code applicable to this problem, expressed as
+          a string value.
+        example: "400"
+        type: string
+    title: 'Mediatype identifier: application/vnd.goa.error; view=default'
+    type: object
+externalDocs:
+  description: api docs
+  url: ""
+host: localhost:8089
+info:
+  contact:
+    email: nbr41@foo.bar
+    name: NBR41
+    url: http://my-inventory.design
+  description: An API to manage my-inventory
+  license:
+    name: MIT
+  title: The virtual my-inventory
+  version: ""
+paths:
+  /_ah/health:
+    get:
+      description: Perform health check.
+      operationId: health#health
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+      schemes:
+      - http
+      summary: health health
+      tags:
+      - health
+  /authenticate:
+    post:
+      description: Get users
+      operationId: authenticate#auth
+      parameters:
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/AuthenticatePayload'
+      produces:
+      - application/vnd.authtoken+json
+      - application/vnd.goa.error
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Authtoken'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: auth authenticate
+      tags:
+      - authenticate
+  /authors:
+    get:
+      description: Get authors
+      operationId: authors#list
+      produces:
+      - application/vnd.author+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/AuthorCollection'
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: list authors
+      tags:
+      - authors
+    post:
+      description: Create new author
+      operationId: authors#create
+      parameters:
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/CreateAuthorsPayload'
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "201":
+          description: Resource created
+          headers:
+            Location:
+              description: href to created resource
+              pattern: /authors/[0-9]+
+              type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: create authors
+      tags:
+      - authors
+  /authors/{author_id}:
+    delete:
+      description: delete author by id
+      operationId: authors#delete
+      parameters:
+      - description: Unique Author ID
+        in: path
+        minimum: 1
+        name: author_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: delete authors
+      tags:
+      - authors
+    get:
+      description: Get author by id
+      operationId: authors#show
+      parameters:
+      - description: Unique Author ID
+        in: path
+        minimum: 1
+        name: author_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.author+json
+      - application/vnd.goa.error
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Author'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: show authors
+      tags:
+      - authors
+    put:
+      description: Update author by id
+      operationId: authors#update
+      parameters:
+      - in: path
+        name: author_id
+        required: true
+        type: string
+      - description: Unique Book ID
+        in: query
+        minimum: 1
+        name: book_id
+        required: false
+        type: integer
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateAuthorsPayload'
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: update authors
+      tags:
+      - authors
+  /books:
+    get:
+      description: Get books
+      operationId: books#list
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: list books
+      tags:
+      - books
+    post:
+      description: Create new book
+      operationId: books#create
+      parameters:
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/CreateBooksPayload'
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "201":
+          description: Resource created
+          headers:
+            Location:
+              description: href to created resource
+              pattern: /books/[0-9]+
+              type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: create books
+      tags:
+      - books
+  /books/{book_id}:
+    delete:
+      description: delete book by id
+      operationId: books#delete
+      parameters:
+      - description: Unique Book ID
+        in: path
+        minimum: 1
+        name: book_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: delete books
+      tags:
+      - books
+    get:
+      description: Get book by id
+      operationId: books#show
+      parameters:
+      - description: Unique Book ID
+        in: path
+        minimum: 1
+        name: book_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json
+      - application/vnd.goa.error
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Book'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: show books
+      tags:
+      - books
+    put:
+      description: Update book by id
+      operationId: books#update
+      parameters:
+      - description: Unique Book ID
+        in: path
+        minimum: 1
+        name: book_id
+        required: true
+        type: integer
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateBooksPayload'
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: update books
+      tags:
+      - books
+  /categories:
+    get:
+      description: Get categories
+      operationId: categories#list
+      produces:
+      - application/vnd.category+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/CategoryCollection'
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: list categories
+      tags:
+      - categories
+    post:
+      description: Create new category
+      operationId: categories#create
+      parameters:
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/CreateCategoriesPayload'
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "201":
+          description: Resource created
+          headers:
+            Location:
+              description: href to created resource
+              pattern: /categories/[0-9]+
+              type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: create categories
+      tags:
+      - categories
+  /categories/{category_id}:
+    delete:
+      description: delete category by id
+      operationId: categories#delete
+      parameters:
+      - description: Unique Category ID
+        in: path
+        minimum: 1
+        name: category_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: delete categories
+      tags:
+      - categories
+    get:
+      description: Get category by id
+      operationId: categories#show
+      parameters:
+      - description: Unique Category ID
+        in: path
+        minimum: 1
+        name: category_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.category+json
+      - application/vnd.goa.error
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Category'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: show categories
+      tags:
+      - categories
+    put:
+      description: Update category by id
+      operationId: categories#update
+      parameters:
+      - description: Unique Category ID
+        in: path
+        minimum: 1
+        name: category_id
+        required: true
+        type: integer
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateCategoriesPayload'
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: update categories
+      tags:
+      - categories
+  /collections:
+    get:
+      description: Get collections
+      operationId: collections#list
+      produces:
+      - application/vnd.collection+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/CollectionCollection'
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: list collections
+      tags:
+      - collections
+    post:
+      description: Create new collection
+      operationId: collections#create
+      parameters:
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/CreateCollectionsPayload'
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "201":
+          description: Resource created
+          headers:
+            Location:
+              description: href to created resource
+              pattern: /collections/[0-9]+
+              type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: create collections
+      tags:
+      - collections
+  /collections/{collection_id}:
+    delete:
+      description: delete collection by id
+      operationId: collections#delete
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: delete collections
+      tags:
+      - collections
+    get:
+      description: Get collection by id
+      operationId: collections#show
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.collection+json
+      - application/vnd.goa.error
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Collection'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: show collections
+      tags:
+      - collections
+    put:
+      description: Update collection by id
+      operationId: collections#update
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateCollectionsPayload'
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: update collections
+      tags:
+      - collections
+  /edition_types:
+    get:
+      description: Get edition types
+      operationId: edition_types#list
+      produces:
+      - application/vnd.editiontype+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/EditiontypeCollection'
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: list edition_types
+      tags:
+      - edition_types
+    post:
+      description: Create new edition type
+      operationId: edition_types#create
+      parameters:
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/CreateEditionTypesPayload'
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "201":
+          description: Resource created
+          headers:
+            Location:
+              description: href to created resource
+              pattern: /edition_types/[0-9]+
+              type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: create edition_types
+      tags:
+      - edition_types
+  /edition_types/{edition_type_id}:
+    delete:
+      description: delete edition type by id
+      operationId: edition_types#delete
+      parameters:
+      - description: Unique Edition type ID
+        in: path
+        minimum: 1
+        name: edition_type_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: delete edition_types
+      tags:
+      - edition_types
+    get:
+      description: Get edition type by id
+      operationId: edition_types#show
+      parameters:
+      - description: Unique Edition type ID
+        in: path
+        minimum: 1
+        name: edition_type_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.editiontype+json
+      - application/vnd.goa.error
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Editiontype'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: show edition_types
+      tags:
+      - edition_types
+    put:
+      description: Update edition type by id
+      operationId: edition_types#update
+      parameters:
+      - description: Unique Edition type ID
+        in: path
+        minimum: 1
+        name: edition_type_id
+        required: true
+        type: integer
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateEditionTypesPayload'
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: update edition_types
+      tags:
+      - edition_types
+  /editors:
+    get:
+      description: Get editors
+      operationId: editors#list
+      produces:
+      - application/vnd.editor+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/EditorCollection'
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: list editors
+      tags:
+      - editors
+    post:
+      description: Create new editor
+      operationId: editors#create
+      parameters:
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/CreateEditorsPayload'
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "201":
+          description: Resource created
+          headers:
+            Location:
+              description: href to created resource
+              pattern: /editors/[0-9]+
+              type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: create editors
+      tags:
+      - editors
+  /editors/{editor_id}:
+    delete:
+      description: delete editor by id
+      operationId: editors#delete
+      parameters:
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: delete editors
+      tags:
+      - editors
+    get:
+      description: Get editor by id
+      operationId: editors#show
+      parameters:
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.editor+json
+      - application/vnd.goa.error
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Editor'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: show editors
+      tags:
+      - editors
+    put:
+      description: Update editor by id
+      operationId: editors#update
+      parameters:
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateEditorsPayload'
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: update editors
+      tags:
+      - editors
+  /genres:
+    get:
+      description: Get genres
+      operationId: genres#list
+      produces:
+      - application/vnd.genre+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GenreCollection'
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: list genres
+      tags:
+      - genres
+    post:
+      description: Create new genre
+      operationId: genres#create
+      parameters:
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/CreateGenresPayload'
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "201":
+          description: Resource created
+          headers:
+            Location:
+              description: href to created resource
+              pattern: /genres/[0-9]+
+              type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: create genres
+      tags:
+      - genres
+  /genres/{genre_id}:
+    delete:
+      description: delete genre by id
+      operationId: genres#delete
+      parameters:
+      - description: Unique Genre ID
+        in: path
+        minimum: 1
+        name: genre_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: delete genres
+      tags:
+      - genres
+    get:
+      description: Get genre by id
+      operationId: genres#show
+      parameters:
+      - description: Unique Genre ID
+        in: path
+        minimum: 1
+        name: genre_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.genre+json
+      - application/vnd.goa.error
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Genre'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: show genres
+      tags:
+      - genres
+    put:
+      description: Update genre by id
+      operationId: genres#update
+      parameters:
+      - description: Unique Genre ID
+        in: path
+        minimum: 1
+        name: genre_id
+        required: true
+        type: integer
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateGenresPayload'
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: update genres
+      tags:
+      - genres
+  /password:
+    get:
+      description: Get password reset
+      operationId: password#get
+      parameters:
+      - description: user email
+        format: email
+        in: query
+        name: email
+        required: true
+        type: string
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: get password
+      tags:
+      - password
+    post:
+      description: Update user password
+      operationId: password#update
+      parameters:
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/PasswordChangePayload'
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: update password
+      tags:
+      - password
+  /roles:
+    get:
+      description: Get roles
+      operationId: roles#list
+      produces:
+      - application/vnd.role+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/RoleCollection'
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: list roles
+      tags:
+      - roles
+    post:
+      description: Create new role
+      operationId: roles#create
+      parameters:
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/CreateRolesPayload'
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "201":
+          description: Resource created
+          headers:
+            Location:
+              description: href to created resource
+              pattern: /roles/[0-9]+
+              type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: create roles
+      tags:
+      - roles
+  /roles/{role_id}:
+    delete:
+      description: delete role by id
+      operationId: roles#delete
+      parameters:
+      - description: Unique Role ID
+        in: path
+        minimum: 1
+        name: role_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: delete roles
+      tags:
+      - roles
+    get:
+      description: Get role by id
+      operationId: roles#show
+      parameters:
+      - description: Unique Role ID
+        in: path
+        minimum: 1
+        name: role_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      - application/vnd.role+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Role'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: show roles
+      tags:
+      - roles
+    put:
+      description: Update role by id
+      operationId: roles#update
+      parameters:
+      - description: Unique Role ID
+        in: path
+        minimum: 1
+        name: role_id
+        required: true
+        type: integer
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateRolesPayload'
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: update roles
+      tags:
+      - roles
+  /series:
+    get:
+      description: Get series
+      operationId: series#list
+      produces:
+      - application/vnd.series+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SeriesCollection'
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: list series
+      tags:
+      - series
+    post:
+      description: Create new series
+      operationId: series#create
+      parameters:
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/CreateSeriesPayload'
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "201":
+          description: Resource created
+          headers:
+            Location:
+              description: href to created resource
+              pattern: /series/[0-9]+
+              type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: create series
+      tags:
+      - series
+  /series/{series_id}:
+    delete:
+      description: delete serie by id
+      operationId: series#delete
+      parameters:
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: delete series
+      tags:
+      - series
+    get:
+      description: Get serie by id
+      operationId: series#show
+      parameters:
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      - application/vnd.series+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Series'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: show series
+      tags:
+      - series
+    put:
+      description: Update serie by id
+      operationId: series#update
+      parameters:
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateSeriesPayload'
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: update series
+      tags:
+      - series
+  /swagger.json:
+    get:
+      operationId: swagger#/swagger.json
+      responses:
+        "200":
+          description: File downloaded
+          schema:
+            type: file
+      schemes:
+      - http
+      summary: Download public/swagger/swagger.json
+  /token/access_token:
+    get:
+      description: Get users
+      operationId: token#access
+      produces:
+      - application/vnd.goa.error
+      - application/vnd.token+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Token'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: access token
+      tags:
+      - token
+  /token/auth:
+    get:
+      description: Get users
+      operationId: token#auth
+      produces:
+      - application/vnd.authtoken+json
+      - application/vnd.goa.error
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Authtoken'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: auth token
+      tags:
+      - token
+  /users:
+    get:
+      description: 'Get users, optionnaly filtering by nickname or email '
+      operationId: users#list
+      parameters:
+      - description: user email
+        format: email
+        in: query
+        name: email
+        required: false
+        type: string
+      - description: user nickname
+        in: query
+        maxLength: 32
+        minLength: 1
+        name: nickname
+        required: false
+        type: string
+      produces:
+      - application/vnd.user+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/UserCollection'
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: list users
+      tags:
+      - users
+    post:
+      description: Create new user
+      operationId: users#create
+      parameters:
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UserCreatePayload'
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "201":
+          description: Resource created
+          headers:
+            Location:
+              description: href to created resource
+              pattern: /users/[0-9]+
+              type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/error'
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: create users
+      tags:
+      - users
+  /users/{user_id}:
+    delete:
+      description: delete user by id
+      operationId: users#delete
+      parameters:
+      - description: Unique User ID
+        in: path
+        minimum: 1
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: delete users
+      tags:
+      - users
+    get:
+      description: Get user by id
+      operationId: users#show
+      parameters:
+      - description: Unique User ID
+        in: path
+        minimum: 1
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      - application/vnd.user+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: show users
+      tags:
+      - users
+    put:
+      description: Update user by id
+      operationId: users#update
+      parameters:
+      - description: Unique User ID
+        in: path
+        minimum: 1
+        name: user_id
+        required: true
+        type: integer
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateUsersPayload'
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: update users
+      tags:
+      - users
+  /users/{user_id}/ownerships:
+    get:
+      description: Get ownerships
+      operationId: ownerships#list
+      parameters:
+      - description: Unique User ID
+        in: path
+        minimum: 1
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      - application/vnd.ownership+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/OwnershipCollection'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: list ownerships
+      tags:
+      - ownerships
+    post:
+      description: Create new ownership
+      operationId: ownerships#create
+      parameters:
+      - description: Unique User ID
+        in: path
+        minimum: 1
+        name: user_id
+        required: true
+        type: integer
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/CreateOwnershipsPayload'
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "201":
+          description: Resource created
+          headers:
+            Location:
+              description: href to created resource
+              pattern: /books/[0-9]+
+              type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: create ownerships
+      tags:
+      - ownerships
+  /users/{user_id}/ownerships/{book_id}:
+    delete:
+      description: delete ownerships by ids
+      operationId: ownerships#delete
+      parameters:
+      - description: Unique Book ID
+        in: path
+        minimum: 1
+        name: book_id
+        required: true
+        type: integer
+      - description: Unique User ID
+        in: path
+        minimum: 1
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: delete ownerships
+      tags:
+      - ownerships
+    get:
+      description: Get ownerships by ids
+      operationId: ownerships#show
+      parameters:
+      - description: Unique Book ID
+        in: path
+        minimum: 1
+        name: book_id
+        required: true
+        type: integer
+      - description: Unique User ID
+        in: path
+        minimum: 1
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      - application/vnd.ownership+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Ownership'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: show ownerships
+      tags:
+      - ownerships
+  /users/{user_id}/ownerships/isbn:
+    post:
+      description: Create new book and ownership by isbn
+      operationId: ownerships#add
+      parameters:
+      - description: Unique User ID
+        in: path
+        minimum: 1
+        name: user_id
+        required: true
+        type: integer
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/AddOwnershipsPayload'
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "201":
+          description: Resource created
+          headers:
+            Location:
+              description: href to created resource
+              pattern: /books/[0-9]+
+              type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/error'
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: add ownerships
+      tags:
+      - ownerships
+  /validation:
+    post:
+      description: Validate user
+      operationId: validation#validate
+      parameters:
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/ValidateValidationPayload'
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: validate validation
+      tags:
+      - validation
+  /validation/{user_id}:
+    get:
+      description: Get validation token
+      operationId: validation#get
+      parameters:
+      - description: Unique User ID
+        in: path
+        minimum: 1
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: get validation
+      tags:
+      - validation
+produces:
+- application/json
+- application/xml
+- application/gob
+- application/x-gob
+responses:
+  InternalServerError:
+    description: Internal Server Error
+  NoContent:
+    description: No Content
+  NotFound:
+    description: Not Found
+  OK:
+    description: OK
+    schema:
+      $ref: '#/definitions/Author'
+  ServiceUnavailable:
+    description: Service Unavailable
+  Unauthorized:
+    description: Unauthorized
+  UnprocessableEntity:
+    description: Unprocessable Entity
+schemes:
+- http
+securityDefinitions:
+  JWTSec:
+    description: Use JWT to authenticate
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

@@ -15,10 +15,46 @@ import (
 	"strings"
 )
 
+// AuthorsHref returns the resource href.
+func AuthorsHref(authorID interface{}) string {
+	paramauthorID := strings.TrimLeftFunc(fmt.Sprintf("%v", authorID), func(r rune) bool { return r == '/' })
+	return fmt.Sprintf("/authors/%v", paramauthorID)
+}
+
 // BooksHref returns the resource href.
 func BooksHref(bookID interface{}) string {
 	parambookID := strings.TrimLeftFunc(fmt.Sprintf("%v", bookID), func(r rune) bool { return r == '/' })
 	return fmt.Sprintf("/books/%v", parambookID)
+}
+
+// CategoriesHref returns the resource href.
+func CategoriesHref(categoryID interface{}) string {
+	paramcategoryID := strings.TrimLeftFunc(fmt.Sprintf("%v", categoryID), func(r rune) bool { return r == '/' })
+	return fmt.Sprintf("/categories/%v", paramcategoryID)
+}
+
+// CollectionsHref returns the resource href.
+func CollectionsHref(collectionID interface{}) string {
+	paramcollectionID := strings.TrimLeftFunc(fmt.Sprintf("%v", collectionID), func(r rune) bool { return r == '/' })
+	return fmt.Sprintf("/collections/%v", paramcollectionID)
+}
+
+// EditionTypesHref returns the resource href.
+func EditionTypesHref(editionTypeID interface{}) string {
+	parameditionTypeID := strings.TrimLeftFunc(fmt.Sprintf("%v", editionTypeID), func(r rune) bool { return r == '/' })
+	return fmt.Sprintf("/edition_types/%v", parameditionTypeID)
+}
+
+// EditorsHref returns the resource href.
+func EditorsHref(editorID interface{}) string {
+	parameditorID := strings.TrimLeftFunc(fmt.Sprintf("%v", editorID), func(r rune) bool { return r == '/' })
+	return fmt.Sprintf("/editors/%v", parameditorID)
+}
+
+// GenresHref returns the resource href.
+func GenresHref(genreID interface{}) string {
+	paramgenreID := strings.TrimLeftFunc(fmt.Sprintf("%v", genreID), func(r rune) bool { return r == '/' })
+	return fmt.Sprintf("/genres/%v", paramgenreID)
 }
 
 // OwnershipsHref returns the resource href.
@@ -26,6 +62,18 @@ func OwnershipsHref(userID, bookID interface{}) string {
 	paramuserID := strings.TrimLeftFunc(fmt.Sprintf("%v", userID), func(r rune) bool { return r == '/' })
 	parambookID := strings.TrimLeftFunc(fmt.Sprintf("%v", bookID), func(r rune) bool { return r == '/' })
 	return fmt.Sprintf("/users/%v/ownerships/%v", paramuserID, parambookID)
+}
+
+// RolesHref returns the resource href.
+func RolesHref(roleID interface{}) string {
+	paramroleID := strings.TrimLeftFunc(fmt.Sprintf("%v", roleID), func(r rune) bool { return r == '/' })
+	return fmt.Sprintf("/roles/%v", paramroleID)
+}
+
+// SeriesHref returns the resource href.
+func SeriesHref(seriesID interface{}) string {
+	paramseriesID := strings.TrimLeftFunc(fmt.Sprintf("%v", seriesID), func(r rune) bool { return r == '/' })
+	return fmt.Sprintf("/series/%v", paramseriesID)
 }
 
 // UsersHref returns the resource href.

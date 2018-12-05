@@ -9,7 +9,6 @@ require (
 	github.com/go-sql-driver/mysql v1.4.1
 	github.com/goadesign/goa v1.4.0
 	github.com/golang/mock v1.1.1
-	github.com/google/go-cloud v0.6.0
 	github.com/hashicorp/go-immutable-radix v1.0.0 // indirect
 	github.com/kylelemons/godebug v0.0.0-20170820004349-d65d576e9348
 	github.com/manveru/faker v0.0.0-20171103152722-9fbc68a78c4d // indirect
@@ -18,6 +17,5 @@ require (
 	github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea // indirect
 	golang.org/x/crypto v0.0.0-20181203042331-505ab145d0a9
 	golang.org/x/net v0.0.0-20181201002055-351d144fa1fc // indirect
-	google.golang.org/api v0.0.0-20181129220737-af4fc4062c26
-	google.golang.org/appengine v1.3.0 // indirect
+	google.golang.org/api v0.0.0-20181203233308-6142e720c068
 )

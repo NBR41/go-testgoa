@@ -17,19 +17,19 @@ func ToAuthTokenMedia(a *model.User, accToken, refToken string) *app.Authtoken {
 // ToBookMedia converts a book model into a book media type
 func ToBookMedia(a *model.Book) *app.Book {
 	return &app.Book{
-		Href: app.BooksHref(a.ID),
-		ID:   int(a.ID),
-		Name: a.Name,
-		Isbn: a.ISBN,
+		Href:     app.BooksHref(a.ID),
+		BookID:   int(a.ID),
+		BookName: a.Name,
+		BookIsbn: a.ISBN,
 	}
 }
 
 // ToBookLinkMedia converts a book model into a book link media type
 func ToBookLinkMedia(a *model.Book) *app.BookLink {
 	return &app.BookLink{
-		Href: app.BooksHref(a.ID),
-		ID:   int(a.ID),
-		Name: a.Name,
+		Href:     app.BooksHref(a.ID),
+		BookID:   int(a.ID),
+		BookName: a.Name,
 	}
 }
 
@@ -48,7 +48,7 @@ func ToUserMedia(a *model.User) *app.User {
 	return &app.User{
 		Email:       a.Email,
 		Href:        app.UsersHref(a.ID),
-		ID:          int(a.ID),
+		UserID:      int(a.ID),
 		Nickname:    a.Nickname,
 		IsAdmin:     a.IsAdmin,
 		IsValidated: a.IsValidated,
@@ -59,7 +59,7 @@ func ToUserMedia(a *model.User) *app.User {
 func ToUserTinyMedia(a *model.User) *app.UserTiny {
 	return &app.UserTiny{
 		Href:     app.UsersHref(a.ID),
-		ID:       int(a.ID),
+		UserID:   int(a.ID),
 		Nickname: a.Nickname,
 	}
 }

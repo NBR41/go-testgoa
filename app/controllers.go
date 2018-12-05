@@ -109,6 +109,176 @@ func unmarshalAuthAuthenticatePayload(ctx context.Context, service *goa.Service,
 	return nil
 }
 
+// AuthorsController is the controller interface for the Authors actions.
+type AuthorsController interface {
+	goa.Muxer
+	Create(*CreateAuthorsContext) error
+	Delete(*DeleteAuthorsContext) error
+	List(*ListAuthorsContext) error
+	Show(*ShowAuthorsContext) error
+	Update(*UpdateAuthorsContext) error
+}
+
+// MountAuthorsController "mounts" a Authors resource controller on the given service.
+func MountAuthorsController(service *goa.Service, ctrl AuthorsController) {
+	initService(service)
+	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/authors", ctrl.MuxHandler("preflight", handleAuthorsOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/authors/:author_id", ctrl.MuxHandler("preflight", handleAuthorsOrigin(cors.HandlePreflight()), nil))
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewCreateAuthorsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*CreateAuthorsPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Create(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleAuthorsOrigin(h)
+	service.Mux.Handle("POST", "/authors", ctrl.MuxHandler("create", h, unmarshalCreateAuthorsPayload))
+	service.LogInfo("mount", "ctrl", "Authors", "action", "Create", "route", "POST /authors", "security", "JWTSec")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewDeleteAuthorsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Delete(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleAuthorsOrigin(h)
+	service.Mux.Handle("DELETE", "/authors/:author_id", ctrl.MuxHandler("delete", h, nil))
+	service.LogInfo("mount", "ctrl", "Authors", "action", "Delete", "route", "DELETE /authors/:author_id", "security", "JWTSec")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewListAuthorsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.List(rctx)
+	}
+	h = handleAuthorsOrigin(h)
+	service.Mux.Handle("GET", "/authors", ctrl.MuxHandler("list", h, nil))
+	service.LogInfo("mount", "ctrl", "Authors", "action", "List", "route", "GET /authors")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewShowAuthorsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Show(rctx)
+	}
+	h = handleAuthorsOrigin(h)
+	service.Mux.Handle("GET", "/authors/:author_id", ctrl.MuxHandler("show", h, nil))
+	service.LogInfo("mount", "ctrl", "Authors", "action", "Show", "route", "GET /authors/:author_id")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewUpdateAuthorsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*UpdateAuthorsPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Update(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleAuthorsOrigin(h)
+	service.Mux.Handle("PUT", "/authors/:author_id", ctrl.MuxHandler("update", h, unmarshalUpdateAuthorsPayload))
+	service.LogInfo("mount", "ctrl", "Authors", "action", "Update", "route", "PUT /authors/:author_id", "security", "JWTSec")
+}
+
+// handleAuthorsOrigin applies the CORS response headers corresponding to the origin.
+func handleAuthorsOrigin(h goa.Handler) goa.Handler {
+
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "http://localhost:4200") {
+			ctx = goa.WithLogContext(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Vary", "Origin")
+			rw.Header().Set("Access-Control-Max-Age", "600")
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+				rw.Header().Set("Access-Control-Allow-Headers", "Authorization, Origin, Content-Type, Accept")
+			}
+			return h(ctx, rw, req)
+		}
+
+		return h(ctx, rw, req)
+	}
+}
+
+// unmarshalCreateAuthorsPayload unmarshals the request body into the context request data Payload field.
+func unmarshalCreateAuthorsPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &createAuthorsPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
+// unmarshalUpdateAuthorsPayload unmarshals the request body into the context request data Payload field.
+func unmarshalUpdateAuthorsPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &updateAuthorsPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
 // BooksController is the controller interface for the Books actions.
 type BooksController interface {
 	goa.Muxer
@@ -279,6 +449,856 @@ func unmarshalUpdateBooksPayload(ctx context.Context, service *goa.Service, req 
 	return nil
 }
 
+// CategoriesController is the controller interface for the Categories actions.
+type CategoriesController interface {
+	goa.Muxer
+	Create(*CreateCategoriesContext) error
+	Delete(*DeleteCategoriesContext) error
+	List(*ListCategoriesContext) error
+	Show(*ShowCategoriesContext) error
+	Update(*UpdateCategoriesContext) error
+}
+
+// MountCategoriesController "mounts" a Categories resource controller on the given service.
+func MountCategoriesController(service *goa.Service, ctrl CategoriesController) {
+	initService(service)
+	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/categories", ctrl.MuxHandler("preflight", handleCategoriesOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/categories/:category_id", ctrl.MuxHandler("preflight", handleCategoriesOrigin(cors.HandlePreflight()), nil))
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewCreateCategoriesContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*CreateCategoriesPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Create(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleCategoriesOrigin(h)
+	service.Mux.Handle("POST", "/categories", ctrl.MuxHandler("create", h, unmarshalCreateCategoriesPayload))
+	service.LogInfo("mount", "ctrl", "Categories", "action", "Create", "route", "POST /categories", "security", "JWTSec")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewDeleteCategoriesContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Delete(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleCategoriesOrigin(h)
+	service.Mux.Handle("DELETE", "/categories/:category_id", ctrl.MuxHandler("delete", h, nil))
+	service.LogInfo("mount", "ctrl", "Categories", "action", "Delete", "route", "DELETE /categories/:category_id", "security", "JWTSec")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewListCategoriesContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.List(rctx)
+	}
+	h = handleCategoriesOrigin(h)
+	service.Mux.Handle("GET", "/categories", ctrl.MuxHandler("list", h, nil))
+	service.LogInfo("mount", "ctrl", "Categories", "action", "List", "route", "GET /categories")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewShowCategoriesContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Show(rctx)
+	}
+	h = handleCategoriesOrigin(h)
+	service.Mux.Handle("GET", "/categories/:category_id", ctrl.MuxHandler("show", h, nil))
+	service.LogInfo("mount", "ctrl", "Categories", "action", "Show", "route", "GET /categories/:category_id")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewUpdateCategoriesContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*UpdateCategoriesPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Update(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleCategoriesOrigin(h)
+	service.Mux.Handle("PUT", "/categories/:category_id", ctrl.MuxHandler("update", h, unmarshalUpdateCategoriesPayload))
+	service.LogInfo("mount", "ctrl", "Categories", "action", "Update", "route", "PUT /categories/:category_id", "security", "JWTSec")
+}
+
+// handleCategoriesOrigin applies the CORS response headers corresponding to the origin.
+func handleCategoriesOrigin(h goa.Handler) goa.Handler {
+
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "http://localhost:4200") {
+			ctx = goa.WithLogContext(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Vary", "Origin")
+			rw.Header().Set("Access-Control-Max-Age", "600")
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+				rw.Header().Set("Access-Control-Allow-Headers", "Authorization, Origin, Content-Type, Accept")
+			}
+			return h(ctx, rw, req)
+		}
+
+		return h(ctx, rw, req)
+	}
+}
+
+// unmarshalCreateCategoriesPayload unmarshals the request body into the context request data Payload field.
+func unmarshalCreateCategoriesPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &createCategoriesPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
+// unmarshalUpdateCategoriesPayload unmarshals the request body into the context request data Payload field.
+func unmarshalUpdateCategoriesPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &updateCategoriesPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
+// CollectionsController is the controller interface for the Collections actions.
+type CollectionsController interface {
+	goa.Muxer
+	Create(*CreateCollectionsContext) error
+	Delete(*DeleteCollectionsContext) error
+	List(*ListCollectionsContext) error
+	Show(*ShowCollectionsContext) error
+	Update(*UpdateCollectionsContext) error
+}
+
+// MountCollectionsController "mounts" a Collections resource controller on the given service.
+func MountCollectionsController(service *goa.Service, ctrl CollectionsController) {
+	initService(service)
+	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/collections", ctrl.MuxHandler("preflight", handleCollectionsOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/collections/:collection_id", ctrl.MuxHandler("preflight", handleCollectionsOrigin(cors.HandlePreflight()), nil))
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewCreateCollectionsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*CreateCollectionsPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Create(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleCollectionsOrigin(h)
+	service.Mux.Handle("POST", "/collections", ctrl.MuxHandler("create", h, unmarshalCreateCollectionsPayload))
+	service.LogInfo("mount", "ctrl", "Collections", "action", "Create", "route", "POST /collections", "security", "JWTSec")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewDeleteCollectionsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Delete(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleCollectionsOrigin(h)
+	service.Mux.Handle("DELETE", "/collections/:collection_id", ctrl.MuxHandler("delete", h, nil))
+	service.LogInfo("mount", "ctrl", "Collections", "action", "Delete", "route", "DELETE /collections/:collection_id", "security", "JWTSec")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewListCollectionsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.List(rctx)
+	}
+	h = handleCollectionsOrigin(h)
+	service.Mux.Handle("GET", "/collections", ctrl.MuxHandler("list", h, nil))
+	service.LogInfo("mount", "ctrl", "Collections", "action", "List", "route", "GET /collections")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewShowCollectionsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Show(rctx)
+	}
+	h = handleCollectionsOrigin(h)
+	service.Mux.Handle("GET", "/collections/:collection_id", ctrl.MuxHandler("show", h, nil))
+	service.LogInfo("mount", "ctrl", "Collections", "action", "Show", "route", "GET /collections/:collection_id")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewUpdateCollectionsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*UpdateCollectionsPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Update(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleCollectionsOrigin(h)
+	service.Mux.Handle("PUT", "/collections/:collection_id", ctrl.MuxHandler("update", h, unmarshalUpdateCollectionsPayload))
+	service.LogInfo("mount", "ctrl", "Collections", "action", "Update", "route", "PUT /collections/:collection_id", "security", "JWTSec")
+}
+
+// handleCollectionsOrigin applies the CORS response headers corresponding to the origin.
+func handleCollectionsOrigin(h goa.Handler) goa.Handler {
+
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "http://localhost:4200") {
+			ctx = goa.WithLogContext(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Vary", "Origin")
+			rw.Header().Set("Access-Control-Max-Age", "600")
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+				rw.Header().Set("Access-Control-Allow-Headers", "Authorization, Origin, Content-Type, Accept")
+			}
+			return h(ctx, rw, req)
+		}
+
+		return h(ctx, rw, req)
+	}
+}
+
+// unmarshalCreateCollectionsPayload unmarshals the request body into the context request data Payload field.
+func unmarshalCreateCollectionsPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &createCollectionsPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
+// unmarshalUpdateCollectionsPayload unmarshals the request body into the context request data Payload field.
+func unmarshalUpdateCollectionsPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &updateCollectionsPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
+// EditionTypesController is the controller interface for the EditionTypes actions.
+type EditionTypesController interface {
+	goa.Muxer
+	Create(*CreateEditionTypesContext) error
+	Delete(*DeleteEditionTypesContext) error
+	List(*ListEditionTypesContext) error
+	Show(*ShowEditionTypesContext) error
+	Update(*UpdateEditionTypesContext) error
+}
+
+// MountEditionTypesController "mounts" a EditionTypes resource controller on the given service.
+func MountEditionTypesController(service *goa.Service, ctrl EditionTypesController) {
+	initService(service)
+	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/edition_types", ctrl.MuxHandler("preflight", handleEditionTypesOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/edition_types/:edition_type_id", ctrl.MuxHandler("preflight", handleEditionTypesOrigin(cors.HandlePreflight()), nil))
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewCreateEditionTypesContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*CreateEditionTypesPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Create(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleEditionTypesOrigin(h)
+	service.Mux.Handle("POST", "/edition_types", ctrl.MuxHandler("create", h, unmarshalCreateEditionTypesPayload))
+	service.LogInfo("mount", "ctrl", "EditionTypes", "action", "Create", "route", "POST /edition_types", "security", "JWTSec")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewDeleteEditionTypesContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Delete(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleEditionTypesOrigin(h)
+	service.Mux.Handle("DELETE", "/edition_types/:edition_type_id", ctrl.MuxHandler("delete", h, nil))
+	service.LogInfo("mount", "ctrl", "EditionTypes", "action", "Delete", "route", "DELETE /edition_types/:edition_type_id", "security", "JWTSec")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewListEditionTypesContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.List(rctx)
+	}
+	h = handleEditionTypesOrigin(h)
+	service.Mux.Handle("GET", "/edition_types", ctrl.MuxHandler("list", h, nil))
+	service.LogInfo("mount", "ctrl", "EditionTypes", "action", "List", "route", "GET /edition_types")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewShowEditionTypesContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Show(rctx)
+	}
+	h = handleEditionTypesOrigin(h)
+	service.Mux.Handle("GET", "/edition_types/:edition_type_id", ctrl.MuxHandler("show", h, nil))
+	service.LogInfo("mount", "ctrl", "EditionTypes", "action", "Show", "route", "GET /edition_types/:edition_type_id")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewUpdateEditionTypesContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*UpdateEditionTypesPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Update(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleEditionTypesOrigin(h)
+	service.Mux.Handle("PUT", "/edition_types/:edition_type_id", ctrl.MuxHandler("update", h, unmarshalUpdateEditionTypesPayload))
+	service.LogInfo("mount", "ctrl", "EditionTypes", "action", "Update", "route", "PUT /edition_types/:edition_type_id", "security", "JWTSec")
+}
+
+// handleEditionTypesOrigin applies the CORS response headers corresponding to the origin.
+func handleEditionTypesOrigin(h goa.Handler) goa.Handler {
+
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "http://localhost:4200") {
+			ctx = goa.WithLogContext(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Vary", "Origin")
+			rw.Header().Set("Access-Control-Max-Age", "600")
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+				rw.Header().Set("Access-Control-Allow-Headers", "Authorization, Origin, Content-Type, Accept")
+			}
+			return h(ctx, rw, req)
+		}
+
+		return h(ctx, rw, req)
+	}
+}
+
+// unmarshalCreateEditionTypesPayload unmarshals the request body into the context request data Payload field.
+func unmarshalCreateEditionTypesPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &createEditionTypesPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
+// unmarshalUpdateEditionTypesPayload unmarshals the request body into the context request data Payload field.
+func unmarshalUpdateEditionTypesPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &updateEditionTypesPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
+// EditorsController is the controller interface for the Editors actions.
+type EditorsController interface {
+	goa.Muxer
+	Create(*CreateEditorsContext) error
+	Delete(*DeleteEditorsContext) error
+	List(*ListEditorsContext) error
+	Show(*ShowEditorsContext) error
+	Update(*UpdateEditorsContext) error
+}
+
+// MountEditorsController "mounts" a Editors resource controller on the given service.
+func MountEditorsController(service *goa.Service, ctrl EditorsController) {
+	initService(service)
+	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/editors", ctrl.MuxHandler("preflight", handleEditorsOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/editors/:editor_id", ctrl.MuxHandler("preflight", handleEditorsOrigin(cors.HandlePreflight()), nil))
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewCreateEditorsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*CreateEditorsPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Create(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleEditorsOrigin(h)
+	service.Mux.Handle("POST", "/editors", ctrl.MuxHandler("create", h, unmarshalCreateEditorsPayload))
+	service.LogInfo("mount", "ctrl", "Editors", "action", "Create", "route", "POST /editors", "security", "JWTSec")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewDeleteEditorsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Delete(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleEditorsOrigin(h)
+	service.Mux.Handle("DELETE", "/editors/:editor_id", ctrl.MuxHandler("delete", h, nil))
+	service.LogInfo("mount", "ctrl", "Editors", "action", "Delete", "route", "DELETE /editors/:editor_id", "security", "JWTSec")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewListEditorsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.List(rctx)
+	}
+	h = handleEditorsOrigin(h)
+	service.Mux.Handle("GET", "/editors", ctrl.MuxHandler("list", h, nil))
+	service.LogInfo("mount", "ctrl", "Editors", "action", "List", "route", "GET /editors")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewShowEditorsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Show(rctx)
+	}
+	h = handleEditorsOrigin(h)
+	service.Mux.Handle("GET", "/editors/:editor_id", ctrl.MuxHandler("show", h, nil))
+	service.LogInfo("mount", "ctrl", "Editors", "action", "Show", "route", "GET /editors/:editor_id")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewUpdateEditorsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*UpdateEditorsPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Update(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleEditorsOrigin(h)
+	service.Mux.Handle("PUT", "/editors/:editor_id", ctrl.MuxHandler("update", h, unmarshalUpdateEditorsPayload))
+	service.LogInfo("mount", "ctrl", "Editors", "action", "Update", "route", "PUT /editors/:editor_id", "security", "JWTSec")
+}
+
+// handleEditorsOrigin applies the CORS response headers corresponding to the origin.
+func handleEditorsOrigin(h goa.Handler) goa.Handler {
+
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "http://localhost:4200") {
+			ctx = goa.WithLogContext(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Vary", "Origin")
+			rw.Header().Set("Access-Control-Max-Age", "600")
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+				rw.Header().Set("Access-Control-Allow-Headers", "Authorization, Origin, Content-Type, Accept")
+			}
+			return h(ctx, rw, req)
+		}
+
+		return h(ctx, rw, req)
+	}
+}
+
+// unmarshalCreateEditorsPayload unmarshals the request body into the context request data Payload field.
+func unmarshalCreateEditorsPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &createEditorsPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
+// unmarshalUpdateEditorsPayload unmarshals the request body into the context request data Payload field.
+func unmarshalUpdateEditorsPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &updateEditorsPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
+// GenresController is the controller interface for the Genres actions.
+type GenresController interface {
+	goa.Muxer
+	Create(*CreateGenresContext) error
+	Delete(*DeleteGenresContext) error
+	List(*ListGenresContext) error
+	Show(*ShowGenresContext) error
+	Update(*UpdateGenresContext) error
+}
+
+// MountGenresController "mounts" a Genres resource controller on the given service.
+func MountGenresController(service *goa.Service, ctrl GenresController) {
+	initService(service)
+	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/genres", ctrl.MuxHandler("preflight", handleGenresOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/genres/:genre_id", ctrl.MuxHandler("preflight", handleGenresOrigin(cors.HandlePreflight()), nil))
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewCreateGenresContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*CreateGenresPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Create(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleGenresOrigin(h)
+	service.Mux.Handle("POST", "/genres", ctrl.MuxHandler("create", h, unmarshalCreateGenresPayload))
+	service.LogInfo("mount", "ctrl", "Genres", "action", "Create", "route", "POST /genres", "security", "JWTSec")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewDeleteGenresContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Delete(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleGenresOrigin(h)
+	service.Mux.Handle("DELETE", "/genres/:genre_id", ctrl.MuxHandler("delete", h, nil))
+	service.LogInfo("mount", "ctrl", "Genres", "action", "Delete", "route", "DELETE /genres/:genre_id", "security", "JWTSec")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewListGenresContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.List(rctx)
+	}
+	h = handleGenresOrigin(h)
+	service.Mux.Handle("GET", "/genres", ctrl.MuxHandler("list", h, nil))
+	service.LogInfo("mount", "ctrl", "Genres", "action", "List", "route", "GET /genres")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewShowGenresContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Show(rctx)
+	}
+	h = handleGenresOrigin(h)
+	service.Mux.Handle("GET", "/genres/:genre_id", ctrl.MuxHandler("show", h, nil))
+	service.LogInfo("mount", "ctrl", "Genres", "action", "Show", "route", "GET /genres/:genre_id")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewUpdateGenresContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*UpdateGenresPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Update(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleGenresOrigin(h)
+	service.Mux.Handle("PUT", "/genres/:genre_id", ctrl.MuxHandler("update", h, unmarshalUpdateGenresPayload))
+	service.LogInfo("mount", "ctrl", "Genres", "action", "Update", "route", "PUT /genres/:genre_id", "security", "JWTSec")
+}
+
+// handleGenresOrigin applies the CORS response headers corresponding to the origin.
+func handleGenresOrigin(h goa.Handler) goa.Handler {
+
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "http://localhost:4200") {
+			ctx = goa.WithLogContext(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Vary", "Origin")
+			rw.Header().Set("Access-Control-Max-Age", "600")
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+				rw.Header().Set("Access-Control-Allow-Headers", "Authorization, Origin, Content-Type, Accept")
+			}
+			return h(ctx, rw, req)
+		}
+
+		return h(ctx, rw, req)
+	}
+}
+
+// unmarshalCreateGenresPayload unmarshals the request body into the context request data Payload field.
+func unmarshalCreateGenresPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &createGenresPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
+// unmarshalUpdateGenresPayload unmarshals the request body into the context request data Payload field.
+func unmarshalUpdateGenresPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &updateGenresPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
 // HealthController is the controller interface for the Health actions.
 type HealthController interface {
 	goa.Muxer
@@ -333,269 +1353,6 @@ func handleHealthOrigin(h goa.Handler) goa.Handler {
 
 		return h(ctx, rw, req)
 	}
-}
-
-// PasswordController is the controller interface for the Password actions.
-type PasswordController interface {
-	goa.Muxer
-	Get(*GetPasswordContext) error
-	Update(*UpdatePasswordContext) error
-}
-
-// MountPasswordController "mounts" a Password resource controller on the given service.
-func MountPasswordController(service *goa.Service, ctrl PasswordController) {
-	initService(service)
-	var h goa.Handler
-	service.Mux.Handle("OPTIONS", "/password", ctrl.MuxHandler("preflight", handlePasswordOrigin(cors.HandlePreflight()), nil))
-
-	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
-		// Check if there was an error loading the request
-		if err := goa.ContextError(ctx); err != nil {
-			return err
-		}
-		// Build the context
-		rctx, err := NewGetPasswordContext(ctx, req, service)
-		if err != nil {
-			return err
-		}
-		return ctrl.Get(rctx)
-	}
-	h = handlePasswordOrigin(h)
-	service.Mux.Handle("GET", "/password", ctrl.MuxHandler("get", h, nil))
-	service.LogInfo("mount", "ctrl", "Password", "action", "Get", "route", "GET /password")
-
-	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
-		// Check if there was an error loading the request
-		if err := goa.ContextError(ctx); err != nil {
-			return err
-		}
-		// Build the context
-		rctx, err := NewUpdatePasswordContext(ctx, req, service)
-		if err != nil {
-			return err
-		}
-		// Build the payload
-		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
-			rctx.Payload = rawPayload.(*PasswordChangePayload)
-		} else {
-			return goa.MissingPayloadError()
-		}
-		return ctrl.Update(rctx)
-	}
-	h = handlePasswordOrigin(h)
-	service.Mux.Handle("POST", "/password", ctrl.MuxHandler("update", h, unmarshalUpdatePasswordPayload))
-	service.LogInfo("mount", "ctrl", "Password", "action", "Update", "route", "POST /password")
-}
-
-// handlePasswordOrigin applies the CORS response headers corresponding to the origin.
-func handlePasswordOrigin(h goa.Handler) goa.Handler {
-
-	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
-		origin := req.Header.Get("Origin")
-		if origin == "" {
-			// Not a CORS request
-			return h(ctx, rw, req)
-		}
-		if cors.MatchOrigin(origin, "http://localhost:4200") {
-			ctx = goa.WithLogContext(ctx, "origin", origin)
-			rw.Header().Set("Access-Control-Allow-Origin", origin)
-			rw.Header().Set("Vary", "Origin")
-			rw.Header().Set("Access-Control-Max-Age", "600")
-			rw.Header().Set("Access-Control-Allow-Credentials", "true")
-			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
-				// We are handling a preflight request
-				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
-				rw.Header().Set("Access-Control-Allow-Headers", "Authorization, Origin, Content-Type, Accept")
-			}
-			return h(ctx, rw, req)
-		}
-
-		return h(ctx, rw, req)
-	}
-}
-
-// unmarshalUpdatePasswordPayload unmarshals the request body into the context request data Payload field.
-func unmarshalUpdatePasswordPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
-	payload := &passwordChangePayload{}
-	if err := service.DecodeRequest(req, payload); err != nil {
-		return err
-	}
-	if err := payload.Validate(); err != nil {
-		// Initialize payload with private data structure so it can be logged
-		goa.ContextRequest(ctx).Payload = payload
-		return err
-	}
-	goa.ContextRequest(ctx).Payload = payload.Publicize()
-	return nil
-}
-
-// UsersController is the controller interface for the Users actions.
-type UsersController interface {
-	goa.Muxer
-	Create(*CreateUsersContext) error
-	Delete(*DeleteUsersContext) error
-	List(*ListUsersContext) error
-	Show(*ShowUsersContext) error
-	Update(*UpdateUsersContext) error
-}
-
-// MountUsersController "mounts" a Users resource controller on the given service.
-func MountUsersController(service *goa.Service, ctrl UsersController) {
-	initService(service)
-	var h goa.Handler
-	service.Mux.Handle("OPTIONS", "/users", ctrl.MuxHandler("preflight", handleUsersOrigin(cors.HandlePreflight()), nil))
-	service.Mux.Handle("OPTIONS", "/users/:user_id", ctrl.MuxHandler("preflight", handleUsersOrigin(cors.HandlePreflight()), nil))
-
-	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
-		// Check if there was an error loading the request
-		if err := goa.ContextError(ctx); err != nil {
-			return err
-		}
-		// Build the context
-		rctx, err := NewCreateUsersContext(ctx, req, service)
-		if err != nil {
-			return err
-		}
-		// Build the payload
-		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
-			rctx.Payload = rawPayload.(*UserCreatePayload)
-		} else {
-			return goa.MissingPayloadError()
-		}
-		return ctrl.Create(rctx)
-	}
-	h = handleUsersOrigin(h)
-	service.Mux.Handle("POST", "/users", ctrl.MuxHandler("create", h, unmarshalCreateUsersPayload))
-	service.LogInfo("mount", "ctrl", "Users", "action", "Create", "route", "POST /users")
-
-	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
-		// Check if there was an error loading the request
-		if err := goa.ContextError(ctx); err != nil {
-			return err
-		}
-		// Build the context
-		rctx, err := NewDeleteUsersContext(ctx, req, service)
-		if err != nil {
-			return err
-		}
-		return ctrl.Delete(rctx)
-	}
-	h = handleSecurity("JWTSec", h)
-	h = handleUsersOrigin(h)
-	service.Mux.Handle("DELETE", "/users/:user_id", ctrl.MuxHandler("delete", h, nil))
-	service.LogInfo("mount", "ctrl", "Users", "action", "Delete", "route", "DELETE /users/:user_id", "security", "JWTSec")
-
-	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
-		// Check if there was an error loading the request
-		if err := goa.ContextError(ctx); err != nil {
-			return err
-		}
-		// Build the context
-		rctx, err := NewListUsersContext(ctx, req, service)
-		if err != nil {
-			return err
-		}
-		return ctrl.List(rctx)
-	}
-	h = handleUsersOrigin(h)
-	service.Mux.Handle("GET", "/users", ctrl.MuxHandler("list", h, nil))
-	service.LogInfo("mount", "ctrl", "Users", "action", "List", "route", "GET /users")
-
-	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
-		// Check if there was an error loading the request
-		if err := goa.ContextError(ctx); err != nil {
-			return err
-		}
-		// Build the context
-		rctx, err := NewShowUsersContext(ctx, req, service)
-		if err != nil {
-			return err
-		}
-		return ctrl.Show(rctx)
-	}
-	h = handleUsersOrigin(h)
-	service.Mux.Handle("GET", "/users/:user_id", ctrl.MuxHandler("show", h, nil))
-	service.LogInfo("mount", "ctrl", "Users", "action", "Show", "route", "GET /users/:user_id")
-
-	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
-		// Check if there was an error loading the request
-		if err := goa.ContextError(ctx); err != nil {
-			return err
-		}
-		// Build the context
-		rctx, err := NewUpdateUsersContext(ctx, req, service)
-		if err != nil {
-			return err
-		}
-		// Build the payload
-		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
-			rctx.Payload = rawPayload.(*UpdateUsersPayload)
-		} else {
-			return goa.MissingPayloadError()
-		}
-		return ctrl.Update(rctx)
-	}
-	h = handleSecurity("JWTSec", h)
-	h = handleUsersOrigin(h)
-	service.Mux.Handle("PUT", "/users/:user_id", ctrl.MuxHandler("update", h, unmarshalUpdateUsersPayload))
-	service.LogInfo("mount", "ctrl", "Users", "action", "Update", "route", "PUT /users/:user_id", "security", "JWTSec")
-}
-
-// handleUsersOrigin applies the CORS response headers corresponding to the origin.
-func handleUsersOrigin(h goa.Handler) goa.Handler {
-
-	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
-		origin := req.Header.Get("Origin")
-		if origin == "" {
-			// Not a CORS request
-			return h(ctx, rw, req)
-		}
-		if cors.MatchOrigin(origin, "http://localhost:4200") {
-			ctx = goa.WithLogContext(ctx, "origin", origin)
-			rw.Header().Set("Access-Control-Allow-Origin", origin)
-			rw.Header().Set("Vary", "Origin")
-			rw.Header().Set("Access-Control-Max-Age", "600")
-			rw.Header().Set("Access-Control-Allow-Credentials", "true")
-			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
-				// We are handling a preflight request
-				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
-				rw.Header().Set("Access-Control-Allow-Headers", "Authorization, Origin, Content-Type, Accept")
-			}
-			return h(ctx, rw, req)
-		}
-
-		return h(ctx, rw, req)
-	}
-}
-
-// unmarshalCreateUsersPayload unmarshals the request body into the context request data Payload field.
-func unmarshalCreateUsersPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
-	payload := &userCreatePayload{}
-	if err := service.DecodeRequest(req, payload); err != nil {
-		return err
-	}
-	if err := payload.Validate(); err != nil {
-		// Initialize payload with private data structure so it can be logged
-		goa.ContextRequest(ctx).Payload = payload
-		return err
-	}
-	goa.ContextRequest(ctx).Payload = payload.Publicize()
-	return nil
-}
-
-// unmarshalUpdateUsersPayload unmarshals the request body into the context request data Payload field.
-func unmarshalUpdateUsersPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
-	payload := &updateUsersPayload{}
-	if err := service.DecodeRequest(req, payload); err != nil {
-		return err
-	}
-	if err := payload.Validate(); err != nil {
-		// Initialize payload with private data structure so it can be logged
-		goa.ContextRequest(ctx).Payload = payload
-		return err
-	}
-	goa.ContextRequest(ctx).Payload = payload.Publicize()
-	return nil
 }
 
 // OwnershipsController is the controller interface for the Ownerships actions.
@@ -771,6 +1528,440 @@ func unmarshalCreateOwnershipsPayload(ctx context.Context, service *goa.Service,
 	return nil
 }
 
+// PasswordController is the controller interface for the Password actions.
+type PasswordController interface {
+	goa.Muxer
+	Get(*GetPasswordContext) error
+	Update(*UpdatePasswordContext) error
+}
+
+// MountPasswordController "mounts" a Password resource controller on the given service.
+func MountPasswordController(service *goa.Service, ctrl PasswordController) {
+	initService(service)
+	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/password", ctrl.MuxHandler("preflight", handlePasswordOrigin(cors.HandlePreflight()), nil))
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewGetPasswordContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Get(rctx)
+	}
+	h = handlePasswordOrigin(h)
+	service.Mux.Handle("GET", "/password", ctrl.MuxHandler("get", h, nil))
+	service.LogInfo("mount", "ctrl", "Password", "action", "Get", "route", "GET /password")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewUpdatePasswordContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*PasswordChangePayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Update(rctx)
+	}
+	h = handlePasswordOrigin(h)
+	service.Mux.Handle("POST", "/password", ctrl.MuxHandler("update", h, unmarshalUpdatePasswordPayload))
+	service.LogInfo("mount", "ctrl", "Password", "action", "Update", "route", "POST /password")
+}
+
+// handlePasswordOrigin applies the CORS response headers corresponding to the origin.
+func handlePasswordOrigin(h goa.Handler) goa.Handler {
+
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "http://localhost:4200") {
+			ctx = goa.WithLogContext(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Vary", "Origin")
+			rw.Header().Set("Access-Control-Max-Age", "600")
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+				rw.Header().Set("Access-Control-Allow-Headers", "Authorization, Origin, Content-Type, Accept")
+			}
+			return h(ctx, rw, req)
+		}
+
+		return h(ctx, rw, req)
+	}
+}
+
+// unmarshalUpdatePasswordPayload unmarshals the request body into the context request data Payload field.
+func unmarshalUpdatePasswordPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &passwordChangePayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
+// RolesController is the controller interface for the Roles actions.
+type RolesController interface {
+	goa.Muxer
+	Create(*CreateRolesContext) error
+	Delete(*DeleteRolesContext) error
+	List(*ListRolesContext) error
+	Show(*ShowRolesContext) error
+	Update(*UpdateRolesContext) error
+}
+
+// MountRolesController "mounts" a Roles resource controller on the given service.
+func MountRolesController(service *goa.Service, ctrl RolesController) {
+	initService(service)
+	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/roles", ctrl.MuxHandler("preflight", handleRolesOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/roles/:role_id", ctrl.MuxHandler("preflight", handleRolesOrigin(cors.HandlePreflight()), nil))
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewCreateRolesContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*CreateRolesPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Create(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleRolesOrigin(h)
+	service.Mux.Handle("POST", "/roles", ctrl.MuxHandler("create", h, unmarshalCreateRolesPayload))
+	service.LogInfo("mount", "ctrl", "Roles", "action", "Create", "route", "POST /roles", "security", "JWTSec")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewDeleteRolesContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Delete(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleRolesOrigin(h)
+	service.Mux.Handle("DELETE", "/roles/:role_id", ctrl.MuxHandler("delete", h, nil))
+	service.LogInfo("mount", "ctrl", "Roles", "action", "Delete", "route", "DELETE /roles/:role_id", "security", "JWTSec")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewListRolesContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.List(rctx)
+	}
+	h = handleRolesOrigin(h)
+	service.Mux.Handle("GET", "/roles", ctrl.MuxHandler("list", h, nil))
+	service.LogInfo("mount", "ctrl", "Roles", "action", "List", "route", "GET /roles")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewShowRolesContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Show(rctx)
+	}
+	h = handleRolesOrigin(h)
+	service.Mux.Handle("GET", "/roles/:role_id", ctrl.MuxHandler("show", h, nil))
+	service.LogInfo("mount", "ctrl", "Roles", "action", "Show", "route", "GET /roles/:role_id")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewUpdateRolesContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*UpdateRolesPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Update(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleRolesOrigin(h)
+	service.Mux.Handle("PUT", "/roles/:role_id", ctrl.MuxHandler("update", h, unmarshalUpdateRolesPayload))
+	service.LogInfo("mount", "ctrl", "Roles", "action", "Update", "route", "PUT /roles/:role_id", "security", "JWTSec")
+}
+
+// handleRolesOrigin applies the CORS response headers corresponding to the origin.
+func handleRolesOrigin(h goa.Handler) goa.Handler {
+
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "http://localhost:4200") {
+			ctx = goa.WithLogContext(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Vary", "Origin")
+			rw.Header().Set("Access-Control-Max-Age", "600")
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+				rw.Header().Set("Access-Control-Allow-Headers", "Authorization, Origin, Content-Type, Accept")
+			}
+			return h(ctx, rw, req)
+		}
+
+		return h(ctx, rw, req)
+	}
+}
+
+// unmarshalCreateRolesPayload unmarshals the request body into the context request data Payload field.
+func unmarshalCreateRolesPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &createRolesPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
+// unmarshalUpdateRolesPayload unmarshals the request body into the context request data Payload field.
+func unmarshalUpdateRolesPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &updateRolesPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
+// SeriesController is the controller interface for the Series actions.
+type SeriesController interface {
+	goa.Muxer
+	Create(*CreateSeriesContext) error
+	Delete(*DeleteSeriesContext) error
+	List(*ListSeriesContext) error
+	Show(*ShowSeriesContext) error
+	Update(*UpdateSeriesContext) error
+}
+
+// MountSeriesController "mounts" a Series resource controller on the given service.
+func MountSeriesController(service *goa.Service, ctrl SeriesController) {
+	initService(service)
+	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/series", ctrl.MuxHandler("preflight", handleSeriesOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/series/:series_id", ctrl.MuxHandler("preflight", handleSeriesOrigin(cors.HandlePreflight()), nil))
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewCreateSeriesContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*CreateSeriesPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Create(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleSeriesOrigin(h)
+	service.Mux.Handle("POST", "/series", ctrl.MuxHandler("create", h, unmarshalCreateSeriesPayload))
+	service.LogInfo("mount", "ctrl", "Series", "action", "Create", "route", "POST /series", "security", "JWTSec")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewDeleteSeriesContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Delete(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleSeriesOrigin(h)
+	service.Mux.Handle("DELETE", "/series/:series_id", ctrl.MuxHandler("delete", h, nil))
+	service.LogInfo("mount", "ctrl", "Series", "action", "Delete", "route", "DELETE /series/:series_id", "security", "JWTSec")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewListSeriesContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.List(rctx)
+	}
+	h = handleSeriesOrigin(h)
+	service.Mux.Handle("GET", "/series", ctrl.MuxHandler("list", h, nil))
+	service.LogInfo("mount", "ctrl", "Series", "action", "List", "route", "GET /series")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewShowSeriesContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Show(rctx)
+	}
+	h = handleSeriesOrigin(h)
+	service.Mux.Handle("GET", "/series/:series_id", ctrl.MuxHandler("show", h, nil))
+	service.LogInfo("mount", "ctrl", "Series", "action", "Show", "route", "GET /series/:series_id")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewUpdateSeriesContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*UpdateSeriesPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Update(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleSeriesOrigin(h)
+	service.Mux.Handle("PUT", "/series/:series_id", ctrl.MuxHandler("update", h, unmarshalUpdateSeriesPayload))
+	service.LogInfo("mount", "ctrl", "Series", "action", "Update", "route", "PUT /series/:series_id", "security", "JWTSec")
+}
+
+// handleSeriesOrigin applies the CORS response headers corresponding to the origin.
+func handleSeriesOrigin(h goa.Handler) goa.Handler {
+
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "http://localhost:4200") {
+			ctx = goa.WithLogContext(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Vary", "Origin")
+			rw.Header().Set("Access-Control-Max-Age", "600")
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+				rw.Header().Set("Access-Control-Allow-Headers", "Authorization, Origin, Content-Type, Accept")
+			}
+			return h(ctx, rw, req)
+		}
+
+		return h(ctx, rw, req)
+	}
+}
+
+// unmarshalCreateSeriesPayload unmarshals the request body into the context request data Payload field.
+func unmarshalCreateSeriesPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &createSeriesPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
+// unmarshalUpdateSeriesPayload unmarshals the request body into the context request data Payload field.
+func unmarshalUpdateSeriesPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &updateSeriesPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
 // SwaggerController is the controller interface for the Swagger actions.
 type SwaggerController interface {
 	goa.Muxer
@@ -900,6 +2091,175 @@ func handleTokenOrigin(h goa.Handler) goa.Handler {
 
 		return h(ctx, rw, req)
 	}
+}
+
+// UsersController is the controller interface for the Users actions.
+type UsersController interface {
+	goa.Muxer
+	Create(*CreateUsersContext) error
+	Delete(*DeleteUsersContext) error
+	List(*ListUsersContext) error
+	Show(*ShowUsersContext) error
+	Update(*UpdateUsersContext) error
+}
+
+// MountUsersController "mounts" a Users resource controller on the given service.
+func MountUsersController(service *goa.Service, ctrl UsersController) {
+	initService(service)
+	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/users", ctrl.MuxHandler("preflight", handleUsersOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/users/:user_id", ctrl.MuxHandler("preflight", handleUsersOrigin(cors.HandlePreflight()), nil))
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewCreateUsersContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*UserCreatePayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Create(rctx)
+	}
+	h = handleUsersOrigin(h)
+	service.Mux.Handle("POST", "/users", ctrl.MuxHandler("create", h, unmarshalCreateUsersPayload))
+	service.LogInfo("mount", "ctrl", "Users", "action", "Create", "route", "POST /users")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewDeleteUsersContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Delete(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleUsersOrigin(h)
+	service.Mux.Handle("DELETE", "/users/:user_id", ctrl.MuxHandler("delete", h, nil))
+	service.LogInfo("mount", "ctrl", "Users", "action", "Delete", "route", "DELETE /users/:user_id", "security", "JWTSec")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewListUsersContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.List(rctx)
+	}
+	h = handleUsersOrigin(h)
+	service.Mux.Handle("GET", "/users", ctrl.MuxHandler("list", h, nil))
+	service.LogInfo("mount", "ctrl", "Users", "action", "List", "route", "GET /users")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewShowUsersContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Show(rctx)
+	}
+	h = handleUsersOrigin(h)
+	service.Mux.Handle("GET", "/users/:user_id", ctrl.MuxHandler("show", h, nil))
+	service.LogInfo("mount", "ctrl", "Users", "action", "Show", "route", "GET /users/:user_id")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewUpdateUsersContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*UpdateUsersPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Update(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleUsersOrigin(h)
+	service.Mux.Handle("PUT", "/users/:user_id", ctrl.MuxHandler("update", h, unmarshalUpdateUsersPayload))
+	service.LogInfo("mount", "ctrl", "Users", "action", "Update", "route", "PUT /users/:user_id", "security", "JWTSec")
+}
+
+// handleUsersOrigin applies the CORS response headers corresponding to the origin.
+func handleUsersOrigin(h goa.Handler) goa.Handler {
+
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "http://localhost:4200") {
+			ctx = goa.WithLogContext(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Vary", "Origin")
+			rw.Header().Set("Access-Control-Max-Age", "600")
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+				rw.Header().Set("Access-Control-Allow-Headers", "Authorization, Origin, Content-Type, Accept")
+			}
+			return h(ctx, rw, req)
+		}
+
+		return h(ctx, rw, req)
+	}
+}
+
+// unmarshalCreateUsersPayload unmarshals the request body into the context request data Payload field.
+func unmarshalCreateUsersPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &userCreatePayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
+// unmarshalUpdateUsersPayload unmarshals the request body into the context request data Payload field.
+func unmarshalUpdateUsersPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &updateUsersPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
 }
 
 // ValidationController is the controller interface for the Validation actions.

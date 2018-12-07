@@ -7,7 +7,10 @@ import (
 // GetOwnershipList returns book list by user ID
 func (m *Model) GetOwnershipList(userID int) ([]*model.Ownership, error) {
 	rows, err := m.db.Query(
-		`SELECT b.book_id, b.isbn, b.name FROM ownerships u JOIN books b USING(book_id) where user_id = ?`,
+		`
+SELECT b.id, b.isbn, b.name
+FROM ownership u
+JOIN books b ON (u.book_id = b.id) where user_id = ?`,
 		userID,
 	)
 	if err != nil {
@@ -40,10 +43,10 @@ func (m *Model) GetOwnershipList(userID int) ([]*model.Ownership, error) {
 func (m *Model) GetOwnership(userID, bookID int) (*model.Ownership, error) {
 	b, err := m.getBook(
 		`
-SELECT b.book_id, b.isbn, b.name
-FROM ownerships u
-JOIN books b USING(book_id)
-where u.user_id = ? and b.book_id = ?`,
+SELECT b.id, b.isbn, b.name
+FROM ownership u
+JOIN books b ON (u.book_id = b.id)
+where u.user_id = ? and b.id = ?`,
 		userID, bookID,
 	)
 	if err != nil {
@@ -56,7 +59,7 @@ where u.user_id = ? and b.book_id = ?`,
 func (m *Model) InsertOwnership(userID, bookID int) (*model.Ownership, error) {
 	_, err := m.db.Exec(
 		`
-INSERT INTO ownerships (user_id, book_id, create_ts, update_ts)
+INSERT INTO ownership (user_id, book_id, create_ts, update_ts)
 VALUES (?, ?, NOW(), NOW())
 ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`,
 		userID, bookID,
@@ -70,12 +73,12 @@ ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`,
 //UpdateOwnership update ownership
 func (m *Model) UpdateOwnership(userID, bookID int) error {
 	return m.exec(
-		`UPDATE ownerships set update_ts = NOW() where user_id = ? and book_id = ?`,
+		`UPDATE ownership set update_ts = NOW() where user_id = ? and book_id = ?`,
 		userID, bookID,
 	)
 }
 
 // DeleteOwnership deletes user book association
 func (m *Model) DeleteOwnership(userID, bookID int) error {
-	return m.exec(`DELETE FROM ownerships where user_id = ? and book_id = ?`, userID, bookID)
+	return m.exec(`DELETE FROM ownership where user_id = ? and book_id = ?`, userID, bookID)
 }

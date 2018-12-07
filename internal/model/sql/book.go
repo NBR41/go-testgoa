@@ -30,7 +30,7 @@ func (m *Model) InsertBook(isbn, name string) (*model.Book, error) {
 	}
 	res, err := m.db.Exec(
 		`
-INSERT INTO books (book_id, isbn, name, create_ts, update_ts)
+INSERT INTO book (id, isbn, name, create_ts, update_ts)
 VALUES (null, ?, ?, NOW(), NOW())
 ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`,
 		isbn, name,
@@ -48,22 +48,22 @@ ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`,
 
 // GetBookByID returns book by ID
 func (m *Model) GetBookByID(id int) (*model.Book, error) {
-	return m.getBook(`SELECT book_id, isbn, name from books where id = ?`, id)
+	return m.getBook(`SELECT id, isbn, name from book where id = ?`, id)
 }
 
 // GetBookByISBN returns book by ISBN
 func (m *Model) GetBookByISBN(isbn string) (*model.Book, error) {
-	return m.getBook(`SELECT book_id, isbn, name from books where isbn = ?`, isbn)
+	return m.getBook(`SELECT id, isbn, name from book where isbn = ?`, isbn)
 }
 
 // GetBookByName returns book by name
 func (m *Model) GetBookByName(name string) (*model.Book, error) {
-	return m.getBook(`SELECT book_id, isbn, name from books where name = ?`, name)
+	return m.getBook(`SELECT id, isbn, name from book where name = ?`, name)
 }
 
 // GetBookList returns book list
 func (m *Model) GetBookList() ([]model.Book, error) {
-	rows, err := m.db.Query(`SELECT book_id, isbn, name FROM books`)
+	rows, err := m.db.Query(`SELECT id, isbn, name FROM book`)
 	if err != nil {
 		return nil, err
 	}
@@ -86,12 +86,12 @@ func (m *Model) GetBookList() ([]model.Book, error) {
 // UpdateBook update book infos
 func (m *Model) UpdateBook(id int, name string) error {
 	return m.exec(
-		`UPDATE books set name = ?, update_ts = NOW() where book_id = ?`,
+		`UPDATE book set name = ?, update_ts = NOW() where id = ?`,
 		name, id,
 	)
 }
 
 // DeleteBook delete book by ID
 func (m *Model) DeleteBook(id int) error {
-	return m.exec(`DELETE FROM books where book_id = ?`, id)
+	return m.exec(`DELETE FROM book where id = ?`, id)
 }

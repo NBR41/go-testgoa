@@ -23,7 +23,7 @@ func (m *Model) getUser(query string, params ...interface{}) (*model.User, error
 
 // GetUserList returns user list
 func (m *Model) GetUserList() ([]model.User, error) {
-	rows, err := m.db.Query(`SELECT user_id, nickname, email, verified, admin FROM users`)
+	rows, err := m.db.Query(`SELECT id, nickname, email, verified, admin FROM user`)
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +45,7 @@ func (m *Model) GetUserList() ([]model.User, error) {
 // GetUserByID returns user by ID
 func (m *Model) GetUserByID(id int) (*model.User, error) {
 	return m.getUser(
-		`SELECT user_id, nickname, email, activated, admin FROM users WHERE user_id = ?`,
+		`SELECT id, nickname, email, activated, admin FROM user WHERE id = ?`,
 		id,
 	)
 }
@@ -53,7 +53,7 @@ func (m *Model) GetUserByID(id int) (*model.User, error) {
 // GetUserByEmailOrNickname returns user by email or nickname
 func (m *Model) GetUserByEmailOrNickname(email, nickname string) (*model.User, error) {
 	return m.getUser(
-		`SELECT user_id, nickname, email, activated, admin FROM users WHERE email = ? OR nickname = ?`,
+		`SELECT id, nickname, email, activated, admin FROM user WHERE email = ? OR nickname = ?`,
 		email, nickname,
 	)
 }
@@ -61,7 +61,7 @@ func (m *Model) GetUserByEmailOrNickname(email, nickname string) (*model.User, e
 // GetUserByEmail returns user by email
 func (m *Model) GetUserByEmail(email string) (*model.User, error) {
 	return m.getUser(
-		`SELECT user_id, nickname, email, activated, admin FROM users WHERE email = ?`,
+		`SELECT id, nickname, email, activated, admin FROM user WHERE email = ?`,
 		email,
 	)
 }
@@ -69,7 +69,7 @@ func (m *Model) GetUserByEmail(email string) (*model.User, error) {
 // GetUserByNickname returns user by email
 func (m *Model) GetUserByNickname(nickname string) (*model.User, error) {
 	return m.getUser(
-		`SELECT user_id, nickname, email, activated, admin FROM users WHERE nickname = ?`,
+		`SELECT id, nickname, email, activated, admin FROM user WHERE nickname = ?`,
 		nickname,
 	)
 }
@@ -80,8 +80,8 @@ func (m *Model) GetAuthenticatedUser(login, password string) (*model.User, error
 	var salt, hash []byte
 	err := m.db.QueryRow(
 		`
-SELECT user_id, nickname, email, activated, admin, salt, password
-FROM users
+SELECT id, nickname, email, activated, admin, salt, password
+FROM user
 WHERE email = ? OR nickname =?`,
 		login, login,
 	).Scan(
@@ -121,7 +121,7 @@ func (m *Model) InsertUser(email, nickname, password string) (*model.User, error
 
 	res, err := m.db.Exec(
 		`
-INSERT INTO users (user_id, nickname, email, salt, password, activated, admin, create_ts, update_ts)
+INSERT INTO user (id, nickname, email, salt, password, activated, admin, create_ts, update_ts)
 VALUES (null, ?, ?, ?, ?, 0, 0, NOW(), NOW())
 ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`,
 		nickname, email, salt, hash,
@@ -140,7 +140,7 @@ ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`,
 // UpdateUserNickname updates user nickname by ID
 func (m *Model) UpdateUserNickname(id int, nickname string) error {
 	return m.exec(
-		`UPDATE users set nickname = ?, update_ts = NOW() where user_id = ?`,
+		`UPDATE user set nickname = ?, update_ts = NOW() where id = ?`,
 		nickname, id,
 	)
 }
@@ -152,7 +152,7 @@ func (m *Model) UpdateUserPassword(id int, password string) error {
 		return err
 	}
 	return m.exec(
-		`UPDATE users set salt = ?, password = ?, update_ts = NOW() where user_id = ?`,
+		`UPDATE user set salt = ?, password = ?, update_ts = NOW() where id = ?`,
 		salt, hash, id,
 	)
 }
@@ -160,12 +160,12 @@ func (m *Model) UpdateUserPassword(id int, password string) error {
 // UpdateUserActivation update user activation by ID
 func (m *Model) UpdateUserActivation(id int, activated bool) error {
 	return m.exec(
-		`UPDATE users set activated = ?, update_ts = NOW() where user_id = ?`,
+		`UPDATE user set activated = ?, update_ts = NOW() where id = ?`,
 		activated, id,
 	)
 }
 
 // DeleteUser deletes user by ID
 func (m *Model) DeleteUser(id int) error {
-	return m.exec(`DELETE FROM users where user_id = ?`, id)
+	return m.exec(`DELETE FROM user where id = ?`, id)
 }

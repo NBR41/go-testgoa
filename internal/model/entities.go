@@ -44,3 +44,39 @@ type Ownership struct {
 	BookID int64
 	Book   *Book
 }
+
+//Category struct for category
+type Category struct {
+	ID   int64
+	Name string
+}
+
+//Author struct for author
+type Author struct {
+	ID   int64
+	Name string
+}
+
+//Genre struct for genre
+type Genre struct {
+	ID   int64
+	Name string
+}
+
+//Role struct for role
+type Role struct {
+	ID   int64
+	Name string
+}
+
+//EditionType struct for edition type
+type EditionType struct {
+	ID   int64
+	Name string
+}
+
+//Editor struct for editor
+type Editor struct {
+	ID   int64
+	Name string
+}

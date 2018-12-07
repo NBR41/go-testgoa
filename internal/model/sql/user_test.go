@@ -16,19 +16,19 @@ func TestGetUserList(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `SELECT user_id, nickname, email, verified, admin FROM users`
+	qry := `SELECT id, nickname, email, verified, admin FROM user`
 	mock.
 		ExpectQuery(qry).
 		WillReturnError(errors.New("query error"))
 	mock.
 		ExpectQuery(qry).
-		WillReturnRows(sqlmock.NewRows([]string{"user_id", "nickname", "email", "verified", "admin"}).AddRow("foo", "bar", "baz", "qux", "quux"))
+		WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "verified", "admin"}).AddRow("foo", "bar", "baz", "qux", "quux"))
 	mock.
 		ExpectQuery(qry).
-		WillReturnRows(sqlmock.NewRows([]string{"user_id", "nickname", "email", "verified", "admin"}).AddRow(1, "nick", "foo@bar.com", 1, 1).RowError(0, errors.New("scan error")))
+		WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "verified", "admin"}).AddRow(1, "nick", "foo@bar.com", 1, 1).RowError(0, errors.New("scan error")))
 	mock.
 		ExpectQuery(qry).
-		WillReturnRows(sqlmock.NewRows([]string{"user_id", "nickname", "email", "verified", "admin"}).AddRow(1, "nick", "foo@bar.com", 1, 1))
+		WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "verified", "admin"}).AddRow(1, "nick", "foo@bar.com", 1, 1))
 
 	m, _ := New(ConnGetter(func() (*sql.DB, error) {
 		return db, nil
@@ -40,7 +40,7 @@ func TestGetUserList(t *testing.T) {
 		err  error
 	}{
 		{"query error", nil, errors.New("query error")},
-		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "user_id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
+		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
 		{"scan error", nil, errors.New("scan error")},
 		{"valid", []model.User{{ID: 1, Nickname: "nick", Email: "foo@bar.com", IsValidated: true, IsAdmin: true}}, nil},
 	}
@@ -73,7 +73,7 @@ func TestGetUserByID(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `SELECT user_id, nickname, email, activated, admin FROM users WHERE user_id = ?`
+	qry := `SELECT id, nickname, email, activated, admin FROM user WHERE id = ?`
 	mock.
 		ExpectQuery(qry).
 		WithArgs(123).
@@ -81,19 +81,19 @@ func TestGetUserByID(t *testing.T) {
 	mock.
 		ExpectQuery(qry).
 		WithArgs(123).
-		WillReturnRows(sqlmock.NewRows([]string{"user_id", "nickname", "email", "verified", "admin"}))
+		WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "verified", "admin"}))
 	mock.
 		ExpectQuery(qry).
 		WithArgs(123).
-		WillReturnRows(sqlmock.NewRows([]string{"user_id", "nickname", "email", "verified", "admin"}).AddRow("foo", "bar", "baz", "qux", "quux"))
+		WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "verified", "admin"}).AddRow("foo", "bar", "baz", "qux", "quux"))
 	mock.
 		ExpectQuery(qry).
 		WithArgs(123).
-		WillReturnRows(sqlmock.NewRows([]string{"user_id", "nickname", "email", "verified", "admin"}).AddRow(1, "nick", "foo@bar.com", 1, 1).RowError(0, errors.New("scan error")))
+		WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "verified", "admin"}).AddRow(1, "nick", "foo@bar.com", 1, 1).RowError(0, errors.New("scan error")))
 	mock.
 		ExpectQuery(qry).
 		WithArgs(123).
-		WillReturnRows(sqlmock.NewRows([]string{"user_id", "nickname", "email", "verified", "admin"}).AddRow(1, "nick", "foo@bar.com", 1, 1))
+		WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "verified", "admin"}).AddRow(1, "nick", "foo@bar.com", 1, 1))
 
 	m, _ := New(ConnGetter(func() (*sql.DB, error) {
 		return db, nil
@@ -106,7 +106,7 @@ func TestGetUserByID(t *testing.T) {
 	}{
 		{"query error", nil, errors.New("query error")},
 		{"no rows", nil, model.ErrNotFound},
-		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "user_id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
+		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
 		{"scan error", nil, errors.New("scan error")},
 		{"valid", &model.User{ID: 1, Nickname: "nick", Email: "foo@bar.com", IsValidated: true, IsAdmin: true}, nil},
 	}
@@ -138,7 +138,7 @@ func TestGetUserByEmail(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `SELECT user_id, nickname, email, activated, admin FROM users WHERE email = ?`
+	qry := `SELECT id, nickname, email, activated, admin FROM user WHERE email = ?`
 	mock.
 		ExpectQuery(qry).
 		WithArgs("foo@bar.com").
@@ -146,19 +146,19 @@ func TestGetUserByEmail(t *testing.T) {
 	mock.
 		ExpectQuery(qry).
 		WithArgs("foo@bar.com").
-		WillReturnRows(sqlmock.NewRows([]string{"user_id", "nickname", "email", "verified", "admin"}))
+		WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "verified", "admin"}))
 	mock.
 		ExpectQuery(qry).
 		WithArgs("foo@bar.com").
-		WillReturnRows(sqlmock.NewRows([]string{"user_id", "nickname", "email", "verified", "admin"}).AddRow("foo", "bar", "baz", "qux", "quux"))
+		WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "verified", "admin"}).AddRow("foo", "bar", "baz", "qux", "quux"))
 	mock.
 		ExpectQuery(qry).
 		WithArgs("foo@bar.com").
-		WillReturnRows(sqlmock.NewRows([]string{"user_id", "nickname", "email", "verified", "admin"}).AddRow(1, "nick", "foo@bar.com", 1, 1).RowError(0, errors.New("scan error")))
+		WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "verified", "admin"}).AddRow(1, "nick", "foo@bar.com", 1, 1).RowError(0, errors.New("scan error")))
 	mock.
 		ExpectQuery(qry).
 		WithArgs("foo@bar.com").
-		WillReturnRows(sqlmock.NewRows([]string{"user_id", "nickname", "email", "verified", "admin"}).AddRow(1, "nick", "foo@bar.com", 1, 1))
+		WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "verified", "admin"}).AddRow(1, "nick", "foo@bar.com", 1, 1))
 
 	m, _ := New(ConnGetter(func() (*sql.DB, error) {
 		return db, nil
@@ -171,7 +171,7 @@ func TestGetUserByEmail(t *testing.T) {
 	}{
 		{"query error", nil, errors.New("query error")},
 		{"no rows", nil, model.ErrNotFound},
-		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "user_id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
+		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
 		{"scan error", nil, errors.New("scan error")},
 		{"valid", &model.User{ID: 1, Nickname: "nick", Email: "foo@bar.com", IsValidated: true, IsAdmin: true}, nil},
 	}
@@ -203,7 +203,7 @@ func TestGetUserByNickname(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `SELECT user_id, nickname, email, activated, admin FROM users WHERE nickname = ?`
+	qry := `SELECT id, nickname, email, activated, admin FROM user WHERE nickname = ?`
 	mock.
 		ExpectQuery(qry).
 		WithArgs("foo").
@@ -211,19 +211,19 @@ func TestGetUserByNickname(t *testing.T) {
 	mock.
 		ExpectQuery(qry).
 		WithArgs("foo").
-		WillReturnRows(sqlmock.NewRows([]string{"user_id", "nickname", "email", "verified", "admin"}))
+		WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "verified", "admin"}))
 	mock.
 		ExpectQuery(qry).
 		WithArgs("foo").
-		WillReturnRows(sqlmock.NewRows([]string{"user_id", "nickname", "email", "verified", "admin"}).AddRow("foo", "bar", "baz", "qux", "quux"))
+		WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "verified", "admin"}).AddRow("foo", "bar", "baz", "qux", "quux"))
 	mock.
 		ExpectQuery(qry).
 		WithArgs("foo").
-		WillReturnRows(sqlmock.NewRows([]string{"user_id", "nickname", "email", "verified", "admin"}).AddRow(1, "nick", "foo@bar.com", 1, 1).RowError(0, errors.New("scan error")))
+		WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "verified", "admin"}).AddRow(1, "nick", "foo@bar.com", 1, 1).RowError(0, errors.New("scan error")))
 	mock.
 		ExpectQuery(qry).
 		WithArgs("foo").
-		WillReturnRows(sqlmock.NewRows([]string{"user_id", "nickname", "email", "verified", "admin"}).AddRow(1, "nick", "foo@bar.com", 1, 1))
+		WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "verified", "admin"}).AddRow(1, "nick", "foo@bar.com", 1, 1))
 
 	m, _ := New(ConnGetter(func() (*sql.DB, error) {
 		return db, nil
@@ -236,7 +236,7 @@ func TestGetUserByNickname(t *testing.T) {
 	}{
 		{"query error", nil, errors.New("query error")},
 		{"no rows", nil, model.ErrNotFound},
-		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "user_id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
+		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
 		{"scan error", nil, errors.New("scan error")},
 		{"valid", &model.User{ID: 1, Nickname: "nick", Email: "foo@bar.com", IsValidated: true, IsAdmin: true}, nil},
 	}
@@ -268,7 +268,7 @@ func TestGetUserByEmailOrNickname(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `SELECT user_id, nickname, email, activated, admin FROM users WHERE email = \? OR nickname = \?`
+	qry := `SELECT id, nickname, email, activated, admin FROM user WHERE email = \? OR nickname = \?`
 	mock.
 		ExpectQuery(qry).
 		WithArgs("foo@bar.com", "foo").
@@ -276,19 +276,19 @@ func TestGetUserByEmailOrNickname(t *testing.T) {
 	mock.
 		ExpectQuery(qry).
 		WithArgs("foo@bar.com", "foo").
-		WillReturnRows(sqlmock.NewRows([]string{"user_id", "nickname", "email", "verified", "admin"}))
+		WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "verified", "admin"}))
 	mock.
 		ExpectQuery(qry).
 		WithArgs("foo@bar.com", "foo").
-		WillReturnRows(sqlmock.NewRows([]string{"user_id", "nickname", "email", "verified", "admin"}).AddRow("foo", "bar", "baz", "qux", "quux"))
+		WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "verified", "admin"}).AddRow("foo", "bar", "baz", "qux", "quux"))
 	mock.
 		ExpectQuery(qry).
 		WithArgs("foo@bar.com", "foo").
-		WillReturnRows(sqlmock.NewRows([]string{"user_id", "nickname", "email", "verified", "admin"}).AddRow(1, "nick", "foo@bar.com", 1, 1).RowError(0, errors.New("scan error")))
+		WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "verified", "admin"}).AddRow(1, "nick", "foo@bar.com", 1, 1).RowError(0, errors.New("scan error")))
 	mock.
 		ExpectQuery(qry).
 		WithArgs("foo@bar.com", "foo").
-		WillReturnRows(sqlmock.NewRows([]string{"user_id", "nickname", "email", "verified", "admin"}).AddRow(1, "nick", "foo@bar.com", 1, 1))
+		WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "verified", "admin"}).AddRow(1, "nick", "foo@bar.com", 1, 1))
 
 	m, _ := New(ConnGetter(func() (*sql.DB, error) {
 		return db, nil
@@ -301,7 +301,7 @@ func TestGetUserByEmailOrNickname(t *testing.T) {
 	}{
 		{"query error", nil, errors.New("query error")},
 		{"no rows", nil, model.ErrNotFound},
-		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "user_id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
+		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
 		{"scan error", nil, errors.New("scan error")},
 		{"valid", &model.User{ID: 1, Nickname: "nick", Email: "foo@bar.com", IsValidated: true, IsAdmin: true}, nil},
 	}
@@ -343,8 +343,8 @@ func TestGetAuthenticatedUser(t *testing.T) {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
 	qry := `
-SELECT user_id, nickname, email, activated, admin, salt, password
-FROM users
+SELECT id, nickname, email, activated, admin, salt, password
+FROM user
 WHERE email = \? OR nickname =\?`
 	dbmock.
 		ExpectQuery(qry).
@@ -353,27 +353,27 @@ WHERE email = \? OR nickname =\?`
 	dbmock.
 		ExpectQuery(qry).
 		WithArgs("foo", "foo").
-		WillReturnRows(sqlmock.NewRows([]string{"user_id", "nickname", "email", "activated", "admin", "salt", "password"}))
+		WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "activated", "admin", "salt", "password"}))
 	dbmock.
 		ExpectQuery(qry).
 		WithArgs("foo", "foo").
-		WillReturnRows(sqlmock.NewRows([]string{"user_id", "nickname", "email", "activated", "admin", "salt", "password"}).AddRow("foo", "bar", "baz", "qux", "quux", "corge", "grault"))
+		WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "activated", "admin", "salt", "password"}).AddRow("foo", "bar", "baz", "qux", "quux", "corge", "grault"))
 	dbmock.
 		ExpectQuery(qry).
 		WithArgs("foo", "foo").
-		WillReturnRows(sqlmock.NewRows([]string{"user_id", "nickname", "email", "activated", "admin", "salt", "password"}).AddRow(1, "nick", "foo@bar.com", 1, 1, []byte("corge"), []byte("grault")).RowError(0, errors.New("scan error")))
+		WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "activated", "admin", "salt", "password"}).AddRow(1, "nick", "foo@bar.com", 1, 1, []byte("corge"), []byte("grault")).RowError(0, errors.New("scan error")))
 	dbmock.
 		ExpectQuery(qry).
 		WithArgs("foo", "foo").
-		WillReturnRows(sqlmock.NewRows([]string{"user_id", "nickname", "email", "activated", "admin", "salt", "password"}).AddRow(1, "nick", "foo@bar.com", 1, 1, "corge", "grault"))
+		WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "activated", "admin", "salt", "password"}).AddRow(1, "nick", "foo@bar.com", 1, 1, "corge", "grault"))
 	dbmock.
 		ExpectQuery(qry).
 		WithArgs("foo", "foo").
-		WillReturnRows(sqlmock.NewRows([]string{"user_id", "nickname", "email", "activated", "admin", "salt", "password"}).AddRow(1, "nick", "foo@bar.com", 1, 1, "corge", "grault"))
+		WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "activated", "admin", "salt", "password"}).AddRow(1, "nick", "foo@bar.com", 1, 1, "corge", "grault"))
 	dbmock.
 		ExpectQuery(qry).
 		WithArgs("foo", "foo").
-		WillReturnRows(sqlmock.NewRows([]string{"user_id", "nickname", "email", "activated", "admin", "salt", "password"}).AddRow(1, "nick", "foo@bar.com", 1, 1, "corge", "grault"))
+		WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "activated", "admin", "salt", "password"}).AddRow(1, "nick", "foo@bar.com", 1, 1, "corge", "grault"))
 
 	m, _ := New(ConnGetter(func() (*sql.DB, error) {
 		return db, nil
@@ -386,7 +386,7 @@ WHERE email = \? OR nickname =\?`
 	}{
 		{"query error", nil, errors.New("query error")},
 		{"no rows", nil, model.ErrNotFound},
-		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "user_id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
+		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
 		{"scan error", nil, errors.New("scan error")},
 		{"compare error", nil, errors.New("compare error")},
 		{"wrong password", nil, model.ErrInvalidCredentials},
@@ -430,24 +430,24 @@ func TestInsertUser(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	userqry := `SELECT user_id, nickname, email, activated, admin FROM users WHERE email = \? OR nickname = \?`
+	userqry := `SELECT id, nickname, email, activated, admin FROM user WHERE email = \? OR nickname = \?`
 	qry := `
-INSERT INTO users \(user_id, nickname, email, salt, password, activated, admin, create_ts, update_ts\)
+INSERT INTO user \(id, nickname, email, salt, password, activated, admin, create_ts, update_ts\)
 VALUES \(null, \?, \?, \?, \?, 0, 0, NOW\(\), NOW\(\)\)
 ON DUPLICATE KEY UPDATE update_ts = VALUES\(update_ts\)`
 	dbmock.ExpectQuery(userqry).WithArgs("foo", "bar").WillReturnError(errors.New("get user error"))
 
-	dbmock.ExpectQuery(userqry).WithArgs("foo", "bar").WillReturnRows(sqlmock.NewRows([]string{"user_id", "nickname", "email", "verified", "admin"}).AddRow(1, "foo", "bar", 1, 1))
+	dbmock.ExpectQuery(userqry).WithArgs("foo", "bar").WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "verified", "admin"}).AddRow(1, "foo", "bar", 1, 1))
 
-	dbmock.ExpectQuery(userqry).WithArgs("foo", "bar").WillReturnRows(sqlmock.NewRows([]string{"user_id", "nickname", "email", "verified", "admin"}))
+	dbmock.ExpectQuery(userqry).WithArgs("foo", "bar").WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "verified", "admin"}))
 
-	dbmock.ExpectQuery(userqry).WithArgs("foo", "bar").WillReturnRows(sqlmock.NewRows([]string{"user_id", "nickname", "email", "verified", "admin"}))
+	dbmock.ExpectQuery(userqry).WithArgs("foo", "bar").WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "verified", "admin"}))
 	dbmock.ExpectExec(qry).WithArgs("bar", "foo", []byte("qux"), []byte("quux")).WillReturnError(errors.New("query error"))
 
-	dbmock.ExpectQuery(userqry).WithArgs("foo", "bar").WillReturnRows(sqlmock.NewRows([]string{"user_id", "nickname", "email", "verified", "admin"}))
+	dbmock.ExpectQuery(userqry).WithArgs("foo", "bar").WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "verified", "admin"}))
 	dbmock.ExpectExec(qry).WithArgs("bar", "foo", []byte("qux"), []byte("quux")).WillReturnResult(sqlmock.NewErrorResult(errors.New("result error")))
 
-	dbmock.ExpectQuery(userqry).WithArgs("foo", "bar").WillReturnRows(sqlmock.NewRows([]string{"user_id", "nickname", "email", "verified", "admin"}))
+	dbmock.ExpectQuery(userqry).WithArgs("foo", "bar").WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "verified", "admin"}))
 	dbmock.ExpectExec(qry).WithArgs("bar", "foo", []byte("qux"), []byte("quux")).WillReturnResult(sqlmock.NewResult(123, 1))
 
 	m, _ := New(ConnGetter(func() (*sql.DB, error) {
@@ -494,7 +494,7 @@ func TestUpdateUserNickname(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `UPDATE users set nickname = \?, update_ts = NOW\(\) where user_id = \?`
+	qry := `UPDATE user set nickname = \?, update_ts = NOW\(\) where id = \?`
 	mock.ExpectExec(qry).WithArgs("foo", 123).WillReturnError(errors.New("query error"))
 	mock.ExpectExec(qry).WithArgs("foo", 123).WillReturnResult(sqlmock.NewErrorResult(errors.New("result error")))
 	mock.ExpectExec(qry).WithArgs("foo", 123).WillReturnResult(sqlmock.NewResult(0, 0))
@@ -546,7 +546,7 @@ func TestUpdateUserPassword(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `UPDATE users set salt = \?, password = \?, update_ts = NOW\(\) where user_id = \?`
+	qry := `UPDATE user set salt = \?, password = \?, update_ts = NOW\(\) where id = \?`
 	dbmock.ExpectExec(qry).WithArgs([]byte("gulp"), []byte("qux"), 123).WillReturnError(errors.New("query error"))
 	dbmock.ExpectExec(qry).WithArgs([]byte("gulp"), []byte("qux"), 123).WillReturnResult(sqlmock.NewErrorResult(errors.New("result error")))
 	dbmock.ExpectExec(qry).WithArgs([]byte("gulp"), []byte("qux"), 123).WillReturnResult(sqlmock.NewResult(0, 0))
@@ -588,7 +588,7 @@ func TestUpdateUserActivation(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `UPDATE users set activated = \?, update_ts = NOW\(\) where user_id = \?`
+	qry := `UPDATE user set activated = \?, update_ts = NOW\(\) where id = \?`
 	mock.ExpectExec(qry).WithArgs(true, 123).WillReturnError(errors.New("query error"))
 	mock.ExpectExec(qry).WithArgs(true, 123).WillReturnResult(sqlmock.NewErrorResult(errors.New("result error")))
 	mock.ExpectExec(qry).WithArgs(true, 123).WillReturnResult(sqlmock.NewResult(0, 0))
@@ -629,7 +629,7 @@ func TestDeleteUser(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `DELETE FROM users where user_id = \?`
+	qry := `DELETE FROM user where id = \?`
 	mock.ExpectExec(qry).WithArgs(123).WillReturnError(errors.New("query error"))
 	mock.ExpectExec(qry).WithArgs(123).WillReturnResult(sqlmock.NewErrorResult(errors.New("result error")))
 	mock.ExpectExec(qry).WithArgs(123).WillReturnResult(sqlmock.NewResult(0, 0))

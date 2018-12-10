@@ -26,14 +26,14 @@ func (c *CategoriesController) Create(ctx *app.CreateCategoriesContext) error {
 	// CategoriesController_Create: start_implement
 	m, err := c.fm()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	b, err := m.InsertCategory(ctx.Payload.Name)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to insert category`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to insert category`, `error`, err.Error())
 		if err == model.ErrDuplicateKey {
 			return ctx.UnprocessableEntity()
 		}
@@ -50,14 +50,14 @@ func (c *CategoriesController) Delete(ctx *app.DeleteCategoriesContext) error {
 	// CategoriesController_Delete: start_implement
 	m, err := c.fm()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	err = m.DeleteCategory(ctx.CategoryID)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to delete category`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to delete category`, `error`, err.Error())
 		if err == model.ErrNotFound {
 			return ctx.NotFound()
 		}
@@ -73,14 +73,14 @@ func (c *CategoriesController) List(ctx *app.ListCategoriesContext) error {
 	// CategoriesController_List: start_implement
 	m, err := c.fm()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	list, err := m.GetCategoryList()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get category list`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to get category list`, `error`, err.Error())
 		return ctx.InternalServerError()
 	}
 
@@ -97,14 +97,14 @@ func (c *CategoriesController) Show(ctx *app.ShowCategoriesContext) error {
 	// CategoriesController_Show: start_implement
 	m, err := c.fm()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	b, err := m.GetCategoryByID(ctx.CategoryID)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get category`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to get category`, `error`, err.Error())
 		if err == model.ErrNotFound {
 			return ctx.NotFound()
 		}
@@ -120,14 +120,14 @@ func (c *CategoriesController) Update(ctx *app.UpdateCategoriesContext) error {
 	// CategoriesController_Update: start_implement
 	m, err := c.fm()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	err = m.UpdateCategory(ctx.CategoryID, ctx.Payload.Name)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to update category`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to update category`, `error`, err.Error())
 		if err == model.ErrNotFound {
 			return ctx.NotFound()
 		}

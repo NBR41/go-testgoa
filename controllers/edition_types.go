@@ -26,14 +26,14 @@ func (c *EditionTypesController) Create(ctx *app.CreateEditionTypesContext) erro
 	// EditionTypesController_Create: start_implement
 	m, err := c.fm()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	b, err := m.InsertEditionType(ctx.Payload.Name)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to insert edition type`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to insert edition type`, `error`, err.Error())
 		if err == model.ErrDuplicateKey {
 			return ctx.UnprocessableEntity()
 		}
@@ -50,14 +50,14 @@ func (c *EditionTypesController) Delete(ctx *app.DeleteEditionTypesContext) erro
 	// EditionTypesController_Delete: start_implement
 	m, err := c.fm()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	err = m.DeleteEditionType(ctx.EditionTypeID)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to delete edition type`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to delete edition type`, `error`, err.Error())
 		if err == model.ErrNotFound {
 			return ctx.NotFound()
 		}
@@ -73,14 +73,14 @@ func (c *EditionTypesController) List(ctx *app.ListEditionTypesContext) error {
 	// EditionTypesController_List: start_implement
 	m, err := c.fm()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	list, err := m.GetEditionTypeList()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get edition type list`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to get edition type list`, `error`, err.Error())
 		return ctx.InternalServerError()
 	}
 
@@ -97,14 +97,14 @@ func (c *EditionTypesController) Show(ctx *app.ShowEditionTypesContext) error {
 	// EditionTypesController_Show: start_implement
 	m, err := c.fm()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	b, err := m.GetEditionTypeByID(ctx.EditionTypeID)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get edition type`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to get edition type`, `error`, err.Error())
 		if err == model.ErrNotFound {
 			return ctx.NotFound()
 		}
@@ -120,14 +120,14 @@ func (c *EditionTypesController) Update(ctx *app.UpdateEditionTypesContext) erro
 	// EditionTypesController_Update: start_implement
 	m, err := c.fm()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	err = m.UpdateEditionType(ctx.EditionTypeID, ctx.Payload.Name)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to update edition type`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to update edition type`, `error`, err.Error())
 		if err == model.ErrNotFound {
 			return ctx.NotFound()
 		}

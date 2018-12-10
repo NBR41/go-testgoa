@@ -26,14 +26,14 @@ func (c *GenresController) Create(ctx *app.CreateGenresContext) error {
 	// GenresController_Create: start_implement
 	m, err := c.fm()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	b, err := m.InsertGenre(ctx.Payload.Name)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to insert genre`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to insert genre`, `error`, err.Error())
 		if err == model.ErrDuplicateKey {
 			return ctx.UnprocessableEntity()
 		}
@@ -50,14 +50,14 @@ func (c *GenresController) Delete(ctx *app.DeleteGenresContext) error {
 	// GenresController_Delete: start_implement
 	m, err := c.fm()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	err = m.DeleteGenre(ctx.GenreID)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to delete genre`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to delete genre`, `error`, err.Error())
 		if err == model.ErrNotFound {
 			return ctx.NotFound()
 		}
@@ -73,14 +73,14 @@ func (c *GenresController) List(ctx *app.ListGenresContext) error {
 	// GenresController_List: start_implement
 	m, err := c.fm()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	list, err := m.GetGenreList()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get genre list`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to get genre list`, `error`, err.Error())
 		return ctx.InternalServerError()
 	}
 
@@ -97,14 +97,14 @@ func (c *GenresController) Show(ctx *app.ShowGenresContext) error {
 	// GenresController_Show: start_implement
 	m, err := c.fm()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	b, err := m.GetGenreByID(ctx.GenreID)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get genre`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to get genre`, `error`, err.Error())
 		if err == model.ErrNotFound {
 			return ctx.NotFound()
 		}
@@ -120,14 +120,14 @@ func (c *GenresController) Update(ctx *app.UpdateGenresContext) error {
 	// GenresController_Update: start_implement
 	m, err := c.fm()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	err = m.UpdateGenre(ctx.GenreID, ctx.Payload.Name)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to update genre`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to update genre`, `error`, err.Error())
 		if err == model.ErrNotFound {
 			return ctx.NotFound()
 		}

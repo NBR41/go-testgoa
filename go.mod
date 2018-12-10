@@ -8,7 +8,7 @@ require (
 	github.com/dimfeld/httptreemux v5.0.1+incompatible // indirect
 	github.com/go-sql-driver/mysql v1.4.1
 	github.com/goadesign/goa v1.4.0
-	github.com/golang/mock v1.1.1
+	github.com/golang/mock v1.2.0
 	github.com/hashicorp/go-immutable-radix v1.0.0 // indirect
 	github.com/kylelemons/godebug v0.0.0-20170820004349-d65d576e9348
 	github.com/manveru/faker v0.0.0-20171103152722-9fbc68a78c4d // indirect
@@ -16,8 +16,6 @@ require (
 	github.com/satori/go.uuid v1.2.1-0.20181028125025-b2ce2384e17b // indirect
 	github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea // indirect
 	golang.org/x/crypto v0.0.0-20181203042331-505ab145d0a9
-	golang.org/x/net v0.0.0-20181201002055-351d144fa1fc // indirect
-	golang.org/x/tools v0.0.0-20181207222222-4c874b978acb // indirect
-	google.golang.org/api v0.0.0-20181203233308-6142e720c068
-	gopkg.in/yaml.v2 v2.2.2 // indirect
+	golang.org/x/net v0.0.0-20181207154023-610586996380 // indirect
+	google.golang.org/api v0.0.0-20181206211257-1a5ef82f9af4
 )

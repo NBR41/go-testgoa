@@ -26,14 +26,14 @@ func (c *RolesController) Create(ctx *app.CreateRolesContext) error {
 	// RolesController_Create: start_implement
 	m, err := c.fm()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	b, err := m.InsertRole(ctx.Payload.Name)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to insert role`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to insert role`, `error`, err.Error())
 		if err == model.ErrDuplicateKey {
 			return ctx.UnprocessableEntity()
 		}
@@ -50,14 +50,14 @@ func (c *RolesController) Delete(ctx *app.DeleteRolesContext) error {
 	// RolesController_Delete: start_implement
 	m, err := c.fm()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	err = m.DeleteRole(ctx.RoleID)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to delete role`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to delete role`, `error`, err.Error())
 		if err == model.ErrNotFound {
 			return ctx.NotFound()
 		}
@@ -73,14 +73,14 @@ func (c *RolesController) List(ctx *app.ListRolesContext) error {
 	// RolesController_List: start_implement
 	m, err := c.fm()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	list, err := m.GetRoleList()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get role list`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to get role list`, `error`, err.Error())
 		return ctx.InternalServerError()
 	}
 
@@ -97,14 +97,14 @@ func (c *RolesController) Show(ctx *app.ShowRolesContext) error {
 	// RolesController_Show: start_implement
 	m, err := c.fm()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	b, err := m.GetRoleByID(ctx.RoleID)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get role`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to get role`, `error`, err.Error())
 		if err == model.ErrNotFound {
 			return ctx.NotFound()
 		}
@@ -120,14 +120,14 @@ func (c *RolesController) Update(ctx *app.UpdateRolesContext) error {
 	// RolesController_Update: start_implement
 	m, err := c.fm()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	err = m.UpdateRole(ctx.RoleID, ctx.Payload.Name)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to update role`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to update role`, `error`, err.Error())
 		if err == model.ErrNotFound {
 			return ctx.NotFound()
 		}

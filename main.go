@@ -54,19 +54,19 @@ func main() {
 	// Mount "token" controller
 	app.MountTokenController(service, controllers.NewTokenController(service, conf.fmod, conf.token))
 	// Mount "authors" controller
-	app.MountAuthorsController(service, controllers.NewAuthorsController(service))
+	app.MountAuthorsController(service, controllers.NewAuthorsController(service, conf.fmod))
 	// Mount "categories" controller
-	app.MountCategoriesController(service, controllers.NewCategoriesController(service))
+	app.MountCategoriesController(service, controllers.NewCategoriesController(service, conf.fmod))
 	// Mount "collections" controller
 	app.MountCollectionsController(service, controllers.NewCollectionsController(service))
 	// Mount "edition_types" controller
-	app.MountEditionTypesController(service, controllers.NewEditionTypesController(service))
+	app.MountEditionTypesController(service, controllers.NewEditionTypesController(service, conf.fmod))
 	// Mount "editors" controller
-	app.MountEditorsController(service, controllers.NewEditorsController(service))
+	app.MountEditorsController(service, controllers.NewEditorsController(service, conf.fmod))
 	// Mount "genres" controller
-	app.MountGenresController(service, controllers.NewGenresController(service))
+	app.MountGenresController(service, controllers.NewGenresController(service, conf.fmod))
 	// Mount "roles" controller
-	app.MountRolesController(service, controllers.NewRolesController(service))
+	app.MountRolesController(service, controllers.NewRolesController(service, conf.fmod))
 	// Mount "series" controller
 	app.MountSeriesController(service, controllers.NewSeriesController(service))
 

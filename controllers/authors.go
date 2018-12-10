@@ -2,17 +2,23 @@ package controllers
 
 import (
 	"github.com/NBR41/go-testgoa/app"
+	"github.com/NBR41/go-testgoa/internal/convert"
+	"github.com/NBR41/go-testgoa/internal/model"
 	"github.com/goadesign/goa"
 )
 
 // AuthorsController implements the authors resource.
 type AuthorsController struct {
 	*goa.Controller
+	fm Fmodeler
 }
 
 // NewAuthorsController creates a authors controller.
-func NewAuthorsController(service *goa.Service) *AuthorsController {
-	return &AuthorsController{Controller: service.NewController("AuthorsController")}
+func NewAuthorsController(service *goa.Service, fm Fmodeler) *AuthorsController {
+	return &AuthorsController{
+		Controller: service.NewController("AuthorsController"),
+		fm:         fm,
+	}
 }
 
 // Create runs the create action.
@@ -20,49 +26,116 @@ func (c *AuthorsController) Create(ctx *app.CreateAuthorsContext) error {
 	// AuthorsController_Create: start_implement
 
 	// Put your logic here
+	m, err := c.fm()
+	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		return ctx.ServiceUnavailable()
+	}
+	defer func() { m.Close() }()
 
-	return nil
+	b, err := m.InsertAuthor(ctx.Payload.Name)
+	if err != nil {
+		goa.ContextLogger(ctx).Error(`failed to insert author`, `error`, err)
+		if err == model.ErrDuplicateKey {
+			return ctx.UnprocessableEntity()
+		}
+		return ctx.InternalServerError()
+	}
+
+	ctx.ResponseData.Header().Set("Location", app.AuthorsHref(b.ID))
+	return ctx.Created()
 	// AuthorsController_Create: end_implement
 }
 
 // Delete runs the delete action.
 func (c *AuthorsController) Delete(ctx *app.DeleteAuthorsContext) error {
 	// AuthorsController_Delete: start_implement
+	m, err := c.fm()
+	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		return ctx.ServiceUnavailable()
+	}
+	defer func() { m.Close() }()
 
-	// Put your logic here
+	err = m.DeleteAuthor(ctx.AuthorID)
+	if err != nil {
+		goa.ContextLogger(ctx).Error(`failed to delete author`, `error`, err)
+		if err == model.ErrNotFound {
+			return ctx.NotFound()
+		}
+		return ctx.InternalServerError()
+	}
 
-	return nil
+	return ctx.NoContent()
 	// AuthorsController_Delete: end_implement
 }
 
 // List runs the list action.
 func (c *AuthorsController) List(ctx *app.ListAuthorsContext) error {
 	// AuthorsController_List: start_implement
+	m, err := c.fm()
+	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		return ctx.ServiceUnavailable()
+	}
+	defer func() { m.Close() }()
 
-	// Put your logic here
+	list, err := m.GetAuthorList()
+	if err != nil {
+		goa.ContextLogger(ctx).Error(`failed to get author list`, `error`, err)
+		return ctx.InternalServerError()
+	}
 
-	res := app.AuthorCollection{}
-	return ctx.OK(res)
+	bs := make(app.AuthorCollection, len(list))
+	for i, bk := range list {
+		bs[i] = convert.ToAuthorMedia(bk)
+	}
+	return ctx.OK(bs)
 	// AuthorsController_List: end_implement
 }
 
 // Show runs the show action.
 func (c *AuthorsController) Show(ctx *app.ShowAuthorsContext) error {
 	// AuthorsController_Show: start_implement
+	m, err := c.fm()
+	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		return ctx.ServiceUnavailable()
+	}
+	defer func() { m.Close() }()
 
-	// Put your logic here
+	b, err := m.GetAuthorByID(ctx.AuthorID)
+	if err != nil {
+		goa.ContextLogger(ctx).Error(`failed to get author`, `error`, err)
+		if err == model.ErrNotFound {
+			return ctx.NotFound()
+		}
+		return ctx.InternalServerError()
+	}
 
-	res := &app.Author{}
-	return ctx.OK(res)
+	return ctx.OK(convert.ToAuthorMedia(b))
 	// AuthorsController_Show: end_implement
 }
 
 // Update runs the update action.
 func (c *AuthorsController) Update(ctx *app.UpdateAuthorsContext) error {
 	// AuthorsController_Update: start_implement
+	m, err := c.fm()
+	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		return ctx.ServiceUnavailable()
+	}
+	defer func() { m.Close() }()
 
-	// Put your logic here
+	err = m.UpdateAuthor(ctx.AuthorID, ctx.Payload.Name)
+	if err != nil {
+		goa.ContextLogger(ctx).Error(`failed to update author`, `error`, err)
+		if err == model.ErrNotFound {
+			return ctx.NotFound()
+		}
+		return ctx.InternalServerError()
+	}
 
-	return nil
+	return ctx.NoContent()
 	// AuthorsController_Update: end_implement
 }

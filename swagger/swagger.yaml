@@ -1133,15 +1133,11 @@ paths:
       description: Update author by id
       operationId: authors#update
       parameters:
-      - in: path
+      - description: Unique Author ID
+        in: path
+        minimum: 1
         name: author_id
         required: true
-        type: string
-      - description: Unique Book ID
-        in: query
-        minimum: 1
-        name: book_id
-        required: false
         type: integer
       - in: body
         name: payload

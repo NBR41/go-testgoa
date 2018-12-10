@@ -367,8 +367,7 @@ type UpdateAuthorsContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
-	AuthorID string
-	BookID   *int
+	AuthorID int
 	Payload  *UpdateAuthorsPayload
 }
 
@@ -384,22 +383,13 @@ func NewUpdateAuthorsContext(ctx context.Context, r *http.Request, service *goa.
 	paramAuthorID := req.Params["author_id"]
 	if len(paramAuthorID) > 0 {
 		rawAuthorID := paramAuthorID[0]
-		rctx.AuthorID = rawAuthorID
-	}
-	paramBookID := req.Params["book_id"]
-	if len(paramBookID) > 0 {
-		rawBookID := paramBookID[0]
-		if bookID, err2 := strconv.Atoi(rawBookID); err2 == nil {
-			tmp4 := bookID
-			tmp3 := &tmp4
-			rctx.BookID = tmp3
+		if authorID, err2 := strconv.Atoi(rawAuthorID); err2 == nil {
+			rctx.AuthorID = authorID
 		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("book_id", rawBookID, "integer"))
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("author_id", rawAuthorID, "integer"))
 		}
-		if rctx.BookID != nil {
-			if *rctx.BookID < 1 {
-				err = goa.MergeErrors(err, goa.InvalidRangeError(`book_id`, *rctx.BookID, 1, true))
-			}
+		if rctx.AuthorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`author_id`, rctx.AuthorID, 1, true))
 		}
 	}
 	return &rctx, err

@@ -17,5 +17,7 @@ require (
 	github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea // indirect
 	golang.org/x/crypto v0.0.0-20181203042331-505ab145d0a9
 	golang.org/x/net v0.0.0-20181201002055-351d144fa1fc // indirect
+	golang.org/x/tools v0.0.0-20181207222222-4c874b978acb // indirect
 	google.golang.org/api v0.0.0-20181203233308-6142e720c068
+	gopkg.in/yaml.v2 v2.2.2 // indirect
 )

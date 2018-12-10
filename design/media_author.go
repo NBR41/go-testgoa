@@ -88,7 +88,7 @@ var _ = Resource("authors", func() {
 	Action("update", func() {
 		Description("Update author by id")
 		Routing(PUT(authorIDPath))
-		Params(attrBookID)
+		Params(attrAuthorID)
 		Payload(func() {
 			Member("name")
 			Required("name")

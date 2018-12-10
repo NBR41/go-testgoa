@@ -22,7 +22,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
-	"strconv"
 )
 
 // CreateAuthorsBadRequest runs the method Create of the given controller with the given parameters and payload.
@@ -1508,7 +1507,7 @@ func ShowAuthorsServiceUnavailable(t goatest.TInterface, ctx context.Context, se
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateAuthorsBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.AuthorsController, authorID string, bookID *int, payload *app.UpdateAuthorsPayload) (http.ResponseWriter, error) {
+func UpdateAuthorsBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.AuthorsController, authorID int, payload *app.UpdateAuthorsPayload) (http.ResponseWriter, error) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1538,14 +1537,8 @@ func UpdateAuthorsBadRequest(t goatest.TInterface, ctx context.Context, service 
 
 	// Setup request context
 	rw := httptest.NewRecorder()
-	query := url.Values{}
-	if bookID != nil {
-		sliceVal := []string{strconv.Itoa(*bookID)}
-		query["book_id"] = sliceVal
-	}
 	u := &url.URL{
-		Path:     fmt.Sprintf("/authors/%v", authorID),
-		RawQuery: query.Encode(),
+		Path: fmt.Sprintf("/authors/%v", authorID),
 	}
 	req, _err := http.NewRequest("PUT", u.String(), nil)
 	if _err != nil {
@@ -1553,10 +1546,6 @@ func UpdateAuthorsBadRequest(t goatest.TInterface, ctx context.Context, service 
 	}
 	prms := url.Values{}
 	prms["author_id"] = []string{fmt.Sprintf("%v", authorID)}
-	if bookID != nil {
-		sliceVal := []string{strconv.Itoa(*bookID)}
-		prms["book_id"] = sliceVal
-	}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -1598,7 +1587,7 @@ func UpdateAuthorsBadRequest(t goatest.TInterface, ctx context.Context, service 
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateAuthorsInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.AuthorsController, authorID string, bookID *int, payload *app.UpdateAuthorsPayload) http.ResponseWriter {
+func UpdateAuthorsInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.AuthorsController, authorID int, payload *app.UpdateAuthorsPayload) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1628,14 +1617,8 @@ func UpdateAuthorsInternalServerError(t goatest.TInterface, ctx context.Context,
 
 	// Setup request context
 	rw := httptest.NewRecorder()
-	query := url.Values{}
-	if bookID != nil {
-		sliceVal := []string{strconv.Itoa(*bookID)}
-		query["book_id"] = sliceVal
-	}
 	u := &url.URL{
-		Path:     fmt.Sprintf("/authors/%v", authorID),
-		RawQuery: query.Encode(),
+		Path: fmt.Sprintf("/authors/%v", authorID),
 	}
 	req, _err := http.NewRequest("PUT", u.String(), nil)
 	if _err != nil {
@@ -1643,10 +1626,6 @@ func UpdateAuthorsInternalServerError(t goatest.TInterface, ctx context.Context,
 	}
 	prms := url.Values{}
 	prms["author_id"] = []string{fmt.Sprintf("%v", authorID)}
-	if bookID != nil {
-		sliceVal := []string{strconv.Itoa(*bookID)}
-		prms["book_id"] = sliceVal
-	}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -1681,7 +1660,7 @@ func UpdateAuthorsInternalServerError(t goatest.TInterface, ctx context.Context,
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateAuthorsNoContent(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.AuthorsController, authorID string, bookID *int, payload *app.UpdateAuthorsPayload) http.ResponseWriter {
+func UpdateAuthorsNoContent(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.AuthorsController, authorID int, payload *app.UpdateAuthorsPayload) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1711,14 +1690,8 @@ func UpdateAuthorsNoContent(t goatest.TInterface, ctx context.Context, service *
 
 	// Setup request context
 	rw := httptest.NewRecorder()
-	query := url.Values{}
-	if bookID != nil {
-		sliceVal := []string{strconv.Itoa(*bookID)}
-		query["book_id"] = sliceVal
-	}
 	u := &url.URL{
-		Path:     fmt.Sprintf("/authors/%v", authorID),
-		RawQuery: query.Encode(),
+		Path: fmt.Sprintf("/authors/%v", authorID),
 	}
 	req, _err := http.NewRequest("PUT", u.String(), nil)
 	if _err != nil {
@@ -1726,10 +1699,6 @@ func UpdateAuthorsNoContent(t goatest.TInterface, ctx context.Context, service *
 	}
 	prms := url.Values{}
 	prms["author_id"] = []string{fmt.Sprintf("%v", authorID)}
-	if bookID != nil {
-		sliceVal := []string{strconv.Itoa(*bookID)}
-		prms["book_id"] = sliceVal
-	}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -1764,7 +1733,7 @@ func UpdateAuthorsNoContent(t goatest.TInterface, ctx context.Context, service *
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateAuthorsNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.AuthorsController, authorID string, bookID *int, payload *app.UpdateAuthorsPayload) http.ResponseWriter {
+func UpdateAuthorsNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.AuthorsController, authorID int, payload *app.UpdateAuthorsPayload) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1794,14 +1763,8 @@ func UpdateAuthorsNotFound(t goatest.TInterface, ctx context.Context, service *g
 
 	// Setup request context
 	rw := httptest.NewRecorder()
-	query := url.Values{}
-	if bookID != nil {
-		sliceVal := []string{strconv.Itoa(*bookID)}
-		query["book_id"] = sliceVal
-	}
 	u := &url.URL{
-		Path:     fmt.Sprintf("/authors/%v", authorID),
-		RawQuery: query.Encode(),
+		Path: fmt.Sprintf("/authors/%v", authorID),
 	}
 	req, _err := http.NewRequest("PUT", u.String(), nil)
 	if _err != nil {
@@ -1809,10 +1772,6 @@ func UpdateAuthorsNotFound(t goatest.TInterface, ctx context.Context, service *g
 	}
 	prms := url.Values{}
 	prms["author_id"] = []string{fmt.Sprintf("%v", authorID)}
-	if bookID != nil {
-		sliceVal := []string{strconv.Itoa(*bookID)}
-		prms["book_id"] = sliceVal
-	}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -1847,7 +1806,7 @@ func UpdateAuthorsNotFound(t goatest.TInterface, ctx context.Context, service *g
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateAuthorsServiceUnavailable(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.AuthorsController, authorID string, bookID *int, payload *app.UpdateAuthorsPayload) http.ResponseWriter {
+func UpdateAuthorsServiceUnavailable(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.AuthorsController, authorID int, payload *app.UpdateAuthorsPayload) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1877,14 +1836,8 @@ func UpdateAuthorsServiceUnavailable(t goatest.TInterface, ctx context.Context, 
 
 	// Setup request context
 	rw := httptest.NewRecorder()
-	query := url.Values{}
-	if bookID != nil {
-		sliceVal := []string{strconv.Itoa(*bookID)}
-		query["book_id"] = sliceVal
-	}
 	u := &url.URL{
-		Path:     fmt.Sprintf("/authors/%v", authorID),
-		RawQuery: query.Encode(),
+		Path: fmt.Sprintf("/authors/%v", authorID),
 	}
 	req, _err := http.NewRequest("PUT", u.String(), nil)
 	if _err != nil {
@@ -1892,10 +1845,6 @@ func UpdateAuthorsServiceUnavailable(t goatest.TInterface, ctx context.Context, 
 	}
 	prms := url.Values{}
 	prms["author_id"] = []string{fmt.Sprintf("%v", authorID)}
-	if bookID != nil {
-		sliceVal := []string{strconv.Itoa(*bookID)}
-		prms["book_id"] = sliceVal
-	}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -1930,7 +1879,7 @@ func UpdateAuthorsServiceUnavailable(t goatest.TInterface, ctx context.Context, 
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateAuthorsUnauthorized(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.AuthorsController, authorID string, bookID *int, payload *app.UpdateAuthorsPayload) http.ResponseWriter {
+func UpdateAuthorsUnauthorized(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.AuthorsController, authorID int, payload *app.UpdateAuthorsPayload) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1960,14 +1909,8 @@ func UpdateAuthorsUnauthorized(t goatest.TInterface, ctx context.Context, servic
 
 	// Setup request context
 	rw := httptest.NewRecorder()
-	query := url.Values{}
-	if bookID != nil {
-		sliceVal := []string{strconv.Itoa(*bookID)}
-		query["book_id"] = sliceVal
-	}
 	u := &url.URL{
-		Path:     fmt.Sprintf("/authors/%v", authorID),
-		RawQuery: query.Encode(),
+		Path: fmt.Sprintf("/authors/%v", authorID),
 	}
 	req, _err := http.NewRequest("PUT", u.String(), nil)
 	if _err != nil {
@@ -1975,10 +1918,6 @@ func UpdateAuthorsUnauthorized(t goatest.TInterface, ctx context.Context, servic
 	}
 	prms := url.Values{}
 	prms["author_id"] = []string{fmt.Sprintf("%v", authorID)}
-	if bookID != nil {
-		sliceVal := []string{strconv.Itoa(*bookID)}
-		prms["book_id"] = sliceVal
-	}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -2013,7 +1952,7 @@ func UpdateAuthorsUnauthorized(t goatest.TInterface, ctx context.Context, servic
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateAuthorsUnprocessableEntity(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.AuthorsController, authorID string, bookID *int, payload *app.UpdateAuthorsPayload) http.ResponseWriter {
+func UpdateAuthorsUnprocessableEntity(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.AuthorsController, authorID int, payload *app.UpdateAuthorsPayload) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -2043,14 +1982,8 @@ func UpdateAuthorsUnprocessableEntity(t goatest.TInterface, ctx context.Context,
 
 	// Setup request context
 	rw := httptest.NewRecorder()
-	query := url.Values{}
-	if bookID != nil {
-		sliceVal := []string{strconv.Itoa(*bookID)}
-		query["book_id"] = sliceVal
-	}
 	u := &url.URL{
-		Path:     fmt.Sprintf("/authors/%v", authorID),
-		RawQuery: query.Encode(),
+		Path: fmt.Sprintf("/authors/%v", authorID),
 	}
 	req, _err := http.NewRequest("PUT", u.String(), nil)
 	if _err != nil {
@@ -2058,10 +1991,6 @@ func UpdateAuthorsUnprocessableEntity(t goatest.TInterface, ctx context.Context,
 	}
 	prms := url.Values{}
 	prms["author_id"] = []string{fmt.Sprintf("%v", authorID)}
-	if bookID != nil {
-		sliceVal := []string{strconv.Itoa(*bookID)}
-		prms["book_id"] = sliceVal
-	}
 	if ctx == nil {
 		ctx = context.Background()
 	}

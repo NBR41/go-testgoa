@@ -5,6 +5,60 @@ import (
 	"github.com/NBR41/go-testgoa/internal/model"
 )
 
+//ToAuthorMedia converts an author model into an author media type
+func ToAuthorMedia(a *model.Author) *app.Author {
+	return &app.Author{
+		Href:       app.AuthorsHref(a.ID),
+		AuthorID:   int(a.ID),
+		AuthorName: a.Name,
+	}
+}
+
+//ToCategoryMedia converts a category model into a category media type
+func ToCategoryMedia(a *model.Category) *app.Category {
+	return &app.Category{
+		Href:         app.CategoriesHref(a.ID),
+		CategoryID:   int(a.ID),
+		CategoryName: a.Name,
+	}
+}
+
+//ToEditionTypeMedia converts an edition type model into an edition type media type
+func ToEditionTypeMedia(a *model.EditionType) *app.Editiontype {
+	return &app.Editiontype{
+		Href:            app.EditionTypesHref(a.ID),
+		EditionTypeID:   int(a.ID),
+		EditionTypeName: a.Name,
+	}
+}
+
+//ToEditorMedia converts an editor model into an editor media type
+func ToEditorMedia(a *model.Editor) *app.Editor {
+	return &app.Editor{
+		Href:       app.EditorsHref(a.ID),
+		EditorID:   int(a.ID),
+		EditorName: a.Name,
+	}
+}
+
+//ToGenreMedia converts a genre model into a genre media type
+func ToGenreMedia(a *model.Genre) *app.Genre {
+	return &app.Genre{
+		Href:      app.GenresHref(a.ID),
+		GenreID:   int(a.ID),
+		GenreName: a.Name,
+	}
+}
+
+//ToRoleMedia converts a role model into a role media type
+func ToRoleMedia(a *model.Role) *app.Role {
+	return &app.Role{
+		Href:     app.GenresHref(a.ID),
+		RoleID:   int(a.ID),
+		RoleName: a.Name,
+	}
+}
+
 // ToAuthTokenMedia converts a user model and token into a auth token media type
 func ToAuthTokenMedia(a *model.User, accToken, refToken string) *app.Authtoken {
 	return &app.Authtoken{

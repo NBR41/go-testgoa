@@ -69,8 +69,8 @@ var _ = Resource("genres", func() {
 		Description("Create new genre")
 		Routing(POST(""))
 		Payload(func() {
-			Member("name")
-			Required("name")
+			attrGenreName()
+			Required("genre_name")
 		})
 		Security(JWTAuth)
 		// unauthorized
@@ -90,8 +90,8 @@ var _ = Resource("genres", func() {
 		Routing(PUT(genreIDPath))
 		Params(attrGenreID)
 		Payload(func() {
-			Member("name")
-			Required("name")
+			attrGenreName()
+			Required("genre_name")
 		})
 		Security(JWTAuth)
 		// Unauthorized

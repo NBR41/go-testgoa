@@ -30,9 +30,9 @@ func newConfig(fmod controllers.Fmodeler, token controllers.TokenHelper, mail co
 
 func initws() (*config, func(), error) {
 	if os.Getenv("ISPROD") == "1" {
-		return setupDev()
+		return setupProd()
 	}
-	return setupProd()
+	return setupDev()
 }
 
 func provideTokenHelper() controllers.TokenHelper {

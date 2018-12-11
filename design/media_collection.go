@@ -41,6 +41,7 @@ var CollectionMedia = MediaType("application/vnd.collection+json", func() {
 
 var _ = Resource("collections", func() {
 	BasePath("/collections")
+	Parent("editors")
 	DefaultMedia(CollectionMedia)
 
 	Action("list", func() {

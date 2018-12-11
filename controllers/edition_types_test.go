@@ -34,7 +34,7 @@ func TestEditionTypesCreate(t *testing.T) {
 	ctrl := NewEditionTypesController(service, Fmodeler(func() (Modeler, error) {
 		return nil, errors.New("model error")
 	}))
-	test.CreateEditionTypesServiceUnavailable(t, ctx, service, ctrl, &app.CreateEditionTypesPayload{Name: "foo"})
+	test.CreateEditionTypesServiceUnavailable(t, ctx, service, ctrl, &app.CreateEditionTypesPayload{EditionTypeName: "foo"})
 	exp := "[EROR] unable to get model error=model error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
@@ -45,21 +45,21 @@ func TestEditionTypesCreate(t *testing.T) {
 	}))
 
 	logbuf.Reset()
-	test.CreateEditionTypesInternalServerError(t, ctx, service, ctrl, &app.CreateEditionTypesPayload{Name: "foo"})
+	test.CreateEditionTypesInternalServerError(t, ctx, service, ctrl, &app.CreateEditionTypesPayload{EditionTypeName: "foo"})
 	exp = "[EROR] failed to insert edition type error=insert error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	test.CreateEditionTypesUnprocessableEntity(t, ctx, service, ctrl, &app.CreateEditionTypesPayload{Name: "foo"})
+	test.CreateEditionTypesUnprocessableEntity(t, ctx, service, ctrl, &app.CreateEditionTypesPayload{EditionTypeName: "foo"})
 	exp = "[EROR] failed to insert edition type error=duplicate key\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	rw := test.CreateEditionTypesCreated(t, ctx, service, ctrl, &app.CreateEditionTypesPayload{Name: "foo"})
+	rw := test.CreateEditionTypesCreated(t, ctx, service, ctrl, &app.CreateEditionTypesPayload{EditionTypeName: "foo"})
 	exp = app.EditionTypesHref(123)
 	v := rw.Header().Get("Location")
 	if exp != v {
@@ -232,7 +232,7 @@ func TestEditionTypeUpdate(t *testing.T) {
 	ctrl := NewEditionTypesController(service, Fmodeler(func() (Modeler, error) {
 		return nil, errors.New("model error")
 	}))
-	test.UpdateEditionTypesServiceUnavailable(t, ctx, service, ctrl, 123, &app.UpdateEditionTypesPayload{Name: "foo"})
+	test.UpdateEditionTypesServiceUnavailable(t, ctx, service, ctrl, 123, &app.UpdateEditionTypesPayload{EditionTypeName: "foo"})
 	exp := "[EROR] unable to get model error=model error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
@@ -243,21 +243,21 @@ func TestEditionTypeUpdate(t *testing.T) {
 	}))
 
 	logbuf.Reset()
-	test.UpdateEditionTypesInternalServerError(t, ctx, service, ctrl, 123, &app.UpdateEditionTypesPayload{Name: "foo"})
+	test.UpdateEditionTypesInternalServerError(t, ctx, service, ctrl, 123, &app.UpdateEditionTypesPayload{EditionTypeName: "foo"})
 	exp = "[EROR] failed to update edition type error=update error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	test.UpdateEditionTypesNotFound(t, ctx, service, ctrl, 123, &app.UpdateEditionTypesPayload{Name: "foo"})
+	test.UpdateEditionTypesNotFound(t, ctx, service, ctrl, 123, &app.UpdateEditionTypesPayload{EditionTypeName: "foo"})
 	exp = "[EROR] failed to update edition type error=not found\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	test.UpdateEditionTypesNoContent(t, ctx, service, ctrl, 123, &app.UpdateEditionTypesPayload{Name: "foo"})
+	test.UpdateEditionTypesNoContent(t, ctx, service, ctrl, 123, &app.UpdateEditionTypesPayload{EditionTypeName: "foo"})
 	exp = ""
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())

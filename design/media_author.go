@@ -69,8 +69,8 @@ var _ = Resource("authors", func() {
 		Description("Create new author")
 		Routing(POST(""))
 		Payload(func() {
-			Member("name")
-			Required("name")
+			attrAuthorName()
+			Required("author_name")
 		})
 		Security(JWTAuth)
 		// unauthorized
@@ -90,8 +90,8 @@ var _ = Resource("authors", func() {
 		Routing(PUT(authorIDPath))
 		Params(attrAuthorID)
 		Payload(func() {
-			Member("name")
-			Required("name")
+			attrAuthorName()
+			Required("author_name")
 		})
 		Security(JWTAuth)
 		// Unauthorized

@@ -34,7 +34,7 @@ func TestEditorsCreate(t *testing.T) {
 	ctrl := NewEditorsController(service, Fmodeler(func() (Modeler, error) {
 		return nil, errors.New("model error")
 	}))
-	test.CreateEditorsServiceUnavailable(t, ctx, service, ctrl, &app.CreateEditorsPayload{Name: "foo"})
+	test.CreateEditorsServiceUnavailable(t, ctx, service, ctrl, &app.CreateEditorsPayload{EditorName: "foo"})
 	exp := "[EROR] unable to get model error=model error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
@@ -45,21 +45,21 @@ func TestEditorsCreate(t *testing.T) {
 	}))
 
 	logbuf.Reset()
-	test.CreateEditorsInternalServerError(t, ctx, service, ctrl, &app.CreateEditorsPayload{Name: "foo"})
+	test.CreateEditorsInternalServerError(t, ctx, service, ctrl, &app.CreateEditorsPayload{EditorName: "foo"})
 	exp = "[EROR] failed to insert editor error=insert error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	test.CreateEditorsUnprocessableEntity(t, ctx, service, ctrl, &app.CreateEditorsPayload{Name: "foo"})
+	test.CreateEditorsUnprocessableEntity(t, ctx, service, ctrl, &app.CreateEditorsPayload{EditorName: "foo"})
 	exp = "[EROR] failed to insert editor error=duplicate key\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	rw := test.CreateEditorsCreated(t, ctx, service, ctrl, &app.CreateEditorsPayload{Name: "foo"})
+	rw := test.CreateEditorsCreated(t, ctx, service, ctrl, &app.CreateEditorsPayload{EditorName: "foo"})
 	exp = app.EditorsHref(123)
 	v := rw.Header().Get("Location")
 	if exp != v {
@@ -232,7 +232,7 @@ func TestEditorUpdate(t *testing.T) {
 	ctrl := NewEditorsController(service, Fmodeler(func() (Modeler, error) {
 		return nil, errors.New("model error")
 	}))
-	test.UpdateEditorsServiceUnavailable(t, ctx, service, ctrl, 123, &app.UpdateEditorsPayload{Name: "foo"})
+	test.UpdateEditorsServiceUnavailable(t, ctx, service, ctrl, 123, &app.UpdateEditorsPayload{EditorName: "foo"})
 	exp := "[EROR] unable to get model error=model error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
@@ -243,21 +243,21 @@ func TestEditorUpdate(t *testing.T) {
 	}))
 
 	logbuf.Reset()
-	test.UpdateEditorsInternalServerError(t, ctx, service, ctrl, 123, &app.UpdateEditorsPayload{Name: "foo"})
+	test.UpdateEditorsInternalServerError(t, ctx, service, ctrl, 123, &app.UpdateEditorsPayload{EditorName: "foo"})
 	exp = "[EROR] failed to update editor error=update error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	test.UpdateEditorsNotFound(t, ctx, service, ctrl, 123, &app.UpdateEditorsPayload{Name: "foo"})
+	test.UpdateEditorsNotFound(t, ctx, service, ctrl, 123, &app.UpdateEditorsPayload{EditorName: "foo"})
 	exp = "[EROR] failed to update editor error=not found\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	test.UpdateEditorsNoContent(t, ctx, service, ctrl, 123, &app.UpdateEditorsPayload{Name: "foo"})
+	test.UpdateEditorsNoContent(t, ctx, service, ctrl, 123, &app.UpdateEditorsPayload{EditorName: "foo"})
 	exp = ""
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())

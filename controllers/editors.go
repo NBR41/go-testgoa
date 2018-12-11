@@ -31,7 +31,7 @@ func (c *EditorsController) Create(ctx *app.CreateEditorsContext) error {
 	}
 	defer func() { m.Close() }()
 
-	b, err := m.InsertEditor(ctx.Payload.Name)
+	b, err := m.InsertEditor(ctx.Payload.EditorName)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to insert editor`, `error`, err.Error())
 		if err == model.ErrDuplicateKey {
@@ -125,7 +125,7 @@ func (c *EditorsController) Update(ctx *app.UpdateEditorsContext) error {
 	}
 	defer func() { m.Close() }()
 
-	err = m.UpdateEditor(ctx.EditorID, ctx.Payload.Name)
+	err = m.UpdateEditor(ctx.EditorID, ctx.Payload.EditorName)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to update editor`, `error`, err.Error())
 		if err == model.ErrNotFound {

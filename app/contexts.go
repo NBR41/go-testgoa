@@ -94,13 +94,24 @@ func NewCreateAuthorsContext(ctx context.Context, r *http.Request, service *goa.
 
 // createAuthorsPayload is the authors create action payload.
 type createAuthorsPayload struct {
-	Name *string `form:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty" xml:"name,omitempty"`
+	// Author Name
+	AuthorName *string `form:"author_name,omitempty" json:"author_name,omitempty" yaml:"author_name,omitempty" xml:"author_name,omitempty"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *createAuthorsPayload) Validate() (err error) {
-	if payload.Name == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	if payload.AuthorName == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "author_name"))
+	}
+	if payload.AuthorName != nil {
+		if utf8.RuneCountInString(*payload.AuthorName) < 1 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.author_name`, *payload.AuthorName, utf8.RuneCountInString(*payload.AuthorName), 1, true))
+		}
+	}
+	if payload.AuthorName != nil {
+		if utf8.RuneCountInString(*payload.AuthorName) > 128 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.author_name`, *payload.AuthorName, utf8.RuneCountInString(*payload.AuthorName), 128, false))
+		}
 	}
 	return
 }
@@ -108,21 +119,28 @@ func (payload *createAuthorsPayload) Validate() (err error) {
 // Publicize creates CreateAuthorsPayload from createAuthorsPayload
 func (payload *createAuthorsPayload) Publicize() *CreateAuthorsPayload {
 	var pub CreateAuthorsPayload
-	if payload.Name != nil {
-		pub.Name = *payload.Name
+	if payload.AuthorName != nil {
+		pub.AuthorName = *payload.AuthorName
 	}
 	return &pub
 }
 
 // CreateAuthorsPayload is the authors create action payload.
 type CreateAuthorsPayload struct {
-	Name string `form:"name" json:"name" yaml:"name" xml:"name"`
+	// Author Name
+	AuthorName string `form:"author_name" json:"author_name" yaml:"author_name" xml:"author_name"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *CreateAuthorsPayload) Validate() (err error) {
-	if payload.Name == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	if payload.AuthorName == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "author_name"))
+	}
+	if utf8.RuneCountInString(payload.AuthorName) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.author_name`, payload.AuthorName, utf8.RuneCountInString(payload.AuthorName), 1, true))
+	}
+	if utf8.RuneCountInString(payload.AuthorName) > 128 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.author_name`, payload.AuthorName, utf8.RuneCountInString(payload.AuthorName), 128, false))
 	}
 	return
 }
@@ -397,13 +415,24 @@ func NewUpdateAuthorsContext(ctx context.Context, r *http.Request, service *goa.
 
 // updateAuthorsPayload is the authors update action payload.
 type updateAuthorsPayload struct {
-	Name *string `form:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty" xml:"name,omitempty"`
+	// Author Name
+	AuthorName *string `form:"author_name,omitempty" json:"author_name,omitempty" yaml:"author_name,omitempty" xml:"author_name,omitempty"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *updateAuthorsPayload) Validate() (err error) {
-	if payload.Name == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	if payload.AuthorName == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "author_name"))
+	}
+	if payload.AuthorName != nil {
+		if utf8.RuneCountInString(*payload.AuthorName) < 1 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.author_name`, *payload.AuthorName, utf8.RuneCountInString(*payload.AuthorName), 1, true))
+		}
+	}
+	if payload.AuthorName != nil {
+		if utf8.RuneCountInString(*payload.AuthorName) > 128 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.author_name`, *payload.AuthorName, utf8.RuneCountInString(*payload.AuthorName), 128, false))
+		}
 	}
 	return
 }
@@ -411,21 +440,28 @@ func (payload *updateAuthorsPayload) Validate() (err error) {
 // Publicize creates UpdateAuthorsPayload from updateAuthorsPayload
 func (payload *updateAuthorsPayload) Publicize() *UpdateAuthorsPayload {
 	var pub UpdateAuthorsPayload
-	if payload.Name != nil {
-		pub.Name = *payload.Name
+	if payload.AuthorName != nil {
+		pub.AuthorName = *payload.AuthorName
 	}
 	return &pub
 }
 
 // UpdateAuthorsPayload is the authors update action payload.
 type UpdateAuthorsPayload struct {
-	Name string `form:"name" json:"name" yaml:"name" xml:"name"`
+	// Author Name
+	AuthorName string `form:"author_name" json:"author_name" yaml:"author_name" xml:"author_name"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *UpdateAuthorsPayload) Validate() (err error) {
-	if payload.Name == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	if payload.AuthorName == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "author_name"))
+	}
+	if utf8.RuneCountInString(payload.AuthorName) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.author_name`, payload.AuthorName, utf8.RuneCountInString(payload.AuthorName), 1, true))
+	}
+	if utf8.RuneCountInString(payload.AuthorName) > 128 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.author_name`, payload.AuthorName, utf8.RuneCountInString(payload.AuthorName), 128, false))
 	}
 	return
 }
@@ -909,13 +945,24 @@ func NewCreateCategoriesContext(ctx context.Context, r *http.Request, service *g
 
 // createCategoriesPayload is the categories create action payload.
 type createCategoriesPayload struct {
-	Name *string `form:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty" xml:"name,omitempty"`
+	// Category Name (Thriller/Romance/...)
+	CategoryName *string `form:"category_name,omitempty" json:"category_name,omitempty" yaml:"category_name,omitempty" xml:"category_name,omitempty"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *createCategoriesPayload) Validate() (err error) {
-	if payload.Name == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	if payload.CategoryName == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "category_name"))
+	}
+	if payload.CategoryName != nil {
+		if utf8.RuneCountInString(*payload.CategoryName) < 1 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.category_name`, *payload.CategoryName, utf8.RuneCountInString(*payload.CategoryName), 1, true))
+		}
+	}
+	if payload.CategoryName != nil {
+		if utf8.RuneCountInString(*payload.CategoryName) > 128 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.category_name`, *payload.CategoryName, utf8.RuneCountInString(*payload.CategoryName), 128, false))
+		}
 	}
 	return
 }
@@ -923,21 +970,28 @@ func (payload *createCategoriesPayload) Validate() (err error) {
 // Publicize creates CreateCategoriesPayload from createCategoriesPayload
 func (payload *createCategoriesPayload) Publicize() *CreateCategoriesPayload {
 	var pub CreateCategoriesPayload
-	if payload.Name != nil {
-		pub.Name = *payload.Name
+	if payload.CategoryName != nil {
+		pub.CategoryName = *payload.CategoryName
 	}
 	return &pub
 }
 
 // CreateCategoriesPayload is the categories create action payload.
 type CreateCategoriesPayload struct {
-	Name string `form:"name" json:"name" yaml:"name" xml:"name"`
+	// Category Name (Thriller/Romance/...)
+	CategoryName string `form:"category_name" json:"category_name" yaml:"category_name" xml:"category_name"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *CreateCategoriesPayload) Validate() (err error) {
-	if payload.Name == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	if payload.CategoryName == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "category_name"))
+	}
+	if utf8.RuneCountInString(payload.CategoryName) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.category_name`, payload.CategoryName, utf8.RuneCountInString(payload.CategoryName), 1, true))
+	}
+	if utf8.RuneCountInString(payload.CategoryName) > 128 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.category_name`, payload.CategoryName, utf8.RuneCountInString(payload.CategoryName), 128, false))
 	}
 	return
 }
@@ -1212,13 +1266,24 @@ func NewUpdateCategoriesContext(ctx context.Context, r *http.Request, service *g
 
 // updateCategoriesPayload is the categories update action payload.
 type updateCategoriesPayload struct {
-	Name *string `form:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty" xml:"name,omitempty"`
+	// Category Name (Thriller/Romance/...)
+	CategoryName *string `form:"category_name,omitempty" json:"category_name,omitempty" yaml:"category_name,omitempty" xml:"category_name,omitempty"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *updateCategoriesPayload) Validate() (err error) {
-	if payload.Name == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	if payload.CategoryName == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "category_name"))
+	}
+	if payload.CategoryName != nil {
+		if utf8.RuneCountInString(*payload.CategoryName) < 1 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.category_name`, *payload.CategoryName, utf8.RuneCountInString(*payload.CategoryName), 1, true))
+		}
+	}
+	if payload.CategoryName != nil {
+		if utf8.RuneCountInString(*payload.CategoryName) > 128 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.category_name`, *payload.CategoryName, utf8.RuneCountInString(*payload.CategoryName), 128, false))
+		}
 	}
 	return
 }
@@ -1226,21 +1291,28 @@ func (payload *updateCategoriesPayload) Validate() (err error) {
 // Publicize creates UpdateCategoriesPayload from updateCategoriesPayload
 func (payload *updateCategoriesPayload) Publicize() *UpdateCategoriesPayload {
 	var pub UpdateCategoriesPayload
-	if payload.Name != nil {
-		pub.Name = *payload.Name
+	if payload.CategoryName != nil {
+		pub.CategoryName = *payload.CategoryName
 	}
 	return &pub
 }
 
 // UpdateCategoriesPayload is the categories update action payload.
 type UpdateCategoriesPayload struct {
-	Name string `form:"name" json:"name" yaml:"name" xml:"name"`
+	// Category Name (Thriller/Romance/...)
+	CategoryName string `form:"category_name" json:"category_name" yaml:"category_name" xml:"category_name"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *UpdateCategoriesPayload) Validate() (err error) {
-	if payload.Name == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	if payload.CategoryName == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "category_name"))
+	}
+	if utf8.RuneCountInString(payload.CategoryName) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.category_name`, payload.CategoryName, utf8.RuneCountInString(payload.CategoryName), 1, true))
+	}
+	if utf8.RuneCountInString(payload.CategoryName) > 128 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.category_name`, payload.CategoryName, utf8.RuneCountInString(payload.CategoryName), 128, false))
 	}
 	return
 }
@@ -1294,7 +1366,8 @@ type CreateCollectionsContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
-	Payload *CreateCollectionsPayload
+	EditorID int
+	Payload  *CreateCollectionsPayload
 }
 
 // NewCreateCollectionsContext parses the incoming request URL and body, performs validations and creates the
@@ -1306,6 +1379,18 @@ func NewCreateCollectionsContext(ctx context.Context, r *http.Request, service *
 	req := goa.ContextRequest(ctx)
 	req.Request = r
 	rctx := CreateCollectionsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
 	return &rctx, err
 }
 
@@ -1388,6 +1473,7 @@ type DeleteCollectionsContext struct {
 	*goa.ResponseData
 	*goa.RequestData
 	CollectionID int
+	EditorID     int
 }
 
 // NewDeleteCollectionsContext parses the incoming request URL and body, performs validations and creates the
@@ -1409,6 +1495,18 @@ func NewDeleteCollectionsContext(ctx context.Context, r *http.Request, service *
 		}
 		if rctx.CollectionID < 1 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
 		}
 	}
 	return &rctx, err
@@ -1457,6 +1555,7 @@ type ListCollectionsContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
+	EditorID int
 }
 
 // NewListCollectionsContext parses the incoming request URL and body, performs validations and creates the
@@ -1468,6 +1567,18 @@ func NewListCollectionsContext(ctx context.Context, r *http.Request, service *go
 	req := goa.ContextRequest(ctx)
 	req.Request = r
 	rctx := ListCollectionsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
 	return &rctx, err
 }
 
@@ -1511,6 +1622,7 @@ type ShowCollectionsContext struct {
 	*goa.ResponseData
 	*goa.RequestData
 	CollectionID int
+	EditorID     int
 }
 
 // NewShowCollectionsContext parses the incoming request URL and body, performs validations and creates the
@@ -1532,6 +1644,18 @@ func NewShowCollectionsContext(ctx context.Context, r *http.Request, service *go
 		}
 		if rctx.CollectionID < 1 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
 		}
 	}
 	return &rctx, err
@@ -1585,6 +1709,7 @@ type UpdateCollectionsContext struct {
 	*goa.ResponseData
 	*goa.RequestData
 	CollectionID int
+	EditorID     int
 	Payload      *UpdateCollectionsPayload
 }
 
@@ -1607,6 +1732,18 @@ func NewUpdateCollectionsContext(ctx context.Context, r *http.Request, service *
 		}
 		if rctx.CollectionID < 1 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
 		}
 	}
 	return &rctx, err
@@ -1713,13 +1850,24 @@ func NewCreateEditionTypesContext(ctx context.Context, r *http.Request, service 
 
 // createEditionTypesPayload is the edition_types create action payload.
 type createEditionTypesPayload struct {
-	Name *string `form:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty" xml:"name,omitempty"`
+	// Editor Name (Deluxe/Ultimate/Pocket)
+	EditionTypeName *string `form:"edition_type_name,omitempty" json:"edition_type_name,omitempty" yaml:"edition_type_name,omitempty" xml:"edition_type_name,omitempty"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *createEditionTypesPayload) Validate() (err error) {
-	if payload.Name == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	if payload.EditionTypeName == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "edition_type_name"))
+	}
+	if payload.EditionTypeName != nil {
+		if utf8.RuneCountInString(*payload.EditionTypeName) < 1 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.edition_type_name`, *payload.EditionTypeName, utf8.RuneCountInString(*payload.EditionTypeName), 1, true))
+		}
+	}
+	if payload.EditionTypeName != nil {
+		if utf8.RuneCountInString(*payload.EditionTypeName) > 128 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.edition_type_name`, *payload.EditionTypeName, utf8.RuneCountInString(*payload.EditionTypeName), 128, false))
+		}
 	}
 	return
 }
@@ -1727,21 +1875,28 @@ func (payload *createEditionTypesPayload) Validate() (err error) {
 // Publicize creates CreateEditionTypesPayload from createEditionTypesPayload
 func (payload *createEditionTypesPayload) Publicize() *CreateEditionTypesPayload {
 	var pub CreateEditionTypesPayload
-	if payload.Name != nil {
-		pub.Name = *payload.Name
+	if payload.EditionTypeName != nil {
+		pub.EditionTypeName = *payload.EditionTypeName
 	}
 	return &pub
 }
 
 // CreateEditionTypesPayload is the edition_types create action payload.
 type CreateEditionTypesPayload struct {
-	Name string `form:"name" json:"name" yaml:"name" xml:"name"`
+	// Editor Name (Deluxe/Ultimate/Pocket)
+	EditionTypeName string `form:"edition_type_name" json:"edition_type_name" yaml:"edition_type_name" xml:"edition_type_name"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *CreateEditionTypesPayload) Validate() (err error) {
-	if payload.Name == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	if payload.EditionTypeName == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "edition_type_name"))
+	}
+	if utf8.RuneCountInString(payload.EditionTypeName) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.edition_type_name`, payload.EditionTypeName, utf8.RuneCountInString(payload.EditionTypeName), 1, true))
+	}
+	if utf8.RuneCountInString(payload.EditionTypeName) > 128 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.edition_type_name`, payload.EditionTypeName, utf8.RuneCountInString(payload.EditionTypeName), 128, false))
 	}
 	return
 }
@@ -2016,13 +2171,24 @@ func NewUpdateEditionTypesContext(ctx context.Context, r *http.Request, service 
 
 // updateEditionTypesPayload is the edition_types update action payload.
 type updateEditionTypesPayload struct {
-	Name *string `form:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty" xml:"name,omitempty"`
+	// Editor Name (Deluxe/Ultimate/Pocket)
+	EditionTypeName *string `form:"edition_type_name,omitempty" json:"edition_type_name,omitempty" yaml:"edition_type_name,omitempty" xml:"edition_type_name,omitempty"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *updateEditionTypesPayload) Validate() (err error) {
-	if payload.Name == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	if payload.EditionTypeName == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "edition_type_name"))
+	}
+	if payload.EditionTypeName != nil {
+		if utf8.RuneCountInString(*payload.EditionTypeName) < 1 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.edition_type_name`, *payload.EditionTypeName, utf8.RuneCountInString(*payload.EditionTypeName), 1, true))
+		}
+	}
+	if payload.EditionTypeName != nil {
+		if utf8.RuneCountInString(*payload.EditionTypeName) > 128 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.edition_type_name`, *payload.EditionTypeName, utf8.RuneCountInString(*payload.EditionTypeName), 128, false))
+		}
 	}
 	return
 }
@@ -2030,21 +2196,28 @@ func (payload *updateEditionTypesPayload) Validate() (err error) {
 // Publicize creates UpdateEditionTypesPayload from updateEditionTypesPayload
 func (payload *updateEditionTypesPayload) Publicize() *UpdateEditionTypesPayload {
 	var pub UpdateEditionTypesPayload
-	if payload.Name != nil {
-		pub.Name = *payload.Name
+	if payload.EditionTypeName != nil {
+		pub.EditionTypeName = *payload.EditionTypeName
 	}
 	return &pub
 }
 
 // UpdateEditionTypesPayload is the edition_types update action payload.
 type UpdateEditionTypesPayload struct {
-	Name string `form:"name" json:"name" yaml:"name" xml:"name"`
+	// Editor Name (Deluxe/Ultimate/Pocket)
+	EditionTypeName string `form:"edition_type_name" json:"edition_type_name" yaml:"edition_type_name" xml:"edition_type_name"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *UpdateEditionTypesPayload) Validate() (err error) {
-	if payload.Name == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	if payload.EditionTypeName == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "edition_type_name"))
+	}
+	if utf8.RuneCountInString(payload.EditionTypeName) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.edition_type_name`, payload.EditionTypeName, utf8.RuneCountInString(payload.EditionTypeName), 1, true))
+	}
+	if utf8.RuneCountInString(payload.EditionTypeName) > 128 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.edition_type_name`, payload.EditionTypeName, utf8.RuneCountInString(payload.EditionTypeName), 128, false))
 	}
 	return
 }
@@ -2115,13 +2288,24 @@ func NewCreateEditorsContext(ctx context.Context, r *http.Request, service *goa.
 
 // createEditorsPayload is the editors create action payload.
 type createEditorsPayload struct {
-	Name *string `form:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty" xml:"name,omitempty"`
+	// Editor Name (Glénat/Delcourt)
+	EditorName *string `form:"editor_name,omitempty" json:"editor_name,omitempty" yaml:"editor_name,omitempty" xml:"editor_name,omitempty"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *createEditorsPayload) Validate() (err error) {
-	if payload.Name == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	if payload.EditorName == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "editor_name"))
+	}
+	if payload.EditorName != nil {
+		if utf8.RuneCountInString(*payload.EditorName) < 1 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.editor_name`, *payload.EditorName, utf8.RuneCountInString(*payload.EditorName), 1, true))
+		}
+	}
+	if payload.EditorName != nil {
+		if utf8.RuneCountInString(*payload.EditorName) > 128 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.editor_name`, *payload.EditorName, utf8.RuneCountInString(*payload.EditorName), 128, false))
+		}
 	}
 	return
 }
@@ -2129,21 +2313,28 @@ func (payload *createEditorsPayload) Validate() (err error) {
 // Publicize creates CreateEditorsPayload from createEditorsPayload
 func (payload *createEditorsPayload) Publicize() *CreateEditorsPayload {
 	var pub CreateEditorsPayload
-	if payload.Name != nil {
-		pub.Name = *payload.Name
+	if payload.EditorName != nil {
+		pub.EditorName = *payload.EditorName
 	}
 	return &pub
 }
 
 // CreateEditorsPayload is the editors create action payload.
 type CreateEditorsPayload struct {
-	Name string `form:"name" json:"name" yaml:"name" xml:"name"`
+	// Editor Name (Glénat/Delcourt)
+	EditorName string `form:"editor_name" json:"editor_name" yaml:"editor_name" xml:"editor_name"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *CreateEditorsPayload) Validate() (err error) {
-	if payload.Name == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	if payload.EditorName == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "editor_name"))
+	}
+	if utf8.RuneCountInString(payload.EditorName) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.editor_name`, payload.EditorName, utf8.RuneCountInString(payload.EditorName), 1, true))
+	}
+	if utf8.RuneCountInString(payload.EditorName) > 128 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.editor_name`, payload.EditorName, utf8.RuneCountInString(payload.EditorName), 128, false))
 	}
 	return
 }
@@ -2418,13 +2609,24 @@ func NewUpdateEditorsContext(ctx context.Context, r *http.Request, service *goa.
 
 // updateEditorsPayload is the editors update action payload.
 type updateEditorsPayload struct {
-	Name *string `form:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty" xml:"name,omitempty"`
+	// Editor Name (Glénat/Delcourt)
+	EditorName *string `form:"editor_name,omitempty" json:"editor_name,omitempty" yaml:"editor_name,omitempty" xml:"editor_name,omitempty"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *updateEditorsPayload) Validate() (err error) {
-	if payload.Name == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	if payload.EditorName == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "editor_name"))
+	}
+	if payload.EditorName != nil {
+		if utf8.RuneCountInString(*payload.EditorName) < 1 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.editor_name`, *payload.EditorName, utf8.RuneCountInString(*payload.EditorName), 1, true))
+		}
+	}
+	if payload.EditorName != nil {
+		if utf8.RuneCountInString(*payload.EditorName) > 128 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.editor_name`, *payload.EditorName, utf8.RuneCountInString(*payload.EditorName), 128, false))
+		}
 	}
 	return
 }
@@ -2432,21 +2634,28 @@ func (payload *updateEditorsPayload) Validate() (err error) {
 // Publicize creates UpdateEditorsPayload from updateEditorsPayload
 func (payload *updateEditorsPayload) Publicize() *UpdateEditorsPayload {
 	var pub UpdateEditorsPayload
-	if payload.Name != nil {
-		pub.Name = *payload.Name
+	if payload.EditorName != nil {
+		pub.EditorName = *payload.EditorName
 	}
 	return &pub
 }
 
 // UpdateEditorsPayload is the editors update action payload.
 type UpdateEditorsPayload struct {
-	Name string `form:"name" json:"name" yaml:"name" xml:"name"`
+	// Editor Name (Glénat/Delcourt)
+	EditorName string `form:"editor_name" json:"editor_name" yaml:"editor_name" xml:"editor_name"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *UpdateEditorsPayload) Validate() (err error) {
-	if payload.Name == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	if payload.EditorName == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "editor_name"))
+	}
+	if utf8.RuneCountInString(payload.EditorName) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.editor_name`, payload.EditorName, utf8.RuneCountInString(payload.EditorName), 1, true))
+	}
+	if utf8.RuneCountInString(payload.EditorName) > 128 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.editor_name`, payload.EditorName, utf8.RuneCountInString(payload.EditorName), 128, false))
 	}
 	return
 }
@@ -2517,13 +2726,24 @@ func NewCreateGenresContext(ctx context.Context, r *http.Request, service *goa.S
 
 // createGenresPayload is the genres create action payload.
 type createGenresPayload struct {
-	Name *string `form:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty" xml:"name,omitempty"`
+	// Genre Name (Shonen/Shojo/Seinen)
+	GenreName *string `form:"genre_name,omitempty" json:"genre_name,omitempty" yaml:"genre_name,omitempty" xml:"genre_name,omitempty"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *createGenresPayload) Validate() (err error) {
-	if payload.Name == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	if payload.GenreName == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "genre_name"))
+	}
+	if payload.GenreName != nil {
+		if utf8.RuneCountInString(*payload.GenreName) < 1 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.genre_name`, *payload.GenreName, utf8.RuneCountInString(*payload.GenreName), 1, true))
+		}
+	}
+	if payload.GenreName != nil {
+		if utf8.RuneCountInString(*payload.GenreName) > 128 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.genre_name`, *payload.GenreName, utf8.RuneCountInString(*payload.GenreName), 128, false))
+		}
 	}
 	return
 }
@@ -2531,21 +2751,28 @@ func (payload *createGenresPayload) Validate() (err error) {
 // Publicize creates CreateGenresPayload from createGenresPayload
 func (payload *createGenresPayload) Publicize() *CreateGenresPayload {
 	var pub CreateGenresPayload
-	if payload.Name != nil {
-		pub.Name = *payload.Name
+	if payload.GenreName != nil {
+		pub.GenreName = *payload.GenreName
 	}
 	return &pub
 }
 
 // CreateGenresPayload is the genres create action payload.
 type CreateGenresPayload struct {
-	Name string `form:"name" json:"name" yaml:"name" xml:"name"`
+	// Genre Name (Shonen/Shojo/Seinen)
+	GenreName string `form:"genre_name" json:"genre_name" yaml:"genre_name" xml:"genre_name"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *CreateGenresPayload) Validate() (err error) {
-	if payload.Name == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	if payload.GenreName == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "genre_name"))
+	}
+	if utf8.RuneCountInString(payload.GenreName) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.genre_name`, payload.GenreName, utf8.RuneCountInString(payload.GenreName), 1, true))
+	}
+	if utf8.RuneCountInString(payload.GenreName) > 128 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.genre_name`, payload.GenreName, utf8.RuneCountInString(payload.GenreName), 128, false))
 	}
 	return
 }
@@ -2820,13 +3047,24 @@ func NewUpdateGenresContext(ctx context.Context, r *http.Request, service *goa.S
 
 // updateGenresPayload is the genres update action payload.
 type updateGenresPayload struct {
-	Name *string `form:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty" xml:"name,omitempty"`
+	// Genre Name (Shonen/Shojo/Seinen)
+	GenreName *string `form:"genre_name,omitempty" json:"genre_name,omitempty" yaml:"genre_name,omitempty" xml:"genre_name,omitempty"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *updateGenresPayload) Validate() (err error) {
-	if payload.Name == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	if payload.GenreName == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "genre_name"))
+	}
+	if payload.GenreName != nil {
+		if utf8.RuneCountInString(*payload.GenreName) < 1 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.genre_name`, *payload.GenreName, utf8.RuneCountInString(*payload.GenreName), 1, true))
+		}
+	}
+	if payload.GenreName != nil {
+		if utf8.RuneCountInString(*payload.GenreName) > 128 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.genre_name`, *payload.GenreName, utf8.RuneCountInString(*payload.GenreName), 128, false))
+		}
 	}
 	return
 }
@@ -2834,21 +3072,28 @@ func (payload *updateGenresPayload) Validate() (err error) {
 // Publicize creates UpdateGenresPayload from updateGenresPayload
 func (payload *updateGenresPayload) Publicize() *UpdateGenresPayload {
 	var pub UpdateGenresPayload
-	if payload.Name != nil {
-		pub.Name = *payload.Name
+	if payload.GenreName != nil {
+		pub.GenreName = *payload.GenreName
 	}
 	return &pub
 }
 
 // UpdateGenresPayload is the genres update action payload.
 type UpdateGenresPayload struct {
-	Name string `form:"name" json:"name" yaml:"name" xml:"name"`
+	// Genre Name (Shonen/Shojo/Seinen)
+	GenreName string `form:"genre_name" json:"genre_name" yaml:"genre_name" xml:"genre_name"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *UpdateGenresPayload) Validate() (err error) {
-	if payload.Name == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	if payload.GenreName == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "genre_name"))
+	}
+	if utf8.RuneCountInString(payload.GenreName) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.genre_name`, payload.GenreName, utf8.RuneCountInString(payload.GenreName), 1, true))
+	}
+	if utf8.RuneCountInString(payload.GenreName) > 128 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.genre_name`, payload.GenreName, utf8.RuneCountInString(payload.GenreName), 128, false))
 	}
 	return
 }
@@ -2924,6 +3169,414 @@ func (ctx *HealthHealthContext) OK(resp []byte) error {
 	ctx.ResponseData.WriteHeader(200)
 	_, err := ctx.ResponseData.Write(resp)
 	return err
+}
+
+// CreateUsersContext provides the users create action context.
+type CreateUsersContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	Payload *UserCreatePayload
+}
+
+// NewCreateUsersContext parses the incoming request URL and body, performs validations and creates the
+// context used by the users controller create action.
+func NewCreateUsersContext(ctx context.Context, r *http.Request, service *goa.Service) (*CreateUsersContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := CreateUsersContext{Context: ctx, ResponseData: resp, RequestData: req}
+	return &rctx, err
+}
+
+// Created sends a HTTP response with status code 201.
+func (ctx *CreateUsersContext) Created() error {
+	ctx.ResponseData.WriteHeader(201)
+	return nil
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *CreateUsersContext) BadRequest(r error) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// UnprocessableEntity sends a HTTP response with status code 422.
+func (ctx *CreateUsersContext) UnprocessableEntity(r error) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 422, r)
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *CreateUsersContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *CreateUsersContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// DeleteUsersContext provides the users delete action context.
+type DeleteUsersContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	UserID int
+}
+
+// NewDeleteUsersContext parses the incoming request URL and body, performs validations and creates the
+// context used by the users controller delete action.
+func NewDeleteUsersContext(ctx context.Context, r *http.Request, service *goa.Service) (*DeleteUsersContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := DeleteUsersContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramUserID := req.Params["user_id"]
+	if len(paramUserID) > 0 {
+		rawUserID := paramUserID[0]
+		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+			rctx.UserID = userID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("user_id", rawUserID, "integer"))
+		}
+		if rctx.UserID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`user_id`, rctx.UserID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// NoContent sends a HTTP response with status code 204.
+func (ctx *DeleteUsersContext) NoContent() error {
+	ctx.ResponseData.WriteHeader(204)
+	return nil
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *DeleteUsersContext) BadRequest(r error) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// Unauthorized sends a HTTP response with status code 401.
+func (ctx *DeleteUsersContext) Unauthorized() error {
+	ctx.ResponseData.WriteHeader(401)
+	return nil
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *DeleteUsersContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *DeleteUsersContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *DeleteUsersContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListUsersContext provides the users list action context.
+type ListUsersContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	Email    *string
+	Nickname *string
+}
+
+// NewListUsersContext parses the incoming request URL and body, performs validations and creates the
+// context used by the users controller list action.
+func NewListUsersContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListUsersContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListUsersContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEmail := req.Params["email"]
+	if len(paramEmail) > 0 {
+		rawEmail := paramEmail[0]
+		rctx.Email = &rawEmail
+		if rctx.Email != nil {
+			if err2 := goa.ValidateFormat(goa.FormatEmail, *rctx.Email); err2 != nil {
+				err = goa.MergeErrors(err, goa.InvalidFormatError(`email`, *rctx.Email, goa.FormatEmail, err2))
+			}
+		}
+	}
+	paramNickname := req.Params["nickname"]
+	if len(paramNickname) > 0 {
+		rawNickname := paramNickname[0]
+		rctx.Nickname = &rawNickname
+		if rctx.Nickname != nil {
+			if utf8.RuneCountInString(*rctx.Nickname) < 1 {
+				err = goa.MergeErrors(err, goa.InvalidLengthError(`nickname`, *rctx.Nickname, utf8.RuneCountInString(*rctx.Nickname), 1, true))
+			}
+		}
+		if rctx.Nickname != nil {
+			if utf8.RuneCountInString(*rctx.Nickname) > 32 {
+				err = goa.MergeErrors(err, goa.InvalidLengthError(`nickname`, *rctx.Nickname, utf8.RuneCountInString(*rctx.Nickname), 32, false))
+			}
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListUsersContext) OK(r UserCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.user+json; type=collection")
+	}
+	if r == nil {
+		r = UserCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKTiny sends a HTTP response with status code 200.
+func (ctx *ListUsersContext) OKTiny(r UserTinyCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.user+json; type=collection")
+	}
+	if r == nil {
+		r = UserTinyCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListUsersContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListUsersContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ShowUsersContext provides the users show action context.
+type ShowUsersContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	UserID int
+}
+
+// NewShowUsersContext parses the incoming request URL and body, performs validations and creates the
+// context used by the users controller show action.
+func NewShowUsersContext(ctx context.Context, r *http.Request, service *goa.Service) (*ShowUsersContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ShowUsersContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramUserID := req.Params["user_id"]
+	if len(paramUserID) > 0 {
+		rawUserID := paramUserID[0]
+		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+			rctx.UserID = userID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("user_id", rawUserID, "integer"))
+		}
+		if rctx.UserID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`user_id`, rctx.UserID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ShowUsersContext) OK(r *User) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.user+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKTiny sends a HTTP response with status code 200.
+func (ctx *ShowUsersContext) OKTiny(r *UserTiny) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.user+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *ShowUsersContext) BadRequest(r error) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ShowUsersContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ShowUsersContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ShowUsersContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// UpdateUsersContext provides the users update action context.
+type UpdateUsersContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	UserID  int
+	Payload *UpdateUsersPayload
+}
+
+// NewUpdateUsersContext parses the incoming request URL and body, performs validations and creates the
+// context used by the users controller update action.
+func NewUpdateUsersContext(ctx context.Context, r *http.Request, service *goa.Service) (*UpdateUsersContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := UpdateUsersContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramUserID := req.Params["user_id"]
+	if len(paramUserID) > 0 {
+		rawUserID := paramUserID[0]
+		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+			rctx.UserID = userID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("user_id", rawUserID, "integer"))
+		}
+		if rctx.UserID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`user_id`, rctx.UserID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// updateUsersPayload is the users update action payload.
+type updateUsersPayload struct {
+	// user nickname
+	Nickname *string `form:"nickname,omitempty" json:"nickname,omitempty" yaml:"nickname,omitempty" xml:"nickname,omitempty"`
+}
+
+// Validate runs the validation rules defined in the design.
+func (payload *updateUsersPayload) Validate() (err error) {
+	if payload.Nickname == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "nickname"))
+	}
+	if payload.Nickname != nil {
+		if utf8.RuneCountInString(*payload.Nickname) < 1 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.nickname`, *payload.Nickname, utf8.RuneCountInString(*payload.Nickname), 1, true))
+		}
+	}
+	if payload.Nickname != nil {
+		if utf8.RuneCountInString(*payload.Nickname) > 32 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.nickname`, *payload.Nickname, utf8.RuneCountInString(*payload.Nickname), 32, false))
+		}
+	}
+	return
+}
+
+// Publicize creates UpdateUsersPayload from updateUsersPayload
+func (payload *updateUsersPayload) Publicize() *UpdateUsersPayload {
+	var pub UpdateUsersPayload
+	if payload.Nickname != nil {
+		pub.Nickname = *payload.Nickname
+	}
+	return &pub
+}
+
+// UpdateUsersPayload is the users update action payload.
+type UpdateUsersPayload struct {
+	// user nickname
+	Nickname string `form:"nickname" json:"nickname" yaml:"nickname" xml:"nickname"`
+}
+
+// Validate runs the validation rules defined in the design.
+func (payload *UpdateUsersPayload) Validate() (err error) {
+	if payload.Nickname == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "nickname"))
+	}
+	if utf8.RuneCountInString(payload.Nickname) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.nickname`, payload.Nickname, utf8.RuneCountInString(payload.Nickname), 1, true))
+	}
+	if utf8.RuneCountInString(payload.Nickname) > 32 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.nickname`, payload.Nickname, utf8.RuneCountInString(payload.Nickname), 32, false))
+	}
+	return
+}
+
+// NoContent sends a HTTP response with status code 204.
+func (ctx *UpdateUsersContext) NoContent() error {
+	ctx.ResponseData.WriteHeader(204)
+	return nil
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *UpdateUsersContext) BadRequest(r error) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// Unauthorized sends a HTTP response with status code 401.
+func (ctx *UpdateUsersContext) Unauthorized() error {
+	ctx.ResponseData.WriteHeader(401)
+	return nil
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *UpdateUsersContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// UnprocessableEntity sends a HTTP response with status code 422.
+func (ctx *UpdateUsersContext) UnprocessableEntity() error {
+	ctx.ResponseData.WriteHeader(422)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *UpdateUsersContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *UpdateUsersContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
 }
 
 // AddOwnershipsContext provides the ownerships add action context.
@@ -3556,13 +4209,24 @@ func NewCreateRolesContext(ctx context.Context, r *http.Request, service *goa.Se
 
 // createRolesPayload is the roles create action payload.
 type createRolesPayload struct {
-	Name *string `form:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty" xml:"name,omitempty"`
+	// Role Name (Author/Scenarist/Cartoonist)
+	RoleName *string `form:"role_name,omitempty" json:"role_name,omitempty" yaml:"role_name,omitempty" xml:"role_name,omitempty"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *createRolesPayload) Validate() (err error) {
-	if payload.Name == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	if payload.RoleName == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "role_name"))
+	}
+	if payload.RoleName != nil {
+		if utf8.RuneCountInString(*payload.RoleName) < 1 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.role_name`, *payload.RoleName, utf8.RuneCountInString(*payload.RoleName), 1, true))
+		}
+	}
+	if payload.RoleName != nil {
+		if utf8.RuneCountInString(*payload.RoleName) > 128 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.role_name`, *payload.RoleName, utf8.RuneCountInString(*payload.RoleName), 128, false))
+		}
 	}
 	return
 }
@@ -3570,21 +4234,28 @@ func (payload *createRolesPayload) Validate() (err error) {
 // Publicize creates CreateRolesPayload from createRolesPayload
 func (payload *createRolesPayload) Publicize() *CreateRolesPayload {
 	var pub CreateRolesPayload
-	if payload.Name != nil {
-		pub.Name = *payload.Name
+	if payload.RoleName != nil {
+		pub.RoleName = *payload.RoleName
 	}
 	return &pub
 }
 
 // CreateRolesPayload is the roles create action payload.
 type CreateRolesPayload struct {
-	Name string `form:"name" json:"name" yaml:"name" xml:"name"`
+	// Role Name (Author/Scenarist/Cartoonist)
+	RoleName string `form:"role_name" json:"role_name" yaml:"role_name" xml:"role_name"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *CreateRolesPayload) Validate() (err error) {
-	if payload.Name == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	if payload.RoleName == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "role_name"))
+	}
+	if utf8.RuneCountInString(payload.RoleName) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.role_name`, payload.RoleName, utf8.RuneCountInString(payload.RoleName), 1, true))
+	}
+	if utf8.RuneCountInString(payload.RoleName) > 128 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.role_name`, payload.RoleName, utf8.RuneCountInString(payload.RoleName), 128, false))
 	}
 	return
 }
@@ -3859,13 +4530,24 @@ func NewUpdateRolesContext(ctx context.Context, r *http.Request, service *goa.Se
 
 // updateRolesPayload is the roles update action payload.
 type updateRolesPayload struct {
-	Name *string `form:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty" xml:"name,omitempty"`
+	// Role Name (Author/Scenarist/Cartoonist)
+	RoleName *string `form:"role_name,omitempty" json:"role_name,omitempty" yaml:"role_name,omitempty" xml:"role_name,omitempty"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *updateRolesPayload) Validate() (err error) {
-	if payload.Name == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	if payload.RoleName == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "role_name"))
+	}
+	if payload.RoleName != nil {
+		if utf8.RuneCountInString(*payload.RoleName) < 1 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.role_name`, *payload.RoleName, utf8.RuneCountInString(*payload.RoleName), 1, true))
+		}
+	}
+	if payload.RoleName != nil {
+		if utf8.RuneCountInString(*payload.RoleName) > 128 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.role_name`, *payload.RoleName, utf8.RuneCountInString(*payload.RoleName), 128, false))
+		}
 	}
 	return
 }
@@ -3873,21 +4555,28 @@ func (payload *updateRolesPayload) Validate() (err error) {
 // Publicize creates UpdateRolesPayload from updateRolesPayload
 func (payload *updateRolesPayload) Publicize() *UpdateRolesPayload {
 	var pub UpdateRolesPayload
-	if payload.Name != nil {
-		pub.Name = *payload.Name
+	if payload.RoleName != nil {
+		pub.RoleName = *payload.RoleName
 	}
 	return &pub
 }
 
 // UpdateRolesPayload is the roles update action payload.
 type UpdateRolesPayload struct {
-	Name string `form:"name" json:"name" yaml:"name" xml:"name"`
+	// Role Name (Author/Scenarist/Cartoonist)
+	RoleName string `form:"role_name" json:"role_name" yaml:"role_name" xml:"role_name"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *UpdateRolesPayload) Validate() (err error) {
-	if payload.Name == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	if payload.RoleName == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "role_name"))
+	}
+	if utf8.RuneCountInString(payload.RoleName) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.role_name`, payload.RoleName, utf8.RuneCountInString(payload.RoleName), 1, true))
+	}
+	if utf8.RuneCountInString(payload.RoleName) > 128 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.role_name`, payload.RoleName, utf8.RuneCountInString(payload.RoleName), 128, false))
 	}
 	return
 }
@@ -4440,414 +5129,6 @@ func (ctx *AuthTokenContext) InternalServerError() error {
 
 // ServiceUnavailable sends a HTTP response with status code 503.
 func (ctx *AuthTokenContext) ServiceUnavailable() error {
-	ctx.ResponseData.WriteHeader(503)
-	return nil
-}
-
-// CreateUsersContext provides the users create action context.
-type CreateUsersContext struct {
-	context.Context
-	*goa.ResponseData
-	*goa.RequestData
-	Payload *UserCreatePayload
-}
-
-// NewCreateUsersContext parses the incoming request URL and body, performs validations and creates the
-// context used by the users controller create action.
-func NewCreateUsersContext(ctx context.Context, r *http.Request, service *goa.Service) (*CreateUsersContext, error) {
-	var err error
-	resp := goa.ContextResponse(ctx)
-	resp.Service = service
-	req := goa.ContextRequest(ctx)
-	req.Request = r
-	rctx := CreateUsersContext{Context: ctx, ResponseData: resp, RequestData: req}
-	return &rctx, err
-}
-
-// Created sends a HTTP response with status code 201.
-func (ctx *CreateUsersContext) Created() error {
-	ctx.ResponseData.WriteHeader(201)
-	return nil
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *CreateUsersContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
-// UnprocessableEntity sends a HTTP response with status code 422.
-func (ctx *CreateUsersContext) UnprocessableEntity(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 422, r)
-}
-
-// InternalServerError sends a HTTP response with status code 500.
-func (ctx *CreateUsersContext) InternalServerError() error {
-	ctx.ResponseData.WriteHeader(500)
-	return nil
-}
-
-// ServiceUnavailable sends a HTTP response with status code 503.
-func (ctx *CreateUsersContext) ServiceUnavailable() error {
-	ctx.ResponseData.WriteHeader(503)
-	return nil
-}
-
-// DeleteUsersContext provides the users delete action context.
-type DeleteUsersContext struct {
-	context.Context
-	*goa.ResponseData
-	*goa.RequestData
-	UserID int
-}
-
-// NewDeleteUsersContext parses the incoming request URL and body, performs validations and creates the
-// context used by the users controller delete action.
-func NewDeleteUsersContext(ctx context.Context, r *http.Request, service *goa.Service) (*DeleteUsersContext, error) {
-	var err error
-	resp := goa.ContextResponse(ctx)
-	resp.Service = service
-	req := goa.ContextRequest(ctx)
-	req.Request = r
-	rctx := DeleteUsersContext{Context: ctx, ResponseData: resp, RequestData: req}
-	paramUserID := req.Params["user_id"]
-	if len(paramUserID) > 0 {
-		rawUserID := paramUserID[0]
-		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-			rctx.UserID = userID
-		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("user_id", rawUserID, "integer"))
-		}
-		if rctx.UserID < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`user_id`, rctx.UserID, 1, true))
-		}
-	}
-	return &rctx, err
-}
-
-// NoContent sends a HTTP response with status code 204.
-func (ctx *DeleteUsersContext) NoContent() error {
-	ctx.ResponseData.WriteHeader(204)
-	return nil
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *DeleteUsersContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
-// Unauthorized sends a HTTP response with status code 401.
-func (ctx *DeleteUsersContext) Unauthorized() error {
-	ctx.ResponseData.WriteHeader(401)
-	return nil
-}
-
-// NotFound sends a HTTP response with status code 404.
-func (ctx *DeleteUsersContext) NotFound() error {
-	ctx.ResponseData.WriteHeader(404)
-	return nil
-}
-
-// InternalServerError sends a HTTP response with status code 500.
-func (ctx *DeleteUsersContext) InternalServerError() error {
-	ctx.ResponseData.WriteHeader(500)
-	return nil
-}
-
-// ServiceUnavailable sends a HTTP response with status code 503.
-func (ctx *DeleteUsersContext) ServiceUnavailable() error {
-	ctx.ResponseData.WriteHeader(503)
-	return nil
-}
-
-// ListUsersContext provides the users list action context.
-type ListUsersContext struct {
-	context.Context
-	*goa.ResponseData
-	*goa.RequestData
-	Email    *string
-	Nickname *string
-}
-
-// NewListUsersContext parses the incoming request URL and body, performs validations and creates the
-// context used by the users controller list action.
-func NewListUsersContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListUsersContext, error) {
-	var err error
-	resp := goa.ContextResponse(ctx)
-	resp.Service = service
-	req := goa.ContextRequest(ctx)
-	req.Request = r
-	rctx := ListUsersContext{Context: ctx, ResponseData: resp, RequestData: req}
-	paramEmail := req.Params["email"]
-	if len(paramEmail) > 0 {
-		rawEmail := paramEmail[0]
-		rctx.Email = &rawEmail
-		if rctx.Email != nil {
-			if err2 := goa.ValidateFormat(goa.FormatEmail, *rctx.Email); err2 != nil {
-				err = goa.MergeErrors(err, goa.InvalidFormatError(`email`, *rctx.Email, goa.FormatEmail, err2))
-			}
-		}
-	}
-	paramNickname := req.Params["nickname"]
-	if len(paramNickname) > 0 {
-		rawNickname := paramNickname[0]
-		rctx.Nickname = &rawNickname
-		if rctx.Nickname != nil {
-			if utf8.RuneCountInString(*rctx.Nickname) < 1 {
-				err = goa.MergeErrors(err, goa.InvalidLengthError(`nickname`, *rctx.Nickname, utf8.RuneCountInString(*rctx.Nickname), 1, true))
-			}
-		}
-		if rctx.Nickname != nil {
-			if utf8.RuneCountInString(*rctx.Nickname) > 32 {
-				err = goa.MergeErrors(err, goa.InvalidLengthError(`nickname`, *rctx.Nickname, utf8.RuneCountInString(*rctx.Nickname), 32, false))
-			}
-		}
-	}
-	return &rctx, err
-}
-
-// OK sends a HTTP response with status code 200.
-func (ctx *ListUsersContext) OK(r UserCollection) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.user+json; type=collection")
-	}
-	if r == nil {
-		r = UserCollection{}
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// OKTiny sends a HTTP response with status code 200.
-func (ctx *ListUsersContext) OKTiny(r UserTinyCollection) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.user+json; type=collection")
-	}
-	if r == nil {
-		r = UserTinyCollection{}
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// InternalServerError sends a HTTP response with status code 500.
-func (ctx *ListUsersContext) InternalServerError() error {
-	ctx.ResponseData.WriteHeader(500)
-	return nil
-}
-
-// ServiceUnavailable sends a HTTP response with status code 503.
-func (ctx *ListUsersContext) ServiceUnavailable() error {
-	ctx.ResponseData.WriteHeader(503)
-	return nil
-}
-
-// ShowUsersContext provides the users show action context.
-type ShowUsersContext struct {
-	context.Context
-	*goa.ResponseData
-	*goa.RequestData
-	UserID int
-}
-
-// NewShowUsersContext parses the incoming request URL and body, performs validations and creates the
-// context used by the users controller show action.
-func NewShowUsersContext(ctx context.Context, r *http.Request, service *goa.Service) (*ShowUsersContext, error) {
-	var err error
-	resp := goa.ContextResponse(ctx)
-	resp.Service = service
-	req := goa.ContextRequest(ctx)
-	req.Request = r
-	rctx := ShowUsersContext{Context: ctx, ResponseData: resp, RequestData: req}
-	paramUserID := req.Params["user_id"]
-	if len(paramUserID) > 0 {
-		rawUserID := paramUserID[0]
-		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-			rctx.UserID = userID
-		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("user_id", rawUserID, "integer"))
-		}
-		if rctx.UserID < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`user_id`, rctx.UserID, 1, true))
-		}
-	}
-	return &rctx, err
-}
-
-// OK sends a HTTP response with status code 200.
-func (ctx *ShowUsersContext) OK(r *User) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.user+json")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// OKTiny sends a HTTP response with status code 200.
-func (ctx *ShowUsersContext) OKTiny(r *UserTiny) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.user+json")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ShowUsersContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
-// NotFound sends a HTTP response with status code 404.
-func (ctx *ShowUsersContext) NotFound() error {
-	ctx.ResponseData.WriteHeader(404)
-	return nil
-}
-
-// InternalServerError sends a HTTP response with status code 500.
-func (ctx *ShowUsersContext) InternalServerError() error {
-	ctx.ResponseData.WriteHeader(500)
-	return nil
-}
-
-// ServiceUnavailable sends a HTTP response with status code 503.
-func (ctx *ShowUsersContext) ServiceUnavailable() error {
-	ctx.ResponseData.WriteHeader(503)
-	return nil
-}
-
-// UpdateUsersContext provides the users update action context.
-type UpdateUsersContext struct {
-	context.Context
-	*goa.ResponseData
-	*goa.RequestData
-	UserID  int
-	Payload *UpdateUsersPayload
-}
-
-// NewUpdateUsersContext parses the incoming request URL and body, performs validations and creates the
-// context used by the users controller update action.
-func NewUpdateUsersContext(ctx context.Context, r *http.Request, service *goa.Service) (*UpdateUsersContext, error) {
-	var err error
-	resp := goa.ContextResponse(ctx)
-	resp.Service = service
-	req := goa.ContextRequest(ctx)
-	req.Request = r
-	rctx := UpdateUsersContext{Context: ctx, ResponseData: resp, RequestData: req}
-	paramUserID := req.Params["user_id"]
-	if len(paramUserID) > 0 {
-		rawUserID := paramUserID[0]
-		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-			rctx.UserID = userID
-		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("user_id", rawUserID, "integer"))
-		}
-		if rctx.UserID < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`user_id`, rctx.UserID, 1, true))
-		}
-	}
-	return &rctx, err
-}
-
-// updateUsersPayload is the users update action payload.
-type updateUsersPayload struct {
-	// user nickname
-	Nickname *string `form:"nickname,omitempty" json:"nickname,omitempty" yaml:"nickname,omitempty" xml:"nickname,omitempty"`
-}
-
-// Validate runs the validation rules defined in the design.
-func (payload *updateUsersPayload) Validate() (err error) {
-	if payload.Nickname == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "nickname"))
-	}
-	if payload.Nickname != nil {
-		if utf8.RuneCountInString(*payload.Nickname) < 1 {
-			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.nickname`, *payload.Nickname, utf8.RuneCountInString(*payload.Nickname), 1, true))
-		}
-	}
-	if payload.Nickname != nil {
-		if utf8.RuneCountInString(*payload.Nickname) > 32 {
-			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.nickname`, *payload.Nickname, utf8.RuneCountInString(*payload.Nickname), 32, false))
-		}
-	}
-	return
-}
-
-// Publicize creates UpdateUsersPayload from updateUsersPayload
-func (payload *updateUsersPayload) Publicize() *UpdateUsersPayload {
-	var pub UpdateUsersPayload
-	if payload.Nickname != nil {
-		pub.Nickname = *payload.Nickname
-	}
-	return &pub
-}
-
-// UpdateUsersPayload is the users update action payload.
-type UpdateUsersPayload struct {
-	// user nickname
-	Nickname string `form:"nickname" json:"nickname" yaml:"nickname" xml:"nickname"`
-}
-
-// Validate runs the validation rules defined in the design.
-func (payload *UpdateUsersPayload) Validate() (err error) {
-	if payload.Nickname == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "nickname"))
-	}
-	if utf8.RuneCountInString(payload.Nickname) < 1 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.nickname`, payload.Nickname, utf8.RuneCountInString(payload.Nickname), 1, true))
-	}
-	if utf8.RuneCountInString(payload.Nickname) > 32 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.nickname`, payload.Nickname, utf8.RuneCountInString(payload.Nickname), 32, false))
-	}
-	return
-}
-
-// NoContent sends a HTTP response with status code 204.
-func (ctx *UpdateUsersContext) NoContent() error {
-	ctx.ResponseData.WriteHeader(204)
-	return nil
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *UpdateUsersContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
-// Unauthorized sends a HTTP response with status code 401.
-func (ctx *UpdateUsersContext) Unauthorized() error {
-	ctx.ResponseData.WriteHeader(401)
-	return nil
-}
-
-// NotFound sends a HTTP response with status code 404.
-func (ctx *UpdateUsersContext) NotFound() error {
-	ctx.ResponseData.WriteHeader(404)
-	return nil
-}
-
-// UnprocessableEntity sends a HTTP response with status code 422.
-func (ctx *UpdateUsersContext) UnprocessableEntity() error {
-	ctx.ResponseData.WriteHeader(422)
-	return nil
-}
-
-// InternalServerError sends a HTTP response with status code 500.
-func (ctx *UpdateUsersContext) InternalServerError() error {
-	ctx.ResponseData.WriteHeader(500)
-	return nil
-}
-
-// ServiceUnavailable sends a HTTP response with status code 503.
-func (ctx *UpdateUsersContext) ServiceUnavailable() error {
 	ctx.ResponseData.WriteHeader(503)
 	return nil
 }

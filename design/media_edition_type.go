@@ -71,8 +71,8 @@ var _ = Resource("edition_types", func() {
 		Description("Create new edition type")
 		Routing(POST(""))
 		Payload(func() {
-			Member("name")
-			Required("name")
+			attrEditionTypeName()
+			Required("edition_type_name")
 		})
 		Security(JWTAuth)
 		// unauthorized
@@ -92,8 +92,8 @@ var _ = Resource("edition_types", func() {
 		Routing(PUT(editionTypeIDPath))
 		Params(attrEditionTypeID)
 		Payload(func() {
-			Member("name")
-			Required("name")
+			attrEditionTypeName()
+			Required("edition_type_name")
 		})
 		Security(JWTAuth)
 		// Unauthorized

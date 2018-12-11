@@ -31,7 +31,7 @@ func (c *CategoriesController) Create(ctx *app.CreateCategoriesContext) error {
 	}
 	defer func() { m.Close() }()
 
-	b, err := m.InsertCategory(ctx.Payload.Name)
+	b, err := m.InsertCategory(ctx.Payload.CategoryName)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to insert category`, `error`, err.Error())
 		if err == model.ErrDuplicateKey {
@@ -125,7 +125,7 @@ func (c *CategoriesController) Update(ctx *app.UpdateCategoriesContext) error {
 	}
 	defer func() { m.Close() }()
 
-	err = m.UpdateCategory(ctx.CategoryID, ctx.Payload.Name)
+	err = m.UpdateCategory(ctx.CategoryID, ctx.Payload.CategoryName)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to update category`, `error`, err.Error())
 		if err == model.ErrNotFound {

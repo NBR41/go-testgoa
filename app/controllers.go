@@ -633,8 +633,8 @@ type CollectionsController interface {
 func MountCollectionsController(service *goa.Service, ctrl CollectionsController) {
 	initService(service)
 	var h goa.Handler
-	service.Mux.Handle("OPTIONS", "/collections", ctrl.MuxHandler("preflight", handleCollectionsOrigin(cors.HandlePreflight()), nil))
-	service.Mux.Handle("OPTIONS", "/collections/:collection_id", ctrl.MuxHandler("preflight", handleCollectionsOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/editors/:editor_id/collections", ctrl.MuxHandler("preflight", handleCollectionsOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/editors/:editor_id/collections/:collection_id", ctrl.MuxHandler("preflight", handleCollectionsOrigin(cors.HandlePreflight()), nil))
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -656,8 +656,8 @@ func MountCollectionsController(service *goa.Service, ctrl CollectionsController
 	}
 	h = handleSecurity("JWTSec", h)
 	h = handleCollectionsOrigin(h)
-	service.Mux.Handle("POST", "/collections", ctrl.MuxHandler("create", h, unmarshalCreateCollectionsPayload))
-	service.LogInfo("mount", "ctrl", "Collections", "action", "Create", "route", "POST /collections", "security", "JWTSec")
+	service.Mux.Handle("POST", "/editors/:editor_id/collections", ctrl.MuxHandler("create", h, unmarshalCreateCollectionsPayload))
+	service.LogInfo("mount", "ctrl", "Collections", "action", "Create", "route", "POST /editors/:editor_id/collections", "security", "JWTSec")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -673,8 +673,8 @@ func MountCollectionsController(service *goa.Service, ctrl CollectionsController
 	}
 	h = handleSecurity("JWTSec", h)
 	h = handleCollectionsOrigin(h)
-	service.Mux.Handle("DELETE", "/collections/:collection_id", ctrl.MuxHandler("delete", h, nil))
-	service.LogInfo("mount", "ctrl", "Collections", "action", "Delete", "route", "DELETE /collections/:collection_id", "security", "JWTSec")
+	service.Mux.Handle("DELETE", "/editors/:editor_id/collections/:collection_id", ctrl.MuxHandler("delete", h, nil))
+	service.LogInfo("mount", "ctrl", "Collections", "action", "Delete", "route", "DELETE /editors/:editor_id/collections/:collection_id", "security", "JWTSec")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -689,8 +689,8 @@ func MountCollectionsController(service *goa.Service, ctrl CollectionsController
 		return ctrl.List(rctx)
 	}
 	h = handleCollectionsOrigin(h)
-	service.Mux.Handle("GET", "/collections", ctrl.MuxHandler("list", h, nil))
-	service.LogInfo("mount", "ctrl", "Collections", "action", "List", "route", "GET /collections")
+	service.Mux.Handle("GET", "/editors/:editor_id/collections", ctrl.MuxHandler("list", h, nil))
+	service.LogInfo("mount", "ctrl", "Collections", "action", "List", "route", "GET /editors/:editor_id/collections")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -705,8 +705,8 @@ func MountCollectionsController(service *goa.Service, ctrl CollectionsController
 		return ctrl.Show(rctx)
 	}
 	h = handleCollectionsOrigin(h)
-	service.Mux.Handle("GET", "/collections/:collection_id", ctrl.MuxHandler("show", h, nil))
-	service.LogInfo("mount", "ctrl", "Collections", "action", "Show", "route", "GET /collections/:collection_id")
+	service.Mux.Handle("GET", "/editors/:editor_id/collections/:collection_id", ctrl.MuxHandler("show", h, nil))
+	service.LogInfo("mount", "ctrl", "Collections", "action", "Show", "route", "GET /editors/:editor_id/collections/:collection_id")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -728,8 +728,8 @@ func MountCollectionsController(service *goa.Service, ctrl CollectionsController
 	}
 	h = handleSecurity("JWTSec", h)
 	h = handleCollectionsOrigin(h)
-	service.Mux.Handle("PUT", "/collections/:collection_id", ctrl.MuxHandler("update", h, unmarshalUpdateCollectionsPayload))
-	service.LogInfo("mount", "ctrl", "Collections", "action", "Update", "route", "PUT /collections/:collection_id", "security", "JWTSec")
+	service.Mux.Handle("PUT", "/editors/:editor_id/collections/:collection_id", ctrl.MuxHandler("update", h, unmarshalUpdateCollectionsPayload))
+	service.LogInfo("mount", "ctrl", "Collections", "action", "Update", "route", "PUT /editors/:editor_id/collections/:collection_id", "security", "JWTSec")
 }
 
 // handleCollectionsOrigin applies the CORS response headers corresponding to the origin.
@@ -1353,179 +1353,6 @@ func handleHealthOrigin(h goa.Handler) goa.Handler {
 
 		return h(ctx, rw, req)
 	}
-}
-
-// OwnershipsController is the controller interface for the Ownerships actions.
-type OwnershipsController interface {
-	goa.Muxer
-	Add(*AddOwnershipsContext) error
-	Create(*CreateOwnershipsContext) error
-	Delete(*DeleteOwnershipsContext) error
-	List(*ListOwnershipsContext) error
-	Show(*ShowOwnershipsContext) error
-}
-
-// MountOwnershipsController "mounts" a Ownerships resource controller on the given service.
-func MountOwnershipsController(service *goa.Service, ctrl OwnershipsController) {
-	initService(service)
-	var h goa.Handler
-	service.Mux.Handle("OPTIONS", "/users/:user_id/ownerships/isbn", ctrl.MuxHandler("preflight", handleOwnershipsOrigin(cors.HandlePreflight()), nil))
-	service.Mux.Handle("OPTIONS", "/users/:user_id/ownerships", ctrl.MuxHandler("preflight", handleOwnershipsOrigin(cors.HandlePreflight()), nil))
-	service.Mux.Handle("OPTIONS", "/users/:user_id/ownerships/:book_id", ctrl.MuxHandler("preflight", handleOwnershipsOrigin(cors.HandlePreflight()), nil))
-
-	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
-		// Check if there was an error loading the request
-		if err := goa.ContextError(ctx); err != nil {
-			return err
-		}
-		// Build the context
-		rctx, err := NewAddOwnershipsContext(ctx, req, service)
-		if err != nil {
-			return err
-		}
-		// Build the payload
-		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
-			rctx.Payload = rawPayload.(*AddOwnershipsPayload)
-		} else {
-			return goa.MissingPayloadError()
-		}
-		return ctrl.Add(rctx)
-	}
-	h = handleSecurity("JWTSec", h)
-	h = handleOwnershipsOrigin(h)
-	service.Mux.Handle("POST", "/users/:user_id/ownerships/isbn", ctrl.MuxHandler("add", h, unmarshalAddOwnershipsPayload))
-	service.LogInfo("mount", "ctrl", "Ownerships", "action", "Add", "route", "POST /users/:user_id/ownerships/isbn", "security", "JWTSec")
-
-	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
-		// Check if there was an error loading the request
-		if err := goa.ContextError(ctx); err != nil {
-			return err
-		}
-		// Build the context
-		rctx, err := NewCreateOwnershipsContext(ctx, req, service)
-		if err != nil {
-			return err
-		}
-		// Build the payload
-		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
-			rctx.Payload = rawPayload.(*CreateOwnershipsPayload)
-		} else {
-			return goa.MissingPayloadError()
-		}
-		return ctrl.Create(rctx)
-	}
-	h = handleSecurity("JWTSec", h)
-	h = handleOwnershipsOrigin(h)
-	service.Mux.Handle("POST", "/users/:user_id/ownerships", ctrl.MuxHandler("create", h, unmarshalCreateOwnershipsPayload))
-	service.LogInfo("mount", "ctrl", "Ownerships", "action", "Create", "route", "POST /users/:user_id/ownerships", "security", "JWTSec")
-
-	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
-		// Check if there was an error loading the request
-		if err := goa.ContextError(ctx); err != nil {
-			return err
-		}
-		// Build the context
-		rctx, err := NewDeleteOwnershipsContext(ctx, req, service)
-		if err != nil {
-			return err
-		}
-		return ctrl.Delete(rctx)
-	}
-	h = handleSecurity("JWTSec", h)
-	h = handleOwnershipsOrigin(h)
-	service.Mux.Handle("DELETE", "/users/:user_id/ownerships/:book_id", ctrl.MuxHandler("delete", h, nil))
-	service.LogInfo("mount", "ctrl", "Ownerships", "action", "Delete", "route", "DELETE /users/:user_id/ownerships/:book_id", "security", "JWTSec")
-
-	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
-		// Check if there was an error loading the request
-		if err := goa.ContextError(ctx); err != nil {
-			return err
-		}
-		// Build the context
-		rctx, err := NewListOwnershipsContext(ctx, req, service)
-		if err != nil {
-			return err
-		}
-		return ctrl.List(rctx)
-	}
-	h = handleSecurity("JWTSec", h)
-	h = handleOwnershipsOrigin(h)
-	service.Mux.Handle("GET", "/users/:user_id/ownerships", ctrl.MuxHandler("list", h, nil))
-	service.LogInfo("mount", "ctrl", "Ownerships", "action", "List", "route", "GET /users/:user_id/ownerships", "security", "JWTSec")
-
-	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
-		// Check if there was an error loading the request
-		if err := goa.ContextError(ctx); err != nil {
-			return err
-		}
-		// Build the context
-		rctx, err := NewShowOwnershipsContext(ctx, req, service)
-		if err != nil {
-			return err
-		}
-		return ctrl.Show(rctx)
-	}
-	h = handleSecurity("JWTSec", h)
-	h = handleOwnershipsOrigin(h)
-	service.Mux.Handle("GET", "/users/:user_id/ownerships/:book_id", ctrl.MuxHandler("show", h, nil))
-	service.LogInfo("mount", "ctrl", "Ownerships", "action", "Show", "route", "GET /users/:user_id/ownerships/:book_id", "security", "JWTSec")
-}
-
-// handleOwnershipsOrigin applies the CORS response headers corresponding to the origin.
-func handleOwnershipsOrigin(h goa.Handler) goa.Handler {
-
-	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
-		origin := req.Header.Get("Origin")
-		if origin == "" {
-			// Not a CORS request
-			return h(ctx, rw, req)
-		}
-		if cors.MatchOrigin(origin, "http://localhost:4200") {
-			ctx = goa.WithLogContext(ctx, "origin", origin)
-			rw.Header().Set("Access-Control-Allow-Origin", origin)
-			rw.Header().Set("Vary", "Origin")
-			rw.Header().Set("Access-Control-Max-Age", "600")
-			rw.Header().Set("Access-Control-Allow-Credentials", "true")
-			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
-				// We are handling a preflight request
-				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
-				rw.Header().Set("Access-Control-Allow-Headers", "Authorization, Origin, Content-Type, Accept")
-			}
-			return h(ctx, rw, req)
-		}
-
-		return h(ctx, rw, req)
-	}
-}
-
-// unmarshalAddOwnershipsPayload unmarshals the request body into the context request data Payload field.
-func unmarshalAddOwnershipsPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
-	payload := &addOwnershipsPayload{}
-	if err := service.DecodeRequest(req, payload); err != nil {
-		return err
-	}
-	if err := payload.Validate(); err != nil {
-		// Initialize payload with private data structure so it can be logged
-		goa.ContextRequest(ctx).Payload = payload
-		return err
-	}
-	goa.ContextRequest(ctx).Payload = payload.Publicize()
-	return nil
-}
-
-// unmarshalCreateOwnershipsPayload unmarshals the request body into the context request data Payload field.
-func unmarshalCreateOwnershipsPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
-	payload := &createOwnershipsPayload{}
-	if err := service.DecodeRequest(req, payload); err != nil {
-		return err
-	}
-	if err := payload.Validate(); err != nil {
-		// Initialize payload with private data structure so it can be logged
-		goa.ContextRequest(ctx).Payload = payload
-		return err
-	}
-	goa.ContextRequest(ctx).Payload = payload.Publicize()
-	return nil
 }
 
 // PasswordController is the controller interface for the Password actions.
@@ -2250,6 +2077,179 @@ func unmarshalCreateUsersPayload(ctx context.Context, service *goa.Service, req 
 // unmarshalUpdateUsersPayload unmarshals the request body into the context request data Payload field.
 func unmarshalUpdateUsersPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
 	payload := &updateUsersPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
+// OwnershipsController is the controller interface for the Ownerships actions.
+type OwnershipsController interface {
+	goa.Muxer
+	Add(*AddOwnershipsContext) error
+	Create(*CreateOwnershipsContext) error
+	Delete(*DeleteOwnershipsContext) error
+	List(*ListOwnershipsContext) error
+	Show(*ShowOwnershipsContext) error
+}
+
+// MountOwnershipsController "mounts" a Ownerships resource controller on the given service.
+func MountOwnershipsController(service *goa.Service, ctrl OwnershipsController) {
+	initService(service)
+	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/users/:user_id/ownerships/isbn", ctrl.MuxHandler("preflight", handleOwnershipsOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/users/:user_id/ownerships", ctrl.MuxHandler("preflight", handleOwnershipsOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/users/:user_id/ownerships/:book_id", ctrl.MuxHandler("preflight", handleOwnershipsOrigin(cors.HandlePreflight()), nil))
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewAddOwnershipsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*AddOwnershipsPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Add(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleOwnershipsOrigin(h)
+	service.Mux.Handle("POST", "/users/:user_id/ownerships/isbn", ctrl.MuxHandler("add", h, unmarshalAddOwnershipsPayload))
+	service.LogInfo("mount", "ctrl", "Ownerships", "action", "Add", "route", "POST /users/:user_id/ownerships/isbn", "security", "JWTSec")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewCreateOwnershipsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*CreateOwnershipsPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Create(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleOwnershipsOrigin(h)
+	service.Mux.Handle("POST", "/users/:user_id/ownerships", ctrl.MuxHandler("create", h, unmarshalCreateOwnershipsPayload))
+	service.LogInfo("mount", "ctrl", "Ownerships", "action", "Create", "route", "POST /users/:user_id/ownerships", "security", "JWTSec")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewDeleteOwnershipsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Delete(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleOwnershipsOrigin(h)
+	service.Mux.Handle("DELETE", "/users/:user_id/ownerships/:book_id", ctrl.MuxHandler("delete", h, nil))
+	service.LogInfo("mount", "ctrl", "Ownerships", "action", "Delete", "route", "DELETE /users/:user_id/ownerships/:book_id", "security", "JWTSec")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewListOwnershipsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.List(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleOwnershipsOrigin(h)
+	service.Mux.Handle("GET", "/users/:user_id/ownerships", ctrl.MuxHandler("list", h, nil))
+	service.LogInfo("mount", "ctrl", "Ownerships", "action", "List", "route", "GET /users/:user_id/ownerships", "security", "JWTSec")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewShowOwnershipsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Show(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleOwnershipsOrigin(h)
+	service.Mux.Handle("GET", "/users/:user_id/ownerships/:book_id", ctrl.MuxHandler("show", h, nil))
+	service.LogInfo("mount", "ctrl", "Ownerships", "action", "Show", "route", "GET /users/:user_id/ownerships/:book_id", "security", "JWTSec")
+}
+
+// handleOwnershipsOrigin applies the CORS response headers corresponding to the origin.
+func handleOwnershipsOrigin(h goa.Handler) goa.Handler {
+
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "http://localhost:4200") {
+			ctx = goa.WithLogContext(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Vary", "Origin")
+			rw.Header().Set("Access-Control-Max-Age", "600")
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+				rw.Header().Set("Access-Control-Allow-Headers", "Authorization, Origin, Content-Type, Accept")
+			}
+			return h(ctx, rw, req)
+		}
+
+		return h(ctx, rw, req)
+	}
+}
+
+// unmarshalAddOwnershipsPayload unmarshals the request body into the context request data Payload field.
+func unmarshalAddOwnershipsPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &addOwnershipsPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
+// unmarshalCreateOwnershipsPayload unmarshals the request body into the context request data Payload field.
+func unmarshalCreateOwnershipsPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &createOwnershipsPayload{}
 	if err := service.DecodeRequest(req, payload); err != nil {
 		return err
 	}

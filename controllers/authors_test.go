@@ -34,7 +34,7 @@ func TestAuthorsCreate(t *testing.T) {
 	ctrl := NewAuthorsController(service, Fmodeler(func() (Modeler, error) {
 		return nil, errors.New("model error")
 	}))
-	test.CreateAuthorsServiceUnavailable(t, ctx, service, ctrl, &app.CreateAuthorsPayload{Name: "foo"})
+	test.CreateAuthorsServiceUnavailable(t, ctx, service, ctrl, &app.CreateAuthorsPayload{AuthorName: "foo"})
 	exp := "[EROR] unable to get model error=model error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
@@ -45,21 +45,21 @@ func TestAuthorsCreate(t *testing.T) {
 	}))
 
 	logbuf.Reset()
-	test.CreateAuthorsInternalServerError(t, ctx, service, ctrl, &app.CreateAuthorsPayload{Name: "foo"})
+	test.CreateAuthorsInternalServerError(t, ctx, service, ctrl, &app.CreateAuthorsPayload{AuthorName: "foo"})
 	exp = "[EROR] failed to insert author error=insert error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	test.CreateAuthorsUnprocessableEntity(t, ctx, service, ctrl, &app.CreateAuthorsPayload{Name: "foo"})
+	test.CreateAuthorsUnprocessableEntity(t, ctx, service, ctrl, &app.CreateAuthorsPayload{AuthorName: "foo"})
 	exp = "[EROR] failed to insert author error=duplicate key\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	rw := test.CreateAuthorsCreated(t, ctx, service, ctrl, &app.CreateAuthorsPayload{Name: "foo"})
+	rw := test.CreateAuthorsCreated(t, ctx, service, ctrl, &app.CreateAuthorsPayload{AuthorName: "foo"})
 	exp = app.AuthorsHref(123)
 	v := rw.Header().Get("Location")
 	if exp != v {
@@ -232,7 +232,7 @@ func TestAuthorUpdate(t *testing.T) {
 	ctrl := NewAuthorsController(service, Fmodeler(func() (Modeler, error) {
 		return nil, errors.New("model error")
 	}))
-	test.UpdateAuthorsServiceUnavailable(t, ctx, service, ctrl, 123, &app.UpdateAuthorsPayload{Name: "foo"})
+	test.UpdateAuthorsServiceUnavailable(t, ctx, service, ctrl, 123, &app.UpdateAuthorsPayload{AuthorName: "foo"})
 	exp := "[EROR] unable to get model error=model error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
@@ -243,21 +243,21 @@ func TestAuthorUpdate(t *testing.T) {
 	}))
 
 	logbuf.Reset()
-	test.UpdateAuthorsInternalServerError(t, ctx, service, ctrl, 123, &app.UpdateAuthorsPayload{Name: "foo"})
+	test.UpdateAuthorsInternalServerError(t, ctx, service, ctrl, 123, &app.UpdateAuthorsPayload{AuthorName: "foo"})
 	exp = "[EROR] failed to update author error=update error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	test.UpdateAuthorsNotFound(t, ctx, service, ctrl, 123, &app.UpdateAuthorsPayload{Name: "foo"})
+	test.UpdateAuthorsNotFound(t, ctx, service, ctrl, 123, &app.UpdateAuthorsPayload{AuthorName: "foo"})
 	exp = "[EROR] failed to update author error=not found\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	test.UpdateAuthorsNoContent(t, ctx, service, ctrl, 123, &app.UpdateAuthorsPayload{Name: "foo"})
+	test.UpdateAuthorsNoContent(t, ctx, service, ctrl, 123, &app.UpdateAuthorsPayload{AuthorName: "foo"})
 	exp = ""
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())

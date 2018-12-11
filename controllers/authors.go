@@ -33,7 +33,7 @@ func (c *AuthorsController) Create(ctx *app.CreateAuthorsContext) error {
 	}
 	defer func() { m.Close() }()
 
-	b, err := m.InsertAuthor(ctx.Payload.Name)
+	b, err := m.InsertAuthor(ctx.Payload.AuthorName)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to insert author`, `error`, err.Error())
 		if err == model.ErrDuplicateKey {
@@ -127,7 +127,7 @@ func (c *AuthorsController) Update(ctx *app.UpdateAuthorsContext) error {
 	}
 	defer func() { m.Close() }()
 
-	err = m.UpdateAuthor(ctx.AuthorID, ctx.Payload.Name)
+	err = m.UpdateAuthor(ctx.AuthorID, ctx.Payload.AuthorName)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to update author`, `error`, err.Error())
 		if err == model.ErrNotFound {

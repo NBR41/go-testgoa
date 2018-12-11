@@ -31,7 +31,7 @@ func (c *RolesController) Create(ctx *app.CreateRolesContext) error {
 	}
 	defer func() { m.Close() }()
 
-	b, err := m.InsertRole(ctx.Payload.Name)
+	b, err := m.InsertRole(ctx.Payload.RoleName)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to insert role`, `error`, err.Error())
 		if err == model.ErrDuplicateKey {
@@ -125,7 +125,7 @@ func (c *RolesController) Update(ctx *app.UpdateRolesContext) error {
 	}
 	defer func() { m.Close() }()
 
-	err = m.UpdateRole(ctx.RoleID, ctx.Payload.Name)
+	err = m.UpdateRole(ctx.RoleID, ctx.Payload.RoleName)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to update role`, `error`, err.Error())
 		if err == model.ErrNotFound {

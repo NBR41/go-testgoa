@@ -69,8 +69,8 @@ var _ = Resource("editors", func() {
 		Description("Create new editor")
 		Routing(POST(""))
 		Payload(func() {
-			Member("name")
-			Required("name")
+			attrEditorName()
+			Required("editor_name")
 		})
 		Security(JWTAuth)
 		// unauthorized
@@ -90,8 +90,8 @@ var _ = Resource("editors", func() {
 		Routing(PUT(editorIDPath))
 		Params(attrEditorID)
 		Payload(func() {
-			Member("name")
-			Required("name")
+			attrEditorName()
+			Required("editor_name")
 		})
 		Security(JWTAuth)
 		// Unauthorized

@@ -34,7 +34,7 @@ func TestCategoriesCreate(t *testing.T) {
 	ctrl := NewCategoriesController(service, Fmodeler(func() (Modeler, error) {
 		return nil, errors.New("model error")
 	}))
-	test.CreateCategoriesServiceUnavailable(t, ctx, service, ctrl, &app.CreateCategoriesPayload{Name: "foo"})
+	test.CreateCategoriesServiceUnavailable(t, ctx, service, ctrl, &app.CreateCategoriesPayload{CategoryName: "foo"})
 	exp := "[EROR] unable to get model error=model error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
@@ -45,21 +45,21 @@ func TestCategoriesCreate(t *testing.T) {
 	}))
 
 	logbuf.Reset()
-	test.CreateCategoriesInternalServerError(t, ctx, service, ctrl, &app.CreateCategoriesPayload{Name: "foo"})
+	test.CreateCategoriesInternalServerError(t, ctx, service, ctrl, &app.CreateCategoriesPayload{CategoryName: "foo"})
 	exp = "[EROR] failed to insert category error=insert error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	test.CreateCategoriesUnprocessableEntity(t, ctx, service, ctrl, &app.CreateCategoriesPayload{Name: "foo"})
+	test.CreateCategoriesUnprocessableEntity(t, ctx, service, ctrl, &app.CreateCategoriesPayload{CategoryName: "foo"})
 	exp = "[EROR] failed to insert category error=duplicate key\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	rw := test.CreateCategoriesCreated(t, ctx, service, ctrl, &app.CreateCategoriesPayload{Name: "foo"})
+	rw := test.CreateCategoriesCreated(t, ctx, service, ctrl, &app.CreateCategoriesPayload{CategoryName: "foo"})
 	exp = app.CategoriesHref(123)
 	v := rw.Header().Get("Location")
 	if exp != v {
@@ -232,7 +232,7 @@ func TestCategoryUpdate(t *testing.T) {
 	ctrl := NewCategoriesController(service, Fmodeler(func() (Modeler, error) {
 		return nil, errors.New("model error")
 	}))
-	test.UpdateCategoriesServiceUnavailable(t, ctx, service, ctrl, 123, &app.UpdateCategoriesPayload{Name: "foo"})
+	test.UpdateCategoriesServiceUnavailable(t, ctx, service, ctrl, 123, &app.UpdateCategoriesPayload{CategoryName: "foo"})
 	exp := "[EROR] unable to get model error=model error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
@@ -243,21 +243,21 @@ func TestCategoryUpdate(t *testing.T) {
 	}))
 
 	logbuf.Reset()
-	test.UpdateCategoriesInternalServerError(t, ctx, service, ctrl, 123, &app.UpdateCategoriesPayload{Name: "foo"})
+	test.UpdateCategoriesInternalServerError(t, ctx, service, ctrl, 123, &app.UpdateCategoriesPayload{CategoryName: "foo"})
 	exp = "[EROR] failed to update category error=update error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	test.UpdateCategoriesNotFound(t, ctx, service, ctrl, 123, &app.UpdateCategoriesPayload{Name: "foo"})
+	test.UpdateCategoriesNotFound(t, ctx, service, ctrl, 123, &app.UpdateCategoriesPayload{CategoryName: "foo"})
 	exp = "[EROR] failed to update category error=not found\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	test.UpdateCategoriesNoContent(t, ctx, service, ctrl, 123, &app.UpdateCategoriesPayload{Name: "foo"})
+	test.UpdateCategoriesNoContent(t, ctx, service, ctrl, 123, &app.UpdateCategoriesPayload{CategoryName: "foo"})
 	exp = ""
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())

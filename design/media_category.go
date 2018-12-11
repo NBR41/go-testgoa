@@ -71,8 +71,8 @@ var _ = Resource("categories", func() {
 		Description("Create new category")
 		Routing(POST(""))
 		Payload(func() {
-			Member("name")
-			Required("name")
+			attrCategoryName()
+			Required("category_name")
 		})
 		Security(JWTAuth)
 		// unauthorized
@@ -92,8 +92,8 @@ var _ = Resource("categories", func() {
 		Routing(PUT(categoryIDPath))
 		Params(attrCategoryID)
 		Payload(func() {
-			Member("name")
-			Required("name")
+			attrCategoryName()
+			Required("category_name")
 		})
 		Security(JWTAuth)
 		// Unauthorized

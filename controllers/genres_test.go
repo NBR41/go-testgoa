@@ -34,7 +34,7 @@ func TestGenresCreate(t *testing.T) {
 	ctrl := NewGenresController(service, Fmodeler(func() (Modeler, error) {
 		return nil, errors.New("model error")
 	}))
-	test.CreateGenresServiceUnavailable(t, ctx, service, ctrl, &app.CreateGenresPayload{Name: "foo"})
+	test.CreateGenresServiceUnavailable(t, ctx, service, ctrl, &app.CreateGenresPayload{GenreName: "foo"})
 	exp := "[EROR] unable to get model error=model error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
@@ -45,21 +45,21 @@ func TestGenresCreate(t *testing.T) {
 	}))
 
 	logbuf.Reset()
-	test.CreateGenresInternalServerError(t, ctx, service, ctrl, &app.CreateGenresPayload{Name: "foo"})
+	test.CreateGenresInternalServerError(t, ctx, service, ctrl, &app.CreateGenresPayload{GenreName: "foo"})
 	exp = "[EROR] failed to insert genre error=insert error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	test.CreateGenresUnprocessableEntity(t, ctx, service, ctrl, &app.CreateGenresPayload{Name: "foo"})
+	test.CreateGenresUnprocessableEntity(t, ctx, service, ctrl, &app.CreateGenresPayload{GenreName: "foo"})
 	exp = "[EROR] failed to insert genre error=duplicate key\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	rw := test.CreateGenresCreated(t, ctx, service, ctrl, &app.CreateGenresPayload{Name: "foo"})
+	rw := test.CreateGenresCreated(t, ctx, service, ctrl, &app.CreateGenresPayload{GenreName: "foo"})
 	exp = app.GenresHref(123)
 	v := rw.Header().Get("Location")
 	if exp != v {
@@ -232,7 +232,7 @@ func TestGenreUpdate(t *testing.T) {
 	ctrl := NewGenresController(service, Fmodeler(func() (Modeler, error) {
 		return nil, errors.New("model error")
 	}))
-	test.UpdateGenresServiceUnavailable(t, ctx, service, ctrl, 123, &app.UpdateGenresPayload{Name: "foo"})
+	test.UpdateGenresServiceUnavailable(t, ctx, service, ctrl, 123, &app.UpdateGenresPayload{GenreName: "foo"})
 	exp := "[EROR] unable to get model error=model error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
@@ -243,21 +243,21 @@ func TestGenreUpdate(t *testing.T) {
 	}))
 
 	logbuf.Reset()
-	test.UpdateGenresInternalServerError(t, ctx, service, ctrl, 123, &app.UpdateGenresPayload{Name: "foo"})
+	test.UpdateGenresInternalServerError(t, ctx, service, ctrl, 123, &app.UpdateGenresPayload{GenreName: "foo"})
 	exp = "[EROR] failed to update genre error=update error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	test.UpdateGenresNotFound(t, ctx, service, ctrl, 123, &app.UpdateGenresPayload{Name: "foo"})
+	test.UpdateGenresNotFound(t, ctx, service, ctrl, 123, &app.UpdateGenresPayload{GenreName: "foo"})
 	exp = "[EROR] failed to update genre error=not found\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	test.UpdateGenresNoContent(t, ctx, service, ctrl, 123, &app.UpdateGenresPayload{Name: "foo"})
+	test.UpdateGenresNoContent(t, ctx, service, ctrl, 123, &app.UpdateGenresPayload{GenreName: "foo"})
 	exp = ""
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())

@@ -31,7 +31,7 @@ func (c *EditionTypesController) Create(ctx *app.CreateEditionTypesContext) erro
 	}
 	defer func() { m.Close() }()
 
-	b, err := m.InsertEditionType(ctx.Payload.Name)
+	b, err := m.InsertEditionType(ctx.Payload.EditionTypeName)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to insert edition type`, `error`, err.Error())
 		if err == model.ErrDuplicateKey {
@@ -125,7 +125,7 @@ func (c *EditionTypesController) Update(ctx *app.UpdateEditionTypesContext) erro
 	}
 	defer func() { m.Close() }()
 
-	err = m.UpdateEditionType(ctx.EditionTypeID, ctx.Payload.Name)
+	err = m.UpdateEditionType(ctx.EditionTypeID, ctx.Payload.EditionTypeName)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to update edition type`, `error`, err.Error())
 		if err == model.ErrNotFound {

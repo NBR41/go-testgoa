@@ -69,8 +69,8 @@ var _ = Resource("roles", func() {
 		Description("Create new role")
 		Routing(POST(""))
 		Payload(func() {
-			Member("name")
-			Required("name")
+			attrRoleName()
+			Required("role_name")
 		})
 		Security(JWTAuth)
 		// unauthorized
@@ -90,8 +90,8 @@ var _ = Resource("roles", func() {
 		Routing(PUT(roleIDPath))
 		Params(attrRoleID)
 		Payload(func() {
-			Member("name")
-			Required("name")
+			attrRoleName()
+			Required("role_name")
 		})
 		Security(JWTAuth)
 		// Unauthorized

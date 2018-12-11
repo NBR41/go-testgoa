@@ -34,7 +34,7 @@ func TestRolesCreate(t *testing.T) {
 	ctrl := NewRolesController(service, Fmodeler(func() (Modeler, error) {
 		return nil, errors.New("model error")
 	}))
-	test.CreateRolesServiceUnavailable(t, ctx, service, ctrl, &app.CreateRolesPayload{Name: "foo"})
+	test.CreateRolesServiceUnavailable(t, ctx, service, ctrl, &app.CreateRolesPayload{RoleName: "foo"})
 	exp := "[EROR] unable to get model error=model error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
@@ -45,21 +45,21 @@ func TestRolesCreate(t *testing.T) {
 	}))
 
 	logbuf.Reset()
-	test.CreateRolesInternalServerError(t, ctx, service, ctrl, &app.CreateRolesPayload{Name: "foo"})
+	test.CreateRolesInternalServerError(t, ctx, service, ctrl, &app.CreateRolesPayload{RoleName: "foo"})
 	exp = "[EROR] failed to insert role error=insert error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	test.CreateRolesUnprocessableEntity(t, ctx, service, ctrl, &app.CreateRolesPayload{Name: "foo"})
+	test.CreateRolesUnprocessableEntity(t, ctx, service, ctrl, &app.CreateRolesPayload{RoleName: "foo"})
 	exp = "[EROR] failed to insert role error=duplicate key\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	rw := test.CreateRolesCreated(t, ctx, service, ctrl, &app.CreateRolesPayload{Name: "foo"})
+	rw := test.CreateRolesCreated(t, ctx, service, ctrl, &app.CreateRolesPayload{RoleName: "foo"})
 	exp = app.RolesHref(123)
 	v := rw.Header().Get("Location")
 	if exp != v {
@@ -232,7 +232,7 @@ func TestRoleUpdate(t *testing.T) {
 	ctrl := NewRolesController(service, Fmodeler(func() (Modeler, error) {
 		return nil, errors.New("model error")
 	}))
-	test.UpdateRolesServiceUnavailable(t, ctx, service, ctrl, 123, &app.UpdateRolesPayload{Name: "foo"})
+	test.UpdateRolesServiceUnavailable(t, ctx, service, ctrl, 123, &app.UpdateRolesPayload{RoleName: "foo"})
 	exp := "[EROR] unable to get model error=model error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
@@ -243,21 +243,21 @@ func TestRoleUpdate(t *testing.T) {
 	}))
 
 	logbuf.Reset()
-	test.UpdateRolesInternalServerError(t, ctx, service, ctrl, 123, &app.UpdateRolesPayload{Name: "foo"})
+	test.UpdateRolesInternalServerError(t, ctx, service, ctrl, 123, &app.UpdateRolesPayload{RoleName: "foo"})
 	exp = "[EROR] failed to update role error=update error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	test.UpdateRolesNotFound(t, ctx, service, ctrl, 123, &app.UpdateRolesPayload{Name: "foo"})
+	test.UpdateRolesNotFound(t, ctx, service, ctrl, 123, &app.UpdateRolesPayload{RoleName: "foo"})
 	exp = "[EROR] failed to update role error=not found\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	test.UpdateRolesNoContent(t, ctx, service, ctrl, 123, &app.UpdateRolesPayload{Name: "foo"})
+	test.UpdateRolesNoContent(t, ctx, service, ctrl, 123, &app.UpdateRolesPayload{RoleName: "foo"})
 	exp = ""
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())

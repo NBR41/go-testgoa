@@ -31,7 +31,7 @@ func (c *GenresController) Create(ctx *app.CreateGenresContext) error {
 	}
 	defer func() { m.Close() }()
 
-	b, err := m.InsertGenre(ctx.Payload.Name)
+	b, err := m.InsertGenre(ctx.Payload.GenreName)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to insert genre`, `error`, err.Error())
 		if err == model.ErrDuplicateKey {
@@ -125,7 +125,7 @@ func (c *GenresController) Update(ctx *app.UpdateGenresContext) error {
 	}
 	defer func() { m.Close() }()
 
-	err = m.UpdateGenre(ctx.GenreID, ctx.Payload.Name)
+	err = m.UpdateGenre(ctx.GenreID, ctx.Payload.GenreName)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to update genre`, `error`, err.Error())
 		if err == model.ErrNotFound {

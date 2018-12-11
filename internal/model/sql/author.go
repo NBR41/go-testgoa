@@ -27,7 +27,7 @@ func (m *Model) GetAuthorByName(name string) (*model.Author, error) {
 	return m.getAuthor(`SELECT id, name FROM author where name = ?`, name)
 }
 
-func (m *Model) GetAuthorList() ([]*model.Author, error) {
+func (m *Model) ListAuthors() ([]*model.Author, error) {
 	rows, err := m.db.Query(`SELECT id, name FROM author`)
 	if err != nil {
 		return nil, err

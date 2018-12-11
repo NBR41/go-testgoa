@@ -5,7 +5,7 @@ import (
 )
 
 // GetOwnershipList returns book list by user ID
-func (db *Local) GetOwnershipList(userID int) ([]*model.Ownership, error) {
+func (db *Local) ListOwnershipsByUserID(userID int) ([]*model.Ownership, error) {
 	db.Lock()
 	defer db.Unlock()
 	l, ok := db.ownerships[userID]

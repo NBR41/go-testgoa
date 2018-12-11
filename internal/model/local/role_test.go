@@ -40,7 +40,7 @@ func TestGetRoleByName(t *testing.T) {
 func TestGetRoleList(t *testing.T) {
 	l := New(nil)
 
-	bs, err := l.GetRoleList()
+	bs, err := l.ListRoles()
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}

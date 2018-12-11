@@ -65,8 +65,8 @@ func (db *Local) getBookByISBN(isbn string) (*model.Book, error) {
 	return nil, model.ErrNotFound
 }
 
-// GetBookList returns book list
-func (db *Local) GetBookList() ([]model.Book, error) {
+// ListBooks returns book list
+func (db *Local) ListBooks() ([]model.Book, error) {
 	db.Lock()
 	defer db.Unlock()
 	ids := make([]int, len(db.books))

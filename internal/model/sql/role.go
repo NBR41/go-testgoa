@@ -27,7 +27,7 @@ func (m *Model) GetRoleByName(name string) (*model.Role, error) {
 	return m.getRole(`SELECT id, name FROM role where name = ?`, name)
 }
 
-func (m *Model) GetRoleList() ([]*model.Role, error) {
+func (m *Model) ListRoles() ([]*model.Role, error) {
 	rows, err := m.db.Query(`SELECT id, name FROM role`)
 	if err != nil {
 		return nil, err

@@ -80,3 +80,10 @@ type Editor struct {
 	ID   int64
 	Name string
 }
+
+type Collection struct {
+	ID       int64
+	Name     string
+	EditorID int64
+	Editor   *Editor
+}

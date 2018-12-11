@@ -36,8 +36,8 @@ func (db *Local) GetEditionTypeByName(name string) (*model.EditionType, error) {
 	return db.getEditionTypeByName(name)
 }
 
-//GetEditionTypeList list editionTypes
-func (db *Local) GetEditionTypeList() ([]*model.EditionType, error) {
+//ListEditionTypes list editionTypes
+func (db *Local) ListEditionTypes() ([]*model.EditionType, error) {
 	db.Lock()
 	defer db.Unlock()
 	ids := make([]int, len(db.editionTypes))

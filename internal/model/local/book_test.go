@@ -79,7 +79,7 @@ func TestGetBookByISBN(t *testing.T) {
 func TestGetBookList(t *testing.T) {
 	l := New(nil)
 
-	bs, err := l.GetBookList()
+	bs, err := l.ListBooks()
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}

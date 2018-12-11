@@ -78,7 +78,7 @@ func (c *RolesController) List(ctx *app.ListRolesContext) error {
 	}
 	defer func() { m.Close() }()
 
-	list, err := m.GetRoleList()
+	list, err := m.ListRoles()
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to get role list`, `error`, err.Error())
 		return ctx.InternalServerError()

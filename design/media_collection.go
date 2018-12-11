@@ -22,19 +22,25 @@ var CollectionMedia = MediaType("application/vnd.collection+json", func() {
 	Attributes(func() {
 		attrCollectionID()
 		attrCollectionName()
+		attrEditorID()
+		Attribute("editor", EditorMedia, "editor struct")
 		attrHref()
-		Required("collection_id", "collection_name", "href")
+		Required("collection_id", "collection_name", "editor_id", "href")
 	})
 
 	View("default", func() {
 		Attribute("collection_id")
 		Attribute("collection_name")
+		Attribute("editor_id")
+		Attribute("editor")
 		Attribute("href")
 	})
 
 	View("link", func() {
 		Attribute("collection_id")
 		Attribute("collection_name")
+		Attribute("editor_id")
+		Attribute("editor")
 		Attribute("href")
 	})
 })
@@ -72,8 +78,8 @@ var _ = Resource("collections", func() {
 		Description("Create new collection")
 		Routing(POST(""))
 		Payload(func() {
-			Member("name")
-			Required("name")
+			attrCollectionName()
+			Required("collection_name")
 		})
 		Security(JWTAuth)
 		// unauthorized
@@ -93,8 +99,8 @@ var _ = Resource("collections", func() {
 		Routing(PUT(collectionIDPath))
 		Params(attrCollectionID)
 		Payload(func() {
-			Member("name")
-			Required("name")
+			attrCollectionName()
+			Required("collection_name")
 		})
 		Security(JWTAuth)
 		// Unauthorized

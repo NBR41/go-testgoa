@@ -40,7 +40,7 @@ func TestGetAuthorByName(t *testing.T) {
 func TestGetAuthorList(t *testing.T) {
 	l := New(nil)
 
-	bs, err := l.GetAuthorList()
+	bs, err := l.ListAuthors()
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}

@@ -6,8 +6,8 @@ import (
 	"github.com/NBR41/go-testgoa/internal/model"
 )
 
-// GetUserList returns user list
-func (db *Local) GetUserList() ([]model.User, error) {
+// ListUsers returns user list
+func (db *Local) ListUsers() ([]model.User, error) {
 	db.Lock()
 	defer db.Unlock()
 	ids := make([]int, len(db.users))

@@ -1396,13 +1396,24 @@ func NewCreateCollectionsContext(ctx context.Context, r *http.Request, service *
 
 // createCollectionsPayload is the collections create action payload.
 type createCollectionsPayload struct {
-	Name *string `form:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty" xml:"name,omitempty"`
+	// Collection Name (Découverte/Shonen)
+	CollectionName *string `form:"collection_name,omitempty" json:"collection_name,omitempty" yaml:"collection_name,omitempty" xml:"collection_name,omitempty"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *createCollectionsPayload) Validate() (err error) {
-	if payload.Name == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	if payload.CollectionName == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "collection_name"))
+	}
+	if payload.CollectionName != nil {
+		if utf8.RuneCountInString(*payload.CollectionName) < 1 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.collection_name`, *payload.CollectionName, utf8.RuneCountInString(*payload.CollectionName), 1, true))
+		}
+	}
+	if payload.CollectionName != nil {
+		if utf8.RuneCountInString(*payload.CollectionName) > 128 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.collection_name`, *payload.CollectionName, utf8.RuneCountInString(*payload.CollectionName), 128, false))
+		}
 	}
 	return
 }
@@ -1410,21 +1421,28 @@ func (payload *createCollectionsPayload) Validate() (err error) {
 // Publicize creates CreateCollectionsPayload from createCollectionsPayload
 func (payload *createCollectionsPayload) Publicize() *CreateCollectionsPayload {
 	var pub CreateCollectionsPayload
-	if payload.Name != nil {
-		pub.Name = *payload.Name
+	if payload.CollectionName != nil {
+		pub.CollectionName = *payload.CollectionName
 	}
 	return &pub
 }
 
 // CreateCollectionsPayload is the collections create action payload.
 type CreateCollectionsPayload struct {
-	Name string `form:"name" json:"name" yaml:"name" xml:"name"`
+	// Collection Name (Découverte/Shonen)
+	CollectionName string `form:"collection_name" json:"collection_name" yaml:"collection_name" xml:"collection_name"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *CreateCollectionsPayload) Validate() (err error) {
-	if payload.Name == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	if payload.CollectionName == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "collection_name"))
+	}
+	if utf8.RuneCountInString(payload.CollectionName) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.collection_name`, payload.CollectionName, utf8.RuneCountInString(payload.CollectionName), 1, true))
+	}
+	if utf8.RuneCountInString(payload.CollectionName) > 128 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.collection_name`, payload.CollectionName, utf8.RuneCountInString(payload.CollectionName), 128, false))
 	}
 	return
 }
@@ -1751,13 +1769,24 @@ func NewUpdateCollectionsContext(ctx context.Context, r *http.Request, service *
 
 // updateCollectionsPayload is the collections update action payload.
 type updateCollectionsPayload struct {
-	Name *string `form:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty" xml:"name,omitempty"`
+	// Collection Name (Découverte/Shonen)
+	CollectionName *string `form:"collection_name,omitempty" json:"collection_name,omitempty" yaml:"collection_name,omitempty" xml:"collection_name,omitempty"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *updateCollectionsPayload) Validate() (err error) {
-	if payload.Name == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	if payload.CollectionName == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "collection_name"))
+	}
+	if payload.CollectionName != nil {
+		if utf8.RuneCountInString(*payload.CollectionName) < 1 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.collection_name`, *payload.CollectionName, utf8.RuneCountInString(*payload.CollectionName), 1, true))
+		}
+	}
+	if payload.CollectionName != nil {
+		if utf8.RuneCountInString(*payload.CollectionName) > 128 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.collection_name`, *payload.CollectionName, utf8.RuneCountInString(*payload.CollectionName), 128, false))
+		}
 	}
 	return
 }
@@ -1765,21 +1794,28 @@ func (payload *updateCollectionsPayload) Validate() (err error) {
 // Publicize creates UpdateCollectionsPayload from updateCollectionsPayload
 func (payload *updateCollectionsPayload) Publicize() *UpdateCollectionsPayload {
 	var pub UpdateCollectionsPayload
-	if payload.Name != nil {
-		pub.Name = *payload.Name
+	if payload.CollectionName != nil {
+		pub.CollectionName = *payload.CollectionName
 	}
 	return &pub
 }
 
 // UpdateCollectionsPayload is the collections update action payload.
 type UpdateCollectionsPayload struct {
-	Name string `form:"name" json:"name" yaml:"name" xml:"name"`
+	// Collection Name (Découverte/Shonen)
+	CollectionName string `form:"collection_name" json:"collection_name" yaml:"collection_name" xml:"collection_name"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *UpdateCollectionsPayload) Validate() (err error) {
-	if payload.Name == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	if payload.CollectionName == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "collection_name"))
+	}
+	if utf8.RuneCountInString(payload.CollectionName) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.collection_name`, payload.CollectionName, utf8.RuneCountInString(payload.CollectionName), 1, true))
+	}
+	if utf8.RuneCountInString(payload.CollectionName) > 128 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.collection_name`, payload.CollectionName, utf8.RuneCountInString(payload.CollectionName), 128, false))
 	}
 	return
 }
@@ -3169,414 +3205,6 @@ func (ctx *HealthHealthContext) OK(resp []byte) error {
 	ctx.ResponseData.WriteHeader(200)
 	_, err := ctx.ResponseData.Write(resp)
 	return err
-}
-
-// CreateUsersContext provides the users create action context.
-type CreateUsersContext struct {
-	context.Context
-	*goa.ResponseData
-	*goa.RequestData
-	Payload *UserCreatePayload
-}
-
-// NewCreateUsersContext parses the incoming request URL and body, performs validations and creates the
-// context used by the users controller create action.
-func NewCreateUsersContext(ctx context.Context, r *http.Request, service *goa.Service) (*CreateUsersContext, error) {
-	var err error
-	resp := goa.ContextResponse(ctx)
-	resp.Service = service
-	req := goa.ContextRequest(ctx)
-	req.Request = r
-	rctx := CreateUsersContext{Context: ctx, ResponseData: resp, RequestData: req}
-	return &rctx, err
-}
-
-// Created sends a HTTP response with status code 201.
-func (ctx *CreateUsersContext) Created() error {
-	ctx.ResponseData.WriteHeader(201)
-	return nil
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *CreateUsersContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
-// UnprocessableEntity sends a HTTP response with status code 422.
-func (ctx *CreateUsersContext) UnprocessableEntity(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 422, r)
-}
-
-// InternalServerError sends a HTTP response with status code 500.
-func (ctx *CreateUsersContext) InternalServerError() error {
-	ctx.ResponseData.WriteHeader(500)
-	return nil
-}
-
-// ServiceUnavailable sends a HTTP response with status code 503.
-func (ctx *CreateUsersContext) ServiceUnavailable() error {
-	ctx.ResponseData.WriteHeader(503)
-	return nil
-}
-
-// DeleteUsersContext provides the users delete action context.
-type DeleteUsersContext struct {
-	context.Context
-	*goa.ResponseData
-	*goa.RequestData
-	UserID int
-}
-
-// NewDeleteUsersContext parses the incoming request URL and body, performs validations and creates the
-// context used by the users controller delete action.
-func NewDeleteUsersContext(ctx context.Context, r *http.Request, service *goa.Service) (*DeleteUsersContext, error) {
-	var err error
-	resp := goa.ContextResponse(ctx)
-	resp.Service = service
-	req := goa.ContextRequest(ctx)
-	req.Request = r
-	rctx := DeleteUsersContext{Context: ctx, ResponseData: resp, RequestData: req}
-	paramUserID := req.Params["user_id"]
-	if len(paramUserID) > 0 {
-		rawUserID := paramUserID[0]
-		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-			rctx.UserID = userID
-		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("user_id", rawUserID, "integer"))
-		}
-		if rctx.UserID < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`user_id`, rctx.UserID, 1, true))
-		}
-	}
-	return &rctx, err
-}
-
-// NoContent sends a HTTP response with status code 204.
-func (ctx *DeleteUsersContext) NoContent() error {
-	ctx.ResponseData.WriteHeader(204)
-	return nil
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *DeleteUsersContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
-// Unauthorized sends a HTTP response with status code 401.
-func (ctx *DeleteUsersContext) Unauthorized() error {
-	ctx.ResponseData.WriteHeader(401)
-	return nil
-}
-
-// NotFound sends a HTTP response with status code 404.
-func (ctx *DeleteUsersContext) NotFound() error {
-	ctx.ResponseData.WriteHeader(404)
-	return nil
-}
-
-// InternalServerError sends a HTTP response with status code 500.
-func (ctx *DeleteUsersContext) InternalServerError() error {
-	ctx.ResponseData.WriteHeader(500)
-	return nil
-}
-
-// ServiceUnavailable sends a HTTP response with status code 503.
-func (ctx *DeleteUsersContext) ServiceUnavailable() error {
-	ctx.ResponseData.WriteHeader(503)
-	return nil
-}
-
-// ListUsersContext provides the users list action context.
-type ListUsersContext struct {
-	context.Context
-	*goa.ResponseData
-	*goa.RequestData
-	Email    *string
-	Nickname *string
-}
-
-// NewListUsersContext parses the incoming request URL and body, performs validations and creates the
-// context used by the users controller list action.
-func NewListUsersContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListUsersContext, error) {
-	var err error
-	resp := goa.ContextResponse(ctx)
-	resp.Service = service
-	req := goa.ContextRequest(ctx)
-	req.Request = r
-	rctx := ListUsersContext{Context: ctx, ResponseData: resp, RequestData: req}
-	paramEmail := req.Params["email"]
-	if len(paramEmail) > 0 {
-		rawEmail := paramEmail[0]
-		rctx.Email = &rawEmail
-		if rctx.Email != nil {
-			if err2 := goa.ValidateFormat(goa.FormatEmail, *rctx.Email); err2 != nil {
-				err = goa.MergeErrors(err, goa.InvalidFormatError(`email`, *rctx.Email, goa.FormatEmail, err2))
-			}
-		}
-	}
-	paramNickname := req.Params["nickname"]
-	if len(paramNickname) > 0 {
-		rawNickname := paramNickname[0]
-		rctx.Nickname = &rawNickname
-		if rctx.Nickname != nil {
-			if utf8.RuneCountInString(*rctx.Nickname) < 1 {
-				err = goa.MergeErrors(err, goa.InvalidLengthError(`nickname`, *rctx.Nickname, utf8.RuneCountInString(*rctx.Nickname), 1, true))
-			}
-		}
-		if rctx.Nickname != nil {
-			if utf8.RuneCountInString(*rctx.Nickname) > 32 {
-				err = goa.MergeErrors(err, goa.InvalidLengthError(`nickname`, *rctx.Nickname, utf8.RuneCountInString(*rctx.Nickname), 32, false))
-			}
-		}
-	}
-	return &rctx, err
-}
-
-// OK sends a HTTP response with status code 200.
-func (ctx *ListUsersContext) OK(r UserCollection) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.user+json; type=collection")
-	}
-	if r == nil {
-		r = UserCollection{}
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// OKTiny sends a HTTP response with status code 200.
-func (ctx *ListUsersContext) OKTiny(r UserTinyCollection) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.user+json; type=collection")
-	}
-	if r == nil {
-		r = UserTinyCollection{}
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// InternalServerError sends a HTTP response with status code 500.
-func (ctx *ListUsersContext) InternalServerError() error {
-	ctx.ResponseData.WriteHeader(500)
-	return nil
-}
-
-// ServiceUnavailable sends a HTTP response with status code 503.
-func (ctx *ListUsersContext) ServiceUnavailable() error {
-	ctx.ResponseData.WriteHeader(503)
-	return nil
-}
-
-// ShowUsersContext provides the users show action context.
-type ShowUsersContext struct {
-	context.Context
-	*goa.ResponseData
-	*goa.RequestData
-	UserID int
-}
-
-// NewShowUsersContext parses the incoming request URL and body, performs validations and creates the
-// context used by the users controller show action.
-func NewShowUsersContext(ctx context.Context, r *http.Request, service *goa.Service) (*ShowUsersContext, error) {
-	var err error
-	resp := goa.ContextResponse(ctx)
-	resp.Service = service
-	req := goa.ContextRequest(ctx)
-	req.Request = r
-	rctx := ShowUsersContext{Context: ctx, ResponseData: resp, RequestData: req}
-	paramUserID := req.Params["user_id"]
-	if len(paramUserID) > 0 {
-		rawUserID := paramUserID[0]
-		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-			rctx.UserID = userID
-		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("user_id", rawUserID, "integer"))
-		}
-		if rctx.UserID < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`user_id`, rctx.UserID, 1, true))
-		}
-	}
-	return &rctx, err
-}
-
-// OK sends a HTTP response with status code 200.
-func (ctx *ShowUsersContext) OK(r *User) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.user+json")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// OKTiny sends a HTTP response with status code 200.
-func (ctx *ShowUsersContext) OKTiny(r *UserTiny) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.user+json")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ShowUsersContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
-// NotFound sends a HTTP response with status code 404.
-func (ctx *ShowUsersContext) NotFound() error {
-	ctx.ResponseData.WriteHeader(404)
-	return nil
-}
-
-// InternalServerError sends a HTTP response with status code 500.
-func (ctx *ShowUsersContext) InternalServerError() error {
-	ctx.ResponseData.WriteHeader(500)
-	return nil
-}
-
-// ServiceUnavailable sends a HTTP response with status code 503.
-func (ctx *ShowUsersContext) ServiceUnavailable() error {
-	ctx.ResponseData.WriteHeader(503)
-	return nil
-}
-
-// UpdateUsersContext provides the users update action context.
-type UpdateUsersContext struct {
-	context.Context
-	*goa.ResponseData
-	*goa.RequestData
-	UserID  int
-	Payload *UpdateUsersPayload
-}
-
-// NewUpdateUsersContext parses the incoming request URL and body, performs validations and creates the
-// context used by the users controller update action.
-func NewUpdateUsersContext(ctx context.Context, r *http.Request, service *goa.Service) (*UpdateUsersContext, error) {
-	var err error
-	resp := goa.ContextResponse(ctx)
-	resp.Service = service
-	req := goa.ContextRequest(ctx)
-	req.Request = r
-	rctx := UpdateUsersContext{Context: ctx, ResponseData: resp, RequestData: req}
-	paramUserID := req.Params["user_id"]
-	if len(paramUserID) > 0 {
-		rawUserID := paramUserID[0]
-		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
-			rctx.UserID = userID
-		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("user_id", rawUserID, "integer"))
-		}
-		if rctx.UserID < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`user_id`, rctx.UserID, 1, true))
-		}
-	}
-	return &rctx, err
-}
-
-// updateUsersPayload is the users update action payload.
-type updateUsersPayload struct {
-	// user nickname
-	Nickname *string `form:"nickname,omitempty" json:"nickname,omitempty" yaml:"nickname,omitempty" xml:"nickname,omitempty"`
-}
-
-// Validate runs the validation rules defined in the design.
-func (payload *updateUsersPayload) Validate() (err error) {
-	if payload.Nickname == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "nickname"))
-	}
-	if payload.Nickname != nil {
-		if utf8.RuneCountInString(*payload.Nickname) < 1 {
-			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.nickname`, *payload.Nickname, utf8.RuneCountInString(*payload.Nickname), 1, true))
-		}
-	}
-	if payload.Nickname != nil {
-		if utf8.RuneCountInString(*payload.Nickname) > 32 {
-			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.nickname`, *payload.Nickname, utf8.RuneCountInString(*payload.Nickname), 32, false))
-		}
-	}
-	return
-}
-
-// Publicize creates UpdateUsersPayload from updateUsersPayload
-func (payload *updateUsersPayload) Publicize() *UpdateUsersPayload {
-	var pub UpdateUsersPayload
-	if payload.Nickname != nil {
-		pub.Nickname = *payload.Nickname
-	}
-	return &pub
-}
-
-// UpdateUsersPayload is the users update action payload.
-type UpdateUsersPayload struct {
-	// user nickname
-	Nickname string `form:"nickname" json:"nickname" yaml:"nickname" xml:"nickname"`
-}
-
-// Validate runs the validation rules defined in the design.
-func (payload *UpdateUsersPayload) Validate() (err error) {
-	if payload.Nickname == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "nickname"))
-	}
-	if utf8.RuneCountInString(payload.Nickname) < 1 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.nickname`, payload.Nickname, utf8.RuneCountInString(payload.Nickname), 1, true))
-	}
-	if utf8.RuneCountInString(payload.Nickname) > 32 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.nickname`, payload.Nickname, utf8.RuneCountInString(payload.Nickname), 32, false))
-	}
-	return
-}
-
-// NoContent sends a HTTP response with status code 204.
-func (ctx *UpdateUsersContext) NoContent() error {
-	ctx.ResponseData.WriteHeader(204)
-	return nil
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *UpdateUsersContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
-// Unauthorized sends a HTTP response with status code 401.
-func (ctx *UpdateUsersContext) Unauthorized() error {
-	ctx.ResponseData.WriteHeader(401)
-	return nil
-}
-
-// NotFound sends a HTTP response with status code 404.
-func (ctx *UpdateUsersContext) NotFound() error {
-	ctx.ResponseData.WriteHeader(404)
-	return nil
-}
-
-// UnprocessableEntity sends a HTTP response with status code 422.
-func (ctx *UpdateUsersContext) UnprocessableEntity() error {
-	ctx.ResponseData.WriteHeader(422)
-	return nil
-}
-
-// InternalServerError sends a HTTP response with status code 500.
-func (ctx *UpdateUsersContext) InternalServerError() error {
-	ctx.ResponseData.WriteHeader(500)
-	return nil
-}
-
-// ServiceUnavailable sends a HTTP response with status code 503.
-func (ctx *UpdateUsersContext) ServiceUnavailable() error {
-	ctx.ResponseData.WriteHeader(503)
-	return nil
 }
 
 // AddOwnershipsContext provides the ownerships add action context.
@@ -5129,6 +4757,414 @@ func (ctx *AuthTokenContext) InternalServerError() error {
 
 // ServiceUnavailable sends a HTTP response with status code 503.
 func (ctx *AuthTokenContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// CreateUsersContext provides the users create action context.
+type CreateUsersContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	Payload *UserCreatePayload
+}
+
+// NewCreateUsersContext parses the incoming request URL and body, performs validations and creates the
+// context used by the users controller create action.
+func NewCreateUsersContext(ctx context.Context, r *http.Request, service *goa.Service) (*CreateUsersContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := CreateUsersContext{Context: ctx, ResponseData: resp, RequestData: req}
+	return &rctx, err
+}
+
+// Created sends a HTTP response with status code 201.
+func (ctx *CreateUsersContext) Created() error {
+	ctx.ResponseData.WriteHeader(201)
+	return nil
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *CreateUsersContext) BadRequest(r error) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// UnprocessableEntity sends a HTTP response with status code 422.
+func (ctx *CreateUsersContext) UnprocessableEntity(r error) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 422, r)
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *CreateUsersContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *CreateUsersContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// DeleteUsersContext provides the users delete action context.
+type DeleteUsersContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	UserID int
+}
+
+// NewDeleteUsersContext parses the incoming request URL and body, performs validations and creates the
+// context used by the users controller delete action.
+func NewDeleteUsersContext(ctx context.Context, r *http.Request, service *goa.Service) (*DeleteUsersContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := DeleteUsersContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramUserID := req.Params["user_id"]
+	if len(paramUserID) > 0 {
+		rawUserID := paramUserID[0]
+		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+			rctx.UserID = userID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("user_id", rawUserID, "integer"))
+		}
+		if rctx.UserID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`user_id`, rctx.UserID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// NoContent sends a HTTP response with status code 204.
+func (ctx *DeleteUsersContext) NoContent() error {
+	ctx.ResponseData.WriteHeader(204)
+	return nil
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *DeleteUsersContext) BadRequest(r error) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// Unauthorized sends a HTTP response with status code 401.
+func (ctx *DeleteUsersContext) Unauthorized() error {
+	ctx.ResponseData.WriteHeader(401)
+	return nil
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *DeleteUsersContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *DeleteUsersContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *DeleteUsersContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListUsersContext provides the users list action context.
+type ListUsersContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	Email    *string
+	Nickname *string
+}
+
+// NewListUsersContext parses the incoming request URL and body, performs validations and creates the
+// context used by the users controller list action.
+func NewListUsersContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListUsersContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListUsersContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEmail := req.Params["email"]
+	if len(paramEmail) > 0 {
+		rawEmail := paramEmail[0]
+		rctx.Email = &rawEmail
+		if rctx.Email != nil {
+			if err2 := goa.ValidateFormat(goa.FormatEmail, *rctx.Email); err2 != nil {
+				err = goa.MergeErrors(err, goa.InvalidFormatError(`email`, *rctx.Email, goa.FormatEmail, err2))
+			}
+		}
+	}
+	paramNickname := req.Params["nickname"]
+	if len(paramNickname) > 0 {
+		rawNickname := paramNickname[0]
+		rctx.Nickname = &rawNickname
+		if rctx.Nickname != nil {
+			if utf8.RuneCountInString(*rctx.Nickname) < 1 {
+				err = goa.MergeErrors(err, goa.InvalidLengthError(`nickname`, *rctx.Nickname, utf8.RuneCountInString(*rctx.Nickname), 1, true))
+			}
+		}
+		if rctx.Nickname != nil {
+			if utf8.RuneCountInString(*rctx.Nickname) > 32 {
+				err = goa.MergeErrors(err, goa.InvalidLengthError(`nickname`, *rctx.Nickname, utf8.RuneCountInString(*rctx.Nickname), 32, false))
+			}
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListUsersContext) OK(r UserCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.user+json; type=collection")
+	}
+	if r == nil {
+		r = UserCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKTiny sends a HTTP response with status code 200.
+func (ctx *ListUsersContext) OKTiny(r UserTinyCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.user+json; type=collection")
+	}
+	if r == nil {
+		r = UserTinyCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListUsersContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListUsersContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ShowUsersContext provides the users show action context.
+type ShowUsersContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	UserID int
+}
+
+// NewShowUsersContext parses the incoming request URL and body, performs validations and creates the
+// context used by the users controller show action.
+func NewShowUsersContext(ctx context.Context, r *http.Request, service *goa.Service) (*ShowUsersContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ShowUsersContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramUserID := req.Params["user_id"]
+	if len(paramUserID) > 0 {
+		rawUserID := paramUserID[0]
+		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+			rctx.UserID = userID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("user_id", rawUserID, "integer"))
+		}
+		if rctx.UserID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`user_id`, rctx.UserID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ShowUsersContext) OK(r *User) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.user+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKTiny sends a HTTP response with status code 200.
+func (ctx *ShowUsersContext) OKTiny(r *UserTiny) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.user+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *ShowUsersContext) BadRequest(r error) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ShowUsersContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ShowUsersContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ShowUsersContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// UpdateUsersContext provides the users update action context.
+type UpdateUsersContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	UserID  int
+	Payload *UpdateUsersPayload
+}
+
+// NewUpdateUsersContext parses the incoming request URL and body, performs validations and creates the
+// context used by the users controller update action.
+func NewUpdateUsersContext(ctx context.Context, r *http.Request, service *goa.Service) (*UpdateUsersContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := UpdateUsersContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramUserID := req.Params["user_id"]
+	if len(paramUserID) > 0 {
+		rawUserID := paramUserID[0]
+		if userID, err2 := strconv.Atoi(rawUserID); err2 == nil {
+			rctx.UserID = userID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("user_id", rawUserID, "integer"))
+		}
+		if rctx.UserID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`user_id`, rctx.UserID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// updateUsersPayload is the users update action payload.
+type updateUsersPayload struct {
+	// user nickname
+	Nickname *string `form:"nickname,omitempty" json:"nickname,omitempty" yaml:"nickname,omitempty" xml:"nickname,omitempty"`
+}
+
+// Validate runs the validation rules defined in the design.
+func (payload *updateUsersPayload) Validate() (err error) {
+	if payload.Nickname == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "nickname"))
+	}
+	if payload.Nickname != nil {
+		if utf8.RuneCountInString(*payload.Nickname) < 1 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.nickname`, *payload.Nickname, utf8.RuneCountInString(*payload.Nickname), 1, true))
+		}
+	}
+	if payload.Nickname != nil {
+		if utf8.RuneCountInString(*payload.Nickname) > 32 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.nickname`, *payload.Nickname, utf8.RuneCountInString(*payload.Nickname), 32, false))
+		}
+	}
+	return
+}
+
+// Publicize creates UpdateUsersPayload from updateUsersPayload
+func (payload *updateUsersPayload) Publicize() *UpdateUsersPayload {
+	var pub UpdateUsersPayload
+	if payload.Nickname != nil {
+		pub.Nickname = *payload.Nickname
+	}
+	return &pub
+}
+
+// UpdateUsersPayload is the users update action payload.
+type UpdateUsersPayload struct {
+	// user nickname
+	Nickname string `form:"nickname" json:"nickname" yaml:"nickname" xml:"nickname"`
+}
+
+// Validate runs the validation rules defined in the design.
+func (payload *UpdateUsersPayload) Validate() (err error) {
+	if payload.Nickname == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "nickname"))
+	}
+	if utf8.RuneCountInString(payload.Nickname) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.nickname`, payload.Nickname, utf8.RuneCountInString(payload.Nickname), 1, true))
+	}
+	if utf8.RuneCountInString(payload.Nickname) > 32 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.nickname`, payload.Nickname, utf8.RuneCountInString(payload.Nickname), 32, false))
+	}
+	return
+}
+
+// NoContent sends a HTTP response with status code 204.
+func (ctx *UpdateUsersContext) NoContent() error {
+	ctx.ResponseData.WriteHeader(204)
+	return nil
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *UpdateUsersContext) BadRequest(r error) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// Unauthorized sends a HTTP response with status code 401.
+func (ctx *UpdateUsersContext) Unauthorized() error {
+	ctx.ResponseData.WriteHeader(401)
+	return nil
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *UpdateUsersContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// UnprocessableEntity sends a HTTP response with status code 422.
+func (ctx *UpdateUsersContext) UnprocessableEntity() error {
+	ctx.ResponseData.WriteHeader(422)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *UpdateUsersContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *UpdateUsersContext) ServiceUnavailable() error {
 	ctx.ResponseData.WriteHeader(503)
 	return nil
 }

@@ -27,7 +27,7 @@ func (m *Model) GetEditorByName(name string) (*model.Editor, error) {
 	return m.getEditor(`SELECT id, name FROM editor where name = ?`, name)
 }
 
-func (m *Model) GetEditorList() ([]*model.Editor, error) {
+func (m *Model) ListEditors() ([]*model.Editor, error) {
 	rows, err := m.db.Query(`SELECT id, name FROM editor`)
 	if err != nil {
 		return nil, err

@@ -129,7 +129,7 @@ func (c *UsersController) List(ctx *app.ListUsersContext) error {
 			users = append(users, *user)
 		}
 	} else {
-		users, err = m.GetUserList()
+		users, err = m.ListUsers()
 		if err != nil {
 			goa.ContextLogger(ctx).Error(`unable to get user list`, `error`, err)
 			return ctx.InternalServerError()

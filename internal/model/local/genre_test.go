@@ -40,7 +40,7 @@ func TestGetGenreByName(t *testing.T) {
 func TestGetGenreList(t *testing.T) {
 	l := New(nil)
 
-	bs, err := l.GetGenreList()
+	bs, err := l.ListGenres()
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}

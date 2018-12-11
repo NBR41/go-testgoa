@@ -62,7 +62,7 @@ func (m *Model) GetBookByName(name string) (*model.Book, error) {
 }
 
 // GetBookList returns book list
-func (m *Model) GetBookList() ([]model.Book, error) {
+func (m *Model) ListBooks() ([]model.Book, error) {
 	rows, err := m.db.Query(`SELECT id, isbn, name FROM book`)
 	if err != nil {
 		return nil, err

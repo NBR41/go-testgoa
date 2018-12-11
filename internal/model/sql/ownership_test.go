@@ -42,7 +42,7 @@ JOIN books b ON \(u.book_id = b.id\) where user_id = \?`
 	}
 
 	for i := range tests {
-		v, err := m.GetOwnershipList(123)
+		v, err := m.ListOwnershipsByUserID(123)
 		if err != nil {
 			if tests[i].err == nil {
 				t.Errorf("unexpected error for [%s], [%v]", tests[i].desc, err)

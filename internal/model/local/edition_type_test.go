@@ -40,7 +40,7 @@ func TestGetEditionTypeByName(t *testing.T) {
 func TestGetEditionTypeList(t *testing.T) {
 	l := New(nil)
 
-	bs, err := l.GetEditionTypeList()
+	bs, err := l.ListEditionTypes()
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}

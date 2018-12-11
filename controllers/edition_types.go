@@ -78,7 +78,7 @@ func (c *EditionTypesController) List(ctx *app.ListEditionTypesContext) error {
 	}
 	defer func() { m.Close() }()
 
-	list, err := m.GetEditionTypeList()
+	list, err := m.ListEditionTypes()
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to get edition type list`, `error`, err.Error())
 		return ctx.InternalServerError()

@@ -40,7 +40,7 @@ func TestGetEditorByName(t *testing.T) {
 func TestGetEditorList(t *testing.T) {
 	l := New(nil)
 
-	bs, err := l.GetEditorList()
+	bs, err := l.ListEditors()
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}

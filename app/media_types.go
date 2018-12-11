@@ -382,6 +382,10 @@ type Collection struct {
 	CollectionID int `form:"collection_id" json:"collection_id" yaml:"collection_id" xml:"collection_id"`
 	// Collection Name (Découverte/Shonen)
 	CollectionName string `form:"collection_name" json:"collection_name" yaml:"collection_name" xml:"collection_name"`
+	// editor struct
+	Editor *Editor `form:"editor,omitempty" json:"editor,omitempty" yaml:"editor,omitempty" xml:"editor,omitempty"`
+	// Unique Editor ID
+	EditorID int `form:"editor_id" json:"editor_id" yaml:"editor_id" xml:"editor_id"`
 	// API href for making requests
 	Href string `form:"href" json:"href" yaml:"href" xml:"href"`
 }
@@ -392,6 +396,7 @@ func (mt *Collection) Validate() (err error) {
 	if mt.CollectionName == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "collection_name"))
 	}
+
 	if mt.Href == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "href"))
 	}
@@ -403,6 +408,14 @@ func (mt *Collection) Validate() (err error) {
 	}
 	if utf8.RuneCountInString(mt.CollectionName) > 128 {
 		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.collection_name`, mt.CollectionName, utf8.RuneCountInString(mt.CollectionName), 128, false))
+	}
+	if mt.Editor != nil {
+		if err2 := mt.Editor.Validate(); err2 != nil {
+			err = goa.MergeErrors(err, err2)
+		}
+	}
+	if mt.EditorID < 1 {
+		err = goa.MergeErrors(err, goa.InvalidRangeError(`response.editor_id`, mt.EditorID, 1, true))
 	}
 	return
 }
@@ -415,6 +428,10 @@ type CollectionLink struct {
 	CollectionID int `form:"collection_id" json:"collection_id" yaml:"collection_id" xml:"collection_id"`
 	// Collection Name (Découverte/Shonen)
 	CollectionName string `form:"collection_name" json:"collection_name" yaml:"collection_name" xml:"collection_name"`
+	// editor struct
+	Editor *Editor `form:"editor,omitempty" json:"editor,omitempty" yaml:"editor,omitempty" xml:"editor,omitempty"`
+	// Unique Editor ID
+	EditorID int `form:"editor_id" json:"editor_id" yaml:"editor_id" xml:"editor_id"`
 	// API href for making requests
 	Href string `form:"href" json:"href" yaml:"href" xml:"href"`
 }
@@ -425,6 +442,7 @@ func (mt *CollectionLink) Validate() (err error) {
 	if mt.CollectionName == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "collection_name"))
 	}
+
 	if mt.Href == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "href"))
 	}
@@ -436,6 +454,14 @@ func (mt *CollectionLink) Validate() (err error) {
 	}
 	if utf8.RuneCountInString(mt.CollectionName) > 128 {
 		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.collection_name`, mt.CollectionName, utf8.RuneCountInString(mt.CollectionName), 128, false))
+	}
+	if mt.Editor != nil {
+		if err2 := mt.Editor.Validate(); err2 != nil {
+			err = goa.MergeErrors(err, err2)
+		}
+	}
+	if mt.EditorID < 1 {
+		err = goa.MergeErrors(err, goa.InvalidRangeError(`response.editor_id`, mt.EditorID, 1, true))
 	}
 	return
 }

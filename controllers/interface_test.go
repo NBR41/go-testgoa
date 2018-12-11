@@ -71,17 +71,17 @@ func (mr *MockModelerMockRecorder) GetAuthorByName(name interface{}) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAuthorByName", reflect.TypeOf((*MockModeler)(nil).GetAuthorByName), name)
 }
 
-// GetAuthorList mocks base method
-func (m *MockModeler) GetAuthorList() ([]*model.Author, error) {
-	ret := m.ctrl.Call(m, "GetAuthorList")
+// ListAuthors mocks base method
+func (m *MockModeler) ListAuthors() ([]*model.Author, error) {
+	ret := m.ctrl.Call(m, "ListAuthors")
 	ret0, _ := ret[0].([]*model.Author)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetAuthorList indicates an expected call of GetAuthorList
-func (mr *MockModelerMockRecorder) GetAuthorList() *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAuthorList", reflect.TypeOf((*MockModeler)(nil).GetAuthorList))
+// ListAuthors indicates an expected call of ListAuthors
+func (mr *MockModelerMockRecorder) ListAuthors() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAuthors", reflect.TypeOf((*MockModeler)(nil).ListAuthors))
 }
 
 // InsertAuthor mocks base method
@@ -160,17 +160,17 @@ func (mr *MockModelerMockRecorder) GetBookByName(name interface{}) *gomock.Call 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBookByName", reflect.TypeOf((*MockModeler)(nil).GetBookByName), name)
 }
 
-// GetBookList mocks base method
-func (m *MockModeler) GetBookList() ([]model.Book, error) {
-	ret := m.ctrl.Call(m, "GetBookList")
+// ListBooks mocks base method
+func (m *MockModeler) ListBooks() ([]model.Book, error) {
+	ret := m.ctrl.Call(m, "ListBooks")
 	ret0, _ := ret[0].([]model.Book)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetBookList indicates an expected call of GetBookList
-func (mr *MockModelerMockRecorder) GetBookList() *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBookList", reflect.TypeOf((*MockModeler)(nil).GetBookList))
+// ListBooks indicates an expected call of ListBooks
+func (mr *MockModelerMockRecorder) ListBooks() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListBooks", reflect.TypeOf((*MockModeler)(nil).ListBooks))
 }
 
 // InsertBook mocks base method
@@ -236,17 +236,17 @@ func (mr *MockModelerMockRecorder) GetCategoryByName(name interface{}) *gomock.C
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCategoryByName", reflect.TypeOf((*MockModeler)(nil).GetCategoryByName), name)
 }
 
-// GetCategoryList mocks base method
-func (m *MockModeler) GetCategoryList() ([]*model.Category, error) {
-	ret := m.ctrl.Call(m, "GetCategoryList")
+// ListCategories mocks base method
+func (m *MockModeler) ListCategories() ([]*model.Category, error) {
+	ret := m.ctrl.Call(m, "ListCategories")
 	ret0, _ := ret[0].([]*model.Category)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetCategoryList indicates an expected call of GetCategoryList
-func (mr *MockModelerMockRecorder) GetCategoryList() *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCategoryList", reflect.TypeOf((*MockModeler)(nil).GetCategoryList))
+// ListCategories indicates an expected call of ListCategories
+func (mr *MockModelerMockRecorder) ListCategories() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListCategories", reflect.TypeOf((*MockModeler)(nil).ListCategories))
 }
 
 // InsertCategory mocks base method
@@ -312,17 +312,17 @@ func (mr *MockModelerMockRecorder) GetEditionTypeByName(name interface{}) *gomoc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetEditionTypeByName", reflect.TypeOf((*MockModeler)(nil).GetEditionTypeByName), name)
 }
 
-// GetEditionTypeList mocks base method
-func (m *MockModeler) GetEditionTypeList() ([]*model.EditionType, error) {
-	ret := m.ctrl.Call(m, "GetEditionTypeList")
+// ListEditionTypes mocks base method
+func (m *MockModeler) ListEditionTypes() ([]*model.EditionType, error) {
+	ret := m.ctrl.Call(m, "ListEditionTypes")
 	ret0, _ := ret[0].([]*model.EditionType)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetEditionTypeList indicates an expected call of GetEditionTypeList
-func (mr *MockModelerMockRecorder) GetEditionTypeList() *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetEditionTypeList", reflect.TypeOf((*MockModeler)(nil).GetEditionTypeList))
+// ListEditionTypes indicates an expected call of ListEditionTypes
+func (mr *MockModelerMockRecorder) ListEditionTypes() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListEditionTypes", reflect.TypeOf((*MockModeler)(nil).ListEditionTypes))
 }
 
 // InsertEditionType mocks base method
@@ -388,17 +388,17 @@ func (mr *MockModelerMockRecorder) GetEditorByName(name interface{}) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetEditorByName", reflect.TypeOf((*MockModeler)(nil).GetEditorByName), name)
 }
 
-// GetEditorList mocks base method
-func (m *MockModeler) GetEditorList() ([]*model.Editor, error) {
-	ret := m.ctrl.Call(m, "GetEditorList")
+// ListEditors mocks base method
+func (m *MockModeler) ListEditors() ([]*model.Editor, error) {
+	ret := m.ctrl.Call(m, "ListEditors")
 	ret0, _ := ret[0].([]*model.Editor)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetEditorList indicates an expected call of GetEditorList
-func (mr *MockModelerMockRecorder) GetEditorList() *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetEditorList", reflect.TypeOf((*MockModeler)(nil).GetEditorList))
+// ListEditors indicates an expected call of ListEditors
+func (mr *MockModelerMockRecorder) ListEditors() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListEditors", reflect.TypeOf((*MockModeler)(nil).ListEditors))
 }
 
 // InsertEditor mocks base method
@@ -464,17 +464,17 @@ func (mr *MockModelerMockRecorder) GetGenreByName(name interface{}) *gomock.Call
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetGenreByName", reflect.TypeOf((*MockModeler)(nil).GetGenreByName), name)
 }
 
-// GetGenreList mocks base method
-func (m *MockModeler) GetGenreList() ([]*model.Genre, error) {
-	ret := m.ctrl.Call(m, "GetGenreList")
+// ListGenres mocks base method
+func (m *MockModeler) ListGenres() ([]*model.Genre, error) {
+	ret := m.ctrl.Call(m, "ListGenres")
 	ret0, _ := ret[0].([]*model.Genre)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetGenreList indicates an expected call of GetGenreList
-func (mr *MockModelerMockRecorder) GetGenreList() *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetGenreList", reflect.TypeOf((*MockModeler)(nil).GetGenreList))
+// ListGenres indicates an expected call of ListGenres
+func (mr *MockModelerMockRecorder) ListGenres() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListGenres", reflect.TypeOf((*MockModeler)(nil).ListGenres))
 }
 
 // InsertGenre mocks base method
@@ -527,17 +527,17 @@ func (mr *MockModelerMockRecorder) GetOwnership(userID, bookID interface{}) *gom
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOwnership", reflect.TypeOf((*MockModeler)(nil).GetOwnership), userID, bookID)
 }
 
-// GetOwnershipList mocks base method
-func (m *MockModeler) GetOwnershipList(userID int) ([]*model.Ownership, error) {
-	ret := m.ctrl.Call(m, "GetOwnershipList", userID)
+// ListOwnershipsByUserID mocks base method
+func (m *MockModeler) ListOwnershipsByUserID(userID int) ([]*model.Ownership, error) {
+	ret := m.ctrl.Call(m, "ListOwnershipsByUserID", userID)
 	ret0, _ := ret[0].([]*model.Ownership)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetOwnershipList indicates an expected call of GetOwnershipList
-func (mr *MockModelerMockRecorder) GetOwnershipList(userID interface{}) *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOwnershipList", reflect.TypeOf((*MockModeler)(nil).GetOwnershipList), userID)
+// ListOwnershipsByUserID indicates an expected call of ListOwnershipsByUserID
+func (mr *MockModelerMockRecorder) ListOwnershipsByUserID(userID interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOwnershipsByUserID", reflect.TypeOf((*MockModeler)(nil).ListOwnershipsByUserID), userID)
 }
 
 // InsertOwnership mocks base method
@@ -603,17 +603,17 @@ func (mr *MockModelerMockRecorder) GetRoleByName(name interface{}) *gomock.Call 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRoleByName", reflect.TypeOf((*MockModeler)(nil).GetRoleByName), name)
 }
 
-// GetRoleList mocks base method
-func (m *MockModeler) GetRoleList() ([]*model.Role, error) {
-	ret := m.ctrl.Call(m, "GetRoleList")
+// ListRoles mocks base method
+func (m *MockModeler) ListRoles() ([]*model.Role, error) {
+	ret := m.ctrl.Call(m, "ListRoles")
 	ret0, _ := ret[0].([]*model.Role)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetRoleList indicates an expected call of GetRoleList
-func (mr *MockModelerMockRecorder) GetRoleList() *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRoleList", reflect.TypeOf((*MockModeler)(nil).GetRoleList))
+// ListRoles indicates an expected call of ListRoles
+func (mr *MockModelerMockRecorder) ListRoles() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListRoles", reflect.TypeOf((*MockModeler)(nil).ListRoles))
 }
 
 // InsertRole mocks base method
@@ -653,17 +653,106 @@ func (mr *MockModelerMockRecorder) DeleteRole(id interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteRole", reflect.TypeOf((*MockModeler)(nil).DeleteRole), id)
 }
 
-// GetUserList mocks base method
-func (m *MockModeler) GetUserList() ([]model.User, error) {
-	ret := m.ctrl.Call(m, "GetUserList")
+// GetCollectionByID mocks base method
+func (m *MockModeler) GetCollectionByID(id int) (*model.Collection, error) {
+	ret := m.ctrl.Call(m, "GetCollectionByID", id)
+	ret0, _ := ret[0].(*model.Collection)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCollectionByID indicates an expected call of GetCollectionByID
+func (mr *MockModelerMockRecorder) GetCollectionByID(id interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCollectionByID", reflect.TypeOf((*MockModeler)(nil).GetCollectionByID), id)
+}
+
+// GetCollectionByName mocks base method
+func (m *MockModeler) GetCollectionByName(name string) (*model.Collection, error) {
+	ret := m.ctrl.Call(m, "GetCollectionByName", name)
+	ret0, _ := ret[0].(*model.Collection)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCollectionByName indicates an expected call of GetCollectionByName
+func (mr *MockModelerMockRecorder) GetCollectionByName(name interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCollectionByName", reflect.TypeOf((*MockModeler)(nil).GetCollectionByName), name)
+}
+
+// InsertCollection mocks base method
+func (m *MockModeler) InsertCollection(name string, editorID int) (*model.Collection, error) {
+	ret := m.ctrl.Call(m, "InsertCollection", name, editorID)
+	ret0, _ := ret[0].(*model.Collection)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// InsertCollection indicates an expected call of InsertCollection
+func (mr *MockModelerMockRecorder) InsertCollection(name, editorID interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InsertCollection", reflect.TypeOf((*MockModeler)(nil).InsertCollection), name, editorID)
+}
+
+// UpdateCollection mocks base method
+func (m *MockModeler) UpdateCollection(name *string, editorID *int) error {
+	ret := m.ctrl.Call(m, "UpdateCollection", name, editorID)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateCollection indicates an expected call of UpdateCollection
+func (mr *MockModelerMockRecorder) UpdateCollection(name, editorID interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateCollection", reflect.TypeOf((*MockModeler)(nil).UpdateCollection), name, editorID)
+}
+
+// DeleteCollection mocks base method
+func (m *MockModeler) DeleteCollection(id int) error {
+	ret := m.ctrl.Call(m, "DeleteCollection", id)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteCollection indicates an expected call of DeleteCollection
+func (mr *MockModelerMockRecorder) DeleteCollection(id interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteCollection", reflect.TypeOf((*MockModeler)(nil).DeleteCollection), id)
+}
+
+// ListCollections mocks base method
+func (m *MockModeler) ListCollections() ([]*model.Collection, error) {
+	ret := m.ctrl.Call(m, "ListCollections")
+	ret0, _ := ret[0].([]*model.Collection)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListCollections indicates an expected call of ListCollections
+func (mr *MockModelerMockRecorder) ListCollections() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListCollections", reflect.TypeOf((*MockModeler)(nil).ListCollections))
+}
+
+// ListCollectionsByEditorID mocks base method
+func (m *MockModeler) ListCollectionsByEditorID(id int) ([]*model.Collection, error) {
+	ret := m.ctrl.Call(m, "ListCollectionsByEditorID", id)
+	ret0, _ := ret[0].([]*model.Collection)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListCollectionsByEditorID indicates an expected call of ListCollectionsByEditorID
+func (mr *MockModelerMockRecorder) ListCollectionsByEditorID(id interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListCollectionsByEditorID", reflect.TypeOf((*MockModeler)(nil).ListCollectionsByEditorID), id)
+}
+
+// ListUsers mocks base method
+func (m *MockModeler) ListUsers() ([]model.User, error) {
+	ret := m.ctrl.Call(m, "ListUsers")
 	ret0, _ := ret[0].([]model.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetUserList indicates an expected call of GetUserList
-func (mr *MockModelerMockRecorder) GetUserList() *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserList", reflect.TypeOf((*MockModeler)(nil).GetUserList))
+// ListUsers indicates an expected call of ListUsers
+func (mr *MockModelerMockRecorder) ListUsers() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListUsers", reflect.TypeOf((*MockModeler)(nil).ListUsers))
 }
 
 // GetUserByID mocks base method

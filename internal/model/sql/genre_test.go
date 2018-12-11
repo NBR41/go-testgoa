@@ -196,7 +196,7 @@ func TestGetGenreList(t *testing.T) {
 	}
 
 	for i := range tests {
-		v, err := m.GetGenreList()
+		v, err := m.ListGenres()
 		if err != nil {
 			if tests[i].err == nil {
 				t.Errorf("unexpected error for [%s], [%v]", tests[i].desc, err)

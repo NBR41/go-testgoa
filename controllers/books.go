@@ -78,7 +78,7 @@ func (c *BooksController) List(ctx *app.ListBooksContext) error {
 	}
 	defer func() { m.Close() }()
 
-	books, err := m.GetBookList()
+	books, err := m.ListBooks()
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to get book list`, `error`, err)
 		return ctx.InternalServerError()

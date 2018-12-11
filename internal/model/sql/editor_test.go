@@ -196,7 +196,7 @@ func TestGetEditorList(t *testing.T) {
 	}
 
 	for i := range tests {
-		v, err := m.GetEditorList()
+		v, err := m.ListEditors()
 		if err != nil {
 			if tests[i].err == nil {
 				t.Errorf("unexpected error for [%s], [%v]", tests[i].desc, err)

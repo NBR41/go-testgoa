@@ -36,8 +36,8 @@ func (db *Local) GetEditorByName(name string) (*model.Editor, error) {
 	return db.getEditorByName(name)
 }
 
-//GetEditorList list editors
-func (db *Local) GetEditorList() ([]*model.Editor, error) {
+//ListEditors list editors
+func (db *Local) ListEditors() ([]*model.Editor, error) {
 	db.Lock()
 	defer db.Unlock()
 	ids := make([]int, len(db.editors))

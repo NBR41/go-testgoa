@@ -196,7 +196,7 @@ func TestGetCategoryList(t *testing.T) {
 	}
 
 	for i := range tests {
-		v, err := m.GetCategoryList()
+		v, err := m.ListCategories()
 		if err != nil {
 			if tests[i].err == nil {
 				t.Errorf("unexpected error for [%s], [%v]", tests[i].desc, err)

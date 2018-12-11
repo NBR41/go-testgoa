@@ -36,8 +36,8 @@ func (db *Local) GetAuthorByName(name string) (*model.Author, error) {
 	return db.getAuthorByName(name)
 }
 
-//GetAuthorList list authors
-func (db *Local) GetAuthorList() ([]*model.Author, error) {
+//ListAuthors list authors
+func (db *Local) ListAuthors() ([]*model.Author, error) {
 	db.Lock()
 	defer db.Unlock()
 	ids := make([]int, len(db.authors))

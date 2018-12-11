@@ -36,8 +36,8 @@ func (db *Local) GetCategoryByName(name string) (*model.Category, error) {
 	return db.getCategoryByName(name)
 }
 
-//GetCategoryList list categories
-func (db *Local) GetCategoryList() ([]*model.Category, error) {
+//ListCategories list categories
+func (db *Local) ListCategories() ([]*model.Category, error) {
 	db.Lock()
 	defer db.Unlock()
 	ids := make([]int, len(db.categories))

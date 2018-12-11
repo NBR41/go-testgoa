@@ -27,7 +27,7 @@ func (m *Model) GetCategoryByName(name string) (*model.Category, error) {
 	return m.getCategory(`SELECT id, name FROM category where name = ?`, name)
 }
 
-func (m *Model) GetCategoryList() ([]*model.Category, error) {
+func (m *Model) ListCategories() ([]*model.Category, error) {
 	rows, err := m.db.Query(`SELECT id, name FROM category`)
 	if err != nil {
 		return nil, err

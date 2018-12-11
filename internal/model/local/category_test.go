@@ -40,7 +40,7 @@ func TestGetCategoryByName(t *testing.T) {
 func TestGetCategoryList(t *testing.T) {
 	l := New(nil)
 
-	bs, err := l.GetCategoryList()
+	bs, err := l.ListCategories()
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}

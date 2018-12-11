@@ -12,7 +12,7 @@ import (
 
 func TestGetUserList(t *testing.T) {
 	l := New(nil)
-	us, err := l.GetUserList()
+	us, err := l.ListUsers()
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}

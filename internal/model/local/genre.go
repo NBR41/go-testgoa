@@ -36,8 +36,8 @@ func (db *Local) GetGenreByName(name string) (*model.Genre, error) {
 	return db.getGenreByName(name)
 }
 
-//GetGenreList list genres
-func (db *Local) GetGenreList() ([]*model.Genre, error) {
+//ListGenres list genres
+func (db *Local) ListGenres() ([]*model.Genre, error) {
 	db.Lock()
 	defer db.Unlock()
 	ids := make([]int, len(db.genres))

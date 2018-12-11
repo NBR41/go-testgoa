@@ -22,7 +22,7 @@ func (m *Model) getUser(query string, params ...interface{}) (*model.User, error
 }
 
 // GetUserList returns user list
-func (m *Model) GetUserList() ([]model.User, error) {
+func (m *Model) ListUsers() ([]model.User, error) {
 	rows, err := m.db.Query(`SELECT id, nickname, email, verified, admin FROM user`)
 	if err != nil {
 		return nil, err

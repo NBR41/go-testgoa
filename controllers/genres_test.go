@@ -122,9 +122,9 @@ func TestGenreList(t *testing.T) {
 	defer mctrl.Finish()
 	mock := NewMockModeler(mctrl)
 	gomock.InOrder(
-		mock.EXPECT().GetGenreList().Return(nil, errors.New("list error")),
+		mock.EXPECT().ListGenres().Return(nil, errors.New("list error")),
 		mock.EXPECT().Close(),
-		mock.EXPECT().GetGenreList().Return([]*model.Genre{&model.Genre{ID: 123, Name: "foo"}, &model.Genre{ID: 456, Name: "bar"}}, nil),
+		mock.EXPECT().ListGenres().Return([]*model.Genre{&model.Genre{ID: 123, Name: "foo"}, &model.Genre{ID: 456, Name: "bar"}}, nil),
 		mock.EXPECT().Close(),
 	)
 	service := goa.New("my-inventory-test")

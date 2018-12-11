@@ -9,10 +9,10 @@ import (
 func TestGetOwnershipList(t *testing.T) {
 	l := New(nil)
 
-	_, err := l.GetOwnershipList(5)
+	_, err := l.ListOwnershipsByUserID(5)
 	expectingError(t, err, model.ErrNotFound)
 
-	ows, err := l.GetOwnershipList(1)
+	ows, err := l.ListOwnershipsByUserID(1)
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}

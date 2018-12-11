@@ -14,7 +14,7 @@ type Modeler interface {
 
 	GetAuthorByID(id int) (*model.Author, error)
 	GetAuthorByName(name string) (*model.Author, error)
-	GetAuthorList() ([]*model.Author, error)
+	ListAuthors() ([]*model.Author, error)
 	InsertAuthor(name string) (*model.Author, error)
 	UpdateAuthor(id int, name string) error
 	DeleteAuthor(id int) error
@@ -22,53 +22,61 @@ type Modeler interface {
 	GetBookByID(id int) (*model.Book, error)
 	GetBookByISBN(isbn string) (*model.Book, error)
 	GetBookByName(name string) (*model.Book, error)
-	GetBookList() ([]model.Book, error)
+	ListBooks() ([]model.Book, error)
 	InsertBook(isbn, name string) (*model.Book, error)
 	UpdateBook(id int, name string) error
 	DeleteBook(id int) error
 
 	GetCategoryByID(id int) (*model.Category, error)
 	GetCategoryByName(name string) (*model.Category, error)
-	GetCategoryList() ([]*model.Category, error)
+	ListCategories() ([]*model.Category, error)
 	InsertCategory(name string) (*model.Category, error)
 	UpdateCategory(id int, name string) error
 	DeleteCategory(id int) error
 
 	GetEditionTypeByID(id int) (*model.EditionType, error)
 	GetEditionTypeByName(name string) (*model.EditionType, error)
-	GetEditionTypeList() ([]*model.EditionType, error)
+	ListEditionTypes() ([]*model.EditionType, error)
 	InsertEditionType(name string) (*model.EditionType, error)
 	UpdateEditionType(id int, name string) error
 	DeleteEditionType(id int) error
 
 	GetEditorByID(id int) (*model.Editor, error)
 	GetEditorByName(name string) (*model.Editor, error)
-	GetEditorList() ([]*model.Editor, error)
+	ListEditors() ([]*model.Editor, error)
 	InsertEditor(name string) (*model.Editor, error)
 	UpdateEditor(id int, name string) error
 	DeleteEditor(id int) error
 
 	GetGenreByID(id int) (*model.Genre, error)
 	GetGenreByName(name string) (*model.Genre, error)
-	GetGenreList() ([]*model.Genre, error)
+	ListGenres() ([]*model.Genre, error)
 	InsertGenre(name string) (*model.Genre, error)
 	UpdateGenre(id int, name string) error
 	DeleteGenre(id int) error
 
 	GetOwnership(userID, bookID int) (*model.Ownership, error)
-	GetOwnershipList(userID int) ([]*model.Ownership, error)
+	ListOwnershipsByUserID(userID int) ([]*model.Ownership, error)
 	InsertOwnership(userID, bookID int) (*model.Ownership, error)
 	UpdateOwnership(userID, bookID int) error
 	DeleteOwnership(userID, bookID int) error
 
 	GetRoleByID(id int) (*model.Role, error)
 	GetRoleByName(name string) (*model.Role, error)
-	GetRoleList() ([]*model.Role, error)
+	ListRoles() ([]*model.Role, error)
 	InsertRole(name string) (*model.Role, error)
 	UpdateRole(id int, name string) error
 	DeleteRole(id int) error
 
-	GetUserList() ([]model.User, error)
+	GetCollectionByID(id int) (*model.Collection, error)
+	GetCollectionByName(name string) (*model.Collection, error)
+	InsertCollection(name string, editorID int) (*model.Collection, error)
+	UpdateCollection(name *string, editorID *int) error
+	DeleteCollection(id int) error
+	ListCollections() ([]*model.Collection, error)
+	ListCollectionsByEditorID(id int) ([]*model.Collection, error)
+
+	ListUsers() ([]model.User, error)
 	GetUserByID(id int) (*model.User, error)
 	GetUserByEmail(email string) (*model.User, error)
 	GetUserByNickname(nickname string) (*model.User, error)

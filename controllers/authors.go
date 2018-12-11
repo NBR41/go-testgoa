@@ -80,7 +80,7 @@ func (c *AuthorsController) List(ctx *app.ListAuthorsContext) error {
 	}
 	defer func() { m.Close() }()
 
-	list, err := m.GetAuthorList()
+	list, err := m.ListAuthors()
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to get author list`, `error`, err.Error())
 		return ctx.InternalServerError()

@@ -33,6 +33,13 @@ func CategoriesHref(categoryID interface{}) string {
 	return fmt.Sprintf("/categories/%v", paramcategoryID)
 }
 
+// CollectionsHref returns the resource href.
+func CollectionsHref(editorID, collectionID interface{}) string {
+	parameditorID := strings.TrimLeftFunc(fmt.Sprintf("%v", editorID), func(r rune) bool { return r == '/' })
+	paramcollectionID := strings.TrimLeftFunc(fmt.Sprintf("%v", collectionID), func(r rune) bool { return r == '/' })
+	return fmt.Sprintf("/editors/%v/collections/%v", parameditorID, paramcollectionID)
+}
+
 // EditionTypesHref returns the resource href.
 func EditionTypesHref(editionTypeID interface{}) string {
 	parameditionTypeID := strings.TrimLeftFunc(fmt.Sprintf("%v", editionTypeID), func(r rune) bool { return r == '/' })
@@ -45,23 +52,10 @@ func EditorsHref(editorID interface{}) string {
 	return fmt.Sprintf("/editors/%v", parameditorID)
 }
 
-// CollectionsHref returns the resource href.
-func CollectionsHref(editorID, collectionID interface{}) string {
-	parameditorID := strings.TrimLeftFunc(fmt.Sprintf("%v", editorID), func(r rune) bool { return r == '/' })
-	paramcollectionID := strings.TrimLeftFunc(fmt.Sprintf("%v", collectionID), func(r rune) bool { return r == '/' })
-	return fmt.Sprintf("/editors/%v/collections/%v", parameditorID, paramcollectionID)
-}
-
 // GenresHref returns the resource href.
 func GenresHref(genreID interface{}) string {
 	paramgenreID := strings.TrimLeftFunc(fmt.Sprintf("%v", genreID), func(r rune) bool { return r == '/' })
 	return fmt.Sprintf("/genres/%v", paramgenreID)
-}
-
-// UsersHref returns the resource href.
-func UsersHref(userID interface{}) string {
-	paramuserID := strings.TrimLeftFunc(fmt.Sprintf("%v", userID), func(r rune) bool { return r == '/' })
-	return fmt.Sprintf("/users/%v", paramuserID)
 }
 
 // OwnershipsHref returns the resource href.
@@ -81,4 +75,10 @@ func RolesHref(roleID interface{}) string {
 func SeriesHref(seriesID interface{}) string {
 	paramseriesID := strings.TrimLeftFunc(fmt.Sprintf("%v", seriesID), func(r rune) bool { return r == '/' })
 	return fmt.Sprintf("/series/%v", paramseriesID)
+}
+
+// UsersHref returns the resource href.
+func UsersHref(userID interface{}) string {
+	paramuserID := strings.TrimLeftFunc(fmt.Sprintf("%v", userID), func(r rune) bool { return r == '/' })
+	return fmt.Sprintf("/users/%v", paramuserID)
 }

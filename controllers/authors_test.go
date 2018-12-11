@@ -122,9 +122,9 @@ func TestAuthorList(t *testing.T) {
 	defer mctrl.Finish()
 	mock := NewMockModeler(mctrl)
 	gomock.InOrder(
-		mock.EXPECT().GetAuthorList().Return(nil, errors.New("list error")),
+		mock.EXPECT().ListAuthors().Return(nil, errors.New("list error")),
 		mock.EXPECT().Close(),
-		mock.EXPECT().GetAuthorList().Return([]*model.Author{&model.Author{ID: 123, Name: "foo"}, &model.Author{ID: 456, Name: "bar"}}, nil),
+		mock.EXPECT().ListAuthors().Return([]*model.Author{&model.Author{ID: 123, Name: "foo"}, &model.Author{ID: 456, Name: "bar"}}, nil),
 		mock.EXPECT().Close(),
 	)
 	service := goa.New("my-inventory-test")

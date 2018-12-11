@@ -78,7 +78,7 @@ func (c *GenresController) List(ctx *app.ListGenresContext) error {
 	}
 	defer func() { m.Close() }()
 
-	list, err := m.GetGenreList()
+	list, err := m.ListGenres()
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to get genre list`, `error`, err.Error())
 		return ctx.InternalServerError()

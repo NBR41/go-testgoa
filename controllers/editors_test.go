@@ -122,9 +122,9 @@ func TestEditorList(t *testing.T) {
 	defer mctrl.Finish()
 	mock := NewMockModeler(mctrl)
 	gomock.InOrder(
-		mock.EXPECT().GetEditorList().Return(nil, errors.New("list error")),
+		mock.EXPECT().ListEditors().Return(nil, errors.New("list error")),
 		mock.EXPECT().Close(),
-		mock.EXPECT().GetEditorList().Return([]*model.Editor{&model.Editor{ID: 123, Name: "foo"}, &model.Editor{ID: 456, Name: "bar"}}, nil),
+		mock.EXPECT().ListEditors().Return([]*model.Editor{&model.Editor{ID: 123, Name: "foo"}, &model.Editor{ID: 456, Name: "bar"}}, nil),
 		mock.EXPECT().Close(),
 	)
 	service := goa.New("my-inventory-test")

@@ -36,8 +36,8 @@ func (db *Local) GetRoleByName(name string) (*model.Role, error) {
 	return db.getRoleByName(name)
 }
 
-//GetRoleList list roles
-func (db *Local) GetRoleList() ([]*model.Role, error) {
+//ListRoles list roles
+func (db *Local) ListRoles() ([]*model.Role, error) {
 	db.Lock()
 	defer db.Unlock()
 	ids := make([]int, len(db.roles))

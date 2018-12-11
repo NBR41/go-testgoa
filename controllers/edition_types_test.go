@@ -122,9 +122,9 @@ func TestEditionTypeList(t *testing.T) {
 	defer mctrl.Finish()
 	mock := NewMockModeler(mctrl)
 	gomock.InOrder(
-		mock.EXPECT().GetEditionTypeList().Return(nil, errors.New("list error")),
+		mock.EXPECT().ListEditionTypes().Return(nil, errors.New("list error")),
 		mock.EXPECT().Close(),
-		mock.EXPECT().GetEditionTypeList().Return([]*model.EditionType{&model.EditionType{ID: 123, Name: "foo"}, &model.EditionType{ID: 456, Name: "bar"}}, nil),
+		mock.EXPECT().ListEditionTypes().Return([]*model.EditionType{&model.EditionType{ID: 123, Name: "foo"}, &model.EditionType{ID: 456, Name: "bar"}}, nil),
 		mock.EXPECT().Close(),
 	)
 	service := goa.New("my-inventory-test")

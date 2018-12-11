@@ -27,7 +27,7 @@ func (m *Model) GetEditionTypeByName(name string) (*model.EditionType, error) {
 	return m.getEditionType(`SELECT id, name FROM edition_type where name = ?`, name)
 }
 
-func (m *Model) GetEditionTypeList() ([]*model.EditionType, error) {
+func (m *Model) ListEditionTypes() ([]*model.EditionType, error) {
 	rows, err := m.db.Query(`SELECT id, name FROM edition_type`)
 	if err != nil {
 		return nil, err

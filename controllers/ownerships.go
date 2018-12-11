@@ -144,7 +144,7 @@ func (c *OwnershipsController) List(ctx *app.ListOwnershipsContext) error {
 	}
 	defer func() { m.Close() }()
 
-	books, err := m.GetOwnershipList(ctx.UserID)
+	books, err := m.ListOwnershipsByUserID(ctx.UserID)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`unable to get ownership list`, `error`, err)
 		return ctx.InternalServerError()

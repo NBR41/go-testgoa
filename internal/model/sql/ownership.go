@@ -5,7 +5,7 @@ import (
 )
 
 // GetOwnershipList returns book list by user ID
-func (m *Model) GetOwnershipList(userID int) ([]*model.Ownership, error) {
+func (m *Model) ListOwnershipsByUserID(userID int) ([]*model.Ownership, error) {
 	rows, err := m.db.Query(
 		`
 SELECT b.id, b.isbn, b.name

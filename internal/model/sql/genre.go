@@ -27,7 +27,7 @@ func (m *Model) GetGenreByName(name string) (*model.Genre, error) {
 	return m.getGenre(`SELECT id, name FROM genre where name = ?`, name)
 }
 
-func (m *Model) GetGenreList() ([]*model.Genre, error) {
+func (m *Model) ListGenres() ([]*model.Genre, error) {
 	rows, err := m.db.Query(`SELECT id, name FROM genre`)
 	if err != nil {
 		return nil, err

@@ -169,7 +169,7 @@ func TestGetGenreByName(t *testing.T) {
 	}
 }
 
-func TestGetGenreList(t *testing.T) {
+func TestListGenres(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)

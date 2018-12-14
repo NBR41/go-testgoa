@@ -169,7 +169,7 @@ func TestGetEditionTypeByName(t *testing.T) {
 	}
 }
 
-func TestGetEditionTypeList(t *testing.T) {
+func TestListEditionTypes(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)

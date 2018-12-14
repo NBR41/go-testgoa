@@ -10,7 +10,7 @@ import (
 	"github.com/golang/mock/gomock"
 )
 
-func TestGetUserList(t *testing.T) {
+func TestListUsers(t *testing.T) {
 	l := New(nil)
 	us, err := l.ListUsers()
 	if err != nil {

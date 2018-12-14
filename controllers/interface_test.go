@@ -693,15 +693,15 @@ func (mr *MockModelerMockRecorder) InsertCollection(name, editorID interface{}) 
 }
 
 // UpdateCollection mocks base method
-func (m *MockModeler) UpdateCollection(name *string, editorID *int) error {
-	ret := m.ctrl.Call(m, "UpdateCollection", name, editorID)
+func (m *MockModeler) UpdateCollection(id int, name *string, editorID *int) error {
+	ret := m.ctrl.Call(m, "UpdateCollection", id, name, editorID)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // UpdateCollection indicates an expected call of UpdateCollection
-func (mr *MockModelerMockRecorder) UpdateCollection(name, editorID interface{}) *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateCollection", reflect.TypeOf((*MockModeler)(nil).UpdateCollection), name, editorID)
+func (mr *MockModelerMockRecorder) UpdateCollection(id, name, editorID interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateCollection", reflect.TypeOf((*MockModeler)(nil).UpdateCollection), id, name, editorID)
 }
 
 // DeleteCollection mocks base method

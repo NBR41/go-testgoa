@@ -76,7 +76,7 @@ func TestGetBookByISBN(t *testing.T) {
 	}
 }
 
-func TestGetBookList(t *testing.T) {
+func TestListBooks(t *testing.T) {
 	l := New(nil)
 
 	bs, err := l.ListBooks()

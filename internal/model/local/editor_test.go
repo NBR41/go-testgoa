@@ -37,7 +37,7 @@ func TestGetEditorByName(t *testing.T) {
 	}
 }
 
-func TestGetEditorList(t *testing.T) {
+func TestListEditors(t *testing.T) {
 	l := New(nil)
 
 	bs, err := l.ListEditors()

@@ -37,7 +37,7 @@ func TestGetCategoryByName(t *testing.T) {
 	}
 }
 
-func TestGetCategoryList(t *testing.T) {
+func TestListCategories(t *testing.T) {
 	l := New(nil)
 
 	bs, err := l.ListCategories()

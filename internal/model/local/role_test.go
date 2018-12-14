@@ -37,7 +37,7 @@ func TestGetRoleByName(t *testing.T) {
 	}
 }
 
-func TestGetRoleList(t *testing.T) {
+func TestListRoles(t *testing.T) {
 	l := New(nil)
 
 	bs, err := l.ListRoles()

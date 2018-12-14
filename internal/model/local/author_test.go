@@ -37,7 +37,7 @@ func TestGetAuthorByName(t *testing.T) {
 	}
 }
 
-func TestGetAuthorList(t *testing.T) {
+func TestListAuthors(t *testing.T) {
 	l := New(nil)
 
 	bs, err := l.ListAuthors()

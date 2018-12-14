@@ -71,7 +71,7 @@ type Modeler interface {
 	GetCollectionByID(id int) (*model.Collection, error)
 	GetCollectionByName(name string) (*model.Collection, error)
 	InsertCollection(name string, editorID int) (*model.Collection, error)
-	UpdateCollection(name *string, editorID *int) error
+	UpdateCollection(id int, name *string, editorID *int) error
 	DeleteCollection(id int) error
 	ListCollections() ([]*model.Collection, error)
 	ListCollectionsByEditorID(id int) ([]*model.Collection, error)

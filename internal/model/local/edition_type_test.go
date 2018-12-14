@@ -37,7 +37,7 @@ func TestGetEditionTypeByName(t *testing.T) {
 	}
 }
 
-func TestGetEditionTypeList(t *testing.T) {
+func TestListEditionTypes(t *testing.T) {
 	l := New(nil)
 
 	bs, err := l.ListEditionTypes()

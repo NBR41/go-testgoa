@@ -6,7 +6,7 @@ import (
 	"github.com/NBR41/go-testgoa/internal/model"
 )
 
-func TestGetOwnershipList(t *testing.T) {
+func TestListOwnershipsByUserID(t *testing.T) {
 	l := New(nil)
 
 	_, err := l.ListOwnershipsByUserID(5)

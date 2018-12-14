@@ -37,7 +37,7 @@ func TestGetGenreByName(t *testing.T) {
 	}
 }
 
-func TestGetGenreList(t *testing.T) {
+func TestListGenres(t *testing.T) {
 	l := New(nil)
 
 	bs, err := l.ListGenres()

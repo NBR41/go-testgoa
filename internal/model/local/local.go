@@ -15,6 +15,7 @@ type Local struct {
 	ownerships   map[int][]*model.Book
 	authors      map[int]*model.Author
 	categories   map[int]*model.Category
+	collections  map[int]*model.Collection
 	editionTypes map[int]*model.EditionType
 	editors      map[int]*model.Editor
 	genres       map[int]*model.Genre
@@ -33,6 +34,7 @@ func New(pass model.Passworder) *Local {
 	editor := &model.Editor{ID: 1, Name: "editor1"}
 	genre := &model.Genre{ID: 1, Name: "genre1"}
 	role := &model.Role{ID: 1, Name: "role1"}
+	collection := &model.Collection{ID: 1, Name: "collection1", EditorID: 1, Editor: editor}
 	return &Local{
 		pass: pass,
 		users: map[int]*model.User{
@@ -66,6 +68,7 @@ func New(pass model.Passworder) *Local {
 		editors:      map[int]*model.Editor{1: editor},
 		genres:       map[int]*model.Genre{1: genre},
 		roles:        map[int]*model.Role{1: role},
+		collections:  map[int]*model.Collection{1: collection},
 	}
 }
 

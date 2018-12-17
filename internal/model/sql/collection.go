@@ -128,7 +128,7 @@ func (m *Model) ListCollections() ([]*model.Collection, error) {
 	)
 }
 
-//ListCollections list all collections for an editor id
+//ListCollectionsByEditorID list all collections for an editor id
 func (m *Model) ListCollectionsByEditorID(id int) ([]*model.Collection, error) {
 	return m.listCollections(
 		`SELECT c.id, c.name, e.id, e.name FROM collection c JOIN editors e ON (e.id = c.editor_id) where e.id = ?`,

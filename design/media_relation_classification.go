@@ -13,7 +13,7 @@ var _ = Resource("classifications", func() {
 	DefaultMedia(ClassMedia)
 
 	Action("list", func() {
-		Description("Get series classes")
+		Description("List series classes")
 		Routing(GET(""))
 		Security(JWTAuth)
 		// Unauthorized
@@ -39,7 +39,7 @@ var _ = Resource("classifications", func() {
 		// Unauthorized
 		Response(Unauthorized)
 		// OK
-		Response(Created, "/books/[0-9]+/roles/[0-9]+")
+		Response(Created, "/classes/[0-9]+")
 		// user NotFound
 		Response(NotFound)
 		// App error
@@ -51,7 +51,7 @@ var _ = Resource("classifications", func() {
 	})
 
 	Action("show", func() {
-		Description("Get series class")
+		Description("Get series classification")
 		Routing(GET(classIDPath))
 		Params(func() {
 			attrClassID()

@@ -8,10 +8,11 @@ import (
 )
 
 var (
+	categoryPath     = "/categories"
 	categoryIDPath   = "/:category_id"
 	attrCategoryID   = func() { Attribute("category_id", Integer, "Unique Category ID", defIDConstraint) }
 	attrCategoryName = func() {
-		Attribute("category_name", String, "Category Name (Thriller/Romance/...)", defStringConstraint)
+		Attribute("category_name", String, "Category Name (Shonen/Shojo/Seinen)", defStringConstraint)
 	}
 )
 
@@ -34,17 +35,16 @@ var CategoryMedia = MediaType("application/vnd.category+json", func() {
 
 	View("link", func() {
 		Attribute("category_id")
-		Attribute("category_name")
 		Attribute("href")
 	})
 })
 
 var _ = Resource("categories", func() {
-	BasePath("/categories")
+	BasePath(categoryPath)
 	DefaultMedia(CategoryMedia)
 
 	Action("list", func() {
-		Description("Get categories")
+		Description("List categories")
 		Routing(GET(""))
 		// ok
 		Response(OK, CollectionOf(CategoryMedia))

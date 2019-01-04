@@ -8,6 +8,7 @@ import (
 )
 
 var (
+	authorshipPath   = "/authorships"
 	authorshipIDPath = "/:authorship_id"
 	attrAuthorshipID = func() { Attribute("authorship_id", Integer, "Unique Authorship ID", defIDConstraint) }
 )
@@ -39,11 +40,11 @@ var AuthorshipMedia = MediaType("application/vnd.authorship+json", func() {
 })
 
 var _ = Resource("authorships", func() {
-	BasePath("/authorships")
+	BasePath(authorshipPath)
 	DefaultMedia(AuthorshipMedia)
 
 	Action("list", func() {
-		Description("Get authorships")
+		Description("List authorships")
 		Routing(GET(""))
 		Security(JWTAuth)
 		// Unauthorized

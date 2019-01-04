@@ -116,7 +116,7 @@ func ListSeriesPath() string {
 	return fmt.Sprintf("/series")
 }
 
-// Get series
+// List series
 func (c *Client) ListSeries(ctx context.Context, path string) (*http.Response, error) {
 	req, err := c.NewListSeriesRequest(ctx, path)
 	if err != nil {

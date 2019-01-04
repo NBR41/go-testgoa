@@ -8,6 +8,7 @@ import (
 )
 
 var (
+	userPath      = "/users"
 	userIDPath    = "/:user_id"
 	attrUserID    = func() { Attribute("user_id", Integer, "Unique User ID", defIDConstraint) }
 	attrUserEmail = func() {
@@ -64,7 +65,7 @@ var UserMedia = MediaType("application/vnd.user+json", func() {
 })
 
 var _ = Resource("users", func() {
-	BasePath("/users")
+	BasePath(userPath)
 	DefaultMedia(UserMedia)
 
 	Action("list", func() {

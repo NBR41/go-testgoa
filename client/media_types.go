@@ -55,8 +55,6 @@ func (mt *Author) Validate() (err error) {
 type AuthorLink struct {
 	// Unique Author ID
 	AuthorID int `form:"author_id" json:"author_id" yaml:"author_id" xml:"author_id"`
-	// Author Name
-	AuthorName string `form:"author_name" json:"author_name" yaml:"author_name" xml:"author_name"`
 	// API href for making requests
 	Href string `form:"href" json:"href" yaml:"href" xml:"href"`
 }
@@ -64,20 +62,11 @@ type AuthorLink struct {
 // Validate validates the AuthorLink media type instance.
 func (mt *AuthorLink) Validate() (err error) {
 
-	if mt.AuthorName == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "author_name"))
-	}
 	if mt.Href == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "href"))
 	}
 	if mt.AuthorID < 1 {
 		err = goa.MergeErrors(err, goa.InvalidRangeError(`response.author_id`, mt.AuthorID, 1, true))
-	}
-	if utf8.RuneCountInString(mt.AuthorName) < 1 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.author_name`, mt.AuthorName, utf8.RuneCountInString(mt.AuthorName), 1, true))
-	}
-	if utf8.RuneCountInString(mt.AuthorName) > 128 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.author_name`, mt.AuthorName, utf8.RuneCountInString(mt.AuthorName), 128, false))
 	}
 	return
 }
@@ -148,6 +137,8 @@ func (c *Client) DecodeAuthorLinkCollection(resp *http.Response) (AuthorLinkColl
 //
 // Identifier: application/vnd.authorship+json; view=default
 type Authorship struct {
+	// author struct
+	Author *Author `form:"author,omitempty" json:"author,omitempty" yaml:"author,omitempty" xml:"author,omitempty"`
 	// Unique Author ID
 	AuthorID int `form:"author_id" json:"author_id" yaml:"author_id" xml:"author_id"`
 	// book struct
@@ -159,7 +150,7 @@ type Authorship struct {
 	// role struct
 	Role *Role `form:"role,omitempty" json:"role,omitempty" yaml:"role,omitempty" xml:"role,omitempty"`
 	// Unique Role ID
-	RoleID *int `form:"role_id,omitempty" json:"role_id,omitempty" yaml:"role_id,omitempty" xml:"role_id,omitempty"`
+	RoleID int `form:"role_id" json:"role_id" yaml:"role_id" xml:"role_id"`
 }
 
 // Validate validates the Authorship media type instance.
@@ -167,6 +158,11 @@ func (mt *Authorship) Validate() (err error) {
 
 	if mt.Href == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "href"))
+	}
+	if mt.Author != nil {
+		if err2 := mt.Author.Validate(); err2 != nil {
+			err = goa.MergeErrors(err, err2)
+		}
 	}
 	if mt.AuthorID < 1 {
 		err = goa.MergeErrors(err, goa.InvalidRangeError(`response.author_id`, mt.AuthorID, 1, true))
@@ -184,10 +180,8 @@ func (mt *Authorship) Validate() (err error) {
 			err = goa.MergeErrors(err, err2)
 		}
 	}
-	if mt.RoleID != nil {
-		if *mt.RoleID < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`response.role_id`, *mt.RoleID, 1, true))
-		}
+	if mt.RoleID < 1 {
+		err = goa.MergeErrors(err, goa.InvalidRangeError(`response.role_id`, mt.RoleID, 1, true))
 	}
 	return
 }
@@ -279,6 +273,10 @@ type Book struct {
 	BookName string `form:"book_name" json:"book_name" yaml:"book_name" xml:"book_name"`
 	// API href for making requests
 	Href string `form:"href" json:"href" yaml:"href" xml:"href"`
+	// series struct
+	Series *Series `form:"series,omitempty" json:"series,omitempty" yaml:"series,omitempty" xml:"series,omitempty"`
+	// Unique Series ID
+	SeriesID *int `form:"series_id,omitempty" json:"series_id,omitempty" yaml:"series_id,omitempty" xml:"series_id,omitempty"`
 }
 
 // Validate validates the Book media type instance.
@@ -308,6 +306,16 @@ func (mt *Book) Validate() (err error) {
 	if utf8.RuneCountInString(mt.BookName) > 128 {
 		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.book_name`, mt.BookName, utf8.RuneCountInString(mt.BookName), 128, false))
 	}
+	if mt.Series != nil {
+		if err2 := mt.Series.Validate(); err2 != nil {
+			err = goa.MergeErrors(err, err2)
+		}
+	}
+	if mt.SeriesID != nil {
+		if *mt.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`response.series_id`, *mt.SeriesID, 1, true))
+		}
+	}
 	return
 }
 
@@ -319,10 +327,10 @@ type BookLink struct {
 	BookID int `form:"book_id" json:"book_id" yaml:"book_id" xml:"book_id"`
 	// Book ISBN
 	BookIsbn string `form:"book_isbn" json:"book_isbn" yaml:"book_isbn" xml:"book_isbn"`
-	// Book Name
-	BookName string `form:"book_name" json:"book_name" yaml:"book_name" xml:"book_name"`
 	// API href for making requests
 	Href string `form:"href" json:"href" yaml:"href" xml:"href"`
+	// Unique Series ID
+	SeriesID *int `form:"series_id,omitempty" json:"series_id,omitempty" yaml:"series_id,omitempty" xml:"series_id,omitempty"`
 }
 
 // Validate validates the BookLink media type instance.
@@ -330,9 +338,6 @@ func (mt *BookLink) Validate() (err error) {
 
 	if mt.BookIsbn == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "book_isbn"))
-	}
-	if mt.BookName == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "book_name"))
 	}
 	if mt.Href == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "href"))
@@ -346,11 +351,10 @@ func (mt *BookLink) Validate() (err error) {
 	if utf8.RuneCountInString(mt.BookIsbn) > 128 {
 		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.book_isbn`, mt.BookIsbn, utf8.RuneCountInString(mt.BookIsbn), 128, false))
 	}
-	if utf8.RuneCountInString(mt.BookName) < 1 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.book_name`, mt.BookName, utf8.RuneCountInString(mt.BookName), 1, true))
-	}
-	if utf8.RuneCountInString(mt.BookName) > 128 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.book_name`, mt.BookName, utf8.RuneCountInString(mt.BookName), 128, false))
+	if mt.SeriesID != nil {
+		if *mt.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`response.series_id`, *mt.SeriesID, 1, true))
+		}
 	}
 	return
 }
@@ -423,7 +427,7 @@ func (c *Client) DecodeBookLinkCollection(resp *http.Response) (BookLinkCollecti
 type Category struct {
 	// Unique Category ID
 	CategoryID int `form:"category_id" json:"category_id" yaml:"category_id" xml:"category_id"`
-	// Category Name (Thriller/Romance/...)
+	// Category Name (Shonen/Shojo/Seinen)
 	CategoryName string `form:"category_name" json:"category_name" yaml:"category_name" xml:"category_name"`
 	// API href for making requests
 	Href string `form:"href" json:"href" yaml:"href" xml:"href"`
@@ -456,8 +460,6 @@ func (mt *Category) Validate() (err error) {
 type CategoryLink struct {
 	// Unique Category ID
 	CategoryID int `form:"category_id" json:"category_id" yaml:"category_id" xml:"category_id"`
-	// Category Name (Thriller/Romance/...)
-	CategoryName string `form:"category_name" json:"category_name" yaml:"category_name" xml:"category_name"`
 	// API href for making requests
 	Href string `form:"href" json:"href" yaml:"href" xml:"href"`
 }
@@ -465,20 +467,11 @@ type CategoryLink struct {
 // Validate validates the CategoryLink media type instance.
 func (mt *CategoryLink) Validate() (err error) {
 
-	if mt.CategoryName == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "category_name"))
-	}
 	if mt.Href == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "href"))
 	}
 	if mt.CategoryID < 1 {
 		err = goa.MergeErrors(err, goa.InvalidRangeError(`response.category_id`, mt.CategoryID, 1, true))
-	}
-	if utf8.RuneCountInString(mt.CategoryName) < 1 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.category_name`, mt.CategoryName, utf8.RuneCountInString(mt.CategoryName), 1, true))
-	}
-	if utf8.RuneCountInString(mt.CategoryName) > 128 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.category_name`, mt.CategoryName, utf8.RuneCountInString(mt.CategoryName), 128, false))
 	}
 	return
 }
@@ -545,6 +538,123 @@ func (c *Client) DecodeCategoryLinkCollection(resp *http.Response) (CategoryLink
 	return decoded, err
 }
 
+// A Class (default view)
+//
+// Identifier: application/vnd.class+json; view=default
+type Class struct {
+	// Unique Class ID
+	ClassID int `form:"class_id" json:"class_id" yaml:"class_id" xml:"class_id"`
+	// Class Name (Thriller/Romance/...)
+	ClassName string `form:"class_name" json:"class_name" yaml:"class_name" xml:"class_name"`
+	// API href for making requests
+	Href string `form:"href" json:"href" yaml:"href" xml:"href"`
+}
+
+// Validate validates the Class media type instance.
+func (mt *Class) Validate() (err error) {
+
+	if mt.ClassName == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "class_name"))
+	}
+	if mt.Href == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "href"))
+	}
+	if mt.ClassID < 1 {
+		err = goa.MergeErrors(err, goa.InvalidRangeError(`response.class_id`, mt.ClassID, 1, true))
+	}
+	if utf8.RuneCountInString(mt.ClassName) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.class_name`, mt.ClassName, utf8.RuneCountInString(mt.ClassName), 1, true))
+	}
+	if utf8.RuneCountInString(mt.ClassName) > 128 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.class_name`, mt.ClassName, utf8.RuneCountInString(mt.ClassName), 128, false))
+	}
+	return
+}
+
+// A Class (link view)
+//
+// Identifier: application/vnd.class+json; view=link
+type ClassLink struct {
+	// Unique Class ID
+	ClassID int `form:"class_id" json:"class_id" yaml:"class_id" xml:"class_id"`
+	// API href for making requests
+	Href string `form:"href" json:"href" yaml:"href" xml:"href"`
+}
+
+// Validate validates the ClassLink media type instance.
+func (mt *ClassLink) Validate() (err error) {
+
+	if mt.Href == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "href"))
+	}
+	if mt.ClassID < 1 {
+		err = goa.MergeErrors(err, goa.InvalidRangeError(`response.class_id`, mt.ClassID, 1, true))
+	}
+	return
+}
+
+// DecodeClass decodes the Class instance encoded in resp body.
+func (c *Client) DecodeClass(resp *http.Response) (*Class, error) {
+	var decoded Class
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
+// DecodeClassLink decodes the ClassLink instance encoded in resp body.
+func (c *Client) DecodeClassLink(resp *http.Response) (*ClassLink, error) {
+	var decoded ClassLink
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
+// ClassCollection is the media type for an array of Class (default view)
+//
+// Identifier: application/vnd.class+json; type=collection; view=default
+type ClassCollection []*Class
+
+// Validate validates the ClassCollection media type instance.
+func (mt ClassCollection) Validate() (err error) {
+	for _, e := range mt {
+		if e != nil {
+			if err2 := e.Validate(); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
+// ClassCollection is the media type for an array of Class (link view)
+//
+// Identifier: application/vnd.class+json; type=collection; view=link
+type ClassLinkCollection []*ClassLink
+
+// Validate validates the ClassLinkCollection media type instance.
+func (mt ClassLinkCollection) Validate() (err error) {
+	for _, e := range mt {
+		if e != nil {
+			if err2 := e.Validate(); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
+// DecodeClassCollection decodes the ClassCollection instance encoded in resp body.
+func (c *Client) DecodeClassCollection(resp *http.Response) (ClassCollection, error) {
+	var decoded ClassCollection
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return decoded, err
+}
+
+// DecodeClassLinkCollection decodes the ClassLinkCollection instance encoded in resp body.
+func (c *Client) DecodeClassLinkCollection(resp *http.Response) (ClassLinkCollection, error) {
+	var decoded ClassLinkCollection
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return decoded, err
+}
+
 // A Collection (default view)
 //
 // Identifier: application/vnd.collection+json; view=default
@@ -597,10 +707,6 @@ func (mt *Collection) Validate() (err error) {
 type CollectionLink struct {
 	// Unique Collection ID
 	CollectionID int `form:"collection_id" json:"collection_id" yaml:"collection_id" xml:"collection_id"`
-	// Collection Name (Découverte/Shonen)
-	CollectionName string `form:"collection_name" json:"collection_name" yaml:"collection_name" xml:"collection_name"`
-	// editor struct
-	Editor *Editor `form:"editor,omitempty" json:"editor,omitempty" yaml:"editor,omitempty" xml:"editor,omitempty"`
 	// Unique Editor ID
 	EditorID int `form:"editor_id" json:"editor_id" yaml:"editor_id" xml:"editor_id"`
 	// API href for making requests
@@ -610,26 +716,11 @@ type CollectionLink struct {
 // Validate validates the CollectionLink media type instance.
 func (mt *CollectionLink) Validate() (err error) {
 
-	if mt.CollectionName == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "collection_name"))
-	}
-
 	if mt.Href == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "href"))
 	}
 	if mt.CollectionID < 1 {
 		err = goa.MergeErrors(err, goa.InvalidRangeError(`response.collection_id`, mt.CollectionID, 1, true))
-	}
-	if utf8.RuneCountInString(mt.CollectionName) < 1 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.collection_name`, mt.CollectionName, utf8.RuneCountInString(mt.CollectionName), 1, true))
-	}
-	if utf8.RuneCountInString(mt.CollectionName) > 128 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.collection_name`, mt.CollectionName, utf8.RuneCountInString(mt.CollectionName), 128, false))
-	}
-	if mt.Editor != nil {
-		if err2 := mt.Editor.Validate(); err2 != nil {
-			err = goa.MergeErrors(err, err2)
-		}
 	}
 	if mt.EditorID < 1 {
 		err = goa.MergeErrors(err, goa.InvalidRangeError(`response.editor_id`, mt.EditorID, 1, true))
@@ -699,93 +790,73 @@ func (c *Client) DecodeCollectionLinkCollection(resp *http.Response) (Collection
 	return decoded, err
 }
 
-// An Edition Type (default view)
+// An edition (default view)
 //
-// Identifier: application/vnd.editiontype+json; view=default
-type Editiontype struct {
-	// Unique Edition type ID
-	EditionTypeID int `form:"edition_type_id" json:"edition_type_id" yaml:"edition_type_id" xml:"edition_type_id"`
-	// Editor Name (Deluxe/Ultimate/Pocket)
-	EditionTypeName string `form:"edition_type_name" json:"edition_type_name" yaml:"edition_type_name" xml:"edition_type_name"`
+// Identifier: application/vnd.edition+json; view=default
+type Edition struct {
+	// book struct
+	Book *Book `form:"book,omitempty" json:"book,omitempty" yaml:"book,omitempty" xml:"book,omitempty"`
+	// Unique Book ID
+	BookID int `form:"book_id" json:"book_id" yaml:"book_id" xml:"book_id"`
+	// collection struct
+	Collection *Collection `form:"collection,omitempty" json:"collection,omitempty" yaml:"collection,omitempty" xml:"collection,omitempty"`
+	// Unique Collection ID
+	CollectionID int `form:"collection_id" json:"collection_id" yaml:"collection_id" xml:"collection_id"`
 	// API href for making requests
 	Href string `form:"href" json:"href" yaml:"href" xml:"href"`
+	// print struct
+	Print *Print `form:"print,omitempty" json:"print,omitempty" yaml:"print,omitempty" xml:"print,omitempty"`
+	// Unique Print ID
+	PrintID int `form:"print_id" json:"print_id" yaml:"print_id" xml:"print_id"`
 }
 
-// Validate validates the Editiontype media type instance.
-func (mt *Editiontype) Validate() (err error) {
+// Validate validates the Edition media type instance.
+func (mt *Edition) Validate() (err error) {
 
-	if mt.EditionTypeName == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "edition_type_name"))
-	}
 	if mt.Href == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "href"))
 	}
-	if mt.EditionTypeID < 1 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError(`response.edition_type_id`, mt.EditionTypeID, 1, true))
+	if mt.Book != nil {
+		if err2 := mt.Book.Validate(); err2 != nil {
+			err = goa.MergeErrors(err, err2)
+		}
 	}
-	if utf8.RuneCountInString(mt.EditionTypeName) < 1 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.edition_type_name`, mt.EditionTypeName, utf8.RuneCountInString(mt.EditionTypeName), 1, true))
+	if mt.BookID < 1 {
+		err = goa.MergeErrors(err, goa.InvalidRangeError(`response.book_id`, mt.BookID, 1, true))
 	}
-	if utf8.RuneCountInString(mt.EditionTypeName) > 128 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.edition_type_name`, mt.EditionTypeName, utf8.RuneCountInString(mt.EditionTypeName), 128, false))
+	if mt.Collection != nil {
+		if err2 := mt.Collection.Validate(); err2 != nil {
+			err = goa.MergeErrors(err, err2)
+		}
+	}
+	if mt.CollectionID < 1 {
+		err = goa.MergeErrors(err, goa.InvalidRangeError(`response.collection_id`, mt.CollectionID, 1, true))
+	}
+	if mt.Print != nil {
+		if err2 := mt.Print.Validate(); err2 != nil {
+			err = goa.MergeErrors(err, err2)
+		}
+	}
+	if mt.PrintID < 1 {
+		err = goa.MergeErrors(err, goa.InvalidRangeError(`response.print_id`, mt.PrintID, 1, true))
 	}
 	return
 }
 
-// An Edition Type (link view)
-//
-// Identifier: application/vnd.editiontype+json; view=link
-type EditiontypeLink struct {
-	// Unique Edition type ID
-	EditionTypeID int `form:"edition_type_id" json:"edition_type_id" yaml:"edition_type_id" xml:"edition_type_id"`
-	// Editor Name (Deluxe/Ultimate/Pocket)
-	EditionTypeName string `form:"edition_type_name" json:"edition_type_name" yaml:"edition_type_name" xml:"edition_type_name"`
-	// API href for making requests
-	Href string `form:"href" json:"href" yaml:"href" xml:"href"`
-}
-
-// Validate validates the EditiontypeLink media type instance.
-func (mt *EditiontypeLink) Validate() (err error) {
-
-	if mt.EditionTypeName == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "edition_type_name"))
-	}
-	if mt.Href == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "href"))
-	}
-	if mt.EditionTypeID < 1 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError(`response.edition_type_id`, mt.EditionTypeID, 1, true))
-	}
-	if utf8.RuneCountInString(mt.EditionTypeName) < 1 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.edition_type_name`, mt.EditionTypeName, utf8.RuneCountInString(mt.EditionTypeName), 1, true))
-	}
-	if utf8.RuneCountInString(mt.EditionTypeName) > 128 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.edition_type_name`, mt.EditionTypeName, utf8.RuneCountInString(mt.EditionTypeName), 128, false))
-	}
-	return
-}
-
-// DecodeEditiontype decodes the Editiontype instance encoded in resp body.
-func (c *Client) DecodeEditiontype(resp *http.Response) (*Editiontype, error) {
-	var decoded Editiontype
+// DecodeEdition decodes the Edition instance encoded in resp body.
+func (c *Client) DecodeEdition(resp *http.Response) (*Edition, error) {
+	var decoded Edition
 	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
 	return &decoded, err
 }
 
-// DecodeEditiontypeLink decodes the EditiontypeLink instance encoded in resp body.
-func (c *Client) DecodeEditiontypeLink(resp *http.Response) (*EditiontypeLink, error) {
-	var decoded EditiontypeLink
-	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
-	return &decoded, err
-}
-
-// EditiontypeCollection is the media type for an array of Editiontype (default view)
+// EditionCollection is the media type for an array of Edition (default view)
 //
-// Identifier: application/vnd.editiontype+json; type=collection; view=default
-type EditiontypeCollection []*Editiontype
+// Identifier: application/vnd.edition+json; type=collection; view=default
+type EditionCollection []*Edition
 
-// Validate validates the EditiontypeCollection media type instance.
-func (mt EditiontypeCollection) Validate() (err error) {
+// Validate validates the EditionCollection media type instance.
+func (mt EditionCollection) Validate() (err error) {
 	for _, e := range mt {
 		if e != nil {
 			if err2 := e.Validate(); err2 != nil {
@@ -796,33 +867,9 @@ func (mt EditiontypeCollection) Validate() (err error) {
 	return
 }
 
-// EditiontypeCollection is the media type for an array of Editiontype (link view)
-//
-// Identifier: application/vnd.editiontype+json; type=collection; view=link
-type EditiontypeLinkCollection []*EditiontypeLink
-
-// Validate validates the EditiontypeLinkCollection media type instance.
-func (mt EditiontypeLinkCollection) Validate() (err error) {
-	for _, e := range mt {
-		if e != nil {
-			if err2 := e.Validate(); err2 != nil {
-				err = goa.MergeErrors(err, err2)
-			}
-		}
-	}
-	return
-}
-
-// DecodeEditiontypeCollection decodes the EditiontypeCollection instance encoded in resp body.
-func (c *Client) DecodeEditiontypeCollection(resp *http.Response) (EditiontypeCollection, error) {
-	var decoded EditiontypeCollection
-	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
-	return decoded, err
-}
-
-// DecodeEditiontypeLinkCollection decodes the EditiontypeLinkCollection instance encoded in resp body.
-func (c *Client) DecodeEditiontypeLinkCollection(resp *http.Response) (EditiontypeLinkCollection, error) {
-	var decoded EditiontypeLinkCollection
+// DecodeEditionCollection decodes the EditionCollection instance encoded in resp body.
+func (c *Client) DecodeEditionCollection(resp *http.Response) (EditionCollection, error) {
+	var decoded EditionCollection
 	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
 	return decoded, err
 }
@@ -866,8 +913,6 @@ func (mt *Editor) Validate() (err error) {
 type EditorLink struct {
 	// Unique Editor ID
 	EditorID int `form:"editor_id" json:"editor_id" yaml:"editor_id" xml:"editor_id"`
-	// Editor Name (Glénat/Delcourt)
-	EditorName string `form:"editor_name" json:"editor_name" yaml:"editor_name" xml:"editor_name"`
 	// API href for making requests
 	Href string `form:"href" json:"href" yaml:"href" xml:"href"`
 }
@@ -875,20 +920,11 @@ type EditorLink struct {
 // Validate validates the EditorLink media type instance.
 func (mt *EditorLink) Validate() (err error) {
 
-	if mt.EditorName == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "editor_name"))
-	}
 	if mt.Href == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "href"))
 	}
 	if mt.EditorID < 1 {
 		err = goa.MergeErrors(err, goa.InvalidRangeError(`response.editor_id`, mt.EditorID, 1, true))
-	}
-	if utf8.RuneCountInString(mt.EditorName) < 1 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.editor_name`, mt.EditorName, utf8.RuneCountInString(mt.EditorName), 1, true))
-	}
-	if utf8.RuneCountInString(mt.EditorName) > 128 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.editor_name`, mt.EditorName, utf8.RuneCountInString(mt.EditorName), 128, false))
 	}
 	return
 }
@@ -951,134 +987,6 @@ func (c *Client) DecodeEditorCollection(resp *http.Response) (EditorCollection, 
 // DecodeEditorLinkCollection decodes the EditorLinkCollection instance encoded in resp body.
 func (c *Client) DecodeEditorLinkCollection(resp *http.Response) (EditorLinkCollection, error) {
 	var decoded EditorLinkCollection
-	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
-	return decoded, err
-}
-
-// A Genre (default view)
-//
-// Identifier: application/vnd.genre+json; view=default
-type Genre struct {
-	// Unique Genre ID
-	GenreID int `form:"genre_id" json:"genre_id" yaml:"genre_id" xml:"genre_id"`
-	// Genre Name (Shonen/Shojo/Seinen)
-	GenreName string `form:"genre_name" json:"genre_name" yaml:"genre_name" xml:"genre_name"`
-	// API href for making requests
-	Href string `form:"href" json:"href" yaml:"href" xml:"href"`
-}
-
-// Validate validates the Genre media type instance.
-func (mt *Genre) Validate() (err error) {
-
-	if mt.GenreName == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "genre_name"))
-	}
-	if mt.Href == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "href"))
-	}
-	if mt.GenreID < 1 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError(`response.genre_id`, mt.GenreID, 1, true))
-	}
-	if utf8.RuneCountInString(mt.GenreName) < 1 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.genre_name`, mt.GenreName, utf8.RuneCountInString(mt.GenreName), 1, true))
-	}
-	if utf8.RuneCountInString(mt.GenreName) > 128 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.genre_name`, mt.GenreName, utf8.RuneCountInString(mt.GenreName), 128, false))
-	}
-	return
-}
-
-// A Genre (link view)
-//
-// Identifier: application/vnd.genre+json; view=link
-type GenreLink struct {
-	// Unique Genre ID
-	GenreID int `form:"genre_id" json:"genre_id" yaml:"genre_id" xml:"genre_id"`
-	// Genre Name (Shonen/Shojo/Seinen)
-	GenreName string `form:"genre_name" json:"genre_name" yaml:"genre_name" xml:"genre_name"`
-	// API href for making requests
-	Href string `form:"href" json:"href" yaml:"href" xml:"href"`
-}
-
-// Validate validates the GenreLink media type instance.
-func (mt *GenreLink) Validate() (err error) {
-
-	if mt.GenreName == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "genre_name"))
-	}
-	if mt.Href == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "href"))
-	}
-	if mt.GenreID < 1 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError(`response.genre_id`, mt.GenreID, 1, true))
-	}
-	if utf8.RuneCountInString(mt.GenreName) < 1 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.genre_name`, mt.GenreName, utf8.RuneCountInString(mt.GenreName), 1, true))
-	}
-	if utf8.RuneCountInString(mt.GenreName) > 128 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.genre_name`, mt.GenreName, utf8.RuneCountInString(mt.GenreName), 128, false))
-	}
-	return
-}
-
-// DecodeGenre decodes the Genre instance encoded in resp body.
-func (c *Client) DecodeGenre(resp *http.Response) (*Genre, error) {
-	var decoded Genre
-	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
-	return &decoded, err
-}
-
-// DecodeGenreLink decodes the GenreLink instance encoded in resp body.
-func (c *Client) DecodeGenreLink(resp *http.Response) (*GenreLink, error) {
-	var decoded GenreLink
-	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
-	return &decoded, err
-}
-
-// GenreCollection is the media type for an array of Genre (default view)
-//
-// Identifier: application/vnd.genre+json; type=collection; view=default
-type GenreCollection []*Genre
-
-// Validate validates the GenreCollection media type instance.
-func (mt GenreCollection) Validate() (err error) {
-	for _, e := range mt {
-		if e != nil {
-			if err2 := e.Validate(); err2 != nil {
-				err = goa.MergeErrors(err, err2)
-			}
-		}
-	}
-	return
-}
-
-// GenreCollection is the media type for an array of Genre (link view)
-//
-// Identifier: application/vnd.genre+json; type=collection; view=link
-type GenreLinkCollection []*GenreLink
-
-// Validate validates the GenreLinkCollection media type instance.
-func (mt GenreLinkCollection) Validate() (err error) {
-	for _, e := range mt {
-		if e != nil {
-			if err2 := e.Validate(); err2 != nil {
-				err = goa.MergeErrors(err, err2)
-			}
-		}
-	}
-	return
-}
-
-// DecodeGenreCollection decodes the GenreCollection instance encoded in resp body.
-func (c *Client) DecodeGenreCollection(resp *http.Response) (GenreCollection, error) {
-	var decoded GenreCollection
-	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
-	return decoded, err
-}
-
-// DecodeGenreLinkCollection decodes the GenreLinkCollection instance encoded in resp body.
-func (c *Client) DecodeGenreLinkCollection(resp *http.Response) (GenreLinkCollection, error) {
-	var decoded GenreLinkCollection
 	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
 	return decoded, err
 }
@@ -1155,6 +1063,123 @@ func (c *Client) DecodeOwnershipCollection(resp *http.Response) (OwnershipCollec
 	return decoded, err
 }
 
+// A Print (default view)
+//
+// Identifier: application/vnd.print+json; view=default
+type Print struct {
+	// API href for making requests
+	Href string `form:"href" json:"href" yaml:"href" xml:"href"`
+	// Unique Print ID
+	PrintID int `form:"print_id" json:"print_id" yaml:"print_id" xml:"print_id"`
+	// Print Name (Deluxe/Ultimate/Pocket)
+	PrintName string `form:"print_name" json:"print_name" yaml:"print_name" xml:"print_name"`
+}
+
+// Validate validates the Print media type instance.
+func (mt *Print) Validate() (err error) {
+
+	if mt.PrintName == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "print_name"))
+	}
+	if mt.Href == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "href"))
+	}
+	if mt.PrintID < 1 {
+		err = goa.MergeErrors(err, goa.InvalidRangeError(`response.print_id`, mt.PrintID, 1, true))
+	}
+	if utf8.RuneCountInString(mt.PrintName) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.print_name`, mt.PrintName, utf8.RuneCountInString(mt.PrintName), 1, true))
+	}
+	if utf8.RuneCountInString(mt.PrintName) > 128 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.print_name`, mt.PrintName, utf8.RuneCountInString(mt.PrintName), 128, false))
+	}
+	return
+}
+
+// A Print (link view)
+//
+// Identifier: application/vnd.print+json; view=link
+type PrintLink struct {
+	// API href for making requests
+	Href string `form:"href" json:"href" yaml:"href" xml:"href"`
+	// Unique Print ID
+	PrintID int `form:"print_id" json:"print_id" yaml:"print_id" xml:"print_id"`
+}
+
+// Validate validates the PrintLink media type instance.
+func (mt *PrintLink) Validate() (err error) {
+
+	if mt.Href == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "href"))
+	}
+	if mt.PrintID < 1 {
+		err = goa.MergeErrors(err, goa.InvalidRangeError(`response.print_id`, mt.PrintID, 1, true))
+	}
+	return
+}
+
+// DecodePrint decodes the Print instance encoded in resp body.
+func (c *Client) DecodePrint(resp *http.Response) (*Print, error) {
+	var decoded Print
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
+// DecodePrintLink decodes the PrintLink instance encoded in resp body.
+func (c *Client) DecodePrintLink(resp *http.Response) (*PrintLink, error) {
+	var decoded PrintLink
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
+// PrintCollection is the media type for an array of Print (default view)
+//
+// Identifier: application/vnd.print+json; type=collection; view=default
+type PrintCollection []*Print
+
+// Validate validates the PrintCollection media type instance.
+func (mt PrintCollection) Validate() (err error) {
+	for _, e := range mt {
+		if e != nil {
+			if err2 := e.Validate(); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
+// PrintCollection is the media type for an array of Print (link view)
+//
+// Identifier: application/vnd.print+json; type=collection; view=link
+type PrintLinkCollection []*PrintLink
+
+// Validate validates the PrintLinkCollection media type instance.
+func (mt PrintLinkCollection) Validate() (err error) {
+	for _, e := range mt {
+		if e != nil {
+			if err2 := e.Validate(); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
+// DecodePrintCollection decodes the PrintCollection instance encoded in resp body.
+func (c *Client) DecodePrintCollection(resp *http.Response) (PrintCollection, error) {
+	var decoded PrintCollection
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return decoded, err
+}
+
+// DecodePrintLinkCollection decodes the PrintLinkCollection instance encoded in resp body.
+func (c *Client) DecodePrintLinkCollection(resp *http.Response) (PrintLinkCollection, error) {
+	var decoded PrintLinkCollection
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return decoded, err
+}
+
 // A Role (default view)
 //
 // Identifier: application/vnd.role+json; view=default
@@ -1196,27 +1221,16 @@ type RoleLink struct {
 	Href string `form:"href" json:"href" yaml:"href" xml:"href"`
 	// Unique Role ID
 	RoleID int `form:"role_id" json:"role_id" yaml:"role_id" xml:"role_id"`
-	// Role Name (Author/Scenarist/Cartoonist)
-	RoleName string `form:"role_name" json:"role_name" yaml:"role_name" xml:"role_name"`
 }
 
 // Validate validates the RoleLink media type instance.
 func (mt *RoleLink) Validate() (err error) {
 
-	if mt.RoleName == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "role_name"))
-	}
 	if mt.Href == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "href"))
 	}
 	if mt.RoleID < 1 {
 		err = goa.MergeErrors(err, goa.InvalidRangeError(`response.role_id`, mt.RoleID, 1, true))
-	}
-	if utf8.RuneCountInString(mt.RoleName) < 1 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.role_name`, mt.RoleName, utf8.RuneCountInString(mt.RoleName), 1, true))
-	}
-	if utf8.RuneCountInString(mt.RoleName) > 128 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.role_name`, mt.RoleName, utf8.RuneCountInString(mt.RoleName), 128, false))
 	}
 	return
 }
@@ -1332,8 +1346,6 @@ func (mt *Series) Validate() (err error) {
 //
 // Identifier: application/vnd.series+json; view=link
 type SeriesLink struct {
-	// category struct
-	Category *Category `form:"category,omitempty" json:"category,omitempty" yaml:"category,omitempty" xml:"category,omitempty"`
 	// Unique Category ID
 	CategoryID int `form:"category_id" json:"category_id" yaml:"category_id" xml:"category_id"`
 	// API href for making requests
@@ -1352,11 +1364,6 @@ func (mt *SeriesLink) Validate() (err error) {
 	}
 	if mt.Href == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "href"))
-	}
-	if mt.Category != nil {
-		if err2 := mt.Category.Validate(); err2 != nil {
-			err = goa.MergeErrors(err, err2)
-		}
 	}
 	if mt.CategoryID < 1 {
 		err = goa.MergeErrors(err, goa.InvalidRangeError(`response.category_id`, mt.CategoryID, 1, true))

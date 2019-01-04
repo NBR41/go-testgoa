@@ -119,7 +119,7 @@ func ListCollectionsPath(editorID int) string {
 	return fmt.Sprintf("/editors/%s/collections", param0)
 }
 
-// Get collections
+// List collections
 func (c *Client) ListCollections(ctx context.Context, path string) (*http.Response, error) {
 	req, err := c.NewListCollectionsRequest(ctx, path)
 	if err != nil {

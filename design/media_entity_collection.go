@@ -8,6 +8,7 @@ import (
 )
 
 var (
+	collectionPath     = "/collections"
 	collectionIDPath   = "/:collection_id"
 	attrCollectionID   = func() { Attribute("collection_id", Integer, "Unique Collection ID", defIDConstraint) }
 	attrCollectionName = func() {
@@ -38,20 +39,18 @@ var CollectionMedia = MediaType("application/vnd.collection+json", func() {
 
 	View("link", func() {
 		Attribute("collection_id")
-		Attribute("collection_name")
 		Attribute("editor_id")
-		Attribute("editor")
 		Attribute("href")
 	})
 })
 
 var _ = Resource("collections", func() {
-	BasePath("/collections")
+	BasePath(collectionPath)
 	Parent("editors")
 	DefaultMedia(CollectionMedia)
 
 	Action("list", func() {
-		Description("Get collections")
+		Description("List collections")
 		Routing(GET(""))
 		// ok
 		Response(OK, CollectionOf(CollectionMedia))

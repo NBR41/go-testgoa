@@ -87,7 +87,7 @@ func CreateOwnershipsPath(userID int) string {
 	return fmt.Sprintf("/users/%s/ownerships", param0)
 }
 
-// Create new ownership
+// Create new user ownership
 func (c *Client) CreateOwnerships(ctx context.Context, path string, payload *CreateOwnershipsPayload, contentType string) (*http.Response, error) {
 	req, err := c.NewCreateOwnershipsRequest(ctx, path, payload, contentType)
 	if err != nil {
@@ -172,7 +172,7 @@ func ListOwnershipsPath(userID int) string {
 	return fmt.Sprintf("/users/%s/ownerships", param0)
 }
 
-// Get ownerships
+// List user ownerships
 func (c *Client) ListOwnerships(ctx context.Context, path string) (*http.Response, error) {
 	req, err := c.NewListOwnershipsRequest(ctx, path)
 	if err != nil {
@@ -208,7 +208,7 @@ func ShowOwnershipsPath(userID int, bookID int) string {
 	return fmt.Sprintf("/users/%s/ownerships/%s", param0, param1)
 }
 
-// Get ownerships by ids
+// Get user ownerships by ids
 func (c *Client) ShowOwnerships(ctx context.Context, path string) (*http.Response, error) {
 	req, err := c.NewShowOwnershipsRequest(ctx, path)
 	if err != nil {

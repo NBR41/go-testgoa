@@ -21,7 +21,7 @@ import (
 
 // CreateCategoriesPayload is the categories create action payload.
 type CreateCategoriesPayload struct {
-	// Category Name (Thriller/Romance/...)
+	// Category Name (Shonen/Shojo/Seinen)
 	CategoryName string `form:"category_name" json:"category_name" yaml:"category_name" xml:"category_name"`
 }
 
@@ -114,7 +114,7 @@ func ListCategoriesPath() string {
 	return fmt.Sprintf("/categories")
 }
 
-// Get categories
+// List categories
 func (c *Client) ListCategories(ctx context.Context, path string) (*http.Response, error) {
 	req, err := c.NewListCategoriesRequest(ctx, path)
 	if err != nil {
@@ -169,7 +169,7 @@ func (c *Client) NewShowCategoriesRequest(ctx context.Context, path string) (*ht
 
 // UpdateCategoriesPayload is the categories update action payload.
 type UpdateCategoriesPayload struct {
-	// Category Name (Thriller/Romance/...)
+	// Category Name (Shonen/Shojo/Seinen)
 	CategoryName string `form:"category_name" json:"category_name" yaml:"category_name" xml:"category_name"`
 }
 

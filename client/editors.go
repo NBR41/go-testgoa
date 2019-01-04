@@ -114,7 +114,7 @@ func ListEditorsPath() string {
 	return fmt.Sprintf("/editors")
 }
 
-// Get editors
+// List editors
 func (c *Client) ListEditors(ctx context.Context, path string) (*http.Response, error) {
 	req, err := c.NewListEditorsRequest(ctx, path)
 	if err != nil {

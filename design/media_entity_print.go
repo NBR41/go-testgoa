@@ -8,6 +8,7 @@ import (
 )
 
 var (
+	printPath     = "/prints"
 	printIDPath   = "/:print_id"
 	attrPrintID   = func() { Attribute("print_id", Integer, "Unique Print ID", defIDConstraint) }
 	attrPrintName = func() {
@@ -34,13 +35,12 @@ var PrintMedia = MediaType("application/vnd.print+json", func() {
 
 	View("link", func() {
 		Attribute("print_id")
-		Attribute("print_name")
 		Attribute("href")
 	})
 })
 
 var _ = Resource("prints", func() {
-	BasePath("/prints")
+	BasePath(printPath)
 	DefaultMedia(PrintMedia)
 
 	Action("list", func() {
@@ -68,7 +68,7 @@ var _ = Resource("prints", func() {
 	})
 
 	Action("create", func() {
-		Description("Create new edition type")
+		Description("Create new print edition")
 		Routing(POST(""))
 		Payload(func() {
 			attrPrintName()

@@ -8,6 +8,7 @@ import (
 )
 
 var (
+	seriesPath     = "/series"
 	seriesIDPath   = "/:series_id"
 	attrSeriesID   = func() { Attribute("series_id", Integer, "Unique Series ID", defIDConstraint) }
 	attrSeriesName = func() { Attribute("series_name", String, "Series Name (Akira/Dragon ball)", defStringConstraint) }
@@ -38,17 +39,16 @@ var SeriesMedia = MediaType("application/vnd.series+json", func() {
 		Attribute("series_id")
 		Attribute("series_name")
 		Attribute("category_id")
-		Attribute("category")
 		Attribute("href")
 	})
 })
 
 var _ = Resource("series", func() {
-	BasePath("/series")
+	BasePath(seriesPath)
 	DefaultMedia(SeriesMedia)
 
 	Action("list", func() {
-		Description("Get series")
+		Description("List series")
 		Routing(GET(""))
 		// ok
 		Response(OK, CollectionOf(SeriesMedia))

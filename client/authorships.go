@@ -21,6 +21,8 @@ import (
 
 // CreateAuthorshipsPayload is the authorships create action payload.
 type CreateAuthorshipsPayload struct {
+	// Unique Author ID
+	AuthorID int `form:"author_id" json:"author_id" yaml:"author_id" xml:"author_id"`
 	// Unique Book ID
 	BookID int `form:"book_id" json:"book_id" yaml:"book_id" xml:"book_id"`
 	// Unique Role ID
@@ -28,10 +30,9 @@ type CreateAuthorshipsPayload struct {
 }
 
 // CreateAuthorshipsPath computes a request path to the create action of authorships.
-func CreateAuthorshipsPath(authorID int) string {
-	param0 := strconv.Itoa(authorID)
+func CreateAuthorshipsPath() string {
 
-	return fmt.Sprintf("/authors/%s/books", param0)
+	return fmt.Sprintf("/authorships")
 }
 
 // Create new authorship
@@ -77,12 +78,10 @@ func (c *Client) NewCreateAuthorshipsRequest(ctx context.Context, path string, p
 }
 
 // DeleteAuthorshipsPath computes a request path to the delete action of authorships.
-func DeleteAuthorshipsPath(authorID int, bookID int, roleID int) string {
-	param0 := strconv.Itoa(authorID)
-	param1 := strconv.Itoa(bookID)
-	param2 := strconv.Itoa(roleID)
+func DeleteAuthorshipsPath(authorshipID int) string {
+	param0 := strconv.Itoa(authorshipID)
 
-	return fmt.Sprintf("/authors/%s/books/%s/%s", param0, param1, param2)
+	return fmt.Sprintf("/authorships/%s", param0)
 }
 
 // delete authorships by ids
@@ -114,13 +113,12 @@ func (c *Client) NewDeleteAuthorshipsRequest(ctx context.Context, path string) (
 }
 
 // ListAuthorshipsPath computes a request path to the list action of authorships.
-func ListAuthorshipsPath(authorID int) string {
-	param0 := strconv.Itoa(authorID)
+func ListAuthorshipsPath() string {
 
-	return fmt.Sprintf("/authors/%s/books", param0)
+	return fmt.Sprintf("/authorships")
 }
 
-// Get authorships
+// List authorships
 func (c *Client) ListAuthorships(ctx context.Context, path string) (*http.Response, error) {
 	req, err := c.NewListAuthorshipsRequest(ctx, path)
 	if err != nil {
@@ -149,12 +147,10 @@ func (c *Client) NewListAuthorshipsRequest(ctx context.Context, path string) (*h
 }
 
 // ShowAuthorshipsPath computes a request path to the show action of authorships.
-func ShowAuthorshipsPath(authorID int, bookID int, roleID int) string {
-	param0 := strconv.Itoa(authorID)
-	param1 := strconv.Itoa(bookID)
-	param2 := strconv.Itoa(roleID)
+func ShowAuthorshipsPath(authorshipID int) string {
+	param0 := strconv.Itoa(authorshipID)
 
-	return fmt.Sprintf("/authors/%s/books/%s/%s", param0, param1, param2)
+	return fmt.Sprintf("/authorships/%s", param0)
 }
 
 // Get authorships by ids

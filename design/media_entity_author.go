@@ -8,6 +8,7 @@ import (
 )
 
 var (
+	authorPath     = "/authors"
 	authorIDPath   = "/:author_id"
 	attrAuthorID   = func() { Attribute("author_id", Integer, "Unique Author ID", defIDConstraint) }
 	attrAuthorName = func() { Attribute("author_name", String, "Author Name", defStringConstraint) }
@@ -32,17 +33,16 @@ var AuthorMedia = MediaType("application/vnd.author+json", func() {
 
 	View("link", func() {
 		Attribute("author_id")
-		Attribute("author_name")
 		Attribute("href")
 	})
 })
 
 var _ = Resource("authors", func() {
-	BasePath("/authors")
+	BasePath(authorPath)
 	DefaultMedia(AuthorMedia)
 
 	Action("list", func() {
-		Description("Get authors")
+		Description("List authors")
 		Routing(GET(""))
 		// ok
 		Response(OK, CollectionOf(AuthorMedia))

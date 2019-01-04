@@ -8,6 +8,7 @@ import (
 )
 
 var (
+	editorPath     = "/editors"
 	editorIDPath   = "/:editor_id"
 	attrEditorID   = func() { Attribute("editor_id", Integer, "Unique Editor ID", defIDConstraint) }
 	attrEditorName = func() { Attribute("editor_name", String, "Editor Name (Glénat/Delcourt)", defStringConstraint) }
@@ -32,17 +33,16 @@ var EditorMedia = MediaType("application/vnd.editor+json", func() {
 
 	View("link", func() {
 		Attribute("editor_id")
-		Attribute("editor_name")
 		Attribute("href")
 	})
 })
 
 var _ = Resource("editors", func() {
-	BasePath("/editors")
+	BasePath(editorPath)
 	DefaultMedia(EditorMedia)
 
 	Action("list", func() {
-		Description("Get editors")
+		Description("List editors")
 		Routing(GET(""))
 		// ok
 		Response(OK, CollectionOf(EditorMedia))

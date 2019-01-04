@@ -14,8 +14,8 @@ var OwnershipMedia = MediaType("application/vnd.ownership+json", func() {
 	Attributes(func() {
 		attrUserID()
 		attrBookID()
-		attrHref()
 		Attribute("book", BookMedia, "book struct")
+		attrHref()
 		Required("user_id", "book_id", "href")
 	})
 
@@ -33,7 +33,7 @@ var _ = Resource("ownerships", func() {
 	DefaultMedia(OwnershipMedia)
 
 	Action("list", func() {
-		Description("Get ownerships")
+		Description("List user ownerships")
 		Routing(GET(""))
 		Security(JWTAuth)
 		// Unauthorized
@@ -49,7 +49,7 @@ var _ = Resource("ownerships", func() {
 	})
 
 	Action("create", func() {
-		Description("Create new ownership")
+		Description("Create new user ownership")
 		Routing(POST(""))
 		Payload(func() {
 			attrBookID()
@@ -93,7 +93,7 @@ var _ = Resource("ownerships", func() {
 	})
 
 	Action("show", func() {
-		Description("Get ownerships by ids")
+		Description("Get user ownerships by ids")
 		Routing(GET(bookIDPath))
 		Params(attrBookID)
 		Security(JWTAuth)

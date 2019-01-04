@@ -8,6 +8,7 @@ import (
 )
 
 var (
+	rolePath     = "/roles"
 	roleIDPath   = "/:role_id"
 	attrRoleID   = func() { Attribute("role_id", Integer, "Unique Role ID", defIDConstraint) }
 	attrRoleName = func() { Attribute("role_name", String, "Role Name (Author/Scenarist/Cartoonist)", defStringConstraint) }
@@ -32,17 +33,16 @@ var RoleMedia = MediaType("application/vnd.role+json", func() {
 
 	View("link", func() {
 		Attribute("role_id")
-		Attribute("role_name")
 		Attribute("href")
 	})
 })
 
 var _ = Resource("roles", func() {
-	BasePath("/roles")
+	BasePath(rolePath)
 	DefaultMedia(RoleMedia)
 
 	Action("list", func() {
-		Description("Get roles")
+		Description("List roles")
 		Routing(GET(""))
 		// ok
 		Response(OK, CollectionOf(RoleMedia))

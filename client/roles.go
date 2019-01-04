@@ -114,7 +114,7 @@ func ListRolesPath() string {
 	return fmt.Sprintf("/roles")
 }
 
-// Get roles
+// List roles
 func (c *Client) ListRoles(ctx context.Context, path string) (*http.Response, error) {
 	req, err := c.NewListRolesRequest(ctx, path)
 	if err != nil {

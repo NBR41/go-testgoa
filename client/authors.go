@@ -114,7 +114,7 @@ func ListAuthorsPath() string {
 	return fmt.Sprintf("/authors")
 }
 
-// Get authors
+// List authors
 func (c *Client) ListAuthors(ctx context.Context, path string) (*http.Response, error) {
 	req, err := c.NewListAuthorsRequest(ctx, path)
 	if err != nil {

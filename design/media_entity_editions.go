@@ -8,6 +8,7 @@ import (
 )
 
 var (
+	editionPath   = "/editions"
 	editionIDPath = "/:edition_id"
 	attrEditionID = func() { Attribute("edition_id", Integer, "Unique Edition ID", defIDConstraint) }
 )
@@ -22,7 +23,7 @@ var EditionMedia = MediaType("application/vnd.edition+json", func() {
 		attrCollectionID()
 		Attribute("collection", CollectionMedia, "collection struct")
 		attrPrintID()
-		Attribute("edition_type", PrintMedia, "print struct")
+		Attribute("print", PrintMedia, "print struct")
 		attrHref()
 		Required("book_id", "collection_id", "print_id", "href")
 	})
@@ -33,13 +34,13 @@ var EditionMedia = MediaType("application/vnd.edition+json", func() {
 		Attribute("collection_id")
 		Attribute("collection")
 		Attribute("print_id")
-		Attribute("print_id")
+		Attribute("print")
 		Attribute("href")
 	})
 })
 
 var _ = Resource("editions", func() {
-	BasePath("/editions")
+	BasePath(editionPath)
 	DefaultMedia(EditionMedia)
 
 	Action("list", func() {
@@ -62,10 +63,10 @@ var _ = Resource("editions", func() {
 		Description("Create new edition")
 		Routing(POST(""))
 		Payload(func() {
-			attrEditionID()
+			attrBookID()
 			attrCollectionID()
 			attrPrintID()
-			Required("edition_id", "collection_id", "print_id")
+			Required("book_id", "collection_id", "print_id")
 		})
 		Security(JWTAuth)
 		// Unauthorized

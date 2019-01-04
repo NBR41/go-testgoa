@@ -8,6 +8,7 @@ import (
 )
 
 var (
+	bookPath     = "/books"
 	bookIDPath   = "/:book_id"
 	attrBookID   = func() { Attribute("book_id", Integer, "Unique Book ID", defIDConstraint) }
 	attrBookISBN = func() { Attribute("book_isbn", String, "Book ISBN", defStringConstraint) }
@@ -22,6 +23,8 @@ var BookMedia = MediaType("application/vnd.book+json", func() {
 		attrBookID()
 		attrBookISBN()
 		attrBookName()
+		attrSeriesID()
+		Attribute("series", SeriesMedia, "series struct")
 		attrHref()
 		Required("book_id", "book_isbn", "book_name", "href")
 	})
@@ -30,19 +33,21 @@ var BookMedia = MediaType("application/vnd.book+json", func() {
 		Attribute("book_id")
 		Attribute("book_isbn")
 		Attribute("book_name")
+		Attribute("series_id")
+		Attribute("series")
 		Attribute("href")
 	})
 
 	View("link", func() {
 		Attribute("book_id")
 		Attribute("book_isbn")
-		Attribute("book_name")
+		Attribute("series_id")
 		Attribute("href")
 	})
 })
 
 var _ = Resource("books", func() {
-	BasePath("/books")
+	BasePath(bookPath)
 	DefaultMedia(BookMedia)
 
 	Action("list", func() {
@@ -75,7 +80,8 @@ var _ = Resource("books", func() {
 		Payload(func() {
 			Member("isbn")
 			Member("name")
-			Required("isbn", "name")
+			Member("series_id")
+			Required("isbn", "name", "series_id")
 		})
 		Security(JWTAuth)
 		// unauthorized
@@ -96,7 +102,7 @@ var _ = Resource("books", func() {
 		Params(attrBookID)
 		Payload(func() {
 			Member("name")
-			Required("name")
+			Member("series_id")
 		})
 		Security(JWTAuth)
 		// Unauthorized

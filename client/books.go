@@ -23,6 +23,8 @@ import (
 type CreateBooksPayload struct {
 	Isbn string `form:"isbn" json:"isbn" yaml:"isbn" xml:"isbn"`
 	Name string `form:"name" json:"name" yaml:"name" xml:"name"`
+	// Unique Series ID
+	SeriesID int `form:"series_id" json:"series_id" yaml:"series_id" xml:"series_id"`
 }
 
 // CreateBooksPath computes a request path to the create action of books.
@@ -114,7 +116,7 @@ func ListBooksPath() string {
 	return fmt.Sprintf("/books")
 }
 
-// Get books
+// List books
 func (c *Client) ListBooks(ctx context.Context, path string) (*http.Response, error) {
 	req, err := c.NewListBooksRequest(ctx, path)
 	if err != nil {
@@ -169,7 +171,9 @@ func (c *Client) NewShowBooksRequest(ctx context.Context, path string) (*http.Re
 
 // UpdateBooksPayload is the books update action payload.
 type UpdateBooksPayload struct {
-	Name string `form:"name" json:"name" yaml:"name" xml:"name"`
+	Name *string `form:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty" xml:"name,omitempty"`
+	// Unique Series ID
+	SeriesID *int `form:"series_id,omitempty" json:"series_id,omitempty" yaml:"series_id,omitempty" xml:"series_id,omitempty"`
 }
 
 // UpdateBooksPath computes a request path to the update action of books.

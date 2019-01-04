@@ -6,11 +6,11 @@ consumes:
 definitions:
   AddOwnershipsPayload:
     example:
-      book_isbn: q6ak74
+      book_isbn: t6
     properties:
       book_isbn:
         description: Book ISBN
-        example: q6ak74
+        example: t6
         maxLength: 128
         minLength: 1
         type: string
@@ -20,17 +20,17 @@ definitions:
     type: object
   AuthenticatePayload:
     example:
-      login: jx751
-      password: y1e7ni7l
+      login: tpdq00
+      password: lg5o2
     properties:
       login:
         description: email or nickname
-        example: jx751
+        example: tpdq00
         minLength: 5
         type: string
       password:
         description: user password
-        example: y1e7ni7l
+        example: lg5o2
         maxLength: 32
         minLength: 1
         type: string
@@ -87,20 +87,36 @@ definitions:
   Authorship:
     description: An Author authorship (default view)
     example:
+      author:
+        author_id: 1
+        author_name: 8rt
+        href: Autem est eaque itaque sed aut debitis.
       author_id: 1
       book:
         book_id: 1
         book_isbn: t8yb
         book_name: erd
         href: Eligendi ipsum quia.
+        series:
+          category:
+            category_id: 1
+            category_name: h
+            href: Quo aliquid cupiditate necessitatibus omnis minus.
+          category_id: 1
+          href: Rerum est inventore error voluptatem.
+          series_id: 1
+          series_name: es
+        series_id: 1
       book_id: 1
-      href: Dolorum modi quo aliquid cupiditate necessitatibus.
+      href: Eius incidunt quo numquam quod nesciunt incidunt.
       role:
-        href: Minus quas est rerum est inventore.
+        href: Quisquam corporis ut vel dicta molestias doloribus.
         role_id: 1
-        role_name: uhesj
+        role_name: os
       role_id: 1
     properties:
+      author:
+        $ref: '#/definitions/Author'
       author_id:
         description: Unique Author ID
         example: 1
@@ -115,7 +131,7 @@ definitions:
         type: integer
       href:
         description: API href for making requests
-        example: Dolorum modi quo aliquid cupiditate necessitatibus.
+        example: Eius incidunt quo numquam quod nesciunt incidunt.
         type: string
       role:
         $ref: '#/definitions/Role'
@@ -127,6 +143,7 @@ definitions:
     required:
     - author_id
     - book_id
+    - role_id
     - href
     title: 'Mediatype identifier: application/vnd.authorship+json; view=default'
     type: object
@@ -134,31 +151,86 @@ definitions:
     description: AuthorshipCollection is the media type for an array of Authorship
       (default view)
     example:
-    - author_id: 1
+    - author:
+        author_id: 1
+        author_name: 8rt
+        href: Autem est eaque itaque sed aut debitis.
+      author_id: 1
       book:
         book_id: 1
         book_isbn: t8yb
         book_name: erd
         href: Eligendi ipsum quia.
+        series:
+          category:
+            category_id: 1
+            category_name: h
+            href: Quo aliquid cupiditate necessitatibus omnis minus.
+          category_id: 1
+          href: Rerum est inventore error voluptatem.
+          series_id: 1
+          series_name: es
+        series_id: 1
       book_id: 1
-      href: Dolorum modi quo aliquid cupiditate necessitatibus.
+      href: Eius incidunt quo numquam quod nesciunt incidunt.
       role:
-        href: Minus quas est rerum est inventore.
+        href: Quisquam corporis ut vel dicta molestias doloribus.
         role_id: 1
-        role_name: uhesj
+        role_name: os
       role_id: 1
-    - author_id: 1
+    - author:
+        author_id: 1
+        author_name: 8rt
+        href: Autem est eaque itaque sed aut debitis.
+      author_id: 1
       book:
         book_id: 1
         book_isbn: t8yb
         book_name: erd
         href: Eligendi ipsum quia.
+        series:
+          category:
+            category_id: 1
+            category_name: h
+            href: Quo aliquid cupiditate necessitatibus omnis minus.
+          category_id: 1
+          href: Rerum est inventore error voluptatem.
+          series_id: 1
+          series_name: es
+        series_id: 1
       book_id: 1
-      href: Dolorum modi quo aliquid cupiditate necessitatibus.
+      href: Eius incidunt quo numquam quod nesciunt incidunt.
       role:
-        href: Minus quas est rerum est inventore.
+        href: Quisquam corporis ut vel dicta molestias doloribus.
         role_id: 1
-        role_name: uhesj
+        role_name: os
+      role_id: 1
+    - author:
+        author_id: 1
+        author_name: 8rt
+        href: Autem est eaque itaque sed aut debitis.
+      author_id: 1
+      book:
+        book_id: 1
+        book_isbn: t8yb
+        book_name: erd
+        href: Eligendi ipsum quia.
+        series:
+          category:
+            category_id: 1
+            category_name: h
+            href: Quo aliquid cupiditate necessitatibus omnis minus.
+          category_id: 1
+          href: Rerum est inventore error voluptatem.
+          series_id: 1
+          series_name: es
+        series_id: 1
+      book_id: 1
+      href: Eius incidunt quo numquam quod nesciunt incidunt.
+      role:
+        href: Quisquam corporis ut vel dicta molestias doloribus.
+        role_id: 1
+        role_name: os
       role_id: 1
     items:
       $ref: '#/definitions/Authorship'
@@ -168,24 +240,24 @@ definitions:
   Authtoken:
     description: An auth token (default view)
     example:
-      access_token: p0
-      refresh_token: w
+      access_token: "5"
+      refresh_token: jb
       user:
         email: me@foo.bar
-        href: Incidunt tempore quisquam corporis ut.
-        is_admin: false
-        is_validated: true
-        nickname: 0zbos
+        href: Rem quasi impedit reprehenderit.
+        is_admin: true
+        is_validated: false
+        nickname: 4jr5kthe
         user_id: 1
     properties:
       access_token:
         description: Access Token
-        example: p0
+        example: "5"
         minLength: 1
         type: string
       refresh_token:
         description: Refresh Token
-        example: w
+        example: jb
         minLength: 1
         type: string
       user:
@@ -203,6 +275,16 @@ definitions:
       book_isbn: t8yb
       book_name: erd
       href: Eligendi ipsum quia.
+      series:
+        category:
+          category_id: 1
+          category_name: h
+          href: Quo aliquid cupiditate necessitatibus omnis minus.
+        category_id: 1
+        href: Rerum est inventore error voluptatem.
+        series_id: 1
+        series_name: es
+      series_id: 1
     properties:
       book_id:
         description: Unique Book ID
@@ -225,6 +307,13 @@ definitions:
         description: API href for making requests
         example: Eligendi ipsum quia.
         type: string
+      series:
+        $ref: '#/definitions/Series'
+      series_id:
+        description: Unique Series ID
+        example: 1
+        minimum: 1
+        type: integer
     required:
     - book_id
     - book_isbn
@@ -239,14 +328,44 @@ definitions:
       book_isbn: t8yb
       book_name: erd
       href: Eligendi ipsum quia.
+      series:
+        category:
+          category_id: 1
+          category_name: h
+          href: Quo aliquid cupiditate necessitatibus omnis minus.
+        category_id: 1
+        href: Rerum est inventore error voluptatem.
+        series_id: 1
+        series_name: es
+      series_id: 1
     - book_id: 1
       book_isbn: t8yb
       book_name: erd
       href: Eligendi ipsum quia.
+      series:
+        category:
+          category_id: 1
+          category_name: h
+          href: Quo aliquid cupiditate necessitatibus omnis minus.
+        category_id: 1
+        href: Rerum est inventore error voluptatem.
+        series_id: 1
+        series_name: es
+      series_id: 1
     - book_id: 1
       book_isbn: t8yb
       book_name: erd
       href: Eligendi ipsum quia.
+      series:
+        category:
+          category_id: 1
+          category_name: h
+          href: Quo aliquid cupiditate necessitatibus omnis minus.
+        category_id: 1
+        href: Rerum est inventore error voluptatem.
+        series_id: 1
+        series_name: es
+      series_id: 1
     items:
       $ref: '#/definitions/Book'
     title: 'Mediatype identifier: application/vnd.book+json; type=collection; view=default'
@@ -255,8 +374,8 @@ definitions:
     description: A Category (default view)
     example:
       category_id: 1
-      category_name: xxfcn05gh3
-      href: Magni dolorem inventore.
+      category_name: h
+      href: Quo aliquid cupiditate necessitatibus omnis minus.
     properties:
       category_id:
         description: Unique Category ID
@@ -264,14 +383,14 @@ definitions:
         minimum: 1
         type: integer
       category_name:
-        description: Category Name (Thriller/Romance/...)
-        example: xxfcn05gh3
+        description: Category Name (Shonen/Shojo/Seinen)
+        example: h
         maxLength: 128
         minLength: 1
         type: string
       href:
         description: API href for making requests
-        example: Magni dolorem inventore.
+        example: Quo aliquid cupiditate necessitatibus omnis minus.
         type: string
     required:
     - category_id
@@ -284,30 +403,66 @@ definitions:
       view)
     example:
     - category_id: 1
-      category_name: xxfcn05gh3
-      href: Magni dolorem inventore.
+      category_name: h
+      href: Quo aliquid cupiditate necessitatibus omnis minus.
     - category_id: 1
-      category_name: xxfcn05gh3
-      href: Magni dolorem inventore.
-    - category_id: 1
-      category_name: xxfcn05gh3
-      href: Magni dolorem inventore.
+      category_name: h
+      href: Quo aliquid cupiditate necessitatibus omnis minus.
     items:
       $ref: '#/definitions/Category'
     title: 'Mediatype identifier: application/vnd.category+json; type=collection;
       view=default'
     type: array
+  Class:
+    description: A Class (default view)
+    example:
+      class_id: 1
+      class_name: jv7
+      href: Dolorem quae quo neque provident.
+    properties:
+      class_id:
+        description: Unique Class ID
+        example: 1
+        minimum: 1
+        type: integer
+      class_name:
+        description: Class Name (Thriller/Romance/...)
+        example: jv7
+        maxLength: 128
+        minLength: 1
+        type: string
+      href:
+        description: API href for making requests
+        example: Dolorem quae quo neque provident.
+        type: string
+    required:
+    - class_id
+    - class_name
+    - href
+    title: 'Mediatype identifier: application/vnd.class+json; view=default'
+    type: object
+  ClassCollection:
+    description: ClassCollection is the media type for an array of Class (default
+      view)
+    example:
+    - class_id: 1
+      class_name: jv7
+      href: Dolorem quae quo neque provident.
+    items:
+      $ref: '#/definitions/Class'
+    title: 'Mediatype identifier: application/vnd.class+json; type=collection; view=default'
+    type: array
   Collection:
     description: A Collection (default view)
     example:
       collection_id: 1
-      collection_name: tsyonxlry
+      collection_name: dm5
       editor:
         editor_id: 1
-        editor_name: msgucc9ijv
-        href: Eius dolorem quae quo neque.
+        editor_name: n002um1
+        href: Minus praesentium possimus.
       editor_id: 1
-      href: Nostrum rerum adipisci.
+      href: Id vel consequuntur corrupti sunt ipsum autem.
     properties:
       collection_id:
         description: Unique Collection ID
@@ -316,7 +471,7 @@ definitions:
         type: integer
       collection_name:
         description: Collection Name (Découverte/Shonen)
-        example: tsyonxlry
+        example: dm5
         maxLength: 128
         minLength: 1
         type: string
@@ -329,7 +484,7 @@ definitions:
         type: integer
       href:
         description: API href for making requests
-        example: Nostrum rerum adipisci.
+        example: Id vel consequuntur corrupti sunt ipsum autem.
         type: string
     required:
     - collection_id
@@ -343,13 +498,13 @@ definitions:
       (default view)
     example:
     - collection_id: 1
-      collection_name: tsyonxlry
+      collection_name: dm5
       editor:
         editor_id: 1
-        editor_name: msgucc9ijv
-        href: Eius dolorem quae quo neque.
+        editor_name: n002um1
+        href: Minus praesentium possimus.
       editor_id: 1
-      href: Nostrum rerum adipisci.
+      href: Id vel consequuntur corrupti sunt ipsum autem.
     items:
       $ref: '#/definitions/Collection'
     title: 'Mediatype identifier: application/vnd.collection+json; type=collection;
@@ -357,11 +512,11 @@ definitions:
     type: array
   CreateAuthorsPayload:
     example:
-      author_name: ma0ty4
+      author_name: beikgwh0
     properties:
       author_name:
         description: Author Name
-        example: ma0ty4
+        example: beikgwh0
         maxLength: 128
         minLength: 1
         type: string
@@ -371,9 +526,15 @@ definitions:
     type: object
   CreateAuthorshipsPayload:
     example:
+      author_id: 1
       book_id: 1
       role_id: 1
     properties:
+      author_id:
+        description: Unique Author ID
+        example: 1
+        minimum: 1
+        type: integer
       book_id:
         description: Unique Book ID
         example: 1
@@ -385,33 +546,41 @@ definitions:
         minimum: 1
         type: integer
     required:
+    - author_id
     - book_id
     - role_id
     title: CreateAuthorshipsPayload
     type: object
   CreateBooksPayload:
     example:
-      isbn: Est eius optio sit repudiandae labore ducimus.
-      name: Deserunt consequatur natus.
+      isbn: Libero consequatur reprehenderit dolor suscipit quia.
+      name: Rem vitae reprehenderit ullam cum.
+      series_id: 1
     properties:
       isbn:
-        example: Est eius optio sit repudiandae labore ducimus.
+        example: Libero consequatur reprehenderit dolor suscipit quia.
         type: string
       name:
-        example: Deserunt consequatur natus.
+        example: Rem vitae reprehenderit ullam cum.
         type: string
+      series_id:
+        description: Unique Series ID
+        example: 1
+        minimum: 1
+        type: integer
     required:
     - isbn
     - name
+    - series_id
     title: CreateBooksPayload
     type: object
   CreateCategoriesPayload:
     example:
-      category_name: esdkxa
+      category_name: ape
     properties:
       category_name:
-        description: Category Name (Thriller/Romance/...)
-        example: esdkxa
+        description: Category Name (Shonen/Shojo/Seinen)
+        example: ape
         maxLength: 128
         minLength: 1
         type: string
@@ -419,14 +588,41 @@ definitions:
     - category_name
     title: CreateCategoriesPayload
     type: object
+  CreateClassesPayload:
+    example:
+      class_name: g3pur1t3p
+    properties:
+      class_name:
+        description: Class Name (Thriller/Romance/...)
+        example: g3pur1t3p
+        maxLength: 128
+        minLength: 1
+        type: string
+    required:
+    - class_name
+    title: CreateClassesPayload
+    type: object
+  CreateClassificationsPayload:
+    example:
+      class_id: 1
+    properties:
+      class_id:
+        description: Unique Class ID
+        example: 1
+        minimum: 1
+        type: integer
+    required:
+    - class_id
+    title: CreateClassificationsPayload
+    type: object
   CreateCollectionsPayload:
     example:
-      collection_name: dq00qlg5o2
+      collection_name: 5y2n0
       editor_id: 1
     properties:
       collection_name:
         description: Collection Name (Découverte/Shonen)
-        example: dq00qlg5o2
+        example: 5y2n0
         maxLength: 128
         minLength: 1
         type: string
@@ -440,47 +636,46 @@ definitions:
     - editor_id
     title: CreateCollectionsPayload
     type: object
-  CreateEditionTypesPayload:
+  CreateEditionsPayload:
     example:
-      edition_type_name: 4z
+      book_id: 1
+      collection_id: 1
+      print_id: 1
     properties:
-      edition_type_name:
-        description: Editor Name (Deluxe/Ultimate/Pocket)
-        example: 4z
-        maxLength: 128
-        minLength: 1
-        type: string
+      book_id:
+        description: Unique Book ID
+        example: 1
+        minimum: 1
+        type: integer
+      collection_id:
+        description: Unique Collection ID
+        example: 1
+        minimum: 1
+        type: integer
+      print_id:
+        description: Unique Print ID
+        example: 1
+        minimum: 1
+        type: integer
     required:
-    - edition_type_name
-    title: CreateEditionTypesPayload
+    - book_id
+    - collection_id
+    - print_id
+    title: CreateEditionsPayload
     type: object
   CreateEditorsPayload:
     example:
-      editor_name: o3ybsv05k8
+      editor_name: "51"
     properties:
       editor_name:
         description: Editor Name (Glénat/Delcourt)
-        example: o3ybsv05k8
+        example: "51"
         maxLength: 128
         minLength: 1
         type: string
     required:
     - editor_name
     title: CreateEditorsPayload
-    type: object
-  CreateGenresPayload:
-    example:
-      genre_name: 3p3flyhi16
-    properties:
-      genre_name:
-        description: Genre Name (Shonen/Shojo/Seinen)
-        example: 3p3flyhi16
-        maxLength: 128
-        minLength: 1
-        type: string
-    required:
-    - genre_name
-    title: CreateGenresPayload
     type: object
   CreateOwnershipsPayload:
     example:
@@ -495,13 +690,27 @@ definitions:
     - book_id
     title: CreateOwnershipsPayload
     type: object
+  CreatePrintsPayload:
+    example:
+      print_name: "n"
+    properties:
+      print_name:
+        description: Print Name (Deluxe/Ultimate/Pocket)
+        example: "n"
+        maxLength: 128
+        minLength: 1
+        type: string
+    required:
+    - print_name
+    title: CreatePrintsPayload
+    type: object
   CreateRolesPayload:
     example:
-      role_name: hroe46r3ox
+      role_name: ma0ty4
     properties:
       role_name:
         description: Role Name (Author/Scenarist/Cartoonist)
-        example: hroe46r3ox
+        example: ma0ty4
         maxLength: 128
         minLength: 1
         type: string
@@ -512,7 +721,7 @@ definitions:
   CreateSeriesPayload:
     example:
       category_id: 1
-      series_name: bekjwr4
+      series_name: esdkxa
     properties:
       category_id:
         description: Unique Category ID
@@ -521,7 +730,7 @@ definitions:
         type: integer
       series_name:
         description: Series Name (Akira/Dragon ball)
-        example: bekjwr4
+        example: esdkxa
         maxLength: 128
         minLength: 1
         type: string
@@ -530,58 +739,184 @@ definitions:
     - category_id
     title: CreateSeriesPayload
     type: object
-  Editiontype:
-    description: An Edition Type (default view)
+  Edition:
+    description: An edition (default view)
     example:
-      edition_type_id: 1
-      edition_type_name: an002um1
-      href: Minus praesentium possimus.
+      book:
+        book_id: 1
+        book_isbn: t8yb
+        book_name: erd
+        href: Eligendi ipsum quia.
+        series:
+          category:
+            category_id: 1
+            category_name: h
+            href: Quo aliquid cupiditate necessitatibus omnis minus.
+          category_id: 1
+          href: Rerum est inventore error voluptatem.
+          series_id: 1
+          series_name: es
+        series_id: 1
+      book_id: 1
+      collection:
+        collection_id: 1
+        collection_name: dm5
+        editor:
+          editor_id: 1
+          editor_name: n002um1
+          href: Minus praesentium possimus.
+        editor_id: 1
+        href: Id vel consequuntur corrupti sunt ipsum autem.
+      collection_id: 1
+      href: Ut atque sint officia voluptatem eaque maxime.
+      print:
+        href: Iusto aspernatur consequatur omnis sed impedit.
+        print_id: 1
+        print_name: ph4
+      print_id: 1
     properties:
-      edition_type_id:
-        description: Unique Edition type ID
+      book:
+        $ref: '#/definitions/Book'
+      book_id:
+        description: Unique Book ID
         example: 1
         minimum: 1
         type: integer
-      edition_type_name:
-        description: Editor Name (Deluxe/Ultimate/Pocket)
-        example: an002um1
-        maxLength: 128
-        minLength: 1
-        type: string
+      collection:
+        $ref: '#/definitions/Collection'
+      collection_id:
+        description: Unique Collection ID
+        example: 1
+        minimum: 1
+        type: integer
       href:
         description: API href for making requests
-        example: Minus praesentium possimus.
+        example: Ut atque sint officia voluptatem eaque maxime.
         type: string
+      print:
+        $ref: '#/definitions/Print'
+      print_id:
+        description: Unique Print ID
+        example: 1
+        minimum: 1
+        type: integer
     required:
-    - edition_type_id
-    - edition_type_name
+    - book_id
+    - collection_id
+    - print_id
     - href
-    title: 'Mediatype identifier: application/vnd.editiontype+json; view=default'
+    title: 'Mediatype identifier: application/vnd.edition+json; view=default'
     type: object
-  EditiontypeCollection:
-    description: EditiontypeCollection is the media type for an array of Editiontype
-      (default view)
+  EditionCollection:
+    description: EditionCollection is the media type for an array of Edition (default
+      view)
     example:
-    - edition_type_id: 1
-      edition_type_name: an002um1
-      href: Minus praesentium possimus.
-    - edition_type_id: 1
-      edition_type_name: an002um1
-      href: Minus praesentium possimus.
-    - edition_type_id: 1
-      edition_type_name: an002um1
-      href: Minus praesentium possimus.
+    - book:
+        book_id: 1
+        book_isbn: t8yb
+        book_name: erd
+        href: Eligendi ipsum quia.
+        series:
+          category:
+            category_id: 1
+            category_name: h
+            href: Quo aliquid cupiditate necessitatibus omnis minus.
+          category_id: 1
+          href: Rerum est inventore error voluptatem.
+          series_id: 1
+          series_name: es
+        series_id: 1
+      book_id: 1
+      collection:
+        collection_id: 1
+        collection_name: dm5
+        editor:
+          editor_id: 1
+          editor_name: n002um1
+          href: Minus praesentium possimus.
+        editor_id: 1
+        href: Id vel consequuntur corrupti sunt ipsum autem.
+      collection_id: 1
+      href: Ut atque sint officia voluptatem eaque maxime.
+      print:
+        href: Iusto aspernatur consequatur omnis sed impedit.
+        print_id: 1
+        print_name: ph4
+      print_id: 1
+    - book:
+        book_id: 1
+        book_isbn: t8yb
+        book_name: erd
+        href: Eligendi ipsum quia.
+        series:
+          category:
+            category_id: 1
+            category_name: h
+            href: Quo aliquid cupiditate necessitatibus omnis minus.
+          category_id: 1
+          href: Rerum est inventore error voluptatem.
+          series_id: 1
+          series_name: es
+        series_id: 1
+      book_id: 1
+      collection:
+        collection_id: 1
+        collection_name: dm5
+        editor:
+          editor_id: 1
+          editor_name: n002um1
+          href: Minus praesentium possimus.
+        editor_id: 1
+        href: Id vel consequuntur corrupti sunt ipsum autem.
+      collection_id: 1
+      href: Ut atque sint officia voluptatem eaque maxime.
+      print:
+        href: Iusto aspernatur consequatur omnis sed impedit.
+        print_id: 1
+        print_name: ph4
+      print_id: 1
+    - book:
+        book_id: 1
+        book_isbn: t8yb
+        book_name: erd
+        href: Eligendi ipsum quia.
+        series:
+          category:
+            category_id: 1
+            category_name: h
+            href: Quo aliquid cupiditate necessitatibus omnis minus.
+          category_id: 1
+          href: Rerum est inventore error voluptatem.
+          series_id: 1
+          series_name: es
+        series_id: 1
+      book_id: 1
+      collection:
+        collection_id: 1
+        collection_name: dm5
+        editor:
+          editor_id: 1
+          editor_name: n002um1
+          href: Minus praesentium possimus.
+        editor_id: 1
+        href: Id vel consequuntur corrupti sunt ipsum autem.
+      collection_id: 1
+      href: Ut atque sint officia voluptatem eaque maxime.
+      print:
+        href: Iusto aspernatur consequatur omnis sed impedit.
+        print_id: 1
+        print_name: ph4
+      print_id: 1
     items:
-      $ref: '#/definitions/Editiontype'
-    title: 'Mediatype identifier: application/vnd.editiontype+json; type=collection;
-      view=default'
+      $ref: '#/definitions/Edition'
+    title: 'Mediatype identifier: application/vnd.edition+json; type=collection; view=default'
     type: array
   Editor:
     description: An Editor (default view)
     example:
       editor_id: 1
-      editor_name: msgucc9ijv
-      href: Eius dolorem quae quo neque.
+      editor_name: n002um1
+      href: Minus praesentium possimus.
     properties:
       editor_id:
         description: Unique Editor ID
@@ -590,13 +925,13 @@ definitions:
         type: integer
       editor_name:
         description: Editor Name (Glénat/Delcourt)
-        example: msgucc9ijv
+        example: n002um1
         maxLength: 128
         minLength: 1
         type: string
       href:
         description: API href for making requests
-        example: Eius dolorem quae quo neque.
+        example: Minus praesentium possimus.
         type: string
     required:
     - editor_id
@@ -609,59 +944,17 @@ definitions:
       view)
     example:
     - editor_id: 1
-      editor_name: msgucc9ijv
-      href: Eius dolorem quae quo neque.
+      editor_name: n002um1
+      href: Minus praesentium possimus.
     - editor_id: 1
-      editor_name: msgucc9ijv
-      href: Eius dolorem quae quo neque.
+      editor_name: n002um1
+      href: Minus praesentium possimus.
+    - editor_id: 1
+      editor_name: n002um1
+      href: Minus praesentium possimus.
     items:
       $ref: '#/definitions/Editor'
     title: 'Mediatype identifier: application/vnd.editor+json; type=collection; view=default'
-    type: array
-  Genre:
-    description: A Genre (default view)
-    example:
-      genre_id: 1
-      genre_name: 30o
-      href: Aspernatur consequatur omnis sed impedit.
-    properties:
-      genre_id:
-        description: Unique Genre ID
-        example: 1
-        minimum: 1
-        type: integer
-      genre_name:
-        description: Genre Name (Shonen/Shojo/Seinen)
-        example: 30o
-        maxLength: 128
-        minLength: 1
-        type: string
-      href:
-        description: API href for making requests
-        example: Aspernatur consequatur omnis sed impedit.
-        type: string
-    required:
-    - genre_id
-    - genre_name
-    - href
-    title: 'Mediatype identifier: application/vnd.genre+json; view=default'
-    type: object
-  GenreCollection:
-    description: GenreCollection is the media type for an array of Genre (default
-      view)
-    example:
-    - genre_id: 1
-      genre_name: 30o
-      href: Aspernatur consequatur omnis sed impedit.
-    - genre_id: 1
-      genre_name: 30o
-      href: Aspernatur consequatur omnis sed impedit.
-    - genre_id: 1
-      genre_name: 30o
-      href: Aspernatur consequatur omnis sed impedit.
-    items:
-      $ref: '#/definitions/Genre'
-    title: 'Mediatype identifier: application/vnd.genre+json; type=collection; view=default'
     type: array
   Ownership:
     description: A User ownership (default view)
@@ -671,8 +964,18 @@ definitions:
         book_isbn: t8yb
         book_name: erd
         href: Eligendi ipsum quia.
+        series:
+          category:
+            category_id: 1
+            category_name: h
+            href: Quo aliquid cupiditate necessitatibus omnis minus.
+          category_id: 1
+          href: Rerum est inventore error voluptatem.
+          series_id: 1
+          series_name: es
+        series_id: 1
       book_id: 1
-      href: Animi esse voluptatem laudantium.
+      href: Dolor eum minus delectus dicta est sequi.
       user_id: 1
     properties:
       book:
@@ -684,7 +987,7 @@ definitions:
         type: integer
       href:
         description: API href for making requests
-        example: Animi esse voluptatem laudantium.
+        example: Dolor eum minus delectus dicta est sequi.
         type: string
       user_id:
         description: Unique User ID
@@ -706,24 +1009,54 @@ definitions:
         book_isbn: t8yb
         book_name: erd
         href: Eligendi ipsum quia.
+        series:
+          category:
+            category_id: 1
+            category_name: h
+            href: Quo aliquid cupiditate necessitatibus omnis minus.
+          category_id: 1
+          href: Rerum est inventore error voluptatem.
+          series_id: 1
+          series_name: es
+        series_id: 1
       book_id: 1
-      href: Animi esse voluptatem laudantium.
+      href: Dolor eum minus delectus dicta est sequi.
       user_id: 1
     - book:
         book_id: 1
         book_isbn: t8yb
         book_name: erd
         href: Eligendi ipsum quia.
+        series:
+          category:
+            category_id: 1
+            category_name: h
+            href: Quo aliquid cupiditate necessitatibus omnis minus.
+          category_id: 1
+          href: Rerum est inventore error voluptatem.
+          series_id: 1
+          series_name: es
+        series_id: 1
       book_id: 1
-      href: Animi esse voluptatem laudantium.
+      href: Dolor eum minus delectus dicta est sequi.
       user_id: 1
     - book:
         book_id: 1
         book_isbn: t8yb
         book_name: erd
         href: Eligendi ipsum quia.
+        series:
+          category:
+            category_id: 1
+            category_name: h
+            href: Quo aliquid cupiditate necessitatibus omnis minus.
+          category_id: 1
+          href: Rerum est inventore error voluptatem.
+          series_id: 1
+          series_name: es
+        series_id: 1
       book_id: 1
-      href: Animi esse voluptatem laudantium.
+      href: Dolor eum minus delectus dicta est sequi.
       user_id: 1
     items:
       $ref: '#/definitions/Ownership'
@@ -732,18 +1065,18 @@ definitions:
     type: array
   PasswordChangePayload:
     example:
-      password: 84arft37
-      token: 1a9
+      password: zo4be
+      token: jwr
     properties:
       password:
         description: user password
-        example: 84arft37
+        example: zo4be
         maxLength: 32
         minLength: 1
         type: string
       token:
         description: token
-        example: 1a9
+        example: jwr
         minLength: 1
         type: string
     required:
@@ -751,16 +1084,61 @@ definitions:
     - token
     title: PasswordChangePayload
     type: object
-  Role:
-    description: A Role (default view)
+  Print:
+    description: A Print (default view)
     example:
-      href: Minus quas est rerum est inventore.
-      role_id: 1
-      role_name: uhesj
+      href: Iusto aspernatur consequatur omnis sed impedit.
+      print_id: 1
+      print_name: ph4
     properties:
       href:
         description: API href for making requests
-        example: Minus quas est rerum est inventore.
+        example: Iusto aspernatur consequatur omnis sed impedit.
+        type: string
+      print_id:
+        description: Unique Print ID
+        example: 1
+        minimum: 1
+        type: integer
+      print_name:
+        description: Print Name (Deluxe/Ultimate/Pocket)
+        example: ph4
+        maxLength: 128
+        minLength: 1
+        type: string
+    required:
+    - print_id
+    - print_name
+    - href
+    title: 'Mediatype identifier: application/vnd.print+json; view=default'
+    type: object
+  PrintCollection:
+    description: PrintCollection is the media type for an array of Print (default
+      view)
+    example:
+    - href: Iusto aspernatur consequatur omnis sed impedit.
+      print_id: 1
+      print_name: ph4
+    - href: Iusto aspernatur consequatur omnis sed impedit.
+      print_id: 1
+      print_name: ph4
+    - href: Iusto aspernatur consequatur omnis sed impedit.
+      print_id: 1
+      print_name: ph4
+    items:
+      $ref: '#/definitions/Print'
+    title: 'Mediatype identifier: application/vnd.print+json; type=collection; view=default'
+    type: array
+  Role:
+    description: A Role (default view)
+    example:
+      href: Quisquam corporis ut vel dicta molestias doloribus.
+      role_id: 1
+      role_name: os
+    properties:
+      href:
+        description: API href for making requests
+        example: Quisquam corporis ut vel dicta molestias doloribus.
         type: string
       role_id:
         description: Unique Role ID
@@ -769,7 +1147,7 @@ definitions:
         type: integer
       role_name:
         description: Role Name (Author/Scenarist/Cartoonist)
-        example: uhesj
+        example: os
         maxLength: 128
         minLength: 1
         type: string
@@ -782,9 +1160,15 @@ definitions:
   RoleCollection:
     description: RoleCollection is the media type for an array of Role (default view)
     example:
-    - href: Minus quas est rerum est inventore.
+    - href: Quisquam corporis ut vel dicta molestias doloribus.
       role_id: 1
-      role_name: uhesj
+      role_name: os
+    - href: Quisquam corporis ut vel dicta molestias doloribus.
+      role_id: 1
+      role_name: os
+    - href: Quisquam corporis ut vel dicta molestias doloribus.
+      role_id: 1
+      role_name: os
     items:
       $ref: '#/definitions/Role'
     title: 'Mediatype identifier: application/vnd.role+json; type=collection; view=default'
@@ -794,12 +1178,12 @@ definitions:
     example:
       category:
         category_id: 1
-        category_name: xxfcn05gh3
-        href: Magni dolorem inventore.
+        category_name: h
+        href: Quo aliquid cupiditate necessitatibus omnis minus.
       category_id: 1
-      href: Quae dolor eum.
+      href: Rerum est inventore error voluptatem.
       series_id: 1
-      series_name: ofep9
+      series_name: es
     properties:
       category:
         $ref: '#/definitions/Category'
@@ -810,7 +1194,7 @@ definitions:
         type: integer
       href:
         description: API href for making requests
-        example: Quae dolor eum.
+        example: Rerum est inventore error voluptatem.
         type: string
       series_id:
         description: Unique Series ID
@@ -819,7 +1203,7 @@ definitions:
         type: integer
       series_name:
         description: Series Name (Akira/Dragon ball)
-        example: ofep9
+        example: es
         maxLength: 128
         minLength: 1
         type: string
@@ -836,20 +1220,28 @@ definitions:
     example:
     - category:
         category_id: 1
-        category_name: xxfcn05gh3
-        href: Magni dolorem inventore.
+        category_name: h
+        href: Quo aliquid cupiditate necessitatibus omnis minus.
       category_id: 1
-      href: Quae dolor eum.
+      href: Rerum est inventore error voluptatem.
       series_id: 1
-      series_name: ofep9
+      series_name: es
     - category:
         category_id: 1
-        category_name: xxfcn05gh3
-        href: Magni dolorem inventore.
+        category_name: h
+        href: Quo aliquid cupiditate necessitatibus omnis minus.
       category_id: 1
-      href: Quae dolor eum.
+      href: Rerum est inventore error voluptatem.
       series_id: 1
-      series_name: ofep9
+      series_name: es
+    - category:
+        category_id: 1
+        category_name: h
+        href: Quo aliquid cupiditate necessitatibus omnis minus.
+      category_id: 1
+      href: Rerum est inventore error voluptatem.
+      series_id: 1
+      series_name: es
     items:
       $ref: '#/definitions/Series'
     title: 'Mediatype identifier: application/vnd.series+json; type=collection; view=default'
@@ -857,11 +1249,11 @@ definitions:
   Token:
     description: A token (default view)
     example:
-      token: zc
+      token: f71
     properties:
       token:
         description: token
-        example: zc
+        example: f71
         minLength: 1
         type: string
     required:
@@ -870,11 +1262,11 @@ definitions:
     type: object
   UpdateAuthorsPayload:
     example:
-      author_name: e859
+      author_name: jiyn
     properties:
       author_name:
         description: Author Name
-        example: e859
+        example: jiyn
         maxLength: 128
         minLength: 1
         type: string
@@ -884,22 +1276,26 @@ definitions:
     type: object
   UpdateBooksPayload:
     example:
-      name: Quibusdam fugit labore aut sunt nulla veniam.
+      name: Saepe quia voluptate.
+      series_id: 1
     properties:
       name:
-        example: Quibusdam fugit labore aut sunt nulla veniam.
+        example: Saepe quia voluptate.
         type: string
-    required:
-    - name
+      series_id:
+        description: Unique Series ID
+        example: 1
+        minimum: 1
+        type: integer
     title: UpdateBooksPayload
     type: object
   UpdateCategoriesPayload:
     example:
-      category_name: gb05ip237t
+      category_name: nx102j4z5w
     properties:
       category_name:
-        description: Category Name (Thriller/Romance/...)
-        example: gb05ip237t
+        description: Category Name (Shonen/Shojo/Seinen)
+        example: nx102j4z5w
         maxLength: 128
         minLength: 1
         type: string
@@ -907,14 +1303,28 @@ definitions:
     - category_name
     title: UpdateCategoriesPayload
     type: object
+  UpdateClassesPayload:
+    example:
+      class_name: flyhi166
+    properties:
+      class_name:
+        description: Class Name (Thriller/Romance/...)
+        example: flyhi166
+        maxLength: 128
+        minLength: 1
+        type: string
+    required:
+    - class_name
+    title: UpdateClassesPayload
+    type: object
   UpdateCollectionsPayload:
     example:
-      collection_name: petnx10
+      collection_name: 5q6ak74z
       editor_id: 1
     properties:
       collection_name:
         description: Collection Name (Découverte/Shonen)
-        example: petnx10
+        example: 5q6ak74z
         maxLength: 128
         minLength: 1
         type: string
@@ -925,27 +1335,13 @@ definitions:
         type: integer
     title: UpdateCollectionsPayload
     type: object
-  UpdateEditionTypesPayload:
-    example:
-      edition_type_name: wmg3pu
-    properties:
-      edition_type_name:
-        description: Editor Name (Deluxe/Ultimate/Pocket)
-        example: wmg3pu
-        maxLength: 128
-        minLength: 1
-        type: string
-    required:
-    - edition_type_name
-    title: UpdateEditionTypesPayload
-    type: object
   UpdateEditorsPayload:
     example:
-      editor_name: eze9yuvc2u
+      editor_name: y1e7ni7l
     properties:
       editor_name:
         description: Editor Name (Glénat/Delcourt)
-        example: eze9yuvc2u
+        example: y1e7ni7l
         maxLength: 128
         minLength: 1
         type: string
@@ -953,27 +1349,27 @@ definitions:
     - editor_name
     title: UpdateEditorsPayload
     type: object
-  UpdateGenresPayload:
+  UpdatePrintsPayload:
     example:
-      genre_name: yc5y2n0j5
+      print_name: vmp0fsqbxb
     properties:
-      genre_name:
-        description: Genre Name (Shonen/Shojo/Seinen)
-        example: yc5y2n0j5
+      print_name:
+        description: Print Name (Deluxe/Ultimate/Pocket)
+        example: vmp0fsqbxb
         maxLength: 128
         minLength: 1
         type: string
     required:
-    - genre_name
-    title: UpdateGenresPayload
+    - print_name
+    title: UpdatePrintsPayload
     type: object
   UpdateRolesPayload:
     example:
-      role_name: 6vyz
+      role_name: e859
     properties:
       role_name:
         description: Role Name (Author/Scenarist/Cartoonist)
-        example: 6vyz
+        example: e859
         maxLength: 128
         minLength: 1
         type: string
@@ -984,7 +1380,7 @@ definitions:
   UpdateSeriesPayload:
     example:
       category_id: 1
-      series_name: vmp0fsqbxb
+      series_name: b05ip23
     properties:
       category_id:
         description: Unique Category ID
@@ -993,7 +1389,7 @@ definitions:
         type: integer
       series_name:
         description: Series Name (Akira/Dragon ball)
-        example: vmp0fsqbxb
+        example: b05ip23
         maxLength: 128
         minLength: 1
         type: string
@@ -1001,11 +1397,11 @@ definitions:
     type: object
   UpdateUsersPayload:
     example:
-      nickname: iw89c
+      nickname: 0j8927
     properties:
       nickname:
         description: user nickname
-        example: iw89c
+        example: 0j8927
         maxLength: 32
         minLength: 1
         type: string
@@ -1017,10 +1413,10 @@ definitions:
     description: A User (default view)
     example:
       email: me@foo.bar
-      href: Incidunt tempore quisquam corporis ut.
-      is_admin: false
-      is_validated: true
-      nickname: 0zbos
+      href: Rem quasi impedit reprehenderit.
+      is_admin: true
+      is_validated: false
+      nickname: 4jr5kthe
       user_id: 1
     properties:
       email:
@@ -1030,17 +1426,17 @@ definitions:
         type: string
       href:
         description: API href for making requests
-        example: Incidunt tempore quisquam corporis ut.
+        example: Rem quasi impedit reprehenderit.
         type: string
       is_admin:
-        example: false
+        example: true
         type: boolean
       is_validated:
-        example: true
+        example: false
         type: boolean
       nickname:
         description: user nickname
-        example: 0zbos
+        example: 4jr5kthe
         maxLength: 32
         minLength: 1
         type: string
@@ -1062,16 +1458,10 @@ definitions:
     description: UserCollection is the media type for an array of User (default view)
     example:
     - email: me@foo.bar
-      href: Incidunt tempore quisquam corporis ut.
-      is_admin: false
-      is_validated: true
-      nickname: 0zbos
-      user_id: 1
-    - email: me@foo.bar
-      href: Incidunt tempore quisquam corporis ut.
-      is_admin: false
-      is_validated: true
-      nickname: 0zbos
+      href: Rem quasi impedit reprehenderit.
+      is_admin: true
+      is_validated: false
+      nickname: 4jr5kthe
       user_id: 1
     items:
       $ref: '#/definitions/User'
@@ -1080,8 +1470,8 @@ definitions:
   UserCreatePayload:
     example:
       email: me@foo.bar
-      nickname: hf71pacs
-      password: 2qbr4bb
+      nickname: y5
+      password: ho2v7wul
     properties:
       email:
         description: user email
@@ -1090,13 +1480,13 @@ definitions:
         type: string
       nickname:
         description: user nickname
-        example: hf71pacs
+        example: y5
         maxLength: 32
         minLength: 1
         type: string
       password:
         description: user password
-        example: 2qbr4bb
+        example: ho2v7wul
         maxLength: 32
         minLength: 1
         type: string
@@ -1108,11 +1498,11 @@ definitions:
     type: object
   ValidateValidationPayload:
     example:
-      token: j
+      token: lq
     properties:
       token:
         description: token
-        example: j
+        example: lq
         minLength: 1
         type: string
     required:
@@ -1220,7 +1610,7 @@ paths:
       - authenticate
   /authors:
     get:
-      description: Get authors
+      description: List authors
       operationId: authors#list
       produces:
       - application/vnd.author+json; type=collection
@@ -1385,10 +1775,10 @@ paths:
       summary: update authors
       tags:
       - authors
-  /authors/{author_id}/books:
+  /authors/{author_id}/categories:
     get:
-      description: Get authorships
-      operationId: authorships#list
+      description: List categories by author
+      operationId: relationAuthor#listCategories
       parameters:
       - description: Unique Author ID
         in: path
@@ -1396,6 +1786,249 @@ paths:
         name: author_id
         required: true
         type: integer
+      produces:
+      - application/vnd.category+json; type=collection
+      - application/vnd.goa.error
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/CategoryCollection'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listCategories relationAuthor
+      tags:
+      - relationAuthor
+  /authors/{author_id}/categories/{category_id}/series:
+    get:
+      description: List series by author and category
+      operationId: relationAuthor#listSeriesByCategory
+      parameters:
+      - description: Unique Author ID
+        in: path
+        minimum: 1
+        name: author_id
+        required: true
+        type: integer
+      - in: path
+        name: category_id
+        required: true
+        type: string
+      produces:
+      - application/vnd.goa.error
+      - application/vnd.series+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SeriesCollection'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listSeriesByCategory relationAuthor
+      tags:
+      - relationAuthor
+  /authors/{author_id}/classes:
+    get:
+      description: List classes by author
+      operationId: relationAuthor#listClasses
+      parameters:
+      - description: Unique Author ID
+        in: path
+        minimum: 1
+        name: author_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.class+json; type=collection
+      - application/vnd.goa.error
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ClassCollection'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listClasses relationAuthor
+      tags:
+      - relationAuthor
+  /authors/{author_id}/classes/{class_id}/series:
+    get:
+      description: List series by author and class
+      operationId: relationAuthor#listSeriesByClass
+      parameters:
+      - description: Unique Author ID
+        in: path
+        minimum: 1
+        name: author_id
+        required: true
+        type: integer
+      - in: path
+        name: class_id
+        required: true
+        type: string
+      produces:
+      - application/vnd.goa.error
+      - application/vnd.series+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SeriesCollection'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listSeriesByClass relationAuthor
+      tags:
+      - relationAuthor
+  /authors/{author_id}/roles:
+    get:
+      description: List roles by author
+      operationId: relationAuthor#listRoles
+      parameters:
+      - description: Unique Author ID
+        in: path
+        minimum: 1
+        name: author_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      - application/vnd.role+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/RoleCollection'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listRoles relationAuthor
+      tags:
+      - relationAuthor
+  /authors/{author_id}/roles/{role_id}/series:
+    get:
+      description: List series by author and role
+      operationId: relationAuthor#listSeriesByRole
+      parameters:
+      - description: Unique Author ID
+        in: path
+        minimum: 1
+        name: author_id
+        required: true
+        type: integer
+      - in: path
+        name: role_id
+        required: true
+        type: string
+      produces:
+      - application/vnd.goa.error
+      - application/vnd.series+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SeriesCollection'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listSeriesByRole relationAuthor
+      tags:
+      - relationAuthor
+  /authors/{author_id}/series:
+    get:
+      description: List series by author
+      operationId: relationAuthor#listSeries
+      parameters:
+      - description: Unique Author ID
+        in: path
+        minimum: 1
+        name: author_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      - application/vnd.series+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SeriesCollection'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listSeries relationAuthor
+      tags:
+      - relationAuthor
+  /authorships:
+    get:
+      description: List authorships
+      operationId: authorships#list
       produces:
       - application/vnd.authorship+json; type=collection
       - application/vnd.goa.error
@@ -1427,12 +2060,6 @@ paths:
       description: Create new authorship
       operationId: authorships#create
       parameters:
-      - description: Unique Author ID
-        in: path
-        minimum: 1
-        name: author_id
-        required: true
-        type: integer
       - in: body
         name: payload
         required: true
@@ -1446,7 +2073,7 @@ paths:
           headers:
             Location:
               description: href to created resource
-              pattern: /books/[0-9]+/roles/[0-9]+
+              pattern: /authorships/[0-9]+
               type: string
         "400":
           description: Bad Request
@@ -1469,27 +2096,15 @@ paths:
       summary: create authorships
       tags:
       - authorships
-  /authors/{author_id}/books/{book_id}/{role_id}:
+  /authorships/{authorship_id}:
     delete:
       description: delete authorships by ids
       operationId: authorships#delete
       parameters:
-      - description: Unique Author ID
+      - description: Unique Authorship ID
         in: path
         minimum: 1
-        name: author_id
-        required: true
-        type: integer
-      - description: Unique Book ID
-        in: path
-        minimum: 1
-        name: book_id
-        required: true
-        type: integer
-      - description: Unique Role ID
-        in: path
-        minimum: 1
-        name: role_id
+        name: authorship_id
         required: true
         type: integer
       produces:
@@ -1520,22 +2135,10 @@ paths:
       description: Get authorships by ids
       operationId: authorships#show
       parameters:
-      - description: Unique Author ID
+      - description: Unique Authorship ID
         in: path
         minimum: 1
-        name: author_id
-        required: true
-        type: integer
-      - description: Unique Book ID
-        in: path
-        minimum: 1
-        name: book_id
-        required: true
-        type: integer
-      - description: Unique Role ID
-        in: path
-        minimum: 1
-        name: role_id
+        name: authorship_id
         required: true
         type: integer
       produces:
@@ -1567,7 +2170,7 @@ paths:
       - authorships
   /books:
     get:
-      description: Get books
+      description: List books
       operationId: books#list
       produces:
       - application/vnd.book+json; type=collection
@@ -1734,7 +2337,7 @@ paths:
       - books
   /categories:
     get:
-      description: Get categories
+      description: List categories
       operationId: categories#list
       produces:
       - application/vnd.category+json; type=collection
@@ -1899,35 +2502,175 @@ paths:
       summary: update categories
       tags:
       - categories
-  /edition_types:
+  /categories/{category_id}/authors:
     get:
-      description: Get edition types
-      operationId: edition_types#list
+      description: List authors by category
+      operationId: relationCategory#listAuthors
+      parameters:
+      - description: Unique Category ID
+        in: path
+        minimum: 1
+        name: category_id
+        required: true
+        type: integer
       produces:
-      - application/vnd.editiontype+json; type=collection
+      - application/vnd.author+json; type=collection
+      - application/vnd.goa.error
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/EditiontypeCollection'
+            $ref: '#/definitions/AuthorCollection'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
         "500":
           description: Internal Server Error
         "503":
           description: Service Unavailable
       schemes:
       - http
-      summary: list edition_types
+      summary: listAuthors relationCategory
       tags:
-      - edition_types
+      - relationCategory
+  /categories/{category_id}/classes:
+    get:
+      description: List classes by category
+      operationId: relationCategory#listClasses
+      parameters:
+      - description: Unique Category ID
+        in: path
+        minimum: 1
+        name: category_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.class+json; type=collection
+      - application/vnd.goa.error
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ClassCollection'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listClasses relationCategory
+      tags:
+      - relationCategory
+  /categories/{category_id}/classes/{class_id}/series:
+    get:
+      description: List series by category and class
+      operationId: relationCategory#listSeriesByClass
+      parameters:
+      - description: Unique Category ID
+        in: path
+        minimum: 1
+        name: category_id
+        required: true
+        type: integer
+      - in: path
+        name: class_id
+        required: true
+        type: string
+      produces:
+      - application/vnd.goa.error
+      - application/vnd.series+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SeriesCollection'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listSeriesByClass relationCategory
+      tags:
+      - relationCategory
+  /categories/{category_id}/series:
+    get:
+      description: List series by category
+      operationId: relationCategory#listSeries
+      parameters:
+      - description: Unique Category ID
+        in: path
+        minimum: 1
+        name: category_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      - application/vnd.series+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SeriesCollection'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listSeries relationCategory
+      tags:
+      - relationCategory
+  /classes:
+    get:
+      description: List classes
+      operationId: classes#list
+      produces:
+      - application/vnd.class+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ClassCollection'
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: list classes
+      tags:
+      - classes
     post:
-      description: Create new edition type
-      operationId: edition_types#create
+      description: Create new class
+      operationId: classes#create
       parameters:
       - in: body
         name: payload
         required: true
         schema:
-          $ref: '#/definitions/CreateEditionTypesPayload'
+          $ref: '#/definitions/CreateClassesPayload'
       produces:
       - application/vnd.goa.error
       responses:
@@ -1936,7 +2679,7 @@ paths:
           headers:
             Location:
               description: href to created resource
-              pattern: /edition_types/[0-9]+
+              pattern: /classes/[0-9]+
               type: string
         "400":
           description: Bad Request
@@ -1954,18 +2697,18 @@ paths:
       - http
       security:
       - JWTSec: []
-      summary: create edition_types
+      summary: create classes
       tags:
-      - edition_types
-  /edition_types/{edition_type_id}:
+      - classes
+  /classes/{class_id}:
     delete:
-      description: delete edition type by id
-      operationId: edition_types#delete
+      description: delete class by id
+      operationId: classes#delete
       parameters:
-      - description: Unique Edition type ID
+      - description: Unique Class ID
         in: path
         minimum: 1
-        name: edition_type_id
+        name: class_id
         required: true
         type: integer
       produces:
@@ -1989,27 +2732,27 @@ paths:
       - http
       security:
       - JWTSec: []
-      summary: delete edition_types
+      summary: delete classes
       tags:
-      - edition_types
+      - classes
     get:
-      description: Get edition type by id
-      operationId: edition_types#show
+      description: Get class by id
+      operationId: classes#show
       parameters:
-      - description: Unique Edition type ID
+      - description: Unique Class ID
         in: path
         minimum: 1
-        name: edition_type_id
+        name: class_id
         required: true
         type: integer
       produces:
-      - application/vnd.editiontype+json
+      - application/vnd.class+json
       - application/vnd.goa.error
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/Editiontype'
+            $ref: '#/definitions/Class'
         "400":
           description: Bad Request
           schema:
@@ -2022,24 +2765,24 @@ paths:
           description: Service Unavailable
       schemes:
       - http
-      summary: show edition_types
+      summary: show classes
       tags:
-      - edition_types
+      - classes
     put:
-      description: Update edition type by id
-      operationId: edition_types#update
+      description: Update class by id
+      operationId: classes#update
       parameters:
-      - description: Unique Edition type ID
+      - description: Unique Class ID
         in: path
         minimum: 1
-        name: edition_type_id
+        name: class_id
         required: true
         type: integer
       - in: body
         name: payload
         required: true
         schema:
-          $ref: '#/definitions/UpdateEditionTypesPayload'
+          $ref: '#/definitions/UpdateClassesPayload'
       produces:
       - application/vnd.goa.error
       responses:
@@ -2063,12 +2806,265 @@ paths:
       - http
       security:
       - JWTSec: []
-      summary: update edition_types
+      summary: update classes
       tags:
-      - edition_types
+      - classes
+  /classes/{class_id}/categories:
+    get:
+      description: List categories by class
+      operationId: relationClass#listCategories
+      parameters:
+      - description: Unique Class ID
+        in: path
+        minimum: 1
+        name: class_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.category+json; type=collection
+      - application/vnd.goa.error
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/CategoryCollection'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listCategories relationClass
+      tags:
+      - relationClass
+  /classes/{class_id}/categories/{category_id}/series:
+    get:
+      description: List series by class and category
+      operationId: relationClass#listSeriesByCategory
+      parameters:
+      - in: path
+        name: category_id
+        required: true
+        type: string
+      - description: Unique Class ID
+        in: path
+        minimum: 1
+        name: class_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      - application/vnd.series+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SeriesCollection'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listSeriesByCategory relationClass
+      tags:
+      - relationClass
+  /classes/{class_id}/series:
+    get:
+      description: List series by class
+      operationId: relationClass#listSeries
+      parameters:
+      - description: Unique Class ID
+        in: path
+        minimum: 1
+        name: class_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      - application/vnd.series+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SeriesCollection'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listSeries relationClass
+      tags:
+      - relationClass
+  /editions:
+    get:
+      description: List editions
+      operationId: editions#list
+      produces:
+      - application/vnd.edition+json; type=collection
+      - application/vnd.goa.error
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/EditionCollection'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: list editions
+      tags:
+      - editions
+    post:
+      description: Create new edition
+      operationId: editions#create
+      parameters:
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/CreateEditionsPayload'
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "201":
+          description: Resource created
+          headers:
+            Location:
+              description: href to created resource
+              pattern: /editions/[0-9]+
+              type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: create editions
+      tags:
+      - editions
+  /editions/{edition_id}:
+    delete:
+      description: delete book edition by id
+      operationId: editions#delete
+      parameters:
+      - in: path
+        name: edition_id
+        required: true
+        type: string
+      - description: Unique Editor ID
+        in: query
+        minimum: 1
+        name: editor_id
+        required: false
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: delete editions
+      tags:
+      - editions
+    get:
+      description: Get book edition by id
+      operationId: editions#show
+      parameters:
+      - description: Unique Edition ID
+        in: path
+        minimum: 1
+        name: edition_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.edition+json
+      - application/vnd.goa.error
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Edition'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: show editions
+      tags:
+      - editions
   /editors:
     get:
-      description: Get editors
+      description: List editors
       operationId: editors#list
       produces:
       - application/vnd.editor+json; type=collection
@@ -2235,7 +3231,7 @@ paths:
       - editors
   /editors/{editor_id}/collections:
     get:
-      description: Get collections
+      description: List collections
       operationId: collections#list
       parameters:
       - description: Unique Editor ID
@@ -2431,117 +3427,31 @@ paths:
       summary: update collections
       tags:
       - collections
-  /genres:
+  /editors/{editor_id}/collections/{collection_id}/books:
     get:
-      description: Get genres
-      operationId: genres#list
-      produces:
-      - application/vnd.genre+json; type=collection
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/GenreCollection'
-        "500":
-          description: Internal Server Error
-        "503":
-          description: Service Unavailable
-      schemes:
-      - http
-      summary: list genres
-      tags:
-      - genres
-    post:
-      description: Create new genre
-      operationId: genres#create
+      description: List books by collection
+      operationId: relationCollection#listBooks
       parameters:
-      - in: body
-        name: payload
-        required: true
-        schema:
-          $ref: '#/definitions/CreateGenresPayload'
-      produces:
-      - application/vnd.goa.error
-      responses:
-        "201":
-          description: Resource created
-          headers:
-            Location:
-              description: href to created resource
-              pattern: /genres/[0-9]+
-              type: string
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/error'
-        "401":
-          description: Unauthorized
-        "422":
-          description: Unprocessable Entity
-        "500":
-          description: Internal Server Error
-        "503":
-          description: Service Unavailable
-      schemes:
-      - http
-      security:
-      - JWTSec: []
-      summary: create genres
-      tags:
-      - genres
-  /genres/{genre_id}:
-    delete:
-      description: delete genre by id
-      operationId: genres#delete
-      parameters:
-      - description: Unique Genre ID
+      - description: Unique Collection ID
         in: path
         minimum: 1
-        name: genre_id
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
         required: true
         type: integer
       produces:
-      - application/vnd.goa.error
-      responses:
-        "204":
-          description: No Content
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/error'
-        "401":
-          description: Unauthorized
-        "404":
-          description: Not Found
-        "500":
-          description: Internal Server Error
-        "503":
-          description: Service Unavailable
-      schemes:
-      - http
-      security:
-      - JWTSec: []
-      summary: delete genres
-      tags:
-      - genres
-    get:
-      description: Get genre by id
-      operationId: genres#show
-      parameters:
-      - description: Unique Genre ID
-        in: path
-        minimum: 1
-        name: genre_id
-        required: true
-        type: integer
-      produces:
-      - application/vnd.genre+json
+      - application/vnd.book+json; type=collection
       - application/vnd.goa.error
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/Genre'
+            $ref: '#/definitions/BookCollection'
         "400":
           description: Bad Request
           schema:
@@ -2554,50 +3464,361 @@ paths:
           description: Service Unavailable
       schemes:
       - http
-      summary: show genres
+      summary: listBooks relationCollection
       tags:
-      - genres
-    put:
-      description: Update genre by id
-      operationId: genres#update
+      - relationCollection
+  /editors/{editor_id}/collections/{collection_id}/prints:
+    get:
+      description: List prints by collection
+      operationId: relationCollection#listPrints
       parameters:
-      - description: Unique Genre ID
+      - description: Unique Collection ID
         in: path
         minimum: 1
-        name: genre_id
+        name: collection_id
         required: true
         type: integer
-      - in: body
-        name: payload
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
         required: true
-        schema:
-          $ref: '#/definitions/UpdateGenresPayload'
+        type: integer
       produces:
       - application/vnd.goa.error
+      - application/vnd.print+json; type=collection
       responses:
-        "204":
-          description: No Content
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/PrintCollection'
         "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/error'
-        "401":
-          description: Unauthorized
         "404":
           description: Not Found
-        "422":
-          description: Unprocessable Entity
         "500":
           description: Internal Server Error
         "503":
           description: Service Unavailable
       schemes:
       - http
-      security:
-      - JWTSec: []
-      summary: update genres
+      summary: listPrints relationCollection
       tags:
-      - genres
+      - relationCollection
+  /editors/{editor_id}/collections/{collection_id}/prints/{print_id}/books:
+    get:
+      description: List books by collection and print
+      operationId: relationCollection#listBooksByPrint
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - in: path
+        name: print_id
+        required: true
+        type: string
+      produces:
+      - application/vnd.book+json; type=collection
+      - application/vnd.goa.error
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksByPrint relationCollection
+      tags:
+      - relationCollection
+  /editors/{editor_id}/collections/{collection_id}/prints/{print_id}/series:
+    get:
+      description: List series by collection and print
+      operationId: relationCollection#listSeriesByPrint
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - in: path
+        name: print_id
+        required: true
+        type: string
+      produces:
+      - application/vnd.goa.error
+      - application/vnd.series+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SeriesCollection'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listSeriesByPrint relationCollection
+      tags:
+      - relationCollection
+  /editors/{editor_id}/collections/{collection_id}/prints/{print_id}/series/{series_id}/books:
+    get:
+      description: List books by collection, prints and series
+      operationId: relationCollection#listBooksByPrintsSeries
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - in: path
+        name: print_id
+        required: true
+        type: string
+      - in: path
+        name: series_id
+        required: true
+        type: string
+      produces:
+      - application/vnd.book+json; type=collection
+      - application/vnd.goa.error
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksByPrintsSeries relationCollection
+      tags:
+      - relationCollection
+  /editors/{editor_id}/collections/{collection_id}/series:
+    get:
+      description: List series by collection
+      operationId: relationCollection#listSeries
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      - application/vnd.series+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SeriesCollection'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listSeries relationCollection
+      tags:
+      - relationCollection
+  /editors/{editor_id}/collections/{collection_id}/series/{series_id}/books:
+    get:
+      description: List books by collection and series
+      operationId: relationCollection#listBooksBySeries
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - in: path
+        name: series_id
+        required: true
+        type: string
+      produces:
+      - application/vnd.book+json; type=collection
+      - application/vnd.goa.error
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksBySeries relationCollection
+      tags:
+      - relationCollection
+  /editors/{editor_id}/collections/{collection_id}/series/{series_id}/prints:
+    get:
+      description: List prints by collection and series
+      operationId: relationCollection#listPrintsBySeries
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - in: path
+        name: series_id
+        required: true
+        type: string
+      produces:
+      - application/vnd.goa.error
+      - application/vnd.print+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/PrintCollection'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listPrintsBySeries relationCollection
+      tags:
+      - relationCollection
+  /editors/{editor_id}/collections/{collection_id}/series/{series_id}/prints/{print_id}/books:
+    get:
+      description: List books by collection, series and prints
+      operationId: relationCollection#listBooksBySeriesPrints
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - in: path
+        name: print_id
+        required: true
+        type: string
+      - in: path
+        name: series_id
+        required: true
+        type: string
+      produces:
+      - application/vnd.book+json; type=collection
+      - application/vnd.goa.error
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksBySeriesPrints relationCollection
+      tags:
+      - relationCollection
   /password:
     get:
       description: Get password reset
@@ -2658,9 +3879,176 @@ paths:
       summary: update password
       tags:
       - password
+  /prints:
+    get:
+      description: List prints
+      operationId: prints#list
+      produces:
+      - application/vnd.print+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/PrintCollection'
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: list prints
+      tags:
+      - prints
+    post:
+      description: Create new print edition
+      operationId: prints#create
+      parameters:
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/CreatePrintsPayload'
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "201":
+          description: Resource created
+          headers:
+            Location:
+              description: href to created resource
+              pattern: /prints/[0-9]+
+              type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: create prints
+      tags:
+      - prints
+  /prints/{print_id}:
+    delete:
+      description: delete print by id
+      operationId: prints#delete
+      parameters:
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: delete prints
+      tags:
+      - prints
+    get:
+      description: Get print by id
+      operationId: prints#show
+      parameters:
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      - application/vnd.print+json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Print'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: show prints
+      tags:
+      - prints
+    put:
+      description: Update print by id
+      operationId: prints#update
+      parameters:
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/UpdatePrintsPayload'
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: update prints
+      tags:
+      - prints
   /roles:
     get:
-      description: Get roles
+      description: List roles
       operationId: roles#list
       produces:
       - application/vnd.role+json; type=collection
@@ -2825,9 +4213,49 @@ paths:
       summary: update roles
       tags:
       - roles
+  /roles/{role_id}/authors:
+    get:
+      description: List series by role and authors
+      operationId: relationRole#listSeriesByAuthors
+      parameters:
+      - description: Unique Author ID
+        in: query
+        minimum: 1
+        name: author_id
+        required: false
+        type: integer
+      - description: Unique Role ID
+        in: path
+        minimum: 1
+        name: role_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      - application/vnd.series+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SeriesCollection'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listSeriesByAuthors relationRole
+      tags:
+      - relationRole
   /series:
     get:
-      description: Get series
+      description: List series
       operationId: series#list
       produces:
       - application/vnd.series+json; type=collection
@@ -2992,6 +4420,174 @@ paths:
       summary: update series
       tags:
       - series
+  /series/{series_id}/classifications:
+    get:
+      description: List series classes
+      operationId: classifications#list
+      parameters:
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.class+json; type=collection
+      - application/vnd.goa.error
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ClassCollection'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: list classifications
+      tags:
+      - classifications
+    post:
+      description: Create new series classification
+      operationId: classifications#create
+      parameters:
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      - in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/CreateClassificationsPayload'
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "201":
+          description: Resource created
+          headers:
+            Location:
+              description: href to created resource
+              pattern: /classes/[0-9]+
+              type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: create classifications
+      tags:
+      - classifications
+  /series/{series_id}/classifications/{class_id}:
+    delete:
+      description: delete series classification
+      operationId: classifications#delete
+      parameters:
+      - description: Unique Class ID
+        in: path
+        minimum: 1
+        name: class_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: delete classifications
+      tags:
+      - classifications
+    get:
+      description: Get series classification
+      operationId: classifications#show
+      parameters:
+      - description: Unique Class ID
+        in: path
+        minimum: 1
+        name: class_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.class+json
+      - application/vnd.goa.error
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Class'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      security:
+      - JWTSec: []
+      summary: show classifications
+      tags:
+      - classifications
   /swagger.json:
     get:
       operationId: swagger#/swagger.json
@@ -3242,7 +4838,7 @@ paths:
       - users
   /users/{user_id}/ownerships:
     get:
-      description: Get ownerships
+      description: List user ownerships
       operationId: ownerships#list
       parameters:
       - description: Unique User ID
@@ -3279,7 +4875,7 @@ paths:
       tags:
       - ownerships
     post:
-      description: Create new ownership
+      description: Create new user ownership
       operationId: ownerships#create
       parameters:
       - description: Unique User ID
@@ -3366,7 +4962,7 @@ paths:
       tags:
       - ownerships
     get:
-      description: Get ownerships by ids
+      description: Get user ownerships by ids
       operationId: ownerships#show
       parameters:
       - description: Unique Book ID

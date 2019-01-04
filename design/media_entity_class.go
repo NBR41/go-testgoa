@@ -8,9 +8,10 @@ import (
 )
 
 var (
+	classPath     = "/classes"
 	classIDPath   = "/:class_id"
 	attrClassID   = func() { Attribute("class_id", Integer, "Unique Class ID", defIDConstraint) }
-	attrClassName = func() { Attribute("class_name", String, "Class Name (Shonen/Shojo/Seinen)", defStringConstraint) }
+	attrClassName = func() { Attribute("class_name", String, "Class Name (Thriller/Romance/...)", defStringConstraint) }
 )
 
 //ClassMedia defines the media type used to render classes.
@@ -32,13 +33,12 @@ var ClassMedia = MediaType("application/vnd.class+json", func() {
 
 	View("link", func() {
 		Attribute("class_id")
-		Attribute("class_name")
 		Attribute("href")
 	})
 })
 
 var _ = Resource("classes", func() {
-	BasePath("/classes")
+	BasePath(classPath)
 	DefaultMedia(ClassMedia)
 
 	Action("list", func() {

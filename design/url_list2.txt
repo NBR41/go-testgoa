@@ -1,128 +1,127 @@
-/authors
-/roles/[0-9]+/authors
-/categories/[0-9]+/authors
+X /authors
+X /authors/[0-9]+/categories
+X /authors/[0-9]+/classes
+X /authors/[0-9]+/roles
+X /authors/[0-9]+/series
+X /authors/[0-9]+/categories/[0-9]+/series
+X /authors/[0-9]+/classes/[0-9]+/series
+X /authors/[0-9]+/roles/[0-9]+/series
 
 
-/roles
-/authors/[0-9]+/roles
+X /books
 
 
-/categories
-/authors/[0-9]+/categories
-/classes/[0-9]+/categories
+X /categories
+X /categories/[0-9]+/authors
+X /categories/[0-9]+/classes
+X /categories/[0-9]+/series
+X /categories/[0-9]+/classes/[0-9]+/series
 
 
-/classes
-/authors/[0-9]+/classes
-/categories/[0-9]+/classes
+X /classes
+X /classes/[0-9]+/categories
+X /classes/[0-9]+/series
+X /classes/[0-9]+/categories/[0-9]+/series
 
+
+X /collections
+X /collections/[0-9]+/books
+X /collections/[0-9]+/prints
+X /collections/[0-9]+/series
+X /collections/[0-9]+/prints/[0-9]+/books
+X /collections/[0-9]+/prints/[0-9]+/series
+X /collections/[0-9]+/prints/[0-9]+/series/[0-9]+/books
+X /collections/[0-9]+/series/[0-9]+/books
+X /collections/[0-9]+/series/[0-9]+/prints
+X /collections/[0-9]+/series/[0-9]+/prints/[0-9]+/books
+
+
+/prints
+/prints/[0-9]+/books
+/prints/[0-9]+/collections
+/prints/[0-9]+/collections/[0-9]+/books
+/prints/[0-9]+/collections/[0-9]+/series
+/prints/[0-9]+/collections/[0-9]+/series/[0-9]+/books
+/prints/[0-9]+/editors
+/prints/[0-9]+/editors/[0-9]+/books
+/prints/[0-9]+/editors/[0-9]+/collections
+/prints/[0-9]+/editors/[0-9]+/collections/[0-9]+/books
+/prints/[0-9]+/editors/[0-9]+/collections/[0-9]+/series
+/prints/[0-9]+/editors/[0-9]+/collections/[0-9]+/series/[0-9]+/books
+/prints/[0-9]+/editors/[0-9]+/series
+/prints/[0-9]+/editors/[0-9]+/series/[0-9]+/books
+/prints/[0-9]+/editors/[0-9]+/series/[0-9]+/collections
+/prints/[0-9]+/editors/[0-9]+/series/[0-9]+/collections/[0-9]+/books
+/prints/[0-9]+/series
+/prints/[0-9]+/series/[0-9]+/books
+/prints/[0-9]+/series/[0-9]+/collections
+/prints/[0-9]+/series/[0-9]+/collections/[0-9]+/books
+/prints/[0-9]+/series/[0-9]+/collections/[0-9]+/editors
+/prints/[0-9]+/series/[0-9]+/collections/[0-9]+/editors/[0-9]+/books
+/prints/[0-9]+/series/[0-9]+/editors
+/prints/[0-9]+/series/[0-9]+/editors/[0-9]+/books
+/prints/[0-9]+/series/[0-9]+/editors/[0-9]+/collections
+/prints/[0-9]+/series/[0-9]+/editors/[0-9]+/collections/[0-9]+/books
 
 /editors
-/edition_types/[0-9]+/editors
-/edition_types/[0-9]+/series/[0-9]+/editors
-/edition_types/[0-9]+/series/[0-9]+/collections/[0-9]+/editors
-/series/[0-9]+/editors
-/series/[0-9]+/edition_types/[0-9]+/editors
-
-
-/edition_types
-/collections/[0-9]+/edition_types
-/collections/[0-9]+/series/[0-9]+/edition_types
-/editors/[0-9]+/edition_types
-/editors/[0-9]+/collections/[0-9]+/edition_types
-/editors/[0-9]+/collections/[0-9]+/series/[0-9]+/edition_types
-/editors/[0-9]+/series/[0-9]+/edition_types
-/editors/[0-9]+/series/[0-9]+/collections/[0-9]+/edition_types
-/series/[0-9]+/edition_types
-/series/[0-9]+/collections/[0-9]+/edition_types
-/series/[0-9]+/editors/[0-9]+/edition_types
-/series/[0-9]+/editors/[0-9]+/collections/[0-9]+/edition_types
-
-
-/collections
-/edition_types/[0-9]+/collections
-/edition_types/[0-9]+/editors/[0-9]+/collections
-/edition_types/[0-9]+/editors/[0-9]+/series/[0-9]+/collections
-/edition_types/[0-9]+/series/[0-9]+/collections
-/edition_types/[0-9]+/series/[0-9]+/editors/[0-9]+/collections
+/editors/[0-9]+/books
 /editors/[0-9]+/collections
-/editors/[0-9]+/edition_types/[0-9]+/collections
-/editors/[0-9]+/edition_types/[0-9]+/series/[0-9]+/collections
+/editors/[0-9]+/collections/[0-9]+/books
+/editors/[0-9]+/collections/[0-9]+/prints
+/editors/[0-9]+/collections/[0-9]+/prints/[0-9]+/books
+/editors/[0-9]+/collections/[0-9]+/prints/[0-9]+/series
+/editors/[0-9]+/collections/[0-9]+/prints/[0-9]+/series/[0-9]+/books
+/editors/[0-9]+/collections/[0-9]+/series
+/editors/[0-9]+/collections/[0-9]+/series/[0-9]+/books
+/editors/[0-9]+/collections/[0-9]+/series/[0-9]+/prints
+/editors/[0-9]+/collections/[0-9]+/series/[0-9]+/prints/[0-9]+/books
+/editors/[0-9]+/prints
+/editors/[0-9]+/prints/[0-9]+/books
+/editors/[0-9]+/prints/[0-9]+/collections
+/editors/[0-9]+/prints/[0-9]+/collections/[0-9]+/books
+/editors/[0-9]+/prints/[0-9]+/collections/[0-9]+/series
+/editors/[0-9]+/prints/[0-9]+/collections/[0-9]+/series/[0-9]+/books
+/editors/[0-9]+/prints/[0-9]+/series
+/editors/[0-9]+/prints/[0-9]+/series/[0-9]+/books
+/editors/[0-9]+/prints/[0-9]+/series/[0-9]+/collections
+/editors/[0-9]+/prints/[0-9]+/series/[0-9]+/collections/[0-9]+/books
+/editors/[0-9]+/series
+/editors/[0-9]+/series/[0-9]+/books
 /editors/[0-9]+/series/[0-9]+/collections
-/editors/[0-9]+/series/[0-9]+/edition_types/[0-9]+/collections
-/series/[0-9]+/collections
-/series/[0-9]+/editors/[0-9]+/collections
-/series/[0-9]+/editors/[0-9]+/edition_types/[0-9]+/collections
-/series/[0-9]+/edition_types/[0-9]+/collections
-/series/[0-9]+/edition_types/[0-9]+/editors/[0-9]+/collections
+/editors/[0-9]+/series/[0-9]+/collections/[0-9]+/books
+/editors/[0-9]+/series/[0-9]+/collections/[0-9]+/prints
+/editors/[0-9]+/series/[0-9]+/collections/[0-9]+/prints/[0-9]+/books
+/editors/[0-9]+/series/[0-9]+/prints
+/editors/[0-9]+/series/[0-9]+/prints/[0-9]+/books
+/editors/[0-9]+/series/[0-9]+/prints/[0-9]+/collections
+/editors/[0-9]+/series/[0-9]+/prints/[0-9]+/collections/[0-9]+/books
+
+
+X /roles
+X /roles/[0-9]+/authors
+X /roles/[0-9]+/authors/[0-9]+/series
 
 
 /series
-/authors/[0-9]+/series
-/authors/[0-9]+/roles/[0-9]+/series
-/authors/[0-9]+/categories/[0-9]+/series
-/authors/[0-9]+/classes/[0-9]+/series
-/roles/[0-9]+/authors/[0-9]+/series
-/categories/[0-9]+/series
-/categories/[0-9]+/classes/[0-9]+/series
-/classes/[0-9]+/series
-/classes/[0-9]+/categories/[0-9]+/series
-/collections/[0-9]+/series
-/collections/[0-9]+/edition_types/[0-9]+/series
-/editors/[0-9]+/series
-/editors/[0-9]+/collections/[0-9]+/series
-/editors/[0-9]+/collections/[0-9]+/edition_types/[0-9]+/series
-/editors/[0-9]+/edition_types/[0-9]+/series
-/editors/[0-9]+/edition_types/[0-9]+/collections/[0-9]+/series
-/edition_types/[0-9]+/series
-/edition_types/[0-9]+/editors/[0-9]+/series
-/edition_types/[0-9]+/editors/[0-9]+/collections/[0-9]+/series
-/edition_types/[0-9]+/collections/[0-9]+/series
-
-
-/books
-/collections/[0-9]+/books
-/collections/[0-9]+/edition_types/[0-9]+/books
-/collections/[0-9]+/edition_types/[0-9]+/series/[0-9]+/books
-/collections/[0-9]+/series/[0-9]+/books
-/collections/[0-9]+/series/[0-9]+/edition_types/[0-9]+/books
-/edition_types/[0-9]+/books
-/edition_types/[0-9]+/editors/[0-9]+/books
-/edition_types/[0-9]+/editors/[0-9]+/collections/[0-9]+/books
-/edition_types/[0-9]+/editors/[0-9]+/collections/[0-9]+/series/[0-9]+/books
-/edition_types/[0-9]+/editors/[0-9]+/series/[0-9]+/books
-/edition_types/[0-9]+/editors/[0-9]+/series/[0-9]+/collections/[0-9]+/books
-/edition_types/[0-9]+/collections/[0-9]+/books
-/edition_types/[0-9]+/collections/[0-9]+/series/[0-9]+/books
-/edition_types/[0-9]+/series/[0-9]+/books
-/edition_types/[0-9]+/series/[0-9]+/editors/[0-9]+/books
-/edition_types/[0-9]+/series/[0-9]+/editors/[0-9]+/collections/[0-9]+/books
-/edition_types/[0-9]+/series/[0-9]+/collections/[0-9]+/books
-/edition_types/[0-9]+/series/[0-9]+/collections/[0-9]+/editors/[0-9]+/books
-/editors/[0-9]+/books
-/editors/[0-9]+/collections/[0-9]+/books
-/editors/[0-9]+/collections/[0-9]+/series/[0-9]+/books
-/editors/[0-9]+/collections/[0-9]+/series/[0-9]+/edition_types/[0-9]+/books
-/editors/[0-9]+/collections/[0-9]+/edition_types/[0-9]+/books
-/editors/[0-9]+/collections/[0-9]+/edition_types/[0-9]+/series/[0-9]+/books
-/editors/[0-9]+/series/[0-9]+/books
-/editors/[0-9]+/series/[0-9]+/collections/[0-9]+/books
-/editors/[0-9]+/series/[0-9]+/collections/[0-9]+/edition_types/[0-9]+/books
-/editors/[0-9]+/series/[0-9]+/edition_types/[0-9]+/books
-/editors/[0-9]+/series/[0-9]+/edition_types/[0-9]+/collections/[0-9]+/books
-/editors/[0-9]+/edition_types/[0-9]+/books
-/editors/[0-9]+/edition_types/[0-9]+/collections/[0-9]+/books
-/editors/[0-9]+/edition_types/[0-9]+/collections/[0-9]+/series/[0-9]+/books
-/editors/[0-9]+/edition_types/[0-9]+/series/[0-9]+/books
-/editors/[0-9]+/edition_types/[0-9]+/series/[0-9]+/collections/[0-9]+/books
 /series/[0-9]+/books
-/series/[0-9]+/editors/[0-9]+/books
-/series/[0-9]+/editors/[0-9]+/collections/[0-9]+/books
-/series/[0-9]+/editors/[0-9]+/collections/[0-9]+/edition_types/[0-9]+/books
-/series/[0-9]+/editors/[0-9]+/edition_types/[0-9]+/books
-/series/[0-9]+/editors/[0-9]+/edition_types/[0-9]+/collections/[0-9]+/books
-/series/[0-9]+/edition_types/[0-9]+/books
-/series/[0-9]+/edition_types/[0-9]+/editors/[0-9]+/books
-/series/[0-9]+/edition_types/[0-9]+/editors/[0-9]+/collections/[0-9]+/books
+/series/[0-9]+/collections
 /series/[0-9]+/collections/[0-9]+/books
-/series/[0-9]+/collections/[0-9]+/edition_types/[0-9]+/books
+/series/[0-9]+/collections/[0-9]+/prints
+/series/[0-9]+/collections/[0-9]+/prints/[0-9]+/books
+/series/[0-9]+/prints
+/series/[0-9]+/prints/[0-9]+/books
+/series/[0-9]+/prints/[0-9]+/collections
+/series/[0-9]+/prints/[0-9]+/editors
+/series/[0-9]+/prints/[0-9]+/editors/[0-9]+/books
+/series/[0-9]+/prints/[0-9]+/editors/[0-9]+/collections
+/series/[0-9]+/prints/[0-9]+/editors/[0-9]+/collections/[0-9]+/books
+/series/[0-9]+/editors
+/series/[0-9]+/editors/[0-9]+/books
+/series/[0-9]+/editors/[0-9]+/collections
+/series/[0-9]+/editors/[0-9]+/collections/[0-9]+/books
+/series/[0-9]+/editors/[0-9]+/collections/[0-9]+/prints
+/series/[0-9]+/editors/[0-9]+/collections/[0-9]+/prints/[0-9]+/books
+/series/[0-9]+/editors/[0-9]+/prints
+/series/[0-9]+/editors/[0-9]+/prints/[0-9]+/books
+/series/[0-9]+/editors/[0-9]+/prints/[0-9]+/collections
+/series/[0-9]+/editors/[0-9]+/prints/[0-9]+/collections/[0-9]+/books

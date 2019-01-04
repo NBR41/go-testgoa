@@ -79,7 +79,8 @@ var _ = Resource("collections", func() {
 		Routing(POST(""))
 		Payload(func() {
 			attrCollectionName()
-			Required("collection_name")
+			attrEditorID()
+			Required("collection_name", "editor_id")
 		})
 		Security(JWTAuth)
 		// unauthorized
@@ -100,7 +101,7 @@ var _ = Resource("collections", func() {
 		Params(attrCollectionID)
 		Payload(func() {
 			attrCollectionName()
-			Required("collection_name")
+			attrEditorID()
 		})
 		Security(JWTAuth)
 		// Unauthorized

@@ -14,11 +14,6 @@ var (
 
 	defIDConstraint = func() { Minimum(1) }
 
-	attrAuthorshipID = func() { Attribute("authorship_id", Integer, "Unique Authorship ID", defIDConstraint) }
-
-	attrEditionID     = func() { Attribute("edition_id", Integer, "Unique Edition ID", defIDConstraint) }
-	attrSeriesGenreID = func() { Attribute("series_genre_id", Integer, "Unique Series Genre ID", defIDConstraint) }
-
 	attrHref = func() { Attribute("href", String, "API href for making requests") }
 )
 

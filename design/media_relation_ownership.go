@@ -7,7 +7,7 @@ import (
 	. "github.com/goadesign/goa/design/apidsl"
 )
 
-// OwnershipMedia defines the media type used to render users.
+// OwnershipMedia defines the media type used to render ownership.
 var OwnershipMedia = MediaType("application/vnd.ownership+json", func() {
 	Description("A User ownership")
 

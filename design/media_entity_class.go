@@ -8,56 +8,56 @@ import (
 )
 
 var (
-	seriesIDPath   = "/:series_id"
-	attrSeriesID   = func() { Attribute("series_id", Integer, "Unique Series ID", defIDConstraint) }
-	attrSeriesName = func() { Attribute("series_name", String, "Series Name (Akira/Dragon ball)", defStringConstraint) }
+	classIDPath   = "/:class_id"
+	attrClassID   = func() { Attribute("class_id", Integer, "Unique Class ID", defIDConstraint) }
+	attrClassName = func() { Attribute("class_name", String, "Class Name (Shonen/Shojo/Seinen)", defStringConstraint) }
 )
 
-//SeriesMedia defines the media type used to render series.
-var SeriesMedia = MediaType("application/vnd.series+json", func() {
-	Description("A Serie")
+//ClassMedia defines the media type used to render classes.
+var ClassMedia = MediaType("application/vnd.class+json", func() {
+	Description("A Class")
 
 	Attributes(func() {
-		attrSeriesID()
-		attrSeriesName()
+		attrClassID()
+		attrClassName()
 		attrHref()
-		Required("series_id", "series_name", "href")
+		Required("class_id", "class_name", "href")
 	})
 
 	View("default", func() {
-		Attribute("series_id")
-		Attribute("series_name")
+		Attribute("class_id")
+		Attribute("class_name")
 		Attribute("href")
 	})
 
 	View("link", func() {
-		Attribute("series_id")
-		Attribute("series_name")
+		Attribute("class_id")
+		Attribute("class_name")
 		Attribute("href")
 	})
 })
 
-var _ = Resource("series", func() {
-	BasePath("/series")
-	DefaultMedia(SeriesMedia)
+var _ = Resource("classes", func() {
+	BasePath("/classes")
+	DefaultMedia(ClassMedia)
 
 	Action("list", func() {
-		Description("Get series")
+		Description("List classes")
 		Routing(GET(""))
 		// ok
-		Response(OK, CollectionOf(SeriesMedia))
+		Response(OK, CollectionOf(ClassMedia))
 		// Errors
 		Response(InternalServerError)
 		Response(ServiceUnavailable)
 	})
 
 	Action("show", func() {
-		Description("Get serie by id")
-		Routing(GET(seriesIDPath))
-		Params(attrSeriesID)
+		Description("Get class by id")
+		Routing(GET(classIDPath))
+		Params(attrClassID)
 		// ok
 		Response(OK)
-		// series not found
+		// class not found
 		Response(NotFound)
 		// Errors
 		Response(InternalServerError)
@@ -66,17 +66,17 @@ var _ = Resource("series", func() {
 	})
 
 	Action("create", func() {
-		Description("Create new series")
+		Description("Create new class")
 		Routing(POST(""))
 		Payload(func() {
-			Member("name")
-			Required("name")
+			attrClassName()
+			Required("class_name")
 		})
 		Security(JWTAuth)
 		// unauthorized
 		Response(Unauthorized)
 		// OK
-		Response(Created, "/series/[0-9]+")
+		Response(Created, "/classes/[0-9]+")
 		// App error
 		Response(UnprocessableEntity)
 		// Errors
@@ -86,12 +86,12 @@ var _ = Resource("series", func() {
 	})
 
 	Action("update", func() {
-		Description("Update serie by id")
-		Routing(PUT(seriesIDPath))
-		Params(attrSeriesID)
+		Description("Update class by id")
+		Routing(PUT(classIDPath))
+		Params(attrClassID)
 		Payload(func() {
-			Member("name")
-			Required("name")
+			attrClassName()
+			Required("class_name")
 		})
 		Security(JWTAuth)
 		// Unauthorized
@@ -109,9 +109,9 @@ var _ = Resource("series", func() {
 	})
 
 	Action("delete", func() {
-		Description("delete serie by id")
-		Routing(DELETE(seriesIDPath))
-		Params(attrSeriesID)
+		Description("delete class by id")
+		Routing(DELETE(classIDPath))
+		Params(attrClassID)
 		Security(JWTAuth)
 		// Unauthorized
 		Response(Unauthorized)

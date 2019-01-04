@@ -8,58 +8,60 @@ import (
 )
 
 var (
-	editionTypeIDPath   = "/:edition_type_id"
-	attrEditionTypeID   = func() { Attribute("edition_type_id", Integer, "Unique Edition type ID", defIDConstraint) }
-	attrEditionTypeName = func() {
-		Attribute("edition_type_name", String, "Editor Name (Deluxe/Ultimate/Pocket)", defStringConstraint)
-	}
+	bookIDPath   = "/:book_id"
+	attrBookID   = func() { Attribute("book_id", Integer, "Unique Book ID", defIDConstraint) }
+	attrBookISBN = func() { Attribute("book_isbn", String, "Book ISBN", defStringConstraint) }
+	attrBookName = func() { Attribute("book_name", String, "Book Name", defStringConstraint) }
 )
 
-//EditionTypeMedia defines the media type used to render edition types.
-var EditionTypeMedia = MediaType("application/vnd.editiontype+json", func() {
-	Description("An Edition Type")
+// BookMedia defines the media type used to render books.
+var BookMedia = MediaType("application/vnd.book+json", func() {
+	Description("A Book")
 
 	Attributes(func() {
-		attrEditionTypeID()
-		attrEditionTypeName()
+		attrBookID()
+		attrBookISBN()
+		attrBookName()
 		attrHref()
-		Required("edition_type_id", "edition_type_name", "href")
+		Required("book_id", "book_isbn", "book_name", "href")
 	})
 
 	View("default", func() {
-		Attribute("edition_type_id")
-		Attribute("edition_type_name")
+		Attribute("book_id")
+		Attribute("book_isbn")
+		Attribute("book_name")
 		Attribute("href")
 	})
 
 	View("link", func() {
-		Attribute("edition_type_id")
-		Attribute("edition_type_name")
+		Attribute("book_id")
+		Attribute("book_isbn")
+		Attribute("book_name")
 		Attribute("href")
 	})
 })
 
-var _ = Resource("edition_types", func() {
-	BasePath("/edition_types")
-	DefaultMedia(EditionTypeMedia)
+var _ = Resource("books", func() {
+	BasePath("/books")
+	DefaultMedia(BookMedia)
 
 	Action("list", func() {
-		Description("Get edition types")
+		Description("List books")
 		Routing(GET(""))
 		// ok
-		Response(OK, CollectionOf(EditionTypeMedia))
+		Response(OK, CollectionOf(BookMedia))
 		// Errors
 		Response(InternalServerError)
 		Response(ServiceUnavailable)
 	})
 
 	Action("show", func() {
-		Description("Get edition type by id")
-		Routing(GET(editionTypeIDPath))
-		Params(attrEditionTypeID)
+		Description("Get book by id")
+		Routing(GET(bookIDPath))
+		Params(attrBookID)
 		// ok
 		Response(OK)
-		// edition type not found
+		// book not found
 		Response(NotFound)
 		// Errors
 		Response(InternalServerError)
@@ -68,17 +70,18 @@ var _ = Resource("edition_types", func() {
 	})
 
 	Action("create", func() {
-		Description("Create new edition type")
+		Description("Create new book")
 		Routing(POST(""))
 		Payload(func() {
-			attrEditionTypeName()
-			Required("edition_type_name")
+			Member("isbn")
+			Member("name")
+			Required("isbn", "name")
 		})
 		Security(JWTAuth)
 		// unauthorized
 		Response(Unauthorized)
 		// OK
-		Response(Created, "/edition_types/[0-9]+")
+		Response(Created, "/books/[0-9]+")
 		// App error
 		Response(UnprocessableEntity)
 		// Errors
@@ -88,12 +91,12 @@ var _ = Resource("edition_types", func() {
 	})
 
 	Action("update", func() {
-		Description("Update edition type by id")
-		Routing(PUT(editionTypeIDPath))
-		Params(attrEditionTypeID)
+		Description("Update book by id")
+		Routing(PUT(bookIDPath))
+		Params(attrBookID)
 		Payload(func() {
-			attrEditionTypeName()
-			Required("edition_type_name")
+			Member("name")
+			Required("name")
 		})
 		Security(JWTAuth)
 		// Unauthorized
@@ -111,9 +114,9 @@ var _ = Resource("edition_types", func() {
 	})
 
 	Action("delete", func() {
-		Description("delete edition type by id")
-		Routing(DELETE(editionTypeIDPath))
-		Params(attrEditionTypeID)
+		Description("delete book by id")
+		Routing(DELETE(bookIDPath))
+		Params(attrBookID)
 		Security(JWTAuth)
 		// Unauthorized
 		Response(Unauthorized)

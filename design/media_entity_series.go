@@ -8,56 +8,62 @@ import (
 )
 
 var (
-	genreIDPath   = "/:genre_id"
-	attrGenreID   = func() { Attribute("genre_id", Integer, "Unique Genre ID", defIDConstraint) }
-	attrGenreName = func() { Attribute("genre_name", String, "Genre Name (Shonen/Shojo/Seinen)", defStringConstraint) }
+	seriesIDPath   = "/:series_id"
+	attrSeriesID   = func() { Attribute("series_id", Integer, "Unique Series ID", defIDConstraint) }
+	attrSeriesName = func() { Attribute("series_name", String, "Series Name (Akira/Dragon ball)", defStringConstraint) }
 )
 
-//GenreMedia defines the media type used to render genres.
-var GenreMedia = MediaType("application/vnd.genre+json", func() {
-	Description("A Genre")
+//SeriesMedia defines the media type used to render series.
+var SeriesMedia = MediaType("application/vnd.series+json", func() {
+	Description("A Serie")
 
 	Attributes(func() {
-		attrGenreID()
-		attrGenreName()
+		attrSeriesID()
+		attrSeriesName()
+		attrCategoryID()
+		Attribute("category", CategoryMedia, "category struct")
 		attrHref()
-		Required("genre_id", "genre_name", "href")
+		Required("series_id", "category_id", "series_name", "href")
 	})
 
 	View("default", func() {
-		Attribute("genre_id")
-		Attribute("genre_name")
+		Attribute("series_id")
+		Attribute("series_name")
+		Attribute("category_id")
+		Attribute("category")
 		Attribute("href")
 	})
 
 	View("link", func() {
-		Attribute("genre_id")
-		Attribute("genre_name")
+		Attribute("series_id")
+		Attribute("series_name")
+		Attribute("category_id")
+		Attribute("category")
 		Attribute("href")
 	})
 })
 
-var _ = Resource("genres", func() {
-	BasePath("/genres")
-	DefaultMedia(GenreMedia)
+var _ = Resource("series", func() {
+	BasePath("/series")
+	DefaultMedia(SeriesMedia)
 
 	Action("list", func() {
-		Description("Get genres")
+		Description("Get series")
 		Routing(GET(""))
 		// ok
-		Response(OK, CollectionOf(GenreMedia))
+		Response(OK, CollectionOf(SeriesMedia))
 		// Errors
 		Response(InternalServerError)
 		Response(ServiceUnavailable)
 	})
 
 	Action("show", func() {
-		Description("Get genre by id")
-		Routing(GET(genreIDPath))
-		Params(attrGenreID)
+		Description("Get serie by id")
+		Routing(GET(seriesIDPath))
+		Params(attrSeriesID)
 		// ok
 		Response(OK)
-		// genre not found
+		// series not found
 		Response(NotFound)
 		// Errors
 		Response(InternalServerError)
@@ -66,17 +72,18 @@ var _ = Resource("genres", func() {
 	})
 
 	Action("create", func() {
-		Description("Create new genre")
+		Description("Create new series")
 		Routing(POST(""))
 		Payload(func() {
-			attrGenreName()
-			Required("genre_name")
+			attrSeriesName()
+			attrCategoryID()
+			Required("series_name", "category_id")
 		})
 		Security(JWTAuth)
 		// unauthorized
 		Response(Unauthorized)
 		// OK
-		Response(Created, "/genres/[0-9]+")
+		Response(Created, "/series/[0-9]+")
 		// App error
 		Response(UnprocessableEntity)
 		// Errors
@@ -86,12 +93,12 @@ var _ = Resource("genres", func() {
 	})
 
 	Action("update", func() {
-		Description("Update genre by id")
-		Routing(PUT(genreIDPath))
-		Params(attrGenreID)
+		Description("Update serie by id")
+		Routing(PUT(seriesIDPath))
+		Params(attrSeriesID)
 		Payload(func() {
-			attrGenreName()
-			Required("genre_name")
+			attrSeriesName()
+			attrCategoryID()
 		})
 		Security(JWTAuth)
 		// Unauthorized
@@ -109,9 +116,9 @@ var _ = Resource("genres", func() {
 	})
 
 	Action("delete", func() {
-		Description("delete genre by id")
-		Routing(DELETE(genreIDPath))
-		Params(attrGenreID)
+		Description("delete serie by id")
+		Routing(DELETE(seriesIDPath))
+		Params(attrSeriesID)
 		Security(JWTAuth)
 		// Unauthorized
 		Response(Unauthorized)

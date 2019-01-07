@@ -13,7 +13,6 @@ var _ = Resource("relationRole", func() {
 	Action("listAuthors", func() {
 		Description("List authors by role")
 		Routing(GET(authorPath))
-		Params(attrAuthorID)
 		// ok
 		Response(OK, CollectionOf(AuthorMedia))
 		// class not found
@@ -26,7 +25,7 @@ var _ = Resource("relationRole", func() {
 
 	Action("listSeriesByAuthors", func() {
 		Description("List series by role and authors")
-		Routing(GET(authorPath))
+		Routing(GET(authorPath + authorIDPath + seriesPath))
 		Params(attrAuthorID)
 		// ok
 		Response(OK, CollectionOf(SeriesMedia))

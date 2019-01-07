@@ -505,6 +505,22 @@ definitions:
         href: Minus praesentium possimus.
       editor_id: 1
       href: Id vel consequuntur corrupti sunt ipsum autem.
+    - collection_id: 1
+      collection_name: dm5
+      editor:
+        editor_id: 1
+        editor_name: n002um1
+        href: Minus praesentium possimus.
+      editor_id: 1
+      href: Id vel consequuntur corrupti sunt ipsum autem.
+    - collection_id: 1
+      collection_name: dm5
+      editor:
+        editor_id: 1
+        editor_name: n002um1
+        href: Minus praesentium possimus.
+      editor_id: 1
+      href: Id vel consequuntur corrupti sunt ipsum autem.
     items:
       $ref: '#/definitions/Collection'
     title: 'Mediatype identifier: application/vnd.collection+json; type=collection;
@@ -943,12 +959,6 @@ definitions:
     description: EditorCollection is the media type for an array of Editor (default
       view)
     example:
-    - editor_id: 1
-      editor_name: n002um1
-      href: Minus praesentium possimus.
-    - editor_id: 1
-      editor_name: n002um1
-      href: Minus praesentium possimus.
     - editor_id: 1
       editor_name: n002um1
       href: Minus praesentium possimus.

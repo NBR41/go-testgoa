@@ -10,18 +10,18 @@ import (
 	"github.com/kylelemons/godebug/pretty"
 )
 
-func TestInsertEditionType(t *testing.T) {
+func TestInsertClass(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
 
 	qry := `
-INSERT INTO edition_type \(id, name, create_ts, update_ts\)
+INSERT INTO class \(id, name, create_ts, update_ts\)
 VALUES \(null, \?, NOW\(\), NOW\(\)\)
 ON DUPLICATE KEY UPDATE update_ts = VALUES\(update_ts\)`
 
-	nameqry := `SELECT id, name FROM edition_type where name = \?`
+	nameqry := `SELECT id, name FROM class where name = \?`
 	mock.ExpectQuery(nameqry).WithArgs("foo").WillReturnError(errors.New("duplicate error"))
 	mock.ExpectQuery(nameqry).WithArgs("foo").WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "foo"))
 	mock.ExpectQuery(nameqry).WithArgs("foo").WillReturnError(model.ErrNotFound)
@@ -37,18 +37,18 @@ ON DUPLICATE KEY UPDATE update_ts = VALUES\(update_ts\)`
 
 	tests := []struct {
 		desc string
-		exp  *model.EditionType
+		exp  *model.Class
 		err  error
 	}{
 		{"duplicate error", nil, errors.New("duplicate error")},
 		{"duplicate", nil, model.ErrDuplicateKey},
 		{"query error", nil, errors.New("query error")},
 		{"result error", nil, errors.New("result error")},
-		{"valid", &model.EditionType{ID: 123, Name: "foo"}, nil},
+		{"valid", &model.Class{ID: 123, Name: "foo"}, nil},
 	}
 
 	for i := range tests {
-		v, err := m.InsertEditionType("foo")
+		v, err := m.InsertClass("foo")
 		if err != nil {
 			if tests[i].err == nil {
 				t.Errorf("unexpected error for [%s], [%v]", tests[i].desc, err)
@@ -69,12 +69,12 @@ ON DUPLICATE KEY UPDATE update_ts = VALUES\(update_ts\)`
 	}
 }
 
-func TestGetEditionTypeByID(t *testing.T) {
+func TestGetClassByID(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `SELECT id, name FROM edition_type where id = \?`
+	qry := `SELECT id, name FROM class where id = \?`
 	mock.ExpectQuery(qry).WithArgs(123).WillReturnError(errors.New("query error"))
 	mock.ExpectQuery(qry).WithArgs(123).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}))
 	mock.ExpectQuery(qry).WithArgs(123).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow("foo", "bar"))
@@ -87,18 +87,18 @@ func TestGetEditionTypeByID(t *testing.T) {
 
 	tests := []struct {
 		desc string
-		exp  *model.EditionType
+		exp  *model.Class
 		err  error
 	}{
 		{"query error", nil, errors.New("query error")},
 		{"no rows", nil, model.ErrNotFound},
 		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
 		{"scan error", nil, errors.New("scan error")},
-		{"valid", &model.EditionType{ID: 1, Name: "foo"}, nil},
+		{"valid", &model.Class{ID: 1, Name: "foo"}, nil},
 	}
 
 	for i := range tests {
-		v, err := m.GetEditionTypeByID(123)
+		v, err := m.GetClassByID(123)
 		if err != nil {
 			if tests[i].err == nil {
 				t.Errorf("unexpected error for [%s], [%v]", tests[i].desc, err)
@@ -119,12 +119,12 @@ func TestGetEditionTypeByID(t *testing.T) {
 	}
 }
 
-func TestGetEditionTypeByName(t *testing.T) {
+func TestGetClassByName(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `SELECT id, name FROM edition_type where name = \?`
+	qry := `SELECT id, name FROM class where name = \?`
 	mock.ExpectQuery(qry).WithArgs("foo").WillReturnError(errors.New("query error"))
 	mock.ExpectQuery(qry).WithArgs("foo").WillReturnRows(sqlmock.NewRows([]string{"id", "name"}))
 	mock.ExpectQuery(qry).WithArgs("foo").WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow("foo", "bar"))
@@ -137,18 +137,18 @@ func TestGetEditionTypeByName(t *testing.T) {
 
 	tests := []struct {
 		desc string
-		exp  *model.EditionType
+		exp  *model.Class
 		err  error
 	}{
 		{"query error", nil, errors.New("query error")},
 		{"no rows", nil, model.ErrNotFound},
 		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
 		{"scan error", nil, errors.New("scan error")},
-		{"valid", &model.EditionType{ID: 1, Name: "foo"}, nil},
+		{"valid", &model.Class{ID: 1, Name: "foo"}, nil},
 	}
 
 	for i := range tests {
-		v, err := m.GetEditionTypeByName("foo")
+		v, err := m.GetClassByName("foo")
 		if err != nil {
 			if tests[i].err == nil {
 				t.Errorf("unexpected error for [%s], [%v]", tests[i].desc, err)
@@ -169,12 +169,12 @@ func TestGetEditionTypeByName(t *testing.T) {
 	}
 }
 
-func TestListEditionTypes(t *testing.T) {
+func TestListClasses(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `SELECT id, name FROM edition_type`
+	qry := `SELECT id, name FROM class`
 	mock.ExpectQuery(qry).WillReturnError(errors.New("query error"))
 	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow("foo", "bar"))
 	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "foo").RowError(0, errors.New("scan error")))
@@ -186,17 +186,17 @@ func TestListEditionTypes(t *testing.T) {
 
 	tests := []struct {
 		desc string
-		exp  []model.EditionType
+		exp  []model.Class
 		err  error
 	}{
 		{"query error", nil, errors.New("query error")},
 		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
 		{"scan error", nil, errors.New("scan error")},
-		{"valid", []model.EditionType{model.EditionType{ID: 1, Name: "foo"}}, nil},
+		{"valid", []model.Class{model.Class{ID: 1, Name: "foo"}}, nil},
 	}
 
 	for i := range tests {
-		v, err := m.ListEditionTypes()
+		v, err := m.ListClasses()
 		if err != nil {
 			if tests[i].err == nil {
 				t.Errorf("unexpected error for [%s], [%v]", tests[i].desc, err)
@@ -218,12 +218,12 @@ func TestListEditionTypes(t *testing.T) {
 	}
 }
 
-func TestUpdateEditionType(t *testing.T) {
+func TestUpdateClass(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `UPDATE edition_type SET name = \?, update_ts = NOW\(\) WHERE id = \?`
+	qry := `UPDATE class SET name = \?, update_ts = NOW\(\) WHERE id = \?`
 	mock.ExpectExec(qry).WithArgs("foo", 123).WillReturnError(errors.New("query error"))
 	mock.ExpectExec(qry).WithArgs("foo", 123).WillReturnResult(sqlmock.NewResult(0, 0))
 	mock.ExpectExec(qry).WithArgs("foo", 123).WillReturnResult(sqlmock.NewResult(0, 1))
@@ -239,7 +239,7 @@ func TestUpdateEditionType(t *testing.T) {
 		{"valid", nil},
 	}
 	for i := range tests {
-		err := m.UpdateEditionType(123, "foo")
+		err := m.UpdateClass(123, "foo")
 		if err != nil {
 			if tests[i].err == nil {
 				t.Errorf("unexpected error for [%s], [%v]", tests[i].desc, err)
@@ -257,12 +257,12 @@ func TestUpdateEditionType(t *testing.T) {
 	}
 }
 
-func TestDeleteEditionType(t *testing.T) {
+func TestDeleteClass(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `DELETE FROM edition_type where id = \?`
+	qry := `DELETE FROM class where id = \?`
 	mock.ExpectExec(qry).WithArgs(123).WillReturnError(errors.New("query error"))
 	mock.ExpectExec(qry).WithArgs(123).WillReturnResult(sqlmock.NewErrorResult(errors.New("result error")))
 	mock.ExpectExec(qry).WithArgs(123).WillReturnResult(sqlmock.NewResult(0, 0))
@@ -280,7 +280,7 @@ func TestDeleteEditionType(t *testing.T) {
 		{"valid", nil},
 	}
 	for i := range tests {
-		err := m.DeleteEditionType(123)
+		err := m.DeleteClass(123)
 		if err != nil {
 			if tests[i].err == nil {
 				t.Errorf("unexpected error for [%s], [%v]", tests[i].desc, err)

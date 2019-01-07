@@ -37,42 +37,57 @@ func main() {
 
 	// Mount "authenticate" controller
 	app.MountAuthenticateController(service, controllers.NewAuthenticateController(service, conf.fmod, conf.token))
+	// Mount "authors" controller
+	app.MountAuthorsController(service, controllers.NewAuthorsController(service, conf.fmod))
+	// Mount "authorships" controller
+	app.MountAuthorshipsController(service, controllers.NewAuthorshipsController(service))
 	// Mount "books" controller
 	app.MountBooksController(service, controllers.NewBooksController(service, conf.fmod))
+	// Mount "categories" controller
+	app.MountCategoriesController(service, controllers.NewCategoriesController(service, conf.fmod))
+	// Mount "classes" controller
+	app.MountClassesController(service, controllers.NewClassesController(service, conf.fmod))
+	// Mount "classifications" controller
+	app.MountClassificationsController(service, controllers.NewClassificationsController(service))
+	// Mount "collections" controller
+	app.MountCollectionsController(service, controllers.NewCollectionsController(service))
+	// Mount "editions" controller
+	app.MountEditionsController(service, controllers.NewEditionsController(service))
+	// Mount "editors" controller
+	app.MountEditorsController(service, controllers.NewEditorsController(service, conf.fmod))
 	// Mount "health" controller
 	app.MountHealthController(service, controllers.NewHealthController(service, conf.fmod))
 	// Mount "ownerships" controller
 	app.MountOwnershipsController(service, controllers.NewOwnershipsController(service, conf.fmod, conf.api))
 	// Mount "password" controller
 	app.MountPasswordController(service, controllers.NewPasswordController(service, conf.fmod, conf.token, conf.mail))
-	// Mount "users" controller
-	app.MountUsersController(service, controllers.NewUsersController(service, conf.fmod, conf.token, conf.mail))
-	// Mount "validation" controller
-	app.MountValidationController(service, controllers.NewValidationController(service, conf.fmod, conf.token, conf.mail))
-	// Mount swagger controller onto service
-	app.MountSwaggerController(service, controllers.NewSwagger(service))
-	// Mount "token" controller
-	app.MountTokenController(service, controllers.NewTokenController(service, conf.fmod, conf.token))
-	// Mount "authors" controller
-	app.MountAuthorsController(service, controllers.NewAuthorsController(service, conf.fmod))
-	// Mount "categories" controller
-	app.MountCategoriesController(service, controllers.NewCategoriesController(service, conf.fmod))
-	// Mount "collections" controller
-	app.MountCollectionsController(service, controllers.NewCollectionsController(service))
-	// Mount "edition_types" controller
-	app.MountEditionTypesController(service, controllers.NewEditionTypesController(service, conf.fmod))
-	// Mount "editors" controller
-	app.MountEditorsController(service, controllers.NewEditorsController(service, conf.fmod))
-	// Mount "genres" controller
-	app.MountGenresController(service, controllers.NewGenresController(service, conf.fmod))
+	// Mount "prints" controller
+	app.MountPrintsController(service, controllers.NewPrintsController(service, conf.fmod))
+	// Mount "relationAuthor" controller
+	app.MountRelationAuthorController(service, controllers.NewRelationAuthorController(service))
+	// Mount "relationCategory" controller
+	app.MountRelationCategoryController(service, controllers.NewRelationCategoryController(service))
+	// Mount "relationClass" controller
+	app.MountRelationClassController(service, controllers.NewRelationClassController(service))
+	// Mount "relationCollection" controller
+	app.MountRelationCollectionController(service, controllers.NewRelationCollectionController(service))
+	// Mount "relationRole" controller
+	app.MountRelationRoleController(service, controllers.NewRelationRoleController(service))
 	// Mount "roles" controller
 	app.MountRolesController(service, controllers.NewRolesController(service, conf.fmod))
 	// Mount "series" controller
 	app.MountSeriesController(service, controllers.NewSeriesController(service))
+	// Mount "swagger" controller
+	app.MountSwaggerController(service, controllers.NewSwaggerController(service))
+	// Mount "token" controller
+	app.MountTokenController(service, controllers.NewTokenController(service, conf.fmod, conf.token))
+	// Mount "users" controller
+	app.MountUsersController(service, controllers.NewUsersController(service, conf.fmod, conf.token, conf.mail))
+	// Mount "validation" controller
+	app.MountValidationController(service, controllers.NewValidationController(service, conf.fmod, conf.token, conf.mail))
 
 	// Start service
 	if err := service.ListenAndServe(":8089"); err != nil {
 		service.LogError("startup", "err", err)
 	}
-
 }

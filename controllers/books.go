@@ -31,7 +31,7 @@ func (c *BooksController) Create(ctx *app.CreateBooksContext) error {
 	}
 	defer func() { m.Close() }()
 
-	b, err := m.InsertBook(ctx.Payload.Isbn, ctx.Payload.Name)
+	b, err := m.InsertBook(ctx.Payload.Isbn, ctx.Payload.Name, ctx.Payload.SeriesID)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to insert book`, `error`, err)
 		if err == model.ErrDuplicateKey {
@@ -125,7 +125,7 @@ func (c *BooksController) Update(ctx *app.UpdateBooksContext) error {
 	}
 	defer func() { m.Close() }()
 
-	err = m.UpdateBook(ctx.BookID, ctx.Payload.Name)
+	err = m.UpdateBook(ctx.BookID, ctx.Payload.Name, ctx.Payload.SeriesID)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to update book`, `error`, err)
 		if err == model.ErrNotFound {

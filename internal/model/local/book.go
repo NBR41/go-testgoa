@@ -7,7 +7,7 @@ import (
 )
 
 // InsertBook inserts book
-func (db *Local) InsertBook(isbn, name string) (*model.Book, error) {
+func (db *Local) InsertBook(isbn, name string, seriesID int) (*model.Book, error) {
 	db.Lock()
 	defer db.Unlock()
 	_, err := db.getBookByISBN(isbn)
@@ -84,14 +84,14 @@ func (db *Local) ListBooks() ([]model.Book, error) {
 }
 
 // UpdateBook update book infos
-func (db *Local) UpdateBook(id int, name string) error {
+func (db *Local) UpdateBook(id int, name *string, seriesID *int) error {
 	db.Lock()
 	defer db.Unlock()
 	b, err := db.getBookByID(id)
 	if err != nil {
 		return err
 	}
-	b.Name = name
+	b.Name = *name
 	return nil
 
 }

@@ -57,8 +57,8 @@ type Author struct {
 	Name string
 }
 
-//Genre struct for genre
-type Genre struct {
+//Class struct for class
+type Class struct {
 	ID   int64
 	Name string
 }
@@ -69,8 +69,8 @@ type Role struct {
 	Name string
 }
 
-//EditionType struct for edition type
-type EditionType struct {
+//Print struct for print
+type Print struct {
 	ID   int64
 	Name string
 }

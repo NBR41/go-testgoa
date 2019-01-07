@@ -7,13 +7,13 @@ import (
 	"github.com/NBR41/go-testgoa/internal/model"
 )
 
-func TestGetGenreByID(t *testing.T) {
+func TestGetPrintByID(t *testing.T) {
 	l := New(nil)
 
-	b, err := l.GetGenreByID(5)
+	b, err := l.GetPrintByID(5)
 	expectingError(t, err, model.ErrNotFound)
 
-	b, err = l.GetGenreByID(1)
+	b, err = l.GetPrintByID(1)
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}
@@ -22,13 +22,13 @@ func TestGetGenreByID(t *testing.T) {
 	}
 }
 
-func TestGetGenreByName(t *testing.T) {
+func TestGetPrintByName(t *testing.T) {
 	l := New(nil)
 
-	b, err := l.GetGenreByName("test5")
+	b, err := l.GetPrintByName("test5")
 	expectingError(t, err, model.ErrNotFound)
 
-	b, err = l.GetGenreByName("genre1")
+	b, err = l.GetPrintByName("print1")
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}
@@ -37,10 +37,10 @@ func TestGetGenreByName(t *testing.T) {
 	}
 }
 
-func TestListGenres(t *testing.T) {
+func TestListPrints(t *testing.T) {
 	l := New(nil)
 
-	bs, err := l.ListGenres()
+	bs, err := l.ListPrints()
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}
@@ -52,18 +52,18 @@ func TestListGenres(t *testing.T) {
 	}
 }
 
-func TestInsertGenre(t *testing.T) {
+func TestInsertPrint(t *testing.T) {
 	l := New(nil)
 
 	// insert
-	b, err := l.InsertGenre("genre2")
+	b, err := l.InsertPrint("print2")
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}
 	if b.ID != 2 {
 		t.Fatalf("expecting ID 2, got %v", b.ID)
 	}
-	b2, err := l.GetGenreByID(2)
+	b2, err := l.GetPrintByID(2)
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}
@@ -71,45 +71,45 @@ func TestInsertGenre(t *testing.T) {
 		t.Fatal("unexpected user value")
 	}
 
-	// duplicate genre name
-	b, err = l.InsertGenre("genre2")
+	// duplicate print name
+	b, err = l.InsertPrint("print2")
 	expectingError(t, err, model.ErrDuplicateKey)
 }
 
-func TestUpdateGenre(t *testing.T) {
+func TestUpdatePrint(t *testing.T) {
 	l := New(nil)
 
-	// genre doesn't exist
-	err := l.UpdateGenre(10, "test10")
+	// print doesn't exist
+	err := l.UpdatePrint(10, "test10")
 	expectingError(t, err, model.ErrNotFound)
 
-	//update genre
-	err = l.UpdateGenre(1, "genre2")
+	//update print
+	err = l.UpdatePrint(1, "print2")
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}
 
-	u, err := l.GetGenreByID(1)
+	u, err := l.GetPrintByID(1)
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}
-	if u.Name != "genre2" {
-		t.Fatalf("expecting genre2, got %s", u.Name)
+	if u.Name != "print2" {
+		t.Fatalf("expecting print2, got %s", u.Name)
 	}
 }
 
-func TestDeleteGenre(t *testing.T) {
+func TestDeletePrint(t *testing.T) {
 	l := New(nil)
 
-	// genre doesn't exists
-	err := l.DeleteGenre(10)
+	// print doesn't exists
+	err := l.DeletePrint(10)
 	expectingError(t, err, model.ErrNotFound)
 
-	// genre delete
-	err = l.DeleteGenre(1)
+	// print delete
+	err = l.DeletePrint(1)
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}
-	_, err = l.GetGenreByID(1)
+	_, err = l.GetPrintByID(1)
 	expectingError(t, err, model.ErrNotFound)
 }

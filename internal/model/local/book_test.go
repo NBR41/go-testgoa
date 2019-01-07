@@ -11,7 +11,7 @@ func TestInsertBook(t *testing.T) {
 	l := New(nil)
 
 	// insert
-	b, err := l.InsertBook("isbn-foo", "foo")
+	b, err := l.InsertBook("isbn-foo", "foo", 1)
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}
@@ -27,7 +27,7 @@ func TestInsertBook(t *testing.T) {
 	}
 
 	// duplicate book name
-	b, err = l.InsertBook("isbn-foo", "foo")
+	b, err = l.InsertBook("isbn-foo", "foo", 1)
 	expectingError(t, err, model.ErrDuplicateKey)
 }
 
@@ -93,12 +93,12 @@ func TestListBooks(t *testing.T) {
 
 func TestUpdateBook(t *testing.T) {
 	l := New(nil)
-
+	n1 := "test10"
 	// user doesn't exist
-	err := l.UpdateBook(10, "test10")
+	err := l.UpdateBook(10, &n1, nil)
 	expectingError(t, err, model.ErrNotFound)
 
-	err = l.UpdateBook(1, "test10")
+	err = l.UpdateBook(1, &n1, nil)
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}

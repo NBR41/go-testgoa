@@ -7,7 +7,7 @@ type SwaggerController struct {
 	*goa.Controller
 }
 
-// NewSwagger creates a swagger controller.
-func NewSwagger(service *goa.Service) *SwaggerController {
+// NewSwaggerController creates a swagger controller.
+func NewSwaggerController(service *goa.Service) *SwaggerController {
 	return &SwaggerController{Controller: service.NewController("SwaggerController")}
 }

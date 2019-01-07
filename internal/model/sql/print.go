@@ -6,8 +6,8 @@ import (
 	"github.com/NBR41/go-testgoa/internal/model"
 )
 
-func (m *Model) getGenre(query string, params ...interface{}) (*model.Genre, error) {
-	var v = model.Genre{}
+func (m *Model) getPrint(query string, params ...interface{}) (*model.Print, error) {
+	var v = model.Print{}
 	err := m.db.QueryRow(query, params...).Scan(&v.ID, &v.Name)
 	switch {
 	case err == sql.ErrNoRows:
@@ -19,23 +19,23 @@ func (m *Model) getGenre(query string, params ...interface{}) (*model.Genre, err
 	}
 }
 
-func (m *Model) GetGenreByID(id int) (*model.Genre, error) {
-	return m.getGenre(`SELECT id, name FROM genre where id = ?`, id)
+func (m *Model) GetPrintByID(id int) (*model.Print, error) {
+	return m.getPrint(`SELECT id, name FROM print where id = ?`, id)
 }
 
-func (m *Model) GetGenreByName(name string) (*model.Genre, error) {
-	return m.getGenre(`SELECT id, name FROM genre where name = ?`, name)
+func (m *Model) GetPrintByName(name string) (*model.Print, error) {
+	return m.getPrint(`SELECT id, name FROM print where name = ?`, name)
 }
 
-func (m *Model) ListGenres() ([]*model.Genre, error) {
-	rows, err := m.db.Query(`SELECT id, name FROM genre`)
+func (m *Model) ListPrints() ([]*model.Print, error) {
+	rows, err := m.db.Query(`SELECT id, name FROM print`)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var l = []*model.Genre{}
+	var l = []*model.Print{}
 	for rows.Next() {
-		v := model.Genre{}
+		v := model.Print{}
 		if err := rows.Scan(&v.ID, &v.Name); err != nil {
 			return nil, err
 		}
@@ -48,8 +48,8 @@ func (m *Model) ListGenres() ([]*model.Genre, error) {
 	return l, nil
 }
 
-func (m *Model) InsertGenre(name string) (*model.Genre, error) {
-	_, err := m.GetGenreByName(name)
+func (m *Model) InsertPrint(name string) (*model.Print, error) {
+	_, err := m.GetPrintByName(name)
 	switch {
 	case err != nil && err != model.ErrNotFound:
 		return nil, err
@@ -58,7 +58,7 @@ func (m *Model) InsertGenre(name string) (*model.Genre, error) {
 	}
 	res, err := m.db.Exec(
 		`
-INSERT INTO genre (id, name, create_ts, update_ts)
+INSERT INTO print (id, name, create_ts, update_ts)
 VALUES (null, ?, NOW(), NOW())
 ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`,
 		name,
@@ -71,16 +71,16 @@ ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`,
 	if err != nil {
 		return nil, err
 	}
-	return &model.Genre{ID: id, Name: name}, nil
+	return &model.Print{ID: id, Name: name}, nil
 }
 
-func (m *Model) UpdateGenre(id int, name string) error {
+func (m *Model) UpdatePrint(id int, name string) error {
 	return m.exec(
-		`UPDATE genre SET name = ?, update_ts = NOW() WHERE id = ?`,
+		`UPDATE print SET name = ?, update_ts = NOW() WHERE id = ?`,
 		name, id,
 	)
 }
 
-func (m *Model) DeleteGenre(id int) error {
-	return m.exec(`DELETE FROM genre where id = ?`, id)
+func (m *Model) DeletePrint(id int) error {
+	return m.exec(`DELETE FROM print where id = ?`, id)
 }

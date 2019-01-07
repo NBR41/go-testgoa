@@ -7,13 +7,13 @@ import (
 	"github.com/NBR41/go-testgoa/internal/model"
 )
 
-func TestGetEditionTypeByID(t *testing.T) {
+func TestGetClassByID(t *testing.T) {
 	l := New(nil)
 
-	b, err := l.GetEditionTypeByID(5)
+	b, err := l.GetClassByID(5)
 	expectingError(t, err, model.ErrNotFound)
 
-	b, err = l.GetEditionTypeByID(1)
+	b, err = l.GetClassByID(1)
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}
@@ -22,13 +22,13 @@ func TestGetEditionTypeByID(t *testing.T) {
 	}
 }
 
-func TestGetEditionTypeByName(t *testing.T) {
+func TestGetClassByName(t *testing.T) {
 	l := New(nil)
 
-	b, err := l.GetEditionTypeByName("test5")
+	b, err := l.GetClassByName("test5")
 	expectingError(t, err, model.ErrNotFound)
 
-	b, err = l.GetEditionTypeByName("edition_type1")
+	b, err = l.GetClassByName("class1")
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}
@@ -37,10 +37,10 @@ func TestGetEditionTypeByName(t *testing.T) {
 	}
 }
 
-func TestListEditionTypes(t *testing.T) {
+func TestListClasses(t *testing.T) {
 	l := New(nil)
 
-	bs, err := l.ListEditionTypes()
+	bs, err := l.ListClasses()
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}
@@ -52,18 +52,18 @@ func TestListEditionTypes(t *testing.T) {
 	}
 }
 
-func TestInsertEditionType(t *testing.T) {
+func TestInsertClass(t *testing.T) {
 	l := New(nil)
 
 	// insert
-	b, err := l.InsertEditionType("edition_type2")
+	b, err := l.InsertClass("genre2")
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}
 	if b.ID != 2 {
 		t.Fatalf("expecting ID 2, got %v", b.ID)
 	}
-	b2, err := l.GetEditionTypeByID(2)
+	b2, err := l.GetClassByID(2)
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}
@@ -71,45 +71,45 @@ func TestInsertEditionType(t *testing.T) {
 		t.Fatal("unexpected user value")
 	}
 
-	// duplicate edition_type name
-	b, err = l.InsertEditionType("edition_type2")
+	// duplicate genre name
+	b, err = l.InsertClass("genre2")
 	expectingError(t, err, model.ErrDuplicateKey)
 }
 
-func TestUpdateEditionType(t *testing.T) {
+func TestUpdateClass(t *testing.T) {
 	l := New(nil)
 
-	// edition_type doesn't exist
-	err := l.UpdateEditionType(10, "test10")
+	// genre doesn't exist
+	err := l.UpdateClass(10, "test10")
 	expectingError(t, err, model.ErrNotFound)
 
-	//update edition_type
-	err = l.UpdateEditionType(1, "edition_type2")
+	//update genre
+	err = l.UpdateClass(1, "genre2")
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}
 
-	u, err := l.GetEditionTypeByID(1)
+	u, err := l.GetClassByID(1)
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}
-	if u.Name != "edition_type2" {
-		t.Fatalf("expecting edition_type2, got %s", u.Name)
+	if u.Name != "genre2" {
+		t.Fatalf("expecting genre2, got %s", u.Name)
 	}
 }
 
-func TestDeleteEditionType(t *testing.T) {
+func TestDeleteClass(t *testing.T) {
 	l := New(nil)
 
-	// edition_type doesn't exists
-	err := l.DeleteEditionType(10)
+	// genre doesn't exists
+	err := l.DeleteClass(10)
 	expectingError(t, err, model.ErrNotFound)
 
-	// edition_type delete
-	err = l.DeleteEditionType(1)
+	// genre delete
+	err = l.DeleteClass(1)
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}
-	_, err = l.GetEditionTypeByID(1)
+	_, err = l.GetClassByID(1)
 	expectingError(t, err, model.ErrNotFound)
 }

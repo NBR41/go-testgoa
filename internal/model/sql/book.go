@@ -20,7 +20,7 @@ func (m *Model) getBook(query string, params ...interface{}) (*model.Book, error
 }
 
 // InsertBook inserts book
-func (m *Model) InsertBook(isbn, name string) (*model.Book, error) {
+func (m *Model) InsertBook(isbn, name string, seriesID int) (*model.Book, error) {
 	_, err := m.GetBookByISBN(isbn)
 	switch {
 	case err != nil && err != model.ErrNotFound:
@@ -30,10 +30,10 @@ func (m *Model) InsertBook(isbn, name string) (*model.Book, error) {
 	}
 	res, err := m.db.Exec(
 		`
-INSERT INTO book (id, isbn, name, create_ts, update_ts)
-VALUES (null, ?, ?, NOW(), NOW())
+INSERT INTO book (id, isbn, name, series_id, create_ts, update_ts)
+VALUES (null, ?, ?, ?, NOW(), NOW())
 ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`,
-		isbn, name,
+		isbn, name, seriesID,
 	)
 	if err != nil {
 		return nil, err
@@ -84,10 +84,11 @@ func (m *Model) ListBooks() ([]model.Book, error) {
 }
 
 // UpdateBook update book infos
-func (m *Model) UpdateBook(id int, name string) error {
+// TODO modify query
+func (m *Model) UpdateBook(id int, name *string, seriesID *int) error {
 	return m.exec(
 		`UPDATE book set name = ?, update_ts = NOW() where id = ?`,
-		name, id,
+		*name, id,
 	)
 }
 

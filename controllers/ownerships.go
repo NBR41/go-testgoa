@@ -79,8 +79,11 @@ func (c *OwnershipsController) Add(ctx *app.AddOwnershipsContext) error {
 				return ctx.InternalServerError()
 			}
 
+			//TODO set series id
+			var seriesID int
+
 			// insert the new book
-			book, err = m.InsertBook(ctx.Payload.BookIsbn, bookName)
+			book, err = m.InsertBook(ctx.Payload.BookIsbn, bookName, seriesID)
 			if err != nil {
 				goa.ContextLogger(ctx).Error(`unable to insert book`, `error`, err)
 				if err == model.ErrDuplicateKey {

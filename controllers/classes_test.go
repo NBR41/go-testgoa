@@ -16,195 +16,195 @@ import (
 	"github.com/kylelemons/godebug/pretty"
 )
 
-func TestEditionTypesCreate(t *testing.T) {
+func TestClassesCreate(t *testing.T) {
 	mctrl := gomock.NewController(t)
 	defer mctrl.Finish()
 	mock := NewMockModeler(mctrl)
 	gomock.InOrder(
-		mock.EXPECT().InsertEditionType("foo").Return(nil, errors.New("insert error")),
+		mock.EXPECT().InsertClass("foo").Return(nil, errors.New("insert error")),
 		mock.EXPECT().Close(),
-		mock.EXPECT().InsertEditionType("foo").Return(nil, model.ErrDuplicateKey),
+		mock.EXPECT().InsertClass("foo").Return(nil, model.ErrDuplicateKey),
 		mock.EXPECT().Close(),
-		mock.EXPECT().InsertEditionType("foo").Return(&model.EditionType{ID: 123, Name: "foo"}, nil),
+		mock.EXPECT().InsertClass("foo").Return(&model.Class{ID: 123, Name: "foo"}, nil),
 		mock.EXPECT().Close(),
 	)
 	service := goa.New("my-inventory-test")
 	logbuf := &strings.Builder{}
 	ctx := goa.WithLogger(context.Background(), goa.NewLogger(log.New(logbuf, "", 0)))
-	ctrl := NewEditionTypesController(service, Fmodeler(func() (Modeler, error) {
+	ctrl := NewClassesController(service, Fmodeler(func() (Modeler, error) {
 		return nil, errors.New("model error")
 	}))
-	test.CreateEditionTypesServiceUnavailable(t, ctx, service, ctrl, &app.CreateEditionTypesPayload{EditionTypeName: "foo"})
+	test.CreateClassesServiceUnavailable(t, ctx, service, ctrl, &app.CreateClassesPayload{ClassName: "foo"})
 	exp := "[EROR] unable to get model error=model error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
-	ctrl = NewEditionTypesController(service, Fmodeler(func() (Modeler, error) {
+	ctrl = NewClassesController(service, Fmodeler(func() (Modeler, error) {
 		return mock, nil
 	}))
 
 	logbuf.Reset()
-	test.CreateEditionTypesInternalServerError(t, ctx, service, ctrl, &app.CreateEditionTypesPayload{EditionTypeName: "foo"})
-	exp = "[EROR] failed to insert edition type error=insert error\n"
+	test.CreateClassesInternalServerError(t, ctx, service, ctrl, &app.CreateClassesPayload{ClassName: "foo"})
+	exp = "[EROR] failed to insert genre error=insert error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	test.CreateEditionTypesUnprocessableEntity(t, ctx, service, ctrl, &app.CreateEditionTypesPayload{EditionTypeName: "foo"})
-	exp = "[EROR] failed to insert edition type error=duplicate key\n"
+	test.CreateClassesUnprocessableEntity(t, ctx, service, ctrl, &app.CreateClassesPayload{ClassName: "foo"})
+	exp = "[EROR] failed to insert genre error=duplicate key\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	rw := test.CreateEditionTypesCreated(t, ctx, service, ctrl, &app.CreateEditionTypesPayload{EditionTypeName: "foo"})
-	exp = app.EditionTypesHref(123)
+	rw := test.CreateClassesCreated(t, ctx, service, ctrl, &app.CreateClassesPayload{ClassName: "foo"})
+	exp = app.ClassesHref(123)
 	v := rw.Header().Get("Location")
 	if exp != v {
 		t.Errorf("unexpected value, exp [%s] got [%s]", exp, v)
 	}
 }
 
-func TestEditionTypeDelete(t *testing.T) {
+func TestClassDelete(t *testing.T) {
 	mctrl := gomock.NewController(t)
 	defer mctrl.Finish()
 	mock := NewMockModeler(mctrl)
 	gomock.InOrder(
-		mock.EXPECT().DeleteEditionType(123).Return(errors.New("delete error")),
+		mock.EXPECT().DeleteClass(123).Return(errors.New("delete error")),
 		mock.EXPECT().Close(),
-		mock.EXPECT().DeleteEditionType(123).Return(model.ErrNotFound),
+		mock.EXPECT().DeleteClass(123).Return(model.ErrNotFound),
 		mock.EXPECT().Close(),
-		mock.EXPECT().DeleteEditionType(123).Return(nil),
+		mock.EXPECT().DeleteClass(123).Return(nil),
 		mock.EXPECT().Close(),
 	)
 	service := goa.New("my-inventory-test")
 	logbuf := &strings.Builder{}
 	ctx := goa.WithLogger(context.Background(), goa.NewLogger(log.New(logbuf, "", 0)))
-	ctrl := NewEditionTypesController(service, Fmodeler(func() (Modeler, error) {
+	ctrl := NewClassesController(service, Fmodeler(func() (Modeler, error) {
 		return nil, errors.New("model error")
 	}))
-	test.DeleteEditionTypesServiceUnavailable(t, ctx, service, ctrl, 123)
+	test.DeleteClassesServiceUnavailable(t, ctx, service, ctrl, 123)
 	exp := "[EROR] unable to get model error=model error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
-	ctrl = NewEditionTypesController(service, Fmodeler(func() (Modeler, error) {
+	ctrl = NewClassesController(service, Fmodeler(func() (Modeler, error) {
 		return mock, nil
 	}))
 
 	logbuf.Reset()
-	test.DeleteEditionTypesInternalServerError(t, ctx, service, ctrl, 123)
-	exp = "[EROR] failed to delete edition type error=delete error\n"
+	test.DeleteClassesInternalServerError(t, ctx, service, ctrl, 123)
+	exp = "[EROR] failed to delete genre error=delete error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	test.DeleteEditionTypesNotFound(t, ctx, service, ctrl, 123)
-	exp = "[EROR] failed to delete edition type error=not found\n"
+	test.DeleteClassesNotFound(t, ctx, service, ctrl, 123)
+	exp = "[EROR] failed to delete genre error=not found\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	test.DeleteEditionTypesNoContent(t, ctx, service, ctrl, 123)
+	test.DeleteClassesNoContent(t, ctx, service, ctrl, 123)
 	exp = ""
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 }
 
-func TestEditionTypeList(t *testing.T) {
+func TestClassList(t *testing.T) {
 	mctrl := gomock.NewController(t)
 	defer mctrl.Finish()
 	mock := NewMockModeler(mctrl)
 	gomock.InOrder(
-		mock.EXPECT().ListEditionTypes().Return(nil, errors.New("list error")),
+		mock.EXPECT().ListClasses().Return(nil, errors.New("list error")),
 		mock.EXPECT().Close(),
-		mock.EXPECT().ListEditionTypes().Return([]*model.EditionType{&model.EditionType{ID: 123, Name: "foo"}, &model.EditionType{ID: 456, Name: "bar"}}, nil),
+		mock.EXPECT().ListClasses().Return([]*model.Class{&model.Class{ID: 123, Name: "foo"}, &model.Class{ID: 456, Name: "bar"}}, nil),
 		mock.EXPECT().Close(),
 	)
 	service := goa.New("my-inventory-test")
 	logbuf := &strings.Builder{}
 	ctx := goa.WithLogger(context.Background(), goa.NewLogger(log.New(logbuf, "", 0)))
-	ctrl := NewEditionTypesController(service, Fmodeler(func() (Modeler, error) {
+	ctrl := NewClassesController(service, Fmodeler(func() (Modeler, error) {
 		return nil, errors.New("model error")
 	}))
-	test.ListEditionTypesServiceUnavailable(t, ctx, service, ctrl)
+	test.ListClassesServiceUnavailable(t, ctx, service, ctrl)
 	exp := "[EROR] unable to get model error=model error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
-	ctrl = NewEditionTypesController(service, Fmodeler(func() (Modeler, error) {
+	ctrl = NewClassesController(service, Fmodeler(func() (Modeler, error) {
 		return mock, nil
 	}))
 
 	logbuf.Reset()
-	test.ListEditionTypesInternalServerError(t, ctx, service, ctrl)
-	exp = "[EROR] failed to get edition type list error=list error\n"
+	test.ListClassesInternalServerError(t, ctx, service, ctrl)
+	exp = "[EROR] failed to get genre list error=list error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
-	_, res := test.ListEditionTypesOK(t, ctx, service, ctrl)
-	expres := app.EditiontypeCollection{
-		convert.ToEditionTypeMedia(&model.EditionType{ID: 123, Name: "foo"}),
-		convert.ToEditionTypeMedia(&model.EditionType{ID: 456, Name: "bar"}),
+	_, res := test.ListClassesOK(t, ctx, service, ctrl)
+	expres := app.ClassCollection{
+		convert.ToClassMedia(&model.Class{ID: 123, Name: "foo"}),
+		convert.ToClassMedia(&model.Class{ID: 456, Name: "bar"}),
 	}
 	if diff := pretty.Compare(res, expres); diff != "" {
 		t.Errorf("diff: (-got +want)\n%s", diff)
 	}
 }
 
-func TestEditionTypeShow(t *testing.T) {
+func TestClassShow(t *testing.T) {
 	mctrl := gomock.NewController(t)
 	defer mctrl.Finish()
 	mock := NewMockModeler(mctrl)
 	gomock.InOrder(
-		mock.EXPECT().GetEditionTypeByID(123).Return(nil, errors.New("get error")),
+		mock.EXPECT().GetClassByID(123).Return(nil, errors.New("get error")),
 		mock.EXPECT().Close(),
-		mock.EXPECT().GetEditionTypeByID(123).Return(nil, model.ErrNotFound),
+		mock.EXPECT().GetClassByID(123).Return(nil, model.ErrNotFound),
 		mock.EXPECT().Close(),
-		mock.EXPECT().GetEditionTypeByID(123).Return(&model.EditionType{ID: 123, Name: "foo"}, nil),
+		mock.EXPECT().GetClassByID(123).Return(&model.Class{ID: 123, Name: "foo"}, nil),
 		mock.EXPECT().Close(),
 	)
 	service := goa.New("my-inventory-test")
 	logbuf := &strings.Builder{}
 	ctx := goa.WithLogger(context.Background(), goa.NewLogger(log.New(logbuf, "", 0)))
-	ctrl := NewEditionTypesController(service, Fmodeler(func() (Modeler, error) {
+	ctrl := NewClassesController(service, Fmodeler(func() (Modeler, error) {
 		return nil, errors.New("model error")
 	}))
-	test.ShowEditionTypesServiceUnavailable(t, ctx, service, ctrl, 123)
+	test.ShowClassesServiceUnavailable(t, ctx, service, ctrl, 123)
 	exp := "[EROR] unable to get model error=model error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
-	ctrl = NewEditionTypesController(service, Fmodeler(func() (Modeler, error) {
+	ctrl = NewClassesController(service, Fmodeler(func() (Modeler, error) {
 		return mock, nil
 	}))
 
 	logbuf.Reset()
-	test.ShowEditionTypesInternalServerError(t, ctx, service, ctrl, 123)
-	exp = "[EROR] failed to get edition type error=get error\n"
+	test.ShowClassesInternalServerError(t, ctx, service, ctrl, 123)
+	exp = "[EROR] failed to get genre error=get error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	test.ShowEditionTypesNotFound(t, ctx, service, ctrl, 123)
-	exp = "[EROR] failed to get edition type error=not found\n"
+	test.ShowClassesNotFound(t, ctx, service, ctrl, 123)
+	exp = "[EROR] failed to get genre error=not found\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	_, res := test.ShowEditionTypesOK(t, ctx, service, ctrl, 123)
-	expres := convert.ToEditionTypeMedia(&model.EditionType{ID: 123, Name: "foo"})
+	_, res := test.ShowClassesOK(t, ctx, service, ctrl, 123)
+	expres := convert.ToClassMedia(&model.Class{ID: 123, Name: "foo"})
 	if diff := pretty.Compare(res, expres); diff != "" {
 		t.Errorf("diff: (-got +want)\n%s", diff)
 	}
@@ -214,50 +214,50 @@ func TestEditionTypeShow(t *testing.T) {
 	}
 }
 
-func TestEditionTypeUpdate(t *testing.T) {
+func TestClassUpdate(t *testing.T) {
 	mctrl := gomock.NewController(t)
 	defer mctrl.Finish()
 	mock := NewMockModeler(mctrl)
 	gomock.InOrder(
-		mock.EXPECT().UpdateEditionType(123, "foo").Return(errors.New("update error")),
+		mock.EXPECT().UpdateClass(123, "foo").Return(errors.New("update error")),
 		mock.EXPECT().Close(),
-		mock.EXPECT().UpdateEditionType(123, "foo").Return(model.ErrNotFound),
+		mock.EXPECT().UpdateClass(123, "foo").Return(model.ErrNotFound),
 		mock.EXPECT().Close(),
-		mock.EXPECT().UpdateEditionType(123, "foo").Return(nil),
+		mock.EXPECT().UpdateClass(123, "foo").Return(nil),
 		mock.EXPECT().Close(),
 	)
 	service := goa.New("my-inventory-test")
 	logbuf := &strings.Builder{}
 	ctx := goa.WithLogger(context.Background(), goa.NewLogger(log.New(logbuf, "", 0)))
-	ctrl := NewEditionTypesController(service, Fmodeler(func() (Modeler, error) {
+	ctrl := NewClassesController(service, Fmodeler(func() (Modeler, error) {
 		return nil, errors.New("model error")
 	}))
-	test.UpdateEditionTypesServiceUnavailable(t, ctx, service, ctrl, 123, &app.UpdateEditionTypesPayload{EditionTypeName: "foo"})
+	test.UpdateClassesServiceUnavailable(t, ctx, service, ctrl, 123, &app.UpdateClassesPayload{ClassName: "foo"})
 	exp := "[EROR] unable to get model error=model error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
-	ctrl = NewEditionTypesController(service, Fmodeler(func() (Modeler, error) {
+	ctrl = NewClassesController(service, Fmodeler(func() (Modeler, error) {
 		return mock, nil
 	}))
 
 	logbuf.Reset()
-	test.UpdateEditionTypesInternalServerError(t, ctx, service, ctrl, 123, &app.UpdateEditionTypesPayload{EditionTypeName: "foo"})
-	exp = "[EROR] failed to update edition type error=update error\n"
+	test.UpdateClassesInternalServerError(t, ctx, service, ctrl, 123, &app.UpdateClassesPayload{ClassName: "foo"})
+	exp = "[EROR] failed to update genre error=update error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	test.UpdateEditionTypesNotFound(t, ctx, service, ctrl, 123, &app.UpdateEditionTypesPayload{EditionTypeName: "foo"})
-	exp = "[EROR] failed to update edition type error=not found\n"
+	test.UpdateClassesNotFound(t, ctx, service, ctrl, 123, &app.UpdateClassesPayload{ClassName: "foo"})
+	exp = "[EROR] failed to update genre error=not found\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	test.UpdateEditionTypesNoContent(t, ctx, service, ctrl, 123, &app.UpdateEditionTypesPayload{EditionTypeName: "foo"})
+	test.UpdateClassesNoContent(t, ctx, service, ctrl, 123, &app.UpdateClassesPayload{ClassName: "foo"})
 	exp = ""
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())

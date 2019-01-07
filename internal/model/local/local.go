@@ -10,16 +10,16 @@ import (
 type Local struct {
 	pass model.Passworder
 	sync.Mutex
-	users        map[int]*model.User
-	books        map[int]*model.Book
-	ownerships   map[int][]*model.Book
-	authors      map[int]*model.Author
-	categories   map[int]*model.Category
-	collections  map[int]*model.Collection
-	editionTypes map[int]*model.EditionType
-	editors      map[int]*model.Editor
-	genres       map[int]*model.Genre
-	roles        map[int]*model.Role
+	users       map[int]*model.User
+	books       map[int]*model.Book
+	ownerships  map[int][]*model.Book
+	authors     map[int]*model.Author
+	categories  map[int]*model.Category
+	collections map[int]*model.Collection
+	prints      map[int]*model.Print
+	editors     map[int]*model.Editor
+	classes     map[int]*model.Class
+	roles       map[int]*model.Role
 }
 
 // New returns new instance of Local storage
@@ -30,9 +30,9 @@ func New(pass model.Passworder) *Local {
 	book4 := &model.Book{ID: 4, ISBN: "isbn-135", Name: "test4"}
 	author := &model.Author{ID: 1, Name: "author1"}
 	category := &model.Category{ID: 1, Name: "category1"}
-	editionType := &model.EditionType{ID: 1, Name: "edition_type1"}
+	print := &model.Print{ID: 1, Name: "print1"}
 	editor := &model.Editor{ID: 1, Name: "editor1"}
-	genre := &model.Genre{ID: 1, Name: "genre1"}
+	class := &model.Class{ID: 1, Name: "class1"}
 	role := &model.Role{ID: 1, Name: "role1"}
 	collection := &model.Collection{ID: 1, Name: "collection1", EditorID: 1, Editor: editor}
 	return &Local{
@@ -62,13 +62,13 @@ func New(pass model.Passworder) *Local {
 			2: []*model.Book{},
 			3: []*model.Book{book2, book3},
 		},
-		authors:      map[int]*model.Author{1: author},
-		categories:   map[int]*model.Category{1: category},
-		editionTypes: map[int]*model.EditionType{1: editionType},
-		editors:      map[int]*model.Editor{1: editor},
-		genres:       map[int]*model.Genre{1: genre},
-		roles:        map[int]*model.Role{1: role},
-		collections:  map[int]*model.Collection{1: collection},
+		authors:     map[int]*model.Author{1: author},
+		categories:  map[int]*model.Category{1: category},
+		prints:      map[int]*model.Print{1: print},
+		editors:     map[int]*model.Editor{1: editor},
+		classes:     map[int]*model.Class{1: class},
+		roles:       map[int]*model.Role{1: role},
+		collections: map[int]*model.Collection{1: collection},
 	}
 }
 

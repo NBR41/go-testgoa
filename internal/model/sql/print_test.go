@@ -10,18 +10,18 @@ import (
 	"github.com/kylelemons/godebug/pretty"
 )
 
-func TestInsertGenre(t *testing.T) {
+func TestInsertPrint(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
 
 	qry := `
-INSERT INTO genre \(id, name, create_ts, update_ts\)
+INSERT INTO print \(id, name, create_ts, update_ts\)
 VALUES \(null, \?, NOW\(\), NOW\(\)\)
 ON DUPLICATE KEY UPDATE update_ts = VALUES\(update_ts\)`
 
-	nameqry := `SELECT id, name FROM genre where name = \?`
+	nameqry := `SELECT id, name FROM print where name = \?`
 	mock.ExpectQuery(nameqry).WithArgs("foo").WillReturnError(errors.New("duplicate error"))
 	mock.ExpectQuery(nameqry).WithArgs("foo").WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "foo"))
 	mock.ExpectQuery(nameqry).WithArgs("foo").WillReturnError(model.ErrNotFound)
@@ -37,18 +37,18 @@ ON DUPLICATE KEY UPDATE update_ts = VALUES\(update_ts\)`
 
 	tests := []struct {
 		desc string
-		exp  *model.Genre
+		exp  *model.Print
 		err  error
 	}{
 		{"duplicate error", nil, errors.New("duplicate error")},
 		{"duplicate", nil, model.ErrDuplicateKey},
 		{"query error", nil, errors.New("query error")},
 		{"result error", nil, errors.New("result error")},
-		{"valid", &model.Genre{ID: 123, Name: "foo"}, nil},
+		{"valid", &model.Print{ID: 123, Name: "foo"}, nil},
 	}
 
 	for i := range tests {
-		v, err := m.InsertGenre("foo")
+		v, err := m.InsertPrint("foo")
 		if err != nil {
 			if tests[i].err == nil {
 				t.Errorf("unexpected error for [%s], [%v]", tests[i].desc, err)
@@ -69,12 +69,12 @@ ON DUPLICATE KEY UPDATE update_ts = VALUES\(update_ts\)`
 	}
 }
 
-func TestGetGenreByID(t *testing.T) {
+func TestGetPrintByID(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `SELECT id, name FROM genre where id = \?`
+	qry := `SELECT id, name FROM print where id = \?`
 	mock.ExpectQuery(qry).WithArgs(123).WillReturnError(errors.New("query error"))
 	mock.ExpectQuery(qry).WithArgs(123).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}))
 	mock.ExpectQuery(qry).WithArgs(123).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow("foo", "bar"))
@@ -87,18 +87,18 @@ func TestGetGenreByID(t *testing.T) {
 
 	tests := []struct {
 		desc string
-		exp  *model.Genre
+		exp  *model.Print
 		err  error
 	}{
 		{"query error", nil, errors.New("query error")},
 		{"no rows", nil, model.ErrNotFound},
 		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
 		{"scan error", nil, errors.New("scan error")},
-		{"valid", &model.Genre{ID: 1, Name: "foo"}, nil},
+		{"valid", &model.Print{ID: 1, Name: "foo"}, nil},
 	}
 
 	for i := range tests {
-		v, err := m.GetGenreByID(123)
+		v, err := m.GetPrintByID(123)
 		if err != nil {
 			if tests[i].err == nil {
 				t.Errorf("unexpected error for [%s], [%v]", tests[i].desc, err)
@@ -119,12 +119,12 @@ func TestGetGenreByID(t *testing.T) {
 	}
 }
 
-func TestGetGenreByName(t *testing.T) {
+func TestGetPrintByName(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `SELECT id, name FROM genre where name = \?`
+	qry := `SELECT id, name FROM print where name = \?`
 	mock.ExpectQuery(qry).WithArgs("foo").WillReturnError(errors.New("query error"))
 	mock.ExpectQuery(qry).WithArgs("foo").WillReturnRows(sqlmock.NewRows([]string{"id", "name"}))
 	mock.ExpectQuery(qry).WithArgs("foo").WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow("foo", "bar"))
@@ -137,18 +137,18 @@ func TestGetGenreByName(t *testing.T) {
 
 	tests := []struct {
 		desc string
-		exp  *model.Genre
+		exp  *model.Print
 		err  error
 	}{
 		{"query error", nil, errors.New("query error")},
 		{"no rows", nil, model.ErrNotFound},
 		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
 		{"scan error", nil, errors.New("scan error")},
-		{"valid", &model.Genre{ID: 1, Name: "foo"}, nil},
+		{"valid", &model.Print{ID: 1, Name: "foo"}, nil},
 	}
 
 	for i := range tests {
-		v, err := m.GetGenreByName("foo")
+		v, err := m.GetPrintByName("foo")
 		if err != nil {
 			if tests[i].err == nil {
 				t.Errorf("unexpected error for [%s], [%v]", tests[i].desc, err)
@@ -169,12 +169,12 @@ func TestGetGenreByName(t *testing.T) {
 	}
 }
 
-func TestListGenres(t *testing.T) {
+func TestListPrints(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `SELECT id, name FROM genre`
+	qry := `SELECT id, name FROM print`
 	mock.ExpectQuery(qry).WillReturnError(errors.New("query error"))
 	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow("foo", "bar"))
 	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "foo").RowError(0, errors.New("scan error")))
@@ -186,17 +186,17 @@ func TestListGenres(t *testing.T) {
 
 	tests := []struct {
 		desc string
-		exp  []model.Genre
+		exp  []model.Print
 		err  error
 	}{
 		{"query error", nil, errors.New("query error")},
 		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
 		{"scan error", nil, errors.New("scan error")},
-		{"valid", []model.Genre{model.Genre{ID: 1, Name: "foo"}}, nil},
+		{"valid", []model.Print{model.Print{ID: 1, Name: "foo"}}, nil},
 	}
 
 	for i := range tests {
-		v, err := m.ListGenres()
+		v, err := m.ListPrints()
 		if err != nil {
 			if tests[i].err == nil {
 				t.Errorf("unexpected error for [%s], [%v]", tests[i].desc, err)
@@ -218,12 +218,12 @@ func TestListGenres(t *testing.T) {
 	}
 }
 
-func TestUpdateGenre(t *testing.T) {
+func TestUpdatePrint(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `UPDATE genre SET name = \?, update_ts = NOW\(\) WHERE id = \?`
+	qry := `UPDATE print SET name = \?, update_ts = NOW\(\) WHERE id = \?`
 	mock.ExpectExec(qry).WithArgs("foo", 123).WillReturnError(errors.New("query error"))
 	mock.ExpectExec(qry).WithArgs("foo", 123).WillReturnResult(sqlmock.NewResult(0, 0))
 	mock.ExpectExec(qry).WithArgs("foo", 123).WillReturnResult(sqlmock.NewResult(0, 1))
@@ -239,7 +239,7 @@ func TestUpdateGenre(t *testing.T) {
 		{"valid", nil},
 	}
 	for i := range tests {
-		err := m.UpdateGenre(123, "foo")
+		err := m.UpdatePrint(123, "foo")
 		if err != nil {
 			if tests[i].err == nil {
 				t.Errorf("unexpected error for [%s], [%v]", tests[i].desc, err)
@@ -257,12 +257,12 @@ func TestUpdateGenre(t *testing.T) {
 	}
 }
 
-func TestDeleteGenre(t *testing.T) {
+func TestDeletePrint(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `DELETE FROM genre where id = \?`
+	qry := `DELETE FROM print where id = \?`
 	mock.ExpectExec(qry).WithArgs(123).WillReturnError(errors.New("query error"))
 	mock.ExpectExec(qry).WithArgs(123).WillReturnResult(sqlmock.NewErrorResult(errors.New("result error")))
 	mock.ExpectExec(qry).WithArgs(123).WillReturnResult(sqlmock.NewResult(0, 0))
@@ -280,7 +280,7 @@ func TestDeleteGenre(t *testing.T) {
 		{"valid", nil},
 	}
 	for i := range tests {
-		err := m.DeleteGenre(123)
+		err := m.DeletePrint(123)
 		if err != nil {
 			if tests[i].err == nil {
 				t.Errorf("unexpected error for [%s], [%v]", tests[i].desc, err)

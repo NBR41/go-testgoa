@@ -17,8 +17,8 @@ func TestInsertBook(t *testing.T) {
 	}
 
 	qry := `
-INSERT INTO book \(id, isbn, name, create_ts, update_ts\)
-VALUES \(null, \?, \?, NOW\(\), NOW\(\)\)
+INSERT INTO book \(id, isbn, name, series_id, create_ts, update_ts\)
+VALUES \(null, \?, \?, \?, NOW\(\), NOW\(\)\)
 ON DUPLICATE KEY UPDATE update_ts = VALUES\(update_ts\)`
 
 	isbnqry := `SELECT id, isbn, name from book where isbn = \?`
@@ -28,11 +28,11 @@ ON DUPLICATE KEY UPDATE update_ts = VALUES\(update_ts\)`
 		WillReturnError(errors.New("duplicate error"))
 	mock.ExpectQuery(isbnqry).WithArgs("foo").WillReturnRows(sqlmock.NewRows([]string{"id", "isbn", "name"}).AddRow(1, "foo", "bar"))
 	mock.ExpectQuery(isbnqry).WithArgs("foo").WillReturnError(model.ErrNotFound)
-	mock.ExpectExec(qry).WithArgs("foo", "bar").WillReturnError(errors.New("query error"))
+	mock.ExpectExec(qry).WithArgs("foo", "bar", 5).WillReturnError(errors.New("query error"))
 	mock.ExpectQuery(isbnqry).WithArgs("foo").WillReturnError(model.ErrNotFound)
-	mock.ExpectExec(qry).WithArgs("foo", "bar").WillReturnResult(sqlmock.NewErrorResult(errors.New("result error")))
+	mock.ExpectExec(qry).WithArgs("foo", "bar", 5).WillReturnResult(sqlmock.NewErrorResult(errors.New("result error")))
 	mock.ExpectQuery(isbnqry).WithArgs("foo").WillReturnError(model.ErrNotFound)
-	mock.ExpectExec(qry).WithArgs("foo", "bar").WillReturnResult(sqlmock.NewResult(123, 1))
+	mock.ExpectExec(qry).WithArgs("foo", "bar", 5).WillReturnResult(sqlmock.NewResult(123, 1))
 
 	m, _ := New(ConnGetter(func() (*sql.DB, error) {
 		return db, nil
@@ -51,7 +51,7 @@ ON DUPLICATE KEY UPDATE update_ts = VALUES\(update_ts\)`
 	}
 
 	for i := range tests {
-		v, err := m.InsertBook("foo", "bar")
+		v, err := m.InsertBook("foo", "bar", 5)
 		if err != nil {
 			if tests[i].err == nil {
 				t.Errorf("unexpected error for [%s], [%v]", tests[i].desc, err)
@@ -329,9 +329,10 @@ func TestUpdateBook(t *testing.T) {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
 	qry := `UPDATE book set name = \?, update_ts = NOW\(\) where id = \?`
-	mock.ExpectExec(qry).WithArgs("foo", 123).WillReturnError(errors.New("query error"))
-	mock.ExpectExec(qry).WithArgs("foo", 123).WillReturnResult(sqlmock.NewResult(0, 0))
-	mock.ExpectExec(qry).WithArgs("foo", 123).WillReturnResult(sqlmock.NewResult(0, 1))
+	n1 := "foo"
+	mock.ExpectExec(qry).WithArgs(n1, 123).WillReturnError(errors.New("query error"))
+	mock.ExpectExec(qry).WithArgs(n1, 123).WillReturnResult(sqlmock.NewResult(0, 0))
+	mock.ExpectExec(qry).WithArgs(n1, 123).WillReturnResult(sqlmock.NewResult(0, 1))
 	m, _ := New(ConnGetter(func() (*sql.DB, error) {
 		return db, nil
 	}), nil)
@@ -344,7 +345,7 @@ func TestUpdateBook(t *testing.T) {
 		{"valid", nil},
 	}
 	for i := range tests {
-		err := m.UpdateBook(123, "foo")
+		err := m.UpdateBook(123, &n1, nil)
 		if err != nil {
 			if tests[i].err == nil {
 				t.Errorf("unexpected error for [%s], [%v]", tests[i].desc, err)

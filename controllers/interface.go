@@ -23,8 +23,8 @@ type Modeler interface {
 	GetBookByISBN(isbn string) (*model.Book, error)
 	GetBookByName(name string) (*model.Book, error)
 	ListBooks() ([]model.Book, error)
-	InsertBook(isbn, name string) (*model.Book, error)
-	UpdateBook(id int, name string) error
+	InsertBook(isbn, name string, seriesID int) (*model.Book, error)
+	UpdateBook(id int, name *string, seriesID *int) error
 	DeleteBook(id int) error
 
 	GetCategoryByID(id int) (*model.Category, error)
@@ -34,12 +34,12 @@ type Modeler interface {
 	UpdateCategory(id int, name string) error
 	DeleteCategory(id int) error
 
-	GetEditionTypeByID(id int) (*model.EditionType, error)
-	GetEditionTypeByName(name string) (*model.EditionType, error)
-	ListEditionTypes() ([]*model.EditionType, error)
-	InsertEditionType(name string) (*model.EditionType, error)
-	UpdateEditionType(id int, name string) error
-	DeleteEditionType(id int) error
+	GetPrintByID(id int) (*model.Print, error)
+	GetPrintByName(name string) (*model.Print, error)
+	ListPrints() ([]*model.Print, error)
+	InsertPrint(name string) (*model.Print, error)
+	UpdatePrint(id int, name string) error
+	DeletePrint(id int) error
 
 	GetEditorByID(id int) (*model.Editor, error)
 	GetEditorByName(name string) (*model.Editor, error)
@@ -48,12 +48,12 @@ type Modeler interface {
 	UpdateEditor(id int, name string) error
 	DeleteEditor(id int) error
 
-	GetGenreByID(id int) (*model.Genre, error)
-	GetGenreByName(name string) (*model.Genre, error)
-	ListGenres() ([]*model.Genre, error)
-	InsertGenre(name string) (*model.Genre, error)
-	UpdateGenre(id int, name string) error
-	DeleteGenre(id int) error
+	GetClassByID(id int) (*model.Class, error)
+	GetClassByName(name string) (*model.Class, error)
+	ListClasses() ([]*model.Class, error)
+	InsertClass(name string) (*model.Class, error)
+	UpdateClass(id int, name string) error
+	DeleteClass(id int) error
 
 	GetOwnership(userID, bookID int) (*model.Ownership, error)
 	ListOwnershipsByUserID(userID int) ([]*model.Ownership, error)

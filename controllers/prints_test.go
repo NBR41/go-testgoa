@@ -16,195 +16,195 @@ import (
 	"github.com/kylelemons/godebug/pretty"
 )
 
-func TestGenresCreate(t *testing.T) {
+func TestPrintsCreate(t *testing.T) {
 	mctrl := gomock.NewController(t)
 	defer mctrl.Finish()
 	mock := NewMockModeler(mctrl)
 	gomock.InOrder(
-		mock.EXPECT().InsertGenre("foo").Return(nil, errors.New("insert error")),
+		mock.EXPECT().InsertPrint("foo").Return(nil, errors.New("insert error")),
 		mock.EXPECT().Close(),
-		mock.EXPECT().InsertGenre("foo").Return(nil, model.ErrDuplicateKey),
+		mock.EXPECT().InsertPrint("foo").Return(nil, model.ErrDuplicateKey),
 		mock.EXPECT().Close(),
-		mock.EXPECT().InsertGenre("foo").Return(&model.Genre{ID: 123, Name: "foo"}, nil),
+		mock.EXPECT().InsertPrint("foo").Return(&model.Print{ID: 123, Name: "foo"}, nil),
 		mock.EXPECT().Close(),
 	)
 	service := goa.New("my-inventory-test")
 	logbuf := &strings.Builder{}
 	ctx := goa.WithLogger(context.Background(), goa.NewLogger(log.New(logbuf, "", 0)))
-	ctrl := NewGenresController(service, Fmodeler(func() (Modeler, error) {
+	ctrl := NewPrintsController(service, Fmodeler(func() (Modeler, error) {
 		return nil, errors.New("model error")
 	}))
-	test.CreateGenresServiceUnavailable(t, ctx, service, ctrl, &app.CreateGenresPayload{GenreName: "foo"})
+	test.CreatePrintsServiceUnavailable(t, ctx, service, ctrl, &app.CreatePrintsPayload{PrintName: "foo"})
 	exp := "[EROR] unable to get model error=model error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
-	ctrl = NewGenresController(service, Fmodeler(func() (Modeler, error) {
+	ctrl = NewPrintsController(service, Fmodeler(func() (Modeler, error) {
 		return mock, nil
 	}))
 
 	logbuf.Reset()
-	test.CreateGenresInternalServerError(t, ctx, service, ctrl, &app.CreateGenresPayload{GenreName: "foo"})
-	exp = "[EROR] failed to insert genre error=insert error\n"
+	test.CreatePrintsInternalServerError(t, ctx, service, ctrl, &app.CreatePrintsPayload{PrintName: "foo"})
+	exp = "[EROR] failed to insert print error=insert error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	test.CreateGenresUnprocessableEntity(t, ctx, service, ctrl, &app.CreateGenresPayload{GenreName: "foo"})
-	exp = "[EROR] failed to insert genre error=duplicate key\n"
+	test.CreatePrintsUnprocessableEntity(t, ctx, service, ctrl, &app.CreatePrintsPayload{PrintName: "foo"})
+	exp = "[EROR] failed to insert print error=duplicate key\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	rw := test.CreateGenresCreated(t, ctx, service, ctrl, &app.CreateGenresPayload{GenreName: "foo"})
-	exp = app.GenresHref(123)
+	rw := test.CreatePrintsCreated(t, ctx, service, ctrl, &app.CreatePrintsPayload{PrintName: "foo"})
+	exp = app.PrintsHref(123)
 	v := rw.Header().Get("Location")
 	if exp != v {
 		t.Errorf("unexpected value, exp [%s] got [%s]", exp, v)
 	}
 }
 
-func TestGenreDelete(t *testing.T) {
+func TestPrintDelete(t *testing.T) {
 	mctrl := gomock.NewController(t)
 	defer mctrl.Finish()
 	mock := NewMockModeler(mctrl)
 	gomock.InOrder(
-		mock.EXPECT().DeleteGenre(123).Return(errors.New("delete error")),
+		mock.EXPECT().DeletePrint(123).Return(errors.New("delete error")),
 		mock.EXPECT().Close(),
-		mock.EXPECT().DeleteGenre(123).Return(model.ErrNotFound),
+		mock.EXPECT().DeletePrint(123).Return(model.ErrNotFound),
 		mock.EXPECT().Close(),
-		mock.EXPECT().DeleteGenre(123).Return(nil),
+		mock.EXPECT().DeletePrint(123).Return(nil),
 		mock.EXPECT().Close(),
 	)
 	service := goa.New("my-inventory-test")
 	logbuf := &strings.Builder{}
 	ctx := goa.WithLogger(context.Background(), goa.NewLogger(log.New(logbuf, "", 0)))
-	ctrl := NewGenresController(service, Fmodeler(func() (Modeler, error) {
+	ctrl := NewPrintsController(service, Fmodeler(func() (Modeler, error) {
 		return nil, errors.New("model error")
 	}))
-	test.DeleteGenresServiceUnavailable(t, ctx, service, ctrl, 123)
+	test.DeletePrintsServiceUnavailable(t, ctx, service, ctrl, 123)
 	exp := "[EROR] unable to get model error=model error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
-	ctrl = NewGenresController(service, Fmodeler(func() (Modeler, error) {
+	ctrl = NewPrintsController(service, Fmodeler(func() (Modeler, error) {
 		return mock, nil
 	}))
 
 	logbuf.Reset()
-	test.DeleteGenresInternalServerError(t, ctx, service, ctrl, 123)
-	exp = "[EROR] failed to delete genre error=delete error\n"
+	test.DeletePrintsInternalServerError(t, ctx, service, ctrl, 123)
+	exp = "[EROR] failed to delete print error=delete error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	test.DeleteGenresNotFound(t, ctx, service, ctrl, 123)
-	exp = "[EROR] failed to delete genre error=not found\n"
+	test.DeletePrintsNotFound(t, ctx, service, ctrl, 123)
+	exp = "[EROR] failed to delete print error=not found\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	test.DeleteGenresNoContent(t, ctx, service, ctrl, 123)
+	test.DeletePrintsNoContent(t, ctx, service, ctrl, 123)
 	exp = ""
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 }
 
-func TestGenreList(t *testing.T) {
+func TestPrintList(t *testing.T) {
 	mctrl := gomock.NewController(t)
 	defer mctrl.Finish()
 	mock := NewMockModeler(mctrl)
 	gomock.InOrder(
-		mock.EXPECT().ListGenres().Return(nil, errors.New("list error")),
+		mock.EXPECT().ListPrints().Return(nil, errors.New("list error")),
 		mock.EXPECT().Close(),
-		mock.EXPECT().ListGenres().Return([]*model.Genre{&model.Genre{ID: 123, Name: "foo"}, &model.Genre{ID: 456, Name: "bar"}}, nil),
+		mock.EXPECT().ListPrints().Return([]*model.Print{&model.Print{ID: 123, Name: "foo"}, &model.Print{ID: 456, Name: "bar"}}, nil),
 		mock.EXPECT().Close(),
 	)
 	service := goa.New("my-inventory-test")
 	logbuf := &strings.Builder{}
 	ctx := goa.WithLogger(context.Background(), goa.NewLogger(log.New(logbuf, "", 0)))
-	ctrl := NewGenresController(service, Fmodeler(func() (Modeler, error) {
+	ctrl := NewPrintsController(service, Fmodeler(func() (Modeler, error) {
 		return nil, errors.New("model error")
 	}))
-	test.ListGenresServiceUnavailable(t, ctx, service, ctrl)
+	test.ListPrintsServiceUnavailable(t, ctx, service, ctrl)
 	exp := "[EROR] unable to get model error=model error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
-	ctrl = NewGenresController(service, Fmodeler(func() (Modeler, error) {
+	ctrl = NewPrintsController(service, Fmodeler(func() (Modeler, error) {
 		return mock, nil
 	}))
 
 	logbuf.Reset()
-	test.ListGenresInternalServerError(t, ctx, service, ctrl)
-	exp = "[EROR] failed to get genre list error=list error\n"
+	test.ListPrintsInternalServerError(t, ctx, service, ctrl)
+	exp = "[EROR] failed to get print list error=list error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
-	_, res := test.ListGenresOK(t, ctx, service, ctrl)
-	expres := app.GenreCollection{
-		convert.ToGenreMedia(&model.Genre{ID: 123, Name: "foo"}),
-		convert.ToGenreMedia(&model.Genre{ID: 456, Name: "bar"}),
+	_, res := test.ListPrintsOK(t, ctx, service, ctrl)
+	expres := app.PrintCollection{
+		convert.ToPrintMedia(&model.Print{ID: 123, Name: "foo"}),
+		convert.ToPrintMedia(&model.Print{ID: 456, Name: "bar"}),
 	}
 	if diff := pretty.Compare(res, expres); diff != "" {
 		t.Errorf("diff: (-got +want)\n%s", diff)
 	}
 }
 
-func TestGenreShow(t *testing.T) {
+func TestPrintShow(t *testing.T) {
 	mctrl := gomock.NewController(t)
 	defer mctrl.Finish()
 	mock := NewMockModeler(mctrl)
 	gomock.InOrder(
-		mock.EXPECT().GetGenreByID(123).Return(nil, errors.New("get error")),
+		mock.EXPECT().GetPrintByID(123).Return(nil, errors.New("get error")),
 		mock.EXPECT().Close(),
-		mock.EXPECT().GetGenreByID(123).Return(nil, model.ErrNotFound),
+		mock.EXPECT().GetPrintByID(123).Return(nil, model.ErrNotFound),
 		mock.EXPECT().Close(),
-		mock.EXPECT().GetGenreByID(123).Return(&model.Genre{ID: 123, Name: "foo"}, nil),
+		mock.EXPECT().GetPrintByID(123).Return(&model.Print{ID: 123, Name: "foo"}, nil),
 		mock.EXPECT().Close(),
 	)
 	service := goa.New("my-inventory-test")
 	logbuf := &strings.Builder{}
 	ctx := goa.WithLogger(context.Background(), goa.NewLogger(log.New(logbuf, "", 0)))
-	ctrl := NewGenresController(service, Fmodeler(func() (Modeler, error) {
+	ctrl := NewPrintsController(service, Fmodeler(func() (Modeler, error) {
 		return nil, errors.New("model error")
 	}))
-	test.ShowGenresServiceUnavailable(t, ctx, service, ctrl, 123)
+	test.ShowPrintsServiceUnavailable(t, ctx, service, ctrl, 123)
 	exp := "[EROR] unable to get model error=model error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
-	ctrl = NewGenresController(service, Fmodeler(func() (Modeler, error) {
+	ctrl = NewPrintsController(service, Fmodeler(func() (Modeler, error) {
 		return mock, nil
 	}))
 
 	logbuf.Reset()
-	test.ShowGenresInternalServerError(t, ctx, service, ctrl, 123)
-	exp = "[EROR] failed to get genre error=get error\n"
+	test.ShowPrintsInternalServerError(t, ctx, service, ctrl, 123)
+	exp = "[EROR] failed to get print error=get error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	test.ShowGenresNotFound(t, ctx, service, ctrl, 123)
-	exp = "[EROR] failed to get genre error=not found\n"
+	test.ShowPrintsNotFound(t, ctx, service, ctrl, 123)
+	exp = "[EROR] failed to get print error=not found\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	_, res := test.ShowGenresOK(t, ctx, service, ctrl, 123)
-	expres := convert.ToGenreMedia(&model.Genre{ID: 123, Name: "foo"})
+	_, res := test.ShowPrintsOK(t, ctx, service, ctrl, 123)
+	expres := convert.ToPrintMedia(&model.Print{ID: 123, Name: "foo"})
 	if diff := pretty.Compare(res, expres); diff != "" {
 		t.Errorf("diff: (-got +want)\n%s", diff)
 	}
@@ -214,50 +214,50 @@ func TestGenreShow(t *testing.T) {
 	}
 }
 
-func TestGenreUpdate(t *testing.T) {
+func TestPrintUpdate(t *testing.T) {
 	mctrl := gomock.NewController(t)
 	defer mctrl.Finish()
 	mock := NewMockModeler(mctrl)
 	gomock.InOrder(
-		mock.EXPECT().UpdateGenre(123, "foo").Return(errors.New("update error")),
+		mock.EXPECT().UpdatePrint(123, "foo").Return(errors.New("update error")),
 		mock.EXPECT().Close(),
-		mock.EXPECT().UpdateGenre(123, "foo").Return(model.ErrNotFound),
+		mock.EXPECT().UpdatePrint(123, "foo").Return(model.ErrNotFound),
 		mock.EXPECT().Close(),
-		mock.EXPECT().UpdateGenre(123, "foo").Return(nil),
+		mock.EXPECT().UpdatePrint(123, "foo").Return(nil),
 		mock.EXPECT().Close(),
 	)
 	service := goa.New("my-inventory-test")
 	logbuf := &strings.Builder{}
 	ctx := goa.WithLogger(context.Background(), goa.NewLogger(log.New(logbuf, "", 0)))
-	ctrl := NewGenresController(service, Fmodeler(func() (Modeler, error) {
+	ctrl := NewPrintsController(service, Fmodeler(func() (Modeler, error) {
 		return nil, errors.New("model error")
 	}))
-	test.UpdateGenresServiceUnavailable(t, ctx, service, ctrl, 123, &app.UpdateGenresPayload{GenreName: "foo"})
+	test.UpdatePrintsServiceUnavailable(t, ctx, service, ctrl, 123, &app.UpdatePrintsPayload{PrintName: "foo"})
 	exp := "[EROR] unable to get model error=model error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
-	ctrl = NewGenresController(service, Fmodeler(func() (Modeler, error) {
+	ctrl = NewPrintsController(service, Fmodeler(func() (Modeler, error) {
 		return mock, nil
 	}))
 
 	logbuf.Reset()
-	test.UpdateGenresInternalServerError(t, ctx, service, ctrl, 123, &app.UpdateGenresPayload{GenreName: "foo"})
-	exp = "[EROR] failed to update genre error=update error\n"
+	test.UpdatePrintsInternalServerError(t, ctx, service, ctrl, 123, &app.UpdatePrintsPayload{PrintName: "foo"})
+	exp = "[EROR] failed to update print error=update error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	test.UpdateGenresNotFound(t, ctx, service, ctrl, 123, &app.UpdateGenresPayload{GenreName: "foo"})
-	exp = "[EROR] failed to update genre error=not found\n"
+	test.UpdatePrintsNotFound(t, ctx, service, ctrl, 123, &app.UpdatePrintsPayload{PrintName: "foo"})
+	exp = "[EROR] failed to update print error=not found\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
-	test.UpdateGenresNoContent(t, ctx, service, ctrl, 123, &app.UpdateGenresPayload{GenreName: "foo"})
+	test.UpdatePrintsNoContent(t, ctx, service, ctrl, 123, &app.UpdatePrintsPayload{PrintName: "foo"})
 	exp = ""
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())

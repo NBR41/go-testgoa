@@ -23,12 +23,12 @@ func ToCategoryMedia(a *model.Category) *app.Category {
 	}
 }
 
-//ToEditionTypeMedia converts an edition type model into an edition type media type
-func ToEditionTypeMedia(a *model.EditionType) *app.Editiontype {
-	return &app.Editiontype{
-		Href:            app.EditionTypesHref(a.ID),
-		EditionTypeID:   int(a.ID),
-		EditionTypeName: a.Name,
+//ToPrintMedia converts a print model into a print media type
+func ToPrintMedia(a *model.Print) *app.Print {
+	return &app.Print{
+		Href:      app.PrintsHref(a.ID),
+		PrintID:   int(a.ID),
+		PrintName: a.Name,
 	}
 }
 
@@ -41,19 +41,19 @@ func ToEditorMedia(a *model.Editor) *app.Editor {
 	}
 }
 
-//ToGenreMedia converts a genre model into a genre media type
-func ToGenreMedia(a *model.Genre) *app.Genre {
-	return &app.Genre{
-		Href:      app.GenresHref(a.ID),
-		GenreID:   int(a.ID),
-		GenreName: a.Name,
+//ToClassMedia converts a class model into a class media type
+func ToClassMedia(a *model.Class) *app.Class {
+	return &app.Class{
+		Href:      app.ClassesHref(a.ID),
+		ClassID:   int(a.ID),
+		ClassName: a.Name,
 	}
 }
 
 //ToRoleMedia converts a role model into a role media type
 func ToRoleMedia(a *model.Role) *app.Role {
 	return &app.Role{
-		Href:     app.GenresHref(a.ID),
+		Href:     app.RolesHref(a.ID),
 		RoleID:   int(a.ID),
 		RoleName: a.Name,
 	}
@@ -81,9 +81,8 @@ func ToBookMedia(a *model.Book) *app.Book {
 // ToBookLinkMedia converts a book model into a book link media type
 func ToBookLinkMedia(a *model.Book) *app.BookLink {
 	return &app.BookLink{
-		Href:     app.BooksHref(a.ID),
-		BookID:   int(a.ID),
-		BookName: a.Name,
+		Href:   app.BooksHref(a.ID),
+		BookID: int(a.ID),
 	}
 }
 

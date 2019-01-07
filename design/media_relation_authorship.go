@@ -18,6 +18,7 @@ var AuthorshipMedia = MediaType("application/vnd.authorship+json", func() {
 	Description("An Author authorship")
 
 	Attributes(func() {
+		attrAuthorshipID()
 		attrAuthorID()
 		Attribute("author", AuthorMedia, "author struct")
 		attrBookID()
@@ -25,10 +26,11 @@ var AuthorshipMedia = MediaType("application/vnd.authorship+json", func() {
 		attrRoleID()
 		Attribute("role", RoleMedia, "role struct")
 		attrHref()
-		Required("author_id", "book_id", "role_id", "href")
+		Required("authorship_id", "author_id", "book_id", "role_id", "href")
 	})
 
 	View("default", func() {
+		Attribute("authorship_id")
 		Attribute("author_id")
 		Attribute("author")
 		Attribute("book_id")

@@ -7,10 +7,26 @@ import (
 	. "github.com/goadesign/goa/design/apidsl"
 )
 
+// ClassificationMedia defines the media type used to render classification.
+var ClassificationMedia = MediaType("application/vnd.classification+json", func() {
+	Description("A series classification")
+
+	Attributes(func() {
+		Attribute("class", ClassMedia, "class struct")
+		attrHref()
+		Required("class", "href")
+	})
+
+	View("default", func() {
+		Attribute("class")
+		Attribute("href")
+	})
+})
+
 var _ = Resource("classifications", func() {
 	BasePath("/classifications")
 	Parent("series")
-	DefaultMedia(ClassMedia)
+	DefaultMedia(ClassificationMedia)
 
 	Action("list", func() {
 		Description("List series classes")
@@ -19,7 +35,7 @@ var _ = Resource("classifications", func() {
 		// Unauthorized
 		Response(Unauthorized)
 		// OK
-		Response(OK, CollectionOf(ClassMedia))
+		Response(OK, CollectionOf(ClassificationMedia))
 		// user NotFound
 		Response(NotFound)
 		// Errors

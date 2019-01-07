@@ -76,6 +76,21 @@ type Modeler interface {
 	ListCollections() ([]*model.Collection, error)
 	ListCollectionsByEditorID(id int) ([]*model.Collection, error)
 
+	GetAuthorshipByID(id int) (*model.Authorship, error)
+	ListAuthorships() ([]*model.Authorship, error)
+	InsertAuthorship(authorID, bookID, roleID int) (*model.Authorship, error)
+	DeleteAuthorship(id int) error
+
+	GetEditionByID(id int) (*model.Edition, error)
+	ListEditions() ([]*model.Edition, error)
+	InsertEdition(bookID, collectionID, printID int) (*model.Edition, error)
+	DeleteEdition(id int) error
+
+	GetClassification(seriesID, classID int) (*model.Class, error)
+	ListClassificationBySeriesID(seriesID int) ([]*model.Class, error)
+	InsertClassification(seriesID, classID int) (*model.Class, error)
+	DeleteClassification(seriesID, classID int) error
+
 	ListUsers() ([]model.User, error)
 	GetUserByID(id int) (*model.User, error)
 	GetUserByEmail(email string) (*model.User, error)

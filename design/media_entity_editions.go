@@ -18,6 +18,7 @@ var EditionMedia = MediaType("application/vnd.edition+json", func() {
 	Description("An edition")
 
 	Attributes(func() {
+		attrEditionID()
 		attrBookID()
 		Attribute("book", BookMedia, "book struct")
 		attrCollectionID()
@@ -25,10 +26,11 @@ var EditionMedia = MediaType("application/vnd.edition+json", func() {
 		attrPrintID()
 		Attribute("print", PrintMedia, "print struct")
 		attrHref()
-		Required("book_id", "collection_id", "print_id", "href")
+		Required("edition_id", "book_id", "collection_id", "print_id", "href")
 	})
 
 	View("default", func() {
+		Attribute("edition_id")
 		Attribute("book_id")
 		Attribute("book")
 		Attribute("collection_id")
@@ -106,7 +108,7 @@ var _ = Resource("editions", func() {
 		Description("delete book edition by id")
 		Routing(DELETE(editionIDPath))
 		Params(func() {
-			attrEditorID()
+			attrEditionID()
 		})
 		Security(JWTAuth)
 		// Unauthorized

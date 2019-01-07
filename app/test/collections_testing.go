@@ -28,7 +28,7 @@ import (
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func CreateCollectionsBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, editorID int, payload *app.CreateCollectionsPayload) (http.ResponseWriter, error) {
+func CreateCollectionsBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, payload *app.CreateCollectionsPayload) (http.ResponseWriter, error) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -59,14 +59,13 @@ func CreateCollectionsBadRequest(t goatest.TInterface, ctx context.Context, serv
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections", editorID),
+		Path: fmt.Sprintf("/collections"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
 		panic("invalid test " + _err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["editor_id"] = []string{fmt.Sprintf("%v", editorID)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -108,7 +107,7 @@ func CreateCollectionsBadRequest(t goatest.TInterface, ctx context.Context, serv
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func CreateCollectionsCreated(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, editorID int, payload *app.CreateCollectionsPayload) http.ResponseWriter {
+func CreateCollectionsCreated(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, payload *app.CreateCollectionsPayload) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -139,14 +138,13 @@ func CreateCollectionsCreated(t goatest.TInterface, ctx context.Context, service
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections", editorID),
+		Path: fmt.Sprintf("/collections"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
 		panic("invalid test " + _err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["editor_id"] = []string{fmt.Sprintf("%v", editorID)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -181,7 +179,7 @@ func CreateCollectionsCreated(t goatest.TInterface, ctx context.Context, service
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func CreateCollectionsInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, editorID int, payload *app.CreateCollectionsPayload) http.ResponseWriter {
+func CreateCollectionsInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, payload *app.CreateCollectionsPayload) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -212,14 +210,13 @@ func CreateCollectionsInternalServerError(t goatest.TInterface, ctx context.Cont
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections", editorID),
+		Path: fmt.Sprintf("/collections"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
 		panic("invalid test " + _err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["editor_id"] = []string{fmt.Sprintf("%v", editorID)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -254,7 +251,7 @@ func CreateCollectionsInternalServerError(t goatest.TInterface, ctx context.Cont
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func CreateCollectionsServiceUnavailable(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, editorID int, payload *app.CreateCollectionsPayload) http.ResponseWriter {
+func CreateCollectionsServiceUnavailable(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, payload *app.CreateCollectionsPayload) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -285,14 +282,13 @@ func CreateCollectionsServiceUnavailable(t goatest.TInterface, ctx context.Conte
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections", editorID),
+		Path: fmt.Sprintf("/collections"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
 		panic("invalid test " + _err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["editor_id"] = []string{fmt.Sprintf("%v", editorID)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -327,7 +323,7 @@ func CreateCollectionsServiceUnavailable(t goatest.TInterface, ctx context.Conte
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func CreateCollectionsUnauthorized(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, editorID int, payload *app.CreateCollectionsPayload) http.ResponseWriter {
+func CreateCollectionsUnauthorized(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, payload *app.CreateCollectionsPayload) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -358,14 +354,13 @@ func CreateCollectionsUnauthorized(t goatest.TInterface, ctx context.Context, se
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections", editorID),
+		Path: fmt.Sprintf("/collections"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
 		panic("invalid test " + _err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["editor_id"] = []string{fmt.Sprintf("%v", editorID)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -400,7 +395,7 @@ func CreateCollectionsUnauthorized(t goatest.TInterface, ctx context.Context, se
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func CreateCollectionsUnprocessableEntity(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, editorID int, payload *app.CreateCollectionsPayload) http.ResponseWriter {
+func CreateCollectionsUnprocessableEntity(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, payload *app.CreateCollectionsPayload) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -431,14 +426,13 @@ func CreateCollectionsUnprocessableEntity(t goatest.TInterface, ctx context.Cont
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections", editorID),
+		Path: fmt.Sprintf("/collections"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
 		panic("invalid test " + _err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["editor_id"] = []string{fmt.Sprintf("%v", editorID)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -473,7 +467,7 @@ func CreateCollectionsUnprocessableEntity(t goatest.TInterface, ctx context.Cont
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func DeleteCollectionsBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, editorID int, collectionID int) (http.ResponseWriter, error) {
+func DeleteCollectionsBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, collectionID int) (http.ResponseWriter, error) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -494,14 +488,13 @@ func DeleteCollectionsBadRequest(t goatest.TInterface, ctx context.Context, serv
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections/%v", editorID, collectionID),
+		Path: fmt.Sprintf("/collections/%v", collectionID),
 	}
 	req, err := http.NewRequest("DELETE", u.String(), nil)
 	if err != nil {
 		panic("invalid test " + err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["editor_id"] = []string{fmt.Sprintf("%v", editorID)}
 	prms["collection_id"] = []string{fmt.Sprintf("%v", collectionID)}
 	if ctx == nil {
 		ctx = context.Background()
@@ -543,7 +536,7 @@ func DeleteCollectionsBadRequest(t goatest.TInterface, ctx context.Context, serv
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func DeleteCollectionsInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, editorID int, collectionID int) http.ResponseWriter {
+func DeleteCollectionsInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, collectionID int) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -563,14 +556,13 @@ func DeleteCollectionsInternalServerError(t goatest.TInterface, ctx context.Cont
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections/%v", editorID, collectionID),
+		Path: fmt.Sprintf("/collections/%v", collectionID),
 	}
 	req, err := http.NewRequest("DELETE", u.String(), nil)
 	if err != nil {
 		panic("invalid test " + err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["editor_id"] = []string{fmt.Sprintf("%v", editorID)}
 	prms["collection_id"] = []string{fmt.Sprintf("%v", collectionID)}
 	if ctx == nil {
 		ctx = context.Background()
@@ -605,7 +597,7 @@ func DeleteCollectionsInternalServerError(t goatest.TInterface, ctx context.Cont
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func DeleteCollectionsNoContent(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, editorID int, collectionID int) http.ResponseWriter {
+func DeleteCollectionsNoContent(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, collectionID int) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -625,14 +617,13 @@ func DeleteCollectionsNoContent(t goatest.TInterface, ctx context.Context, servi
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections/%v", editorID, collectionID),
+		Path: fmt.Sprintf("/collections/%v", collectionID),
 	}
 	req, err := http.NewRequest("DELETE", u.String(), nil)
 	if err != nil {
 		panic("invalid test " + err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["editor_id"] = []string{fmt.Sprintf("%v", editorID)}
 	prms["collection_id"] = []string{fmt.Sprintf("%v", collectionID)}
 	if ctx == nil {
 		ctx = context.Background()
@@ -667,7 +658,7 @@ func DeleteCollectionsNoContent(t goatest.TInterface, ctx context.Context, servi
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func DeleteCollectionsNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, editorID int, collectionID int) http.ResponseWriter {
+func DeleteCollectionsNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, collectionID int) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -687,14 +678,13 @@ func DeleteCollectionsNotFound(t goatest.TInterface, ctx context.Context, servic
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections/%v", editorID, collectionID),
+		Path: fmt.Sprintf("/collections/%v", collectionID),
 	}
 	req, err := http.NewRequest("DELETE", u.String(), nil)
 	if err != nil {
 		panic("invalid test " + err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["editor_id"] = []string{fmt.Sprintf("%v", editorID)}
 	prms["collection_id"] = []string{fmt.Sprintf("%v", collectionID)}
 	if ctx == nil {
 		ctx = context.Background()
@@ -729,7 +719,7 @@ func DeleteCollectionsNotFound(t goatest.TInterface, ctx context.Context, servic
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func DeleteCollectionsServiceUnavailable(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, editorID int, collectionID int) http.ResponseWriter {
+func DeleteCollectionsServiceUnavailable(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, collectionID int) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -749,14 +739,13 @@ func DeleteCollectionsServiceUnavailable(t goatest.TInterface, ctx context.Conte
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections/%v", editorID, collectionID),
+		Path: fmt.Sprintf("/collections/%v", collectionID),
 	}
 	req, err := http.NewRequest("DELETE", u.String(), nil)
 	if err != nil {
 		panic("invalid test " + err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["editor_id"] = []string{fmt.Sprintf("%v", editorID)}
 	prms["collection_id"] = []string{fmt.Sprintf("%v", collectionID)}
 	if ctx == nil {
 		ctx = context.Background()
@@ -791,7 +780,7 @@ func DeleteCollectionsServiceUnavailable(t goatest.TInterface, ctx context.Conte
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func DeleteCollectionsUnauthorized(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, editorID int, collectionID int) http.ResponseWriter {
+func DeleteCollectionsUnauthorized(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, collectionID int) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -811,14 +800,13 @@ func DeleteCollectionsUnauthorized(t goatest.TInterface, ctx context.Context, se
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections/%v", editorID, collectionID),
+		Path: fmt.Sprintf("/collections/%v", collectionID),
 	}
 	req, err := http.NewRequest("DELETE", u.String(), nil)
 	if err != nil {
 		panic("invalid test " + err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["editor_id"] = []string{fmt.Sprintf("%v", editorID)}
 	prms["collection_id"] = []string{fmt.Sprintf("%v", collectionID)}
 	if ctx == nil {
 		ctx = context.Background()
@@ -853,7 +841,7 @@ func DeleteCollectionsUnauthorized(t goatest.TInterface, ctx context.Context, se
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ListCollectionsInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, editorID int) http.ResponseWriter {
+func ListCollectionsInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -873,14 +861,13 @@ func ListCollectionsInternalServerError(t goatest.TInterface, ctx context.Contex
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections", editorID),
+		Path: fmt.Sprintf("/collections"),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		panic("invalid test " + err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["editor_id"] = []string{fmt.Sprintf("%v", editorID)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -914,7 +901,7 @@ func ListCollectionsInternalServerError(t goatest.TInterface, ctx context.Contex
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ListCollectionsOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, editorID int) (http.ResponseWriter, app.CollectionCollection) {
+func ListCollectionsOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController) (http.ResponseWriter, app.CollectionCollection) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -935,14 +922,13 @@ func ListCollectionsOK(t goatest.TInterface, ctx context.Context, service *goa.S
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections", editorID),
+		Path: fmt.Sprintf("/collections"),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		panic("invalid test " + err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["editor_id"] = []string{fmt.Sprintf("%v", editorID)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -988,7 +974,7 @@ func ListCollectionsOK(t goatest.TInterface, ctx context.Context, service *goa.S
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ListCollectionsOKLink(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, editorID int) (http.ResponseWriter, app.CollectionLinkCollection) {
+func ListCollectionsOKLink(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController) (http.ResponseWriter, app.CollectionLinkCollection) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1009,14 +995,13 @@ func ListCollectionsOKLink(t goatest.TInterface, ctx context.Context, service *g
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections", editorID),
+		Path: fmt.Sprintf("/collections"),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		panic("invalid test " + err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["editor_id"] = []string{fmt.Sprintf("%v", editorID)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -1062,7 +1047,7 @@ func ListCollectionsOKLink(t goatest.TInterface, ctx context.Context, service *g
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ListCollectionsServiceUnavailable(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, editorID int) http.ResponseWriter {
+func ListCollectionsServiceUnavailable(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1082,14 +1067,13 @@ func ListCollectionsServiceUnavailable(t goatest.TInterface, ctx context.Context
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections", editorID),
+		Path: fmt.Sprintf("/collections"),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		panic("invalid test " + err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["editor_id"] = []string{fmt.Sprintf("%v", editorID)}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -1123,7 +1107,7 @@ func ListCollectionsServiceUnavailable(t goatest.TInterface, ctx context.Context
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ShowCollectionsBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, editorID int, collectionID int) (http.ResponseWriter, error) {
+func ShowCollectionsBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, collectionID int) (http.ResponseWriter, error) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1144,14 +1128,13 @@ func ShowCollectionsBadRequest(t goatest.TInterface, ctx context.Context, servic
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections/%v", editorID, collectionID),
+		Path: fmt.Sprintf("/collections/%v", collectionID),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		panic("invalid test " + err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["editor_id"] = []string{fmt.Sprintf("%v", editorID)}
 	prms["collection_id"] = []string{fmt.Sprintf("%v", collectionID)}
 	if ctx == nil {
 		ctx = context.Background()
@@ -1193,7 +1176,7 @@ func ShowCollectionsBadRequest(t goatest.TInterface, ctx context.Context, servic
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ShowCollectionsInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, editorID int, collectionID int) http.ResponseWriter {
+func ShowCollectionsInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, collectionID int) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1213,14 +1196,13 @@ func ShowCollectionsInternalServerError(t goatest.TInterface, ctx context.Contex
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections/%v", editorID, collectionID),
+		Path: fmt.Sprintf("/collections/%v", collectionID),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		panic("invalid test " + err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["editor_id"] = []string{fmt.Sprintf("%v", editorID)}
 	prms["collection_id"] = []string{fmt.Sprintf("%v", collectionID)}
 	if ctx == nil {
 		ctx = context.Background()
@@ -1255,7 +1237,7 @@ func ShowCollectionsInternalServerError(t goatest.TInterface, ctx context.Contex
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ShowCollectionsNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, editorID int, collectionID int) http.ResponseWriter {
+func ShowCollectionsNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, collectionID int) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1275,14 +1257,13 @@ func ShowCollectionsNotFound(t goatest.TInterface, ctx context.Context, service 
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections/%v", editorID, collectionID),
+		Path: fmt.Sprintf("/collections/%v", collectionID),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		panic("invalid test " + err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["editor_id"] = []string{fmt.Sprintf("%v", editorID)}
 	prms["collection_id"] = []string{fmt.Sprintf("%v", collectionID)}
 	if ctx == nil {
 		ctx = context.Background()
@@ -1317,7 +1298,7 @@ func ShowCollectionsNotFound(t goatest.TInterface, ctx context.Context, service 
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ShowCollectionsOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, editorID int, collectionID int) (http.ResponseWriter, *app.Collection) {
+func ShowCollectionsOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, collectionID int) (http.ResponseWriter, *app.Collection) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1338,14 +1319,13 @@ func ShowCollectionsOK(t goatest.TInterface, ctx context.Context, service *goa.S
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections/%v", editorID, collectionID),
+		Path: fmt.Sprintf("/collections/%v", collectionID),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		panic("invalid test " + err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["editor_id"] = []string{fmt.Sprintf("%v", editorID)}
 	prms["collection_id"] = []string{fmt.Sprintf("%v", collectionID)}
 	if ctx == nil {
 		ctx = context.Background()
@@ -1392,7 +1372,7 @@ func ShowCollectionsOK(t goatest.TInterface, ctx context.Context, service *goa.S
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ShowCollectionsOKLink(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, editorID int, collectionID int) (http.ResponseWriter, *app.CollectionLink) {
+func ShowCollectionsOKLink(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, collectionID int) (http.ResponseWriter, *app.CollectionLink) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1413,14 +1393,13 @@ func ShowCollectionsOKLink(t goatest.TInterface, ctx context.Context, service *g
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections/%v", editorID, collectionID),
+		Path: fmt.Sprintf("/collections/%v", collectionID),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		panic("invalid test " + err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["editor_id"] = []string{fmt.Sprintf("%v", editorID)}
 	prms["collection_id"] = []string{fmt.Sprintf("%v", collectionID)}
 	if ctx == nil {
 		ctx = context.Background()
@@ -1467,7 +1446,7 @@ func ShowCollectionsOKLink(t goatest.TInterface, ctx context.Context, service *g
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ShowCollectionsServiceUnavailable(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, editorID int, collectionID int) http.ResponseWriter {
+func ShowCollectionsServiceUnavailable(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, collectionID int) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1487,14 +1466,13 @@ func ShowCollectionsServiceUnavailable(t goatest.TInterface, ctx context.Context
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections/%v", editorID, collectionID),
+		Path: fmt.Sprintf("/collections/%v", collectionID),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		panic("invalid test " + err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["editor_id"] = []string{fmt.Sprintf("%v", editorID)}
 	prms["collection_id"] = []string{fmt.Sprintf("%v", collectionID)}
 	if ctx == nil {
 		ctx = context.Background()
@@ -1529,7 +1507,7 @@ func ShowCollectionsServiceUnavailable(t goatest.TInterface, ctx context.Context
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateCollectionsBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, editorID int, collectionID int, payload *app.UpdateCollectionsPayload) (http.ResponseWriter, error) {
+func UpdateCollectionsBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, collectionID int, payload *app.UpdateCollectionsPayload) (http.ResponseWriter, error) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1560,14 +1538,13 @@ func UpdateCollectionsBadRequest(t goatest.TInterface, ctx context.Context, serv
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections/%v", editorID, collectionID),
+		Path: fmt.Sprintf("/collections/%v", collectionID),
 	}
 	req, _err := http.NewRequest("PUT", u.String(), nil)
 	if _err != nil {
 		panic("invalid test " + _err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["editor_id"] = []string{fmt.Sprintf("%v", editorID)}
 	prms["collection_id"] = []string{fmt.Sprintf("%v", collectionID)}
 	if ctx == nil {
 		ctx = context.Background()
@@ -1610,7 +1587,7 @@ func UpdateCollectionsBadRequest(t goatest.TInterface, ctx context.Context, serv
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateCollectionsInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, editorID int, collectionID int, payload *app.UpdateCollectionsPayload) http.ResponseWriter {
+func UpdateCollectionsInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, collectionID int, payload *app.UpdateCollectionsPayload) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1641,14 +1618,13 @@ func UpdateCollectionsInternalServerError(t goatest.TInterface, ctx context.Cont
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections/%v", editorID, collectionID),
+		Path: fmt.Sprintf("/collections/%v", collectionID),
 	}
 	req, _err := http.NewRequest("PUT", u.String(), nil)
 	if _err != nil {
 		panic("invalid test " + _err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["editor_id"] = []string{fmt.Sprintf("%v", editorID)}
 	prms["collection_id"] = []string{fmt.Sprintf("%v", collectionID)}
 	if ctx == nil {
 		ctx = context.Background()
@@ -1684,7 +1660,7 @@ func UpdateCollectionsInternalServerError(t goatest.TInterface, ctx context.Cont
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateCollectionsNoContent(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, editorID int, collectionID int, payload *app.UpdateCollectionsPayload) http.ResponseWriter {
+func UpdateCollectionsNoContent(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, collectionID int, payload *app.UpdateCollectionsPayload) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1715,14 +1691,13 @@ func UpdateCollectionsNoContent(t goatest.TInterface, ctx context.Context, servi
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections/%v", editorID, collectionID),
+		Path: fmt.Sprintf("/collections/%v", collectionID),
 	}
 	req, _err := http.NewRequest("PUT", u.String(), nil)
 	if _err != nil {
 		panic("invalid test " + _err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["editor_id"] = []string{fmt.Sprintf("%v", editorID)}
 	prms["collection_id"] = []string{fmt.Sprintf("%v", collectionID)}
 	if ctx == nil {
 		ctx = context.Background()
@@ -1758,7 +1733,7 @@ func UpdateCollectionsNoContent(t goatest.TInterface, ctx context.Context, servi
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateCollectionsNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, editorID int, collectionID int, payload *app.UpdateCollectionsPayload) http.ResponseWriter {
+func UpdateCollectionsNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, collectionID int, payload *app.UpdateCollectionsPayload) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1789,14 +1764,13 @@ func UpdateCollectionsNotFound(t goatest.TInterface, ctx context.Context, servic
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections/%v", editorID, collectionID),
+		Path: fmt.Sprintf("/collections/%v", collectionID),
 	}
 	req, _err := http.NewRequest("PUT", u.String(), nil)
 	if _err != nil {
 		panic("invalid test " + _err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["editor_id"] = []string{fmt.Sprintf("%v", editorID)}
 	prms["collection_id"] = []string{fmt.Sprintf("%v", collectionID)}
 	if ctx == nil {
 		ctx = context.Background()
@@ -1832,7 +1806,7 @@ func UpdateCollectionsNotFound(t goatest.TInterface, ctx context.Context, servic
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateCollectionsServiceUnavailable(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, editorID int, collectionID int, payload *app.UpdateCollectionsPayload) http.ResponseWriter {
+func UpdateCollectionsServiceUnavailable(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, collectionID int, payload *app.UpdateCollectionsPayload) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1863,14 +1837,13 @@ func UpdateCollectionsServiceUnavailable(t goatest.TInterface, ctx context.Conte
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections/%v", editorID, collectionID),
+		Path: fmt.Sprintf("/collections/%v", collectionID),
 	}
 	req, _err := http.NewRequest("PUT", u.String(), nil)
 	if _err != nil {
 		panic("invalid test " + _err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["editor_id"] = []string{fmt.Sprintf("%v", editorID)}
 	prms["collection_id"] = []string{fmt.Sprintf("%v", collectionID)}
 	if ctx == nil {
 		ctx = context.Background()
@@ -1906,7 +1879,7 @@ func UpdateCollectionsServiceUnavailable(t goatest.TInterface, ctx context.Conte
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateCollectionsUnauthorized(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, editorID int, collectionID int, payload *app.UpdateCollectionsPayload) http.ResponseWriter {
+func UpdateCollectionsUnauthorized(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, collectionID int, payload *app.UpdateCollectionsPayload) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1937,14 +1910,13 @@ func UpdateCollectionsUnauthorized(t goatest.TInterface, ctx context.Context, se
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections/%v", editorID, collectionID),
+		Path: fmt.Sprintf("/collections/%v", collectionID),
 	}
 	req, _err := http.NewRequest("PUT", u.String(), nil)
 	if _err != nil {
 		panic("invalid test " + _err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["editor_id"] = []string{fmt.Sprintf("%v", editorID)}
 	prms["collection_id"] = []string{fmt.Sprintf("%v", collectionID)}
 	if ctx == nil {
 		ctx = context.Background()
@@ -1980,7 +1952,7 @@ func UpdateCollectionsUnauthorized(t goatest.TInterface, ctx context.Context, se
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateCollectionsUnprocessableEntity(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, editorID int, collectionID int, payload *app.UpdateCollectionsPayload) http.ResponseWriter {
+func UpdateCollectionsUnprocessableEntity(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.CollectionsController, collectionID int, payload *app.UpdateCollectionsPayload) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -2011,14 +1983,13 @@ func UpdateCollectionsUnprocessableEntity(t goatest.TInterface, ctx context.Cont
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections/%v", editorID, collectionID),
+		Path: fmt.Sprintf("/collections/%v", collectionID),
 	}
 	req, _err := http.NewRequest("PUT", u.String(), nil)
 	if _err != nil {
 		panic("invalid test " + _err.Error()) // bug
 	}
 	prms := url.Values{}
-	prms["editor_id"] = []string{fmt.Sprintf("%v", editorID)}
 	prms["collection_id"] = []string{fmt.Sprintf("%v", collectionID)}
 	if ctx == nil {
 		ctx = context.Background()

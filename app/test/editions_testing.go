@@ -22,7 +22,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
-	"strconv"
 )
 
 // CreateEditionsBadRequest runs the method Create of the given controller with the given parameters and payload.
@@ -540,7 +539,7 @@ func CreateEditionsUnprocessableEntity(t goatest.TInterface, ctx context.Context
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func DeleteEditionsBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.EditionsController, editionID string, editorID *int) (http.ResponseWriter, error) {
+func DeleteEditionsBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.EditionsController, editionID int) (http.ResponseWriter, error) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -560,14 +559,8 @@ func DeleteEditionsBadRequest(t goatest.TInterface, ctx context.Context, service
 
 	// Setup request context
 	rw := httptest.NewRecorder()
-	query := url.Values{}
-	if editorID != nil {
-		sliceVal := []string{strconv.Itoa(*editorID)}
-		query["editor_id"] = sliceVal
-	}
 	u := &url.URL{
-		Path:     fmt.Sprintf("/editions/%v", editionID),
-		RawQuery: query.Encode(),
+		Path: fmt.Sprintf("/editions/%v", editionID),
 	}
 	req, err := http.NewRequest("DELETE", u.String(), nil)
 	if err != nil {
@@ -575,10 +568,6 @@ func DeleteEditionsBadRequest(t goatest.TInterface, ctx context.Context, service
 	}
 	prms := url.Values{}
 	prms["edition_id"] = []string{fmt.Sprintf("%v", editionID)}
-	if editorID != nil {
-		sliceVal := []string{strconv.Itoa(*editorID)}
-		prms["editor_id"] = sliceVal
-	}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -619,7 +608,7 @@ func DeleteEditionsBadRequest(t goatest.TInterface, ctx context.Context, service
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func DeleteEditionsInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.EditionsController, editionID string, editorID *int) http.ResponseWriter {
+func DeleteEditionsInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.EditionsController, editionID int) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -638,14 +627,8 @@ func DeleteEditionsInternalServerError(t goatest.TInterface, ctx context.Context
 
 	// Setup request context
 	rw := httptest.NewRecorder()
-	query := url.Values{}
-	if editorID != nil {
-		sliceVal := []string{strconv.Itoa(*editorID)}
-		query["editor_id"] = sliceVal
-	}
 	u := &url.URL{
-		Path:     fmt.Sprintf("/editions/%v", editionID),
-		RawQuery: query.Encode(),
+		Path: fmt.Sprintf("/editions/%v", editionID),
 	}
 	req, err := http.NewRequest("DELETE", u.String(), nil)
 	if err != nil {
@@ -653,10 +636,6 @@ func DeleteEditionsInternalServerError(t goatest.TInterface, ctx context.Context
 	}
 	prms := url.Values{}
 	prms["edition_id"] = []string{fmt.Sprintf("%v", editionID)}
-	if editorID != nil {
-		sliceVal := []string{strconv.Itoa(*editorID)}
-		prms["editor_id"] = sliceVal
-	}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -690,7 +669,7 @@ func DeleteEditionsInternalServerError(t goatest.TInterface, ctx context.Context
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func DeleteEditionsNoContent(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.EditionsController, editionID string, editorID *int) http.ResponseWriter {
+func DeleteEditionsNoContent(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.EditionsController, editionID int) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -709,14 +688,8 @@ func DeleteEditionsNoContent(t goatest.TInterface, ctx context.Context, service 
 
 	// Setup request context
 	rw := httptest.NewRecorder()
-	query := url.Values{}
-	if editorID != nil {
-		sliceVal := []string{strconv.Itoa(*editorID)}
-		query["editor_id"] = sliceVal
-	}
 	u := &url.URL{
-		Path:     fmt.Sprintf("/editions/%v", editionID),
-		RawQuery: query.Encode(),
+		Path: fmt.Sprintf("/editions/%v", editionID),
 	}
 	req, err := http.NewRequest("DELETE", u.String(), nil)
 	if err != nil {
@@ -724,10 +697,6 @@ func DeleteEditionsNoContent(t goatest.TInterface, ctx context.Context, service 
 	}
 	prms := url.Values{}
 	prms["edition_id"] = []string{fmt.Sprintf("%v", editionID)}
-	if editorID != nil {
-		sliceVal := []string{strconv.Itoa(*editorID)}
-		prms["editor_id"] = sliceVal
-	}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -761,7 +730,7 @@ func DeleteEditionsNoContent(t goatest.TInterface, ctx context.Context, service 
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func DeleteEditionsNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.EditionsController, editionID string, editorID *int) http.ResponseWriter {
+func DeleteEditionsNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.EditionsController, editionID int) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -780,14 +749,8 @@ func DeleteEditionsNotFound(t goatest.TInterface, ctx context.Context, service *
 
 	// Setup request context
 	rw := httptest.NewRecorder()
-	query := url.Values{}
-	if editorID != nil {
-		sliceVal := []string{strconv.Itoa(*editorID)}
-		query["editor_id"] = sliceVal
-	}
 	u := &url.URL{
-		Path:     fmt.Sprintf("/editions/%v", editionID),
-		RawQuery: query.Encode(),
+		Path: fmt.Sprintf("/editions/%v", editionID),
 	}
 	req, err := http.NewRequest("DELETE", u.String(), nil)
 	if err != nil {
@@ -795,10 +758,6 @@ func DeleteEditionsNotFound(t goatest.TInterface, ctx context.Context, service *
 	}
 	prms := url.Values{}
 	prms["edition_id"] = []string{fmt.Sprintf("%v", editionID)}
-	if editorID != nil {
-		sliceVal := []string{strconv.Itoa(*editorID)}
-		prms["editor_id"] = sliceVal
-	}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -832,7 +791,7 @@ func DeleteEditionsNotFound(t goatest.TInterface, ctx context.Context, service *
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func DeleteEditionsServiceUnavailable(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.EditionsController, editionID string, editorID *int) http.ResponseWriter {
+func DeleteEditionsServiceUnavailable(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.EditionsController, editionID int) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -851,14 +810,8 @@ func DeleteEditionsServiceUnavailable(t goatest.TInterface, ctx context.Context,
 
 	// Setup request context
 	rw := httptest.NewRecorder()
-	query := url.Values{}
-	if editorID != nil {
-		sliceVal := []string{strconv.Itoa(*editorID)}
-		query["editor_id"] = sliceVal
-	}
 	u := &url.URL{
-		Path:     fmt.Sprintf("/editions/%v", editionID),
-		RawQuery: query.Encode(),
+		Path: fmt.Sprintf("/editions/%v", editionID),
 	}
 	req, err := http.NewRequest("DELETE", u.String(), nil)
 	if err != nil {
@@ -866,10 +819,6 @@ func DeleteEditionsServiceUnavailable(t goatest.TInterface, ctx context.Context,
 	}
 	prms := url.Values{}
 	prms["edition_id"] = []string{fmt.Sprintf("%v", editionID)}
-	if editorID != nil {
-		sliceVal := []string{strconv.Itoa(*editorID)}
-		prms["editor_id"] = sliceVal
-	}
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -903,7 +852,7 @@ func DeleteEditionsServiceUnavailable(t goatest.TInterface, ctx context.Context,
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func DeleteEditionsUnauthorized(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.EditionsController, editionID string, editorID *int) http.ResponseWriter {
+func DeleteEditionsUnauthorized(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.EditionsController, editionID int) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -922,14 +871,8 @@ func DeleteEditionsUnauthorized(t goatest.TInterface, ctx context.Context, servi
 
 	// Setup request context
 	rw := httptest.NewRecorder()
-	query := url.Values{}
-	if editorID != nil {
-		sliceVal := []string{strconv.Itoa(*editorID)}
-		query["editor_id"] = sliceVal
-	}
 	u := &url.URL{
-		Path:     fmt.Sprintf("/editions/%v", editionID),
-		RawQuery: query.Encode(),
+		Path: fmt.Sprintf("/editions/%v", editionID),
 	}
 	req, err := http.NewRequest("DELETE", u.String(), nil)
 	if err != nil {
@@ -937,10 +880,6 @@ func DeleteEditionsUnauthorized(t goatest.TInterface, ctx context.Context, servi
 	}
 	prms := url.Values{}
 	prms["edition_id"] = []string{fmt.Sprintf("%v", editionID)}
-	if editorID != nil {
-		sliceVal := []string{strconv.Itoa(*editorID)}
-		prms["editor_id"] = sliceVal
-	}
 	if ctx == nil {
 		ctx = context.Background()
 	}

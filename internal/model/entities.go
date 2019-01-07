@@ -81,9 +81,32 @@ type Editor struct {
 	Name string
 }
 
+//Collection struct for collection
 type Collection struct {
 	ID       int64
 	Name     string
 	EditorID int64
 	Editor   *Editor
+}
+
+//Authorship struct for authorship
+type Authorship struct {
+	ID       int64
+	AuthorID int64
+	Author   *Author
+	BookID   int64
+	Book     *Book
+	RoleID   int64
+	Role     *Role
+}
+
+//Edition struct for edition
+type Edition struct {
+	ID           int64
+	BookID       int64
+	Book         *Book
+	CollectionID int64
+	Collection   *Collection
+	PrintID      int64
+	Print        *Print
 }

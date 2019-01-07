@@ -1055,6 +1055,176 @@ func unmarshalCreateClassificationsPayload(ctx context.Context, service *goa.Ser
 	return nil
 }
 
+// CollectionsController is the controller interface for the Collections actions.
+type CollectionsController interface {
+	goa.Muxer
+	Create(*CreateCollectionsContext) error
+	Delete(*DeleteCollectionsContext) error
+	List(*ListCollectionsContext) error
+	Show(*ShowCollectionsContext) error
+	Update(*UpdateCollectionsContext) error
+}
+
+// MountCollectionsController "mounts" a Collections resource controller on the given service.
+func MountCollectionsController(service *goa.Service, ctrl CollectionsController) {
+	initService(service)
+	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/collections", ctrl.MuxHandler("preflight", handleCollectionsOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/collections/:collection_id", ctrl.MuxHandler("preflight", handleCollectionsOrigin(cors.HandlePreflight()), nil))
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewCreateCollectionsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*CreateCollectionsPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Create(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleCollectionsOrigin(h)
+	service.Mux.Handle("POST", "/collections", ctrl.MuxHandler("create", h, unmarshalCreateCollectionsPayload))
+	service.LogInfo("mount", "ctrl", "Collections", "action", "Create", "route", "POST /collections", "security", "JWTSec")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewDeleteCollectionsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Delete(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleCollectionsOrigin(h)
+	service.Mux.Handle("DELETE", "/collections/:collection_id", ctrl.MuxHandler("delete", h, nil))
+	service.LogInfo("mount", "ctrl", "Collections", "action", "Delete", "route", "DELETE /collections/:collection_id", "security", "JWTSec")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewListCollectionsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.List(rctx)
+	}
+	h = handleCollectionsOrigin(h)
+	service.Mux.Handle("GET", "/collections", ctrl.MuxHandler("list", h, nil))
+	service.LogInfo("mount", "ctrl", "Collections", "action", "List", "route", "GET /collections")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewShowCollectionsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.Show(rctx)
+	}
+	h = handleCollectionsOrigin(h)
+	service.Mux.Handle("GET", "/collections/:collection_id", ctrl.MuxHandler("show", h, nil))
+	service.LogInfo("mount", "ctrl", "Collections", "action", "Show", "route", "GET /collections/:collection_id")
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewUpdateCollectionsContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		// Build the payload
+		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
+			rctx.Payload = rawPayload.(*UpdateCollectionsPayload)
+		} else {
+			return goa.MissingPayloadError()
+		}
+		return ctrl.Update(rctx)
+	}
+	h = handleSecurity("JWTSec", h)
+	h = handleCollectionsOrigin(h)
+	service.Mux.Handle("PUT", "/collections/:collection_id", ctrl.MuxHandler("update", h, unmarshalUpdateCollectionsPayload))
+	service.LogInfo("mount", "ctrl", "Collections", "action", "Update", "route", "PUT /collections/:collection_id", "security", "JWTSec")
+}
+
+// handleCollectionsOrigin applies the CORS response headers corresponding to the origin.
+func handleCollectionsOrigin(h goa.Handler) goa.Handler {
+
+	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		origin := req.Header.Get("Origin")
+		if origin == "" {
+			// Not a CORS request
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOrigin(origin, "http://localhost:4200") {
+			ctx = goa.WithLogContext(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Vary", "Origin")
+			rw.Header().Set("Access-Control-Max-Age", "600")
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+				rw.Header().Set("Access-Control-Allow-Headers", "Authorization, Origin, Content-Type, Accept")
+			}
+			return h(ctx, rw, req)
+		}
+
+		return h(ctx, rw, req)
+	}
+}
+
+// unmarshalCreateCollectionsPayload unmarshals the request body into the context request data Payload field.
+func unmarshalCreateCollectionsPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &createCollectionsPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
+// unmarshalUpdateCollectionsPayload unmarshals the request body into the context request data Payload field.
+func unmarshalUpdateCollectionsPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
+	payload := &updateCollectionsPayload{}
+	if err := service.DecodeRequest(req, payload); err != nil {
+		return err
+	}
+	if err := payload.Validate(); err != nil {
+		// Initialize payload with private data structure so it can be logged
+		goa.ContextRequest(ctx).Payload = payload
+		return err
+	}
+	goa.ContextRequest(ctx).Payload = payload.Publicize()
+	return nil
+}
+
 // EditionsController is the controller interface for the Editions actions.
 type EditionsController interface {
 	goa.Muxer
@@ -1346,176 +1516,6 @@ func unmarshalCreateEditorsPayload(ctx context.Context, service *goa.Service, re
 // unmarshalUpdateEditorsPayload unmarshals the request body into the context request data Payload field.
 func unmarshalUpdateEditorsPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
 	payload := &updateEditorsPayload{}
-	if err := service.DecodeRequest(req, payload); err != nil {
-		return err
-	}
-	if err := payload.Validate(); err != nil {
-		// Initialize payload with private data structure so it can be logged
-		goa.ContextRequest(ctx).Payload = payload
-		return err
-	}
-	goa.ContextRequest(ctx).Payload = payload.Publicize()
-	return nil
-}
-
-// CollectionsController is the controller interface for the Collections actions.
-type CollectionsController interface {
-	goa.Muxer
-	Create(*CreateCollectionsContext) error
-	Delete(*DeleteCollectionsContext) error
-	List(*ListCollectionsContext) error
-	Show(*ShowCollectionsContext) error
-	Update(*UpdateCollectionsContext) error
-}
-
-// MountCollectionsController "mounts" a Collections resource controller on the given service.
-func MountCollectionsController(service *goa.Service, ctrl CollectionsController) {
-	initService(service)
-	var h goa.Handler
-	service.Mux.Handle("OPTIONS", "/editors/:editor_id/collections", ctrl.MuxHandler("preflight", handleCollectionsOrigin(cors.HandlePreflight()), nil))
-	service.Mux.Handle("OPTIONS", "/editors/:editor_id/collections/:collection_id", ctrl.MuxHandler("preflight", handleCollectionsOrigin(cors.HandlePreflight()), nil))
-
-	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
-		// Check if there was an error loading the request
-		if err := goa.ContextError(ctx); err != nil {
-			return err
-		}
-		// Build the context
-		rctx, err := NewCreateCollectionsContext(ctx, req, service)
-		if err != nil {
-			return err
-		}
-		// Build the payload
-		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
-			rctx.Payload = rawPayload.(*CreateCollectionsPayload)
-		} else {
-			return goa.MissingPayloadError()
-		}
-		return ctrl.Create(rctx)
-	}
-	h = handleSecurity("JWTSec", h)
-	h = handleCollectionsOrigin(h)
-	service.Mux.Handle("POST", "/editors/:editor_id/collections", ctrl.MuxHandler("create", h, unmarshalCreateCollectionsPayload))
-	service.LogInfo("mount", "ctrl", "Collections", "action", "Create", "route", "POST /editors/:editor_id/collections", "security", "JWTSec")
-
-	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
-		// Check if there was an error loading the request
-		if err := goa.ContextError(ctx); err != nil {
-			return err
-		}
-		// Build the context
-		rctx, err := NewDeleteCollectionsContext(ctx, req, service)
-		if err != nil {
-			return err
-		}
-		return ctrl.Delete(rctx)
-	}
-	h = handleSecurity("JWTSec", h)
-	h = handleCollectionsOrigin(h)
-	service.Mux.Handle("DELETE", "/editors/:editor_id/collections/:collection_id", ctrl.MuxHandler("delete", h, nil))
-	service.LogInfo("mount", "ctrl", "Collections", "action", "Delete", "route", "DELETE /editors/:editor_id/collections/:collection_id", "security", "JWTSec")
-
-	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
-		// Check if there was an error loading the request
-		if err := goa.ContextError(ctx); err != nil {
-			return err
-		}
-		// Build the context
-		rctx, err := NewListCollectionsContext(ctx, req, service)
-		if err != nil {
-			return err
-		}
-		return ctrl.List(rctx)
-	}
-	h = handleCollectionsOrigin(h)
-	service.Mux.Handle("GET", "/editors/:editor_id/collections", ctrl.MuxHandler("list", h, nil))
-	service.LogInfo("mount", "ctrl", "Collections", "action", "List", "route", "GET /editors/:editor_id/collections")
-
-	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
-		// Check if there was an error loading the request
-		if err := goa.ContextError(ctx); err != nil {
-			return err
-		}
-		// Build the context
-		rctx, err := NewShowCollectionsContext(ctx, req, service)
-		if err != nil {
-			return err
-		}
-		return ctrl.Show(rctx)
-	}
-	h = handleCollectionsOrigin(h)
-	service.Mux.Handle("GET", "/editors/:editor_id/collections/:collection_id", ctrl.MuxHandler("show", h, nil))
-	service.LogInfo("mount", "ctrl", "Collections", "action", "Show", "route", "GET /editors/:editor_id/collections/:collection_id")
-
-	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
-		// Check if there was an error loading the request
-		if err := goa.ContextError(ctx); err != nil {
-			return err
-		}
-		// Build the context
-		rctx, err := NewUpdateCollectionsContext(ctx, req, service)
-		if err != nil {
-			return err
-		}
-		// Build the payload
-		if rawPayload := goa.ContextRequest(ctx).Payload; rawPayload != nil {
-			rctx.Payload = rawPayload.(*UpdateCollectionsPayload)
-		} else {
-			return goa.MissingPayloadError()
-		}
-		return ctrl.Update(rctx)
-	}
-	h = handleSecurity("JWTSec", h)
-	h = handleCollectionsOrigin(h)
-	service.Mux.Handle("PUT", "/editors/:editor_id/collections/:collection_id", ctrl.MuxHandler("update", h, unmarshalUpdateCollectionsPayload))
-	service.LogInfo("mount", "ctrl", "Collections", "action", "Update", "route", "PUT /editors/:editor_id/collections/:collection_id", "security", "JWTSec")
-}
-
-// handleCollectionsOrigin applies the CORS response headers corresponding to the origin.
-func handleCollectionsOrigin(h goa.Handler) goa.Handler {
-
-	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
-		origin := req.Header.Get("Origin")
-		if origin == "" {
-			// Not a CORS request
-			return h(ctx, rw, req)
-		}
-		if cors.MatchOrigin(origin, "http://localhost:4200") {
-			ctx = goa.WithLogContext(ctx, "origin", origin)
-			rw.Header().Set("Access-Control-Allow-Origin", origin)
-			rw.Header().Set("Vary", "Origin")
-			rw.Header().Set("Access-Control-Max-Age", "600")
-			rw.Header().Set("Access-Control-Allow-Credentials", "true")
-			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
-				// We are handling a preflight request
-				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
-				rw.Header().Set("Access-Control-Allow-Headers", "Authorization, Origin, Content-Type, Accept")
-			}
-			return h(ctx, rw, req)
-		}
-
-		return h(ctx, rw, req)
-	}
-}
-
-// unmarshalCreateCollectionsPayload unmarshals the request body into the context request data Payload field.
-func unmarshalCreateCollectionsPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
-	payload := &createCollectionsPayload{}
-	if err := service.DecodeRequest(req, payload); err != nil {
-		return err
-	}
-	if err := payload.Validate(); err != nil {
-		// Initialize payload with private data structure so it can be logged
-		goa.ContextRequest(ctx).Payload = payload
-		return err
-	}
-	goa.ContextRequest(ctx).Payload = payload.Publicize()
-	return nil
-}
-
-// unmarshalUpdateCollectionsPayload unmarshals the request body into the context request data Payload field.
-func unmarshalUpdateCollectionsPayload(ctx context.Context, service *goa.Service, req *http.Request) error {
-	payload := &updateCollectionsPayload{}
 	if err := service.DecodeRequest(req, payload); err != nil {
 		return err
 	}
@@ -2405,15 +2405,15 @@ type RelationCollectionController interface {
 func MountRelationCollectionController(service *goa.Service, ctrl RelationCollectionController) {
 	initService(service)
 	var h goa.Handler
-	service.Mux.Handle("OPTIONS", "/editors/:editor_id/collections/:collection_id/books", ctrl.MuxHandler("preflight", handleRelationCollectionOrigin(cors.HandlePreflight()), nil))
-	service.Mux.Handle("OPTIONS", "/editors/:editor_id/collections/:collection_id/prints/:print_id/books", ctrl.MuxHandler("preflight", handleRelationCollectionOrigin(cors.HandlePreflight()), nil))
-	service.Mux.Handle("OPTIONS", "/editors/:editor_id/collections/:collection_id/prints/:print_id/series/:series_id/books", ctrl.MuxHandler("preflight", handleRelationCollectionOrigin(cors.HandlePreflight()), nil))
-	service.Mux.Handle("OPTIONS", "/editors/:editor_id/collections/:collection_id/series/:series_id/books", ctrl.MuxHandler("preflight", handleRelationCollectionOrigin(cors.HandlePreflight()), nil))
-	service.Mux.Handle("OPTIONS", "/editors/:editor_id/collections/:collection_id/series/:series_id/prints/:print_id/books", ctrl.MuxHandler("preflight", handleRelationCollectionOrigin(cors.HandlePreflight()), nil))
-	service.Mux.Handle("OPTIONS", "/editors/:editor_id/collections/:collection_id/prints", ctrl.MuxHandler("preflight", handleRelationCollectionOrigin(cors.HandlePreflight()), nil))
-	service.Mux.Handle("OPTIONS", "/editors/:editor_id/collections/:collection_id/series/:series_id/prints", ctrl.MuxHandler("preflight", handleRelationCollectionOrigin(cors.HandlePreflight()), nil))
-	service.Mux.Handle("OPTIONS", "/editors/:editor_id/collections/:collection_id/series", ctrl.MuxHandler("preflight", handleRelationCollectionOrigin(cors.HandlePreflight()), nil))
-	service.Mux.Handle("OPTIONS", "/editors/:editor_id/collections/:collection_id/prints/:print_id/series", ctrl.MuxHandler("preflight", handleRelationCollectionOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/collections/:collection_id/books", ctrl.MuxHandler("preflight", handleRelationCollectionOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/collections/:collection_id/prints/:print_id/books", ctrl.MuxHandler("preflight", handleRelationCollectionOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/collections/:collection_id/prints/:print_id/series/:series_id/books", ctrl.MuxHandler("preflight", handleRelationCollectionOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/collections/:collection_id/series/:series_id/books", ctrl.MuxHandler("preflight", handleRelationCollectionOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/collections/:collection_id/series/:series_id/prints/:print_id/books", ctrl.MuxHandler("preflight", handleRelationCollectionOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/collections/:collection_id/prints", ctrl.MuxHandler("preflight", handleRelationCollectionOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/collections/:collection_id/series/:series_id/prints", ctrl.MuxHandler("preflight", handleRelationCollectionOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/collections/:collection_id/series", ctrl.MuxHandler("preflight", handleRelationCollectionOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/collections/:collection_id/prints/:print_id/series", ctrl.MuxHandler("preflight", handleRelationCollectionOrigin(cors.HandlePreflight()), nil))
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -2428,8 +2428,8 @@ func MountRelationCollectionController(service *goa.Service, ctrl RelationCollec
 		return ctrl.ListBooks(rctx)
 	}
 	h = handleRelationCollectionOrigin(h)
-	service.Mux.Handle("GET", "/editors/:editor_id/collections/:collection_id/books", ctrl.MuxHandler("listBooks", h, nil))
-	service.LogInfo("mount", "ctrl", "RelationCollection", "action", "ListBooks", "route", "GET /editors/:editor_id/collections/:collection_id/books")
+	service.Mux.Handle("GET", "/collections/:collection_id/books", ctrl.MuxHandler("listBooks", h, nil))
+	service.LogInfo("mount", "ctrl", "RelationCollection", "action", "ListBooks", "route", "GET /collections/:collection_id/books")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -2444,8 +2444,8 @@ func MountRelationCollectionController(service *goa.Service, ctrl RelationCollec
 		return ctrl.ListBooksByPrint(rctx)
 	}
 	h = handleRelationCollectionOrigin(h)
-	service.Mux.Handle("GET", "/editors/:editor_id/collections/:collection_id/prints/:print_id/books", ctrl.MuxHandler("listBooksByPrint", h, nil))
-	service.LogInfo("mount", "ctrl", "RelationCollection", "action", "ListBooksByPrint", "route", "GET /editors/:editor_id/collections/:collection_id/prints/:print_id/books")
+	service.Mux.Handle("GET", "/collections/:collection_id/prints/:print_id/books", ctrl.MuxHandler("listBooksByPrint", h, nil))
+	service.LogInfo("mount", "ctrl", "RelationCollection", "action", "ListBooksByPrint", "route", "GET /collections/:collection_id/prints/:print_id/books")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -2460,8 +2460,8 @@ func MountRelationCollectionController(service *goa.Service, ctrl RelationCollec
 		return ctrl.ListBooksByPrintsSeries(rctx)
 	}
 	h = handleRelationCollectionOrigin(h)
-	service.Mux.Handle("GET", "/editors/:editor_id/collections/:collection_id/prints/:print_id/series/:series_id/books", ctrl.MuxHandler("listBooksByPrintsSeries", h, nil))
-	service.LogInfo("mount", "ctrl", "RelationCollection", "action", "ListBooksByPrintsSeries", "route", "GET /editors/:editor_id/collections/:collection_id/prints/:print_id/series/:series_id/books")
+	service.Mux.Handle("GET", "/collections/:collection_id/prints/:print_id/series/:series_id/books", ctrl.MuxHandler("listBooksByPrintsSeries", h, nil))
+	service.LogInfo("mount", "ctrl", "RelationCollection", "action", "ListBooksByPrintsSeries", "route", "GET /collections/:collection_id/prints/:print_id/series/:series_id/books")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -2476,8 +2476,8 @@ func MountRelationCollectionController(service *goa.Service, ctrl RelationCollec
 		return ctrl.ListBooksBySeries(rctx)
 	}
 	h = handleRelationCollectionOrigin(h)
-	service.Mux.Handle("GET", "/editors/:editor_id/collections/:collection_id/series/:series_id/books", ctrl.MuxHandler("listBooksBySeries", h, nil))
-	service.LogInfo("mount", "ctrl", "RelationCollection", "action", "ListBooksBySeries", "route", "GET /editors/:editor_id/collections/:collection_id/series/:series_id/books")
+	service.Mux.Handle("GET", "/collections/:collection_id/series/:series_id/books", ctrl.MuxHandler("listBooksBySeries", h, nil))
+	service.LogInfo("mount", "ctrl", "RelationCollection", "action", "ListBooksBySeries", "route", "GET /collections/:collection_id/series/:series_id/books")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -2492,8 +2492,8 @@ func MountRelationCollectionController(service *goa.Service, ctrl RelationCollec
 		return ctrl.ListBooksBySeriesPrints(rctx)
 	}
 	h = handleRelationCollectionOrigin(h)
-	service.Mux.Handle("GET", "/editors/:editor_id/collections/:collection_id/series/:series_id/prints/:print_id/books", ctrl.MuxHandler("listBooksBySeriesPrints", h, nil))
-	service.LogInfo("mount", "ctrl", "RelationCollection", "action", "ListBooksBySeriesPrints", "route", "GET /editors/:editor_id/collections/:collection_id/series/:series_id/prints/:print_id/books")
+	service.Mux.Handle("GET", "/collections/:collection_id/series/:series_id/prints/:print_id/books", ctrl.MuxHandler("listBooksBySeriesPrints", h, nil))
+	service.LogInfo("mount", "ctrl", "RelationCollection", "action", "ListBooksBySeriesPrints", "route", "GET /collections/:collection_id/series/:series_id/prints/:print_id/books")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -2508,8 +2508,8 @@ func MountRelationCollectionController(service *goa.Service, ctrl RelationCollec
 		return ctrl.ListPrints(rctx)
 	}
 	h = handleRelationCollectionOrigin(h)
-	service.Mux.Handle("GET", "/editors/:editor_id/collections/:collection_id/prints", ctrl.MuxHandler("listPrints", h, nil))
-	service.LogInfo("mount", "ctrl", "RelationCollection", "action", "ListPrints", "route", "GET /editors/:editor_id/collections/:collection_id/prints")
+	service.Mux.Handle("GET", "/collections/:collection_id/prints", ctrl.MuxHandler("listPrints", h, nil))
+	service.LogInfo("mount", "ctrl", "RelationCollection", "action", "ListPrints", "route", "GET /collections/:collection_id/prints")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -2524,8 +2524,8 @@ func MountRelationCollectionController(service *goa.Service, ctrl RelationCollec
 		return ctrl.ListPrintsBySeries(rctx)
 	}
 	h = handleRelationCollectionOrigin(h)
-	service.Mux.Handle("GET", "/editors/:editor_id/collections/:collection_id/series/:series_id/prints", ctrl.MuxHandler("listPrintsBySeries", h, nil))
-	service.LogInfo("mount", "ctrl", "RelationCollection", "action", "ListPrintsBySeries", "route", "GET /editors/:editor_id/collections/:collection_id/series/:series_id/prints")
+	service.Mux.Handle("GET", "/collections/:collection_id/series/:series_id/prints", ctrl.MuxHandler("listPrintsBySeries", h, nil))
+	service.LogInfo("mount", "ctrl", "RelationCollection", "action", "ListPrintsBySeries", "route", "GET /collections/:collection_id/series/:series_id/prints")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -2540,8 +2540,8 @@ func MountRelationCollectionController(service *goa.Service, ctrl RelationCollec
 		return ctrl.ListSeries(rctx)
 	}
 	h = handleRelationCollectionOrigin(h)
-	service.Mux.Handle("GET", "/editors/:editor_id/collections/:collection_id/series", ctrl.MuxHandler("listSeries", h, nil))
-	service.LogInfo("mount", "ctrl", "RelationCollection", "action", "ListSeries", "route", "GET /editors/:editor_id/collections/:collection_id/series")
+	service.Mux.Handle("GET", "/collections/:collection_id/series", ctrl.MuxHandler("listSeries", h, nil))
+	service.LogInfo("mount", "ctrl", "RelationCollection", "action", "ListSeries", "route", "GET /collections/:collection_id/series")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -2556,8 +2556,8 @@ func MountRelationCollectionController(service *goa.Service, ctrl RelationCollec
 		return ctrl.ListSeriesByPrint(rctx)
 	}
 	h = handleRelationCollectionOrigin(h)
-	service.Mux.Handle("GET", "/editors/:editor_id/collections/:collection_id/prints/:print_id/series", ctrl.MuxHandler("listSeriesByPrint", h, nil))
-	service.LogInfo("mount", "ctrl", "RelationCollection", "action", "ListSeriesByPrint", "route", "GET /editors/:editor_id/collections/:collection_id/prints/:print_id/series")
+	service.Mux.Handle("GET", "/collections/:collection_id/prints/:print_id/series", ctrl.MuxHandler("listSeriesByPrint", h, nil))
+	service.LogInfo("mount", "ctrl", "RelationCollection", "action", "ListSeriesByPrint", "route", "GET /collections/:collection_id/prints/:print_id/series")
 }
 
 // handleRelationCollectionOrigin applies the CORS response headers corresponding to the origin.

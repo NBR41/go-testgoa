@@ -34,7 +34,7 @@ func (c *ClassificationsController) Create(ctx *app.CreateClassificationsContext
 	_, err = m.InsertClassification(ctx.SeriesID, ctx.Payload.ClassID)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to insert classification`, `error`, err.Error())
-		if err == model.ErrDuplicateKey {
+		if err == model.ErrDuplicateKey || err == model.ErrNotFound {
 			return ctx.UnprocessableEntity()
 		}
 		return ctx.InternalServerError()
@@ -78,7 +78,7 @@ func (c *ClassificationsController) List(ctx *app.ListClassificationsContext) er
 	}
 	defer func() { m.Close() }()
 
-	list, err := m.ListClassificationBySeriesID(ctx.SeriesID)
+	list, err := m.ListClassesBySeriesID(ctx.SeriesID)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to get classification list`, `error`, err.Error())
 		return ctx.InternalServerError()

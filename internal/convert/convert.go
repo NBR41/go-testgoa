@@ -211,3 +211,17 @@ func ToCollectionMedia(a *model.Collection) *app.Collection {
 		Href:           app.CollectionsHref(a.ID),
 	}
 }
+
+// ToSeriesMedia converts a series model into a series media type
+func ToSeriesMedia(a *model.Series) *app.Series {
+	if a == nil {
+		return nil
+	}
+	return &app.Series{
+		SeriesID:   int(a.ID),
+		SeriesName: a.Name,
+		CategoryID: int(a.CategoryID),
+		Category:   ToCategoryMedia(a.Category),
+		Href:       app.SeriesHref(a.ID),
+	}
+}

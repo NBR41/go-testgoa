@@ -34,7 +34,7 @@ func (c *EditionsController) Create(ctx *app.CreateEditionsContext) error {
 	v, err := m.InsertEdition(ctx.Payload.BookID, ctx.Payload.CollectionID, ctx.Payload.PrintID)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to insert edition`, `error`, err.Error())
-		if err == model.ErrDuplicateKey {
+		if err == model.ErrDuplicateKey || err == model.ErrNotFound {
 			return ctx.UnprocessableEntity()
 		}
 		return ctx.InternalServerError()

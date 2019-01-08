@@ -879,22 +879,44 @@ func NewCreateBooksContext(ctx context.Context, r *http.Request, service *goa.Se
 
 // createBooksPayload is the books create action payload.
 type createBooksPayload struct {
-	Isbn *string `form:"isbn,omitempty" json:"isbn,omitempty" yaml:"isbn,omitempty" xml:"isbn,omitempty"`
-	Name *string `form:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty" xml:"name,omitempty"`
+	// Book ISBN
+	BookIsbn *string `form:"book_isbn,omitempty" json:"book_isbn,omitempty" yaml:"book_isbn,omitempty" xml:"book_isbn,omitempty"`
+	// Book Name
+	BookName *string `form:"book_name,omitempty" json:"book_name,omitempty" yaml:"book_name,omitempty" xml:"book_name,omitempty"`
 	// Unique Series ID
 	SeriesID *int `form:"series_id,omitempty" json:"series_id,omitempty" yaml:"series_id,omitempty" xml:"series_id,omitempty"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *createBooksPayload) Validate() (err error) {
-	if payload.Isbn == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "isbn"))
+	if payload.BookIsbn == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "book_isbn"))
 	}
-	if payload.Name == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	if payload.BookName == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "book_name"))
 	}
 	if payload.SeriesID == nil {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "series_id"))
+	}
+	if payload.BookIsbn != nil {
+		if utf8.RuneCountInString(*payload.BookIsbn) < 1 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.book_isbn`, *payload.BookIsbn, utf8.RuneCountInString(*payload.BookIsbn), 1, true))
+		}
+	}
+	if payload.BookIsbn != nil {
+		if utf8.RuneCountInString(*payload.BookIsbn) > 128 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.book_isbn`, *payload.BookIsbn, utf8.RuneCountInString(*payload.BookIsbn), 128, false))
+		}
+	}
+	if payload.BookName != nil {
+		if utf8.RuneCountInString(*payload.BookName) < 1 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.book_name`, *payload.BookName, utf8.RuneCountInString(*payload.BookName), 1, true))
+		}
+	}
+	if payload.BookName != nil {
+		if utf8.RuneCountInString(*payload.BookName) > 128 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.book_name`, *payload.BookName, utf8.RuneCountInString(*payload.BookName), 128, false))
+		}
 	}
 	if payload.SeriesID != nil {
 		if *payload.SeriesID < 1 {
@@ -907,11 +929,11 @@ func (payload *createBooksPayload) Validate() (err error) {
 // Publicize creates CreateBooksPayload from createBooksPayload
 func (payload *createBooksPayload) Publicize() *CreateBooksPayload {
 	var pub CreateBooksPayload
-	if payload.Isbn != nil {
-		pub.Isbn = *payload.Isbn
+	if payload.BookIsbn != nil {
+		pub.BookIsbn = *payload.BookIsbn
 	}
-	if payload.Name != nil {
-		pub.Name = *payload.Name
+	if payload.BookName != nil {
+		pub.BookName = *payload.BookName
 	}
 	if payload.SeriesID != nil {
 		pub.SeriesID = *payload.SeriesID
@@ -921,21 +943,35 @@ func (payload *createBooksPayload) Publicize() *CreateBooksPayload {
 
 // CreateBooksPayload is the books create action payload.
 type CreateBooksPayload struct {
-	Isbn string `form:"isbn" json:"isbn" yaml:"isbn" xml:"isbn"`
-	Name string `form:"name" json:"name" yaml:"name" xml:"name"`
+	// Book ISBN
+	BookIsbn string `form:"book_isbn" json:"book_isbn" yaml:"book_isbn" xml:"book_isbn"`
+	// Book Name
+	BookName string `form:"book_name" json:"book_name" yaml:"book_name" xml:"book_name"`
 	// Unique Series ID
 	SeriesID int `form:"series_id" json:"series_id" yaml:"series_id" xml:"series_id"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *CreateBooksPayload) Validate() (err error) {
-	if payload.Isbn == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "isbn"))
+	if payload.BookIsbn == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "book_isbn"))
 	}
-	if payload.Name == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "name"))
+	if payload.BookName == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "book_name"))
 	}
 
+	if utf8.RuneCountInString(payload.BookIsbn) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.book_isbn`, payload.BookIsbn, utf8.RuneCountInString(payload.BookIsbn), 1, true))
+	}
+	if utf8.RuneCountInString(payload.BookIsbn) > 128 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.book_isbn`, payload.BookIsbn, utf8.RuneCountInString(payload.BookIsbn), 128, false))
+	}
+	if utf8.RuneCountInString(payload.BookName) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.book_name`, payload.BookName, utf8.RuneCountInString(payload.BookName), 1, true))
+	}
+	if utf8.RuneCountInString(payload.BookName) > 128 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.book_name`, payload.BookName, utf8.RuneCountInString(payload.BookName), 128, false))
+	}
 	if payload.SeriesID < 1 {
 		err = goa.MergeErrors(err, goa.InvalidRangeError(`raw.series_id`, payload.SeriesID, 1, true))
 	}
@@ -1212,13 +1248,24 @@ func NewUpdateBooksContext(ctx context.Context, r *http.Request, service *goa.Se
 
 // updateBooksPayload is the books update action payload.
 type updateBooksPayload struct {
-	Name *string `form:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty" xml:"name,omitempty"`
+	// Book Name
+	BookName *string `form:"book_name,omitempty" json:"book_name,omitempty" yaml:"book_name,omitempty" xml:"book_name,omitempty"`
 	// Unique Series ID
 	SeriesID *int `form:"series_id,omitempty" json:"series_id,omitempty" yaml:"series_id,omitempty" xml:"series_id,omitempty"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *updateBooksPayload) Validate() (err error) {
+	if payload.BookName != nil {
+		if utf8.RuneCountInString(*payload.BookName) < 1 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.book_name`, *payload.BookName, utf8.RuneCountInString(*payload.BookName), 1, true))
+		}
+	}
+	if payload.BookName != nil {
+		if utf8.RuneCountInString(*payload.BookName) > 128 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.book_name`, *payload.BookName, utf8.RuneCountInString(*payload.BookName), 128, false))
+		}
+	}
 	if payload.SeriesID != nil {
 		if *payload.SeriesID < 1 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError(`raw.series_id`, *payload.SeriesID, 1, true))
@@ -1230,8 +1277,8 @@ func (payload *updateBooksPayload) Validate() (err error) {
 // Publicize creates UpdateBooksPayload from updateBooksPayload
 func (payload *updateBooksPayload) Publicize() *UpdateBooksPayload {
 	var pub UpdateBooksPayload
-	if payload.Name != nil {
-		pub.Name = payload.Name
+	if payload.BookName != nil {
+		pub.BookName = payload.BookName
 	}
 	if payload.SeriesID != nil {
 		pub.SeriesID = payload.SeriesID
@@ -1241,13 +1288,24 @@ func (payload *updateBooksPayload) Publicize() *UpdateBooksPayload {
 
 // UpdateBooksPayload is the books update action payload.
 type UpdateBooksPayload struct {
-	Name *string `form:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty" xml:"name,omitempty"`
+	// Book Name
+	BookName *string `form:"book_name,omitempty" json:"book_name,omitempty" yaml:"book_name,omitempty" xml:"book_name,omitempty"`
 	// Unique Series ID
 	SeriesID *int `form:"series_id,omitempty" json:"series_id,omitempty" yaml:"series_id,omitempty" xml:"series_id,omitempty"`
 }
 
 // Validate runs the validation rules defined in the design.
 func (payload *UpdateBooksPayload) Validate() (err error) {
+	if payload.BookName != nil {
+		if utf8.RuneCountInString(*payload.BookName) < 1 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.book_name`, *payload.BookName, utf8.RuneCountInString(*payload.BookName), 1, true))
+		}
+	}
+	if payload.BookName != nil {
+		if utf8.RuneCountInString(*payload.BookName) > 128 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.book_name`, *payload.BookName, utf8.RuneCountInString(*payload.BookName), 128, false))
+		}
+	}
 	if payload.SeriesID != nil {
 		if *payload.SeriesID < 1 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError(`raw.series_id`, *payload.SeriesID, 1, true))
@@ -2172,6 +2230,478 @@ func (ctx *UpdateClassesContext) InternalServerError() error {
 
 // ServiceUnavailable sends a HTTP response with status code 503.
 func (ctx *UpdateClassesContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// CreateSeriesContext provides the series create action context.
+type CreateSeriesContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	Payload *CreateSeriesPayload
+}
+
+// NewCreateSeriesContext parses the incoming request URL and body, performs validations and creates the
+// context used by the series controller create action.
+func NewCreateSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*CreateSeriesContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := CreateSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
+	return &rctx, err
+}
+
+// createSeriesPayload is the series create action payload.
+type createSeriesPayload struct {
+	// Unique Category ID
+	CategoryID *int `form:"category_id,omitempty" json:"category_id,omitempty" yaml:"category_id,omitempty" xml:"category_id,omitempty"`
+	// Series Name (Akira/Dragon ball)
+	SeriesName *string `form:"series_name,omitempty" json:"series_name,omitempty" yaml:"series_name,omitempty" xml:"series_name,omitempty"`
+}
+
+// Validate runs the validation rules defined in the design.
+func (payload *createSeriesPayload) Validate() (err error) {
+	if payload.SeriesName == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "series_name"))
+	}
+	if payload.CategoryID == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "category_id"))
+	}
+	if payload.CategoryID != nil {
+		if *payload.CategoryID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`raw.category_id`, *payload.CategoryID, 1, true))
+		}
+	}
+	if payload.SeriesName != nil {
+		if utf8.RuneCountInString(*payload.SeriesName) < 1 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.series_name`, *payload.SeriesName, utf8.RuneCountInString(*payload.SeriesName), 1, true))
+		}
+	}
+	if payload.SeriesName != nil {
+		if utf8.RuneCountInString(*payload.SeriesName) > 128 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.series_name`, *payload.SeriesName, utf8.RuneCountInString(*payload.SeriesName), 128, false))
+		}
+	}
+	return
+}
+
+// Publicize creates CreateSeriesPayload from createSeriesPayload
+func (payload *createSeriesPayload) Publicize() *CreateSeriesPayload {
+	var pub CreateSeriesPayload
+	if payload.CategoryID != nil {
+		pub.CategoryID = *payload.CategoryID
+	}
+	if payload.SeriesName != nil {
+		pub.SeriesName = *payload.SeriesName
+	}
+	return &pub
+}
+
+// CreateSeriesPayload is the series create action payload.
+type CreateSeriesPayload struct {
+	// Unique Category ID
+	CategoryID int `form:"category_id" json:"category_id" yaml:"category_id" xml:"category_id"`
+	// Series Name (Akira/Dragon ball)
+	SeriesName string `form:"series_name" json:"series_name" yaml:"series_name" xml:"series_name"`
+}
+
+// Validate runs the validation rules defined in the design.
+func (payload *CreateSeriesPayload) Validate() (err error) {
+	if payload.SeriesName == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "series_name"))
+	}
+
+	if payload.CategoryID < 1 {
+		err = goa.MergeErrors(err, goa.InvalidRangeError(`raw.category_id`, payload.CategoryID, 1, true))
+	}
+	if utf8.RuneCountInString(payload.SeriesName) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.series_name`, payload.SeriesName, utf8.RuneCountInString(payload.SeriesName), 1, true))
+	}
+	if utf8.RuneCountInString(payload.SeriesName) > 128 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.series_name`, payload.SeriesName, utf8.RuneCountInString(payload.SeriesName), 128, false))
+	}
+	return
+}
+
+// Created sends a HTTP response with status code 201.
+func (ctx *CreateSeriesContext) Created() error {
+	ctx.ResponseData.WriteHeader(201)
+	return nil
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *CreateSeriesContext) BadRequest(r error) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// Unauthorized sends a HTTP response with status code 401.
+func (ctx *CreateSeriesContext) Unauthorized() error {
+	ctx.ResponseData.WriteHeader(401)
+	return nil
+}
+
+// UnprocessableEntity sends a HTTP response with status code 422.
+func (ctx *CreateSeriesContext) UnprocessableEntity() error {
+	ctx.ResponseData.WriteHeader(422)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *CreateSeriesContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *CreateSeriesContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// DeleteSeriesContext provides the series delete action context.
+type DeleteSeriesContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	SeriesID int
+}
+
+// NewDeleteSeriesContext parses the incoming request URL and body, performs validations and creates the
+// context used by the series controller delete action.
+func NewDeleteSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*DeleteSeriesContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := DeleteSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// NoContent sends a HTTP response with status code 204.
+func (ctx *DeleteSeriesContext) NoContent() error {
+	ctx.ResponseData.WriteHeader(204)
+	return nil
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *DeleteSeriesContext) BadRequest(r error) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// Unauthorized sends a HTTP response with status code 401.
+func (ctx *DeleteSeriesContext) Unauthorized() error {
+	ctx.ResponseData.WriteHeader(401)
+	return nil
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *DeleteSeriesContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *DeleteSeriesContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *DeleteSeriesContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListSeriesContext provides the series list action context.
+type ListSeriesContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+}
+
+// NewListSeriesContext parses the incoming request URL and body, performs validations and creates the
+// context used by the series controller list action.
+func NewListSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListSeriesContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListSeriesContext) OK(r SeriesCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json; type=collection")
+	}
+	if r == nil {
+		r = SeriesCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListSeriesContext) OKLink(r SeriesLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json; type=collection")
+	}
+	if r == nil {
+		r = SeriesLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListSeriesContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListSeriesContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ShowSeriesContext provides the series show action context.
+type ShowSeriesContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	SeriesID int
+}
+
+// NewShowSeriesContext parses the incoming request URL and body, performs validations and creates the
+// context used by the series controller show action.
+func NewShowSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*ShowSeriesContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ShowSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ShowSeriesContext) OK(r *Series) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ShowSeriesContext) OKLink(r *SeriesLink) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *ShowSeriesContext) BadRequest(r error) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ShowSeriesContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ShowSeriesContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ShowSeriesContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// UpdateSeriesContext provides the series update action context.
+type UpdateSeriesContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	SeriesID int
+	Payload  *UpdateSeriesPayload
+}
+
+// NewUpdateSeriesContext parses the incoming request URL and body, performs validations and creates the
+// context used by the series controller update action.
+func NewUpdateSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*UpdateSeriesContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := UpdateSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// updateSeriesPayload is the series update action payload.
+type updateSeriesPayload struct {
+	// Unique Category ID
+	CategoryID *int `form:"category_id,omitempty" json:"category_id,omitempty" yaml:"category_id,omitempty" xml:"category_id,omitempty"`
+	// Series Name (Akira/Dragon ball)
+	SeriesName *string `form:"series_name,omitempty" json:"series_name,omitempty" yaml:"series_name,omitempty" xml:"series_name,omitempty"`
+}
+
+// Validate runs the validation rules defined in the design.
+func (payload *updateSeriesPayload) Validate() (err error) {
+	if payload.CategoryID != nil {
+		if *payload.CategoryID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`raw.category_id`, *payload.CategoryID, 1, true))
+		}
+	}
+	if payload.SeriesName != nil {
+		if utf8.RuneCountInString(*payload.SeriesName) < 1 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.series_name`, *payload.SeriesName, utf8.RuneCountInString(*payload.SeriesName), 1, true))
+		}
+	}
+	if payload.SeriesName != nil {
+		if utf8.RuneCountInString(*payload.SeriesName) > 128 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.series_name`, *payload.SeriesName, utf8.RuneCountInString(*payload.SeriesName), 128, false))
+		}
+	}
+	return
+}
+
+// Publicize creates UpdateSeriesPayload from updateSeriesPayload
+func (payload *updateSeriesPayload) Publicize() *UpdateSeriesPayload {
+	var pub UpdateSeriesPayload
+	if payload.CategoryID != nil {
+		pub.CategoryID = payload.CategoryID
+	}
+	if payload.SeriesName != nil {
+		pub.SeriesName = payload.SeriesName
+	}
+	return &pub
+}
+
+// UpdateSeriesPayload is the series update action payload.
+type UpdateSeriesPayload struct {
+	// Unique Category ID
+	CategoryID *int `form:"category_id,omitempty" json:"category_id,omitempty" yaml:"category_id,omitempty" xml:"category_id,omitempty"`
+	// Series Name (Akira/Dragon ball)
+	SeriesName *string `form:"series_name,omitempty" json:"series_name,omitempty" yaml:"series_name,omitempty" xml:"series_name,omitempty"`
+}
+
+// Validate runs the validation rules defined in the design.
+func (payload *UpdateSeriesPayload) Validate() (err error) {
+	if payload.CategoryID != nil {
+		if *payload.CategoryID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`raw.category_id`, *payload.CategoryID, 1, true))
+		}
+	}
+	if payload.SeriesName != nil {
+		if utf8.RuneCountInString(*payload.SeriesName) < 1 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.series_name`, *payload.SeriesName, utf8.RuneCountInString(*payload.SeriesName), 1, true))
+		}
+	}
+	if payload.SeriesName != nil {
+		if utf8.RuneCountInString(*payload.SeriesName) > 128 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.series_name`, *payload.SeriesName, utf8.RuneCountInString(*payload.SeriesName), 128, false))
+		}
+	}
+	return
+}
+
+// NoContent sends a HTTP response with status code 204.
+func (ctx *UpdateSeriesContext) NoContent() error {
+	ctx.ResponseData.WriteHeader(204)
+	return nil
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *UpdateSeriesContext) BadRequest(r error) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// Unauthorized sends a HTTP response with status code 401.
+func (ctx *UpdateSeriesContext) Unauthorized() error {
+	ctx.ResponseData.WriteHeader(401)
+	return nil
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *UpdateSeriesContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// UnprocessableEntity sends a HTTP response with status code 422.
+func (ctx *UpdateSeriesContext) UnprocessableEntity() error {
+	ctx.ResponseData.WriteHeader(422)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *UpdateSeriesContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *UpdateSeriesContext) ServiceUnavailable() error {
 	ctx.ResponseData.WriteHeader(503)
 	return nil
 }
@@ -7395,478 +7925,6 @@ func (ctx *ListSeriesByAuthorsRelationRoleContext) InternalServerError() error {
 
 // ServiceUnavailable sends a HTTP response with status code 503.
 func (ctx *ListSeriesByAuthorsRelationRoleContext) ServiceUnavailable() error {
-	ctx.ResponseData.WriteHeader(503)
-	return nil
-}
-
-// CreateSeriesContext provides the series create action context.
-type CreateSeriesContext struct {
-	context.Context
-	*goa.ResponseData
-	*goa.RequestData
-	Payload *CreateSeriesPayload
-}
-
-// NewCreateSeriesContext parses the incoming request URL and body, performs validations and creates the
-// context used by the series controller create action.
-func NewCreateSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*CreateSeriesContext, error) {
-	var err error
-	resp := goa.ContextResponse(ctx)
-	resp.Service = service
-	req := goa.ContextRequest(ctx)
-	req.Request = r
-	rctx := CreateSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
-	return &rctx, err
-}
-
-// createSeriesPayload is the series create action payload.
-type createSeriesPayload struct {
-	// Unique Category ID
-	CategoryID *int `form:"category_id,omitempty" json:"category_id,omitempty" yaml:"category_id,omitempty" xml:"category_id,omitempty"`
-	// Series Name (Akira/Dragon ball)
-	SeriesName *string `form:"series_name,omitempty" json:"series_name,omitempty" yaml:"series_name,omitempty" xml:"series_name,omitempty"`
-}
-
-// Validate runs the validation rules defined in the design.
-func (payload *createSeriesPayload) Validate() (err error) {
-	if payload.SeriesName == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "series_name"))
-	}
-	if payload.CategoryID == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "category_id"))
-	}
-	if payload.CategoryID != nil {
-		if *payload.CategoryID < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`raw.category_id`, *payload.CategoryID, 1, true))
-		}
-	}
-	if payload.SeriesName != nil {
-		if utf8.RuneCountInString(*payload.SeriesName) < 1 {
-			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.series_name`, *payload.SeriesName, utf8.RuneCountInString(*payload.SeriesName), 1, true))
-		}
-	}
-	if payload.SeriesName != nil {
-		if utf8.RuneCountInString(*payload.SeriesName) > 128 {
-			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.series_name`, *payload.SeriesName, utf8.RuneCountInString(*payload.SeriesName), 128, false))
-		}
-	}
-	return
-}
-
-// Publicize creates CreateSeriesPayload from createSeriesPayload
-func (payload *createSeriesPayload) Publicize() *CreateSeriesPayload {
-	var pub CreateSeriesPayload
-	if payload.CategoryID != nil {
-		pub.CategoryID = *payload.CategoryID
-	}
-	if payload.SeriesName != nil {
-		pub.SeriesName = *payload.SeriesName
-	}
-	return &pub
-}
-
-// CreateSeriesPayload is the series create action payload.
-type CreateSeriesPayload struct {
-	// Unique Category ID
-	CategoryID int `form:"category_id" json:"category_id" yaml:"category_id" xml:"category_id"`
-	// Series Name (Akira/Dragon ball)
-	SeriesName string `form:"series_name" json:"series_name" yaml:"series_name" xml:"series_name"`
-}
-
-// Validate runs the validation rules defined in the design.
-func (payload *CreateSeriesPayload) Validate() (err error) {
-	if payload.SeriesName == "" {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "series_name"))
-	}
-
-	if payload.CategoryID < 1 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError(`raw.category_id`, payload.CategoryID, 1, true))
-	}
-	if utf8.RuneCountInString(payload.SeriesName) < 1 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.series_name`, payload.SeriesName, utf8.RuneCountInString(payload.SeriesName), 1, true))
-	}
-	if utf8.RuneCountInString(payload.SeriesName) > 128 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.series_name`, payload.SeriesName, utf8.RuneCountInString(payload.SeriesName), 128, false))
-	}
-	return
-}
-
-// Created sends a HTTP response with status code 201.
-func (ctx *CreateSeriesContext) Created() error {
-	ctx.ResponseData.WriteHeader(201)
-	return nil
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *CreateSeriesContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
-// Unauthorized sends a HTTP response with status code 401.
-func (ctx *CreateSeriesContext) Unauthorized() error {
-	ctx.ResponseData.WriteHeader(401)
-	return nil
-}
-
-// UnprocessableEntity sends a HTTP response with status code 422.
-func (ctx *CreateSeriesContext) UnprocessableEntity() error {
-	ctx.ResponseData.WriteHeader(422)
-	return nil
-}
-
-// InternalServerError sends a HTTP response with status code 500.
-func (ctx *CreateSeriesContext) InternalServerError() error {
-	ctx.ResponseData.WriteHeader(500)
-	return nil
-}
-
-// ServiceUnavailable sends a HTTP response with status code 503.
-func (ctx *CreateSeriesContext) ServiceUnavailable() error {
-	ctx.ResponseData.WriteHeader(503)
-	return nil
-}
-
-// DeleteSeriesContext provides the series delete action context.
-type DeleteSeriesContext struct {
-	context.Context
-	*goa.ResponseData
-	*goa.RequestData
-	SeriesID int
-}
-
-// NewDeleteSeriesContext parses the incoming request URL and body, performs validations and creates the
-// context used by the series controller delete action.
-func NewDeleteSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*DeleteSeriesContext, error) {
-	var err error
-	resp := goa.ContextResponse(ctx)
-	resp.Service = service
-	req := goa.ContextRequest(ctx)
-	req.Request = r
-	rctx := DeleteSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
-	paramSeriesID := req.Params["series_id"]
-	if len(paramSeriesID) > 0 {
-		rawSeriesID := paramSeriesID[0]
-		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
-			rctx.SeriesID = seriesID
-		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
-		}
-		if rctx.SeriesID < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
-		}
-	}
-	return &rctx, err
-}
-
-// NoContent sends a HTTP response with status code 204.
-func (ctx *DeleteSeriesContext) NoContent() error {
-	ctx.ResponseData.WriteHeader(204)
-	return nil
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *DeleteSeriesContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
-// Unauthorized sends a HTTP response with status code 401.
-func (ctx *DeleteSeriesContext) Unauthorized() error {
-	ctx.ResponseData.WriteHeader(401)
-	return nil
-}
-
-// NotFound sends a HTTP response with status code 404.
-func (ctx *DeleteSeriesContext) NotFound() error {
-	ctx.ResponseData.WriteHeader(404)
-	return nil
-}
-
-// InternalServerError sends a HTTP response with status code 500.
-func (ctx *DeleteSeriesContext) InternalServerError() error {
-	ctx.ResponseData.WriteHeader(500)
-	return nil
-}
-
-// ServiceUnavailable sends a HTTP response with status code 503.
-func (ctx *DeleteSeriesContext) ServiceUnavailable() error {
-	ctx.ResponseData.WriteHeader(503)
-	return nil
-}
-
-// ListSeriesContext provides the series list action context.
-type ListSeriesContext struct {
-	context.Context
-	*goa.ResponseData
-	*goa.RequestData
-}
-
-// NewListSeriesContext parses the incoming request URL and body, performs validations and creates the
-// context used by the series controller list action.
-func NewListSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListSeriesContext, error) {
-	var err error
-	resp := goa.ContextResponse(ctx)
-	resp.Service = service
-	req := goa.ContextRequest(ctx)
-	req.Request = r
-	rctx := ListSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
-	return &rctx, err
-}
-
-// OK sends a HTTP response with status code 200.
-func (ctx *ListSeriesContext) OK(r SeriesCollection) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json; type=collection")
-	}
-	if r == nil {
-		r = SeriesCollection{}
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// OKLink sends a HTTP response with status code 200.
-func (ctx *ListSeriesContext) OKLink(r SeriesLinkCollection) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json; type=collection")
-	}
-	if r == nil {
-		r = SeriesLinkCollection{}
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// InternalServerError sends a HTTP response with status code 500.
-func (ctx *ListSeriesContext) InternalServerError() error {
-	ctx.ResponseData.WriteHeader(500)
-	return nil
-}
-
-// ServiceUnavailable sends a HTTP response with status code 503.
-func (ctx *ListSeriesContext) ServiceUnavailable() error {
-	ctx.ResponseData.WriteHeader(503)
-	return nil
-}
-
-// ShowSeriesContext provides the series show action context.
-type ShowSeriesContext struct {
-	context.Context
-	*goa.ResponseData
-	*goa.RequestData
-	SeriesID int
-}
-
-// NewShowSeriesContext parses the incoming request URL and body, performs validations and creates the
-// context used by the series controller show action.
-func NewShowSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*ShowSeriesContext, error) {
-	var err error
-	resp := goa.ContextResponse(ctx)
-	resp.Service = service
-	req := goa.ContextRequest(ctx)
-	req.Request = r
-	rctx := ShowSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
-	paramSeriesID := req.Params["series_id"]
-	if len(paramSeriesID) > 0 {
-		rawSeriesID := paramSeriesID[0]
-		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
-			rctx.SeriesID = seriesID
-		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
-		}
-		if rctx.SeriesID < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
-		}
-	}
-	return &rctx, err
-}
-
-// OK sends a HTTP response with status code 200.
-func (ctx *ShowSeriesContext) OK(r *Series) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// OKLink sends a HTTP response with status code 200.
-func (ctx *ShowSeriesContext) OKLink(r *SeriesLink) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ShowSeriesContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
-// NotFound sends a HTTP response with status code 404.
-func (ctx *ShowSeriesContext) NotFound() error {
-	ctx.ResponseData.WriteHeader(404)
-	return nil
-}
-
-// InternalServerError sends a HTTP response with status code 500.
-func (ctx *ShowSeriesContext) InternalServerError() error {
-	ctx.ResponseData.WriteHeader(500)
-	return nil
-}
-
-// ServiceUnavailable sends a HTTP response with status code 503.
-func (ctx *ShowSeriesContext) ServiceUnavailable() error {
-	ctx.ResponseData.WriteHeader(503)
-	return nil
-}
-
-// UpdateSeriesContext provides the series update action context.
-type UpdateSeriesContext struct {
-	context.Context
-	*goa.ResponseData
-	*goa.RequestData
-	SeriesID int
-	Payload  *UpdateSeriesPayload
-}
-
-// NewUpdateSeriesContext parses the incoming request URL and body, performs validations and creates the
-// context used by the series controller update action.
-func NewUpdateSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*UpdateSeriesContext, error) {
-	var err error
-	resp := goa.ContextResponse(ctx)
-	resp.Service = service
-	req := goa.ContextRequest(ctx)
-	req.Request = r
-	rctx := UpdateSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
-	paramSeriesID := req.Params["series_id"]
-	if len(paramSeriesID) > 0 {
-		rawSeriesID := paramSeriesID[0]
-		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
-			rctx.SeriesID = seriesID
-		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
-		}
-		if rctx.SeriesID < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
-		}
-	}
-	return &rctx, err
-}
-
-// updateSeriesPayload is the series update action payload.
-type updateSeriesPayload struct {
-	// Unique Category ID
-	CategoryID *int `form:"category_id,omitempty" json:"category_id,omitempty" yaml:"category_id,omitempty" xml:"category_id,omitempty"`
-	// Series Name (Akira/Dragon ball)
-	SeriesName *string `form:"series_name,omitempty" json:"series_name,omitempty" yaml:"series_name,omitempty" xml:"series_name,omitempty"`
-}
-
-// Validate runs the validation rules defined in the design.
-func (payload *updateSeriesPayload) Validate() (err error) {
-	if payload.CategoryID != nil {
-		if *payload.CategoryID < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`raw.category_id`, *payload.CategoryID, 1, true))
-		}
-	}
-	if payload.SeriesName != nil {
-		if utf8.RuneCountInString(*payload.SeriesName) < 1 {
-			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.series_name`, *payload.SeriesName, utf8.RuneCountInString(*payload.SeriesName), 1, true))
-		}
-	}
-	if payload.SeriesName != nil {
-		if utf8.RuneCountInString(*payload.SeriesName) > 128 {
-			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.series_name`, *payload.SeriesName, utf8.RuneCountInString(*payload.SeriesName), 128, false))
-		}
-	}
-	return
-}
-
-// Publicize creates UpdateSeriesPayload from updateSeriesPayload
-func (payload *updateSeriesPayload) Publicize() *UpdateSeriesPayload {
-	var pub UpdateSeriesPayload
-	if payload.CategoryID != nil {
-		pub.CategoryID = payload.CategoryID
-	}
-	if payload.SeriesName != nil {
-		pub.SeriesName = payload.SeriesName
-	}
-	return &pub
-}
-
-// UpdateSeriesPayload is the series update action payload.
-type UpdateSeriesPayload struct {
-	// Unique Category ID
-	CategoryID *int `form:"category_id,omitempty" json:"category_id,omitempty" yaml:"category_id,omitempty" xml:"category_id,omitempty"`
-	// Series Name (Akira/Dragon ball)
-	SeriesName *string `form:"series_name,omitempty" json:"series_name,omitempty" yaml:"series_name,omitempty" xml:"series_name,omitempty"`
-}
-
-// Validate runs the validation rules defined in the design.
-func (payload *UpdateSeriesPayload) Validate() (err error) {
-	if payload.CategoryID != nil {
-		if *payload.CategoryID < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`raw.category_id`, *payload.CategoryID, 1, true))
-		}
-	}
-	if payload.SeriesName != nil {
-		if utf8.RuneCountInString(*payload.SeriesName) < 1 {
-			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.series_name`, *payload.SeriesName, utf8.RuneCountInString(*payload.SeriesName), 1, true))
-		}
-	}
-	if payload.SeriesName != nil {
-		if utf8.RuneCountInString(*payload.SeriesName) > 128 {
-			err = goa.MergeErrors(err, goa.InvalidLengthError(`raw.series_name`, *payload.SeriesName, utf8.RuneCountInString(*payload.SeriesName), 128, false))
-		}
-	}
-	return
-}
-
-// NoContent sends a HTTP response with status code 204.
-func (ctx *UpdateSeriesContext) NoContent() error {
-	ctx.ResponseData.WriteHeader(204)
-	return nil
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *UpdateSeriesContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
-// Unauthorized sends a HTTP response with status code 401.
-func (ctx *UpdateSeriesContext) Unauthorized() error {
-	ctx.ResponseData.WriteHeader(401)
-	return nil
-}
-
-// NotFound sends a HTTP response with status code 404.
-func (ctx *UpdateSeriesContext) NotFound() error {
-	ctx.ResponseData.WriteHeader(404)
-	return nil
-}
-
-// UnprocessableEntity sends a HTTP response with status code 422.
-func (ctx *UpdateSeriesContext) UnprocessableEntity() error {
-	ctx.ResponseData.WriteHeader(422)
-	return nil
-}
-
-// InternalServerError sends a HTTP response with status code 500.
-func (ctx *UpdateSeriesContext) InternalServerError() error {
-	ctx.ResponseData.WriteHeader(500)
-	return nil
-}
-
-// ServiceUnavailable sends a HTTP response with status code 503.
-func (ctx *UpdateSeriesContext) ServiceUnavailable() error {
 	ctx.ResponseData.WriteHeader(503)
 	return nil
 }

@@ -22,7 +22,7 @@ type Modeler interface {
 	GetBookByID(id int) (*model.Book, error)
 	GetBookByISBN(isbn string) (*model.Book, error)
 	GetBookByName(name string) (*model.Book, error)
-	ListBooks() ([]model.Book, error)
+	ListBooks() ([]*model.Book, error)
 	InsertBook(isbn, name string, seriesID int) (*model.Book, error)
 	UpdateBook(id int, name *string, seriesID *int) error
 	DeleteBook(id int) error
@@ -54,6 +54,7 @@ type Modeler interface {
 	InsertClass(name string) (*model.Class, error)
 	UpdateClass(id int, name string) error
 	DeleteClass(id int) error
+	ListClassesBySeriesID(seriesID int) ([]*model.Class, error)
 
 	GetOwnership(userID, bookID int) (*model.Ownership, error)
 	ListOwnershipsByUserID(userID int) ([]*model.Ownership, error)
@@ -76,6 +77,13 @@ type Modeler interface {
 	ListCollections() ([]*model.Collection, error)
 	ListCollectionsByEditorID(id int) ([]*model.Collection, error)
 
+	GetSeriesByID(id int) (*model.Series, error)
+	GetSeriesByName(name string) (*model.Series, error)
+	InsertSeries(name string, categoryID int) (*model.Series, error)
+	UpdateSeries(id int, name *string, categoryID *int) error
+	DeleteSeries(id int) error
+	ListSeries() ([]*model.Series, error)
+
 	GetAuthorshipByID(id int) (*model.Authorship, error)
 	ListAuthorships() ([]*model.Authorship, error)
 	InsertAuthorship(authorID, bookID, roleID int) (*model.Authorship, error)
@@ -87,7 +95,6 @@ type Modeler interface {
 	DeleteEdition(id int) error
 
 	GetClassification(seriesID, classID int) (*model.Class, error)
-	ListClassificationBySeriesID(seriesID int) ([]*model.Class, error)
 	InsertClassification(seriesID, classID int) (*model.Class, error)
 	DeleteClassification(seriesID, classID int) error
 

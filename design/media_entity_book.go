@@ -78,10 +78,10 @@ var _ = Resource("books", func() {
 		Description("Create new book")
 		Routing(POST(""))
 		Payload(func() {
-			Member("isbn")
-			Member("name")
+			Member("book_isbn")
+			Member("book_name")
 			Member("series_id")
-			Required("isbn", "name", "series_id")
+			Required("book_isbn", "book_name", "series_id")
 		})
 		Security(JWTAuth)
 		// unauthorized
@@ -101,7 +101,7 @@ var _ = Resource("books", func() {
 		Routing(PUT(bookIDPath))
 		Params(attrBookID)
 		Payload(func() {
-			Member("name")
+			Member("book_name")
 			Member("series_id")
 		})
 		Security(JWTAuth)

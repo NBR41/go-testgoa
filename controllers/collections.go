@@ -34,7 +34,7 @@ func (c *CollectionsController) Create(ctx *app.CreateCollectionsContext) error 
 	v, err := m.InsertCollection(ctx.Payload.CollectionName, ctx.Payload.EditorID)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to insert collection`, `error`, err.Error())
-		if err == model.ErrDuplicateKey {
+		if err == model.ErrDuplicateKey || err == model.ErrNotFound {
 			return ctx.UnprocessableEntity()
 		}
 		return ctx.InternalServerError()

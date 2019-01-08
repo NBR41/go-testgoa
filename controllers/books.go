@@ -26,15 +26,15 @@ func (c *BooksController) Create(ctx *app.CreateBooksContext) error {
 	// BooksController_Create: start_implement
 	m, err := c.fm()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
-	b, err := m.InsertBook(ctx.Payload.Isbn, ctx.Payload.Name, ctx.Payload.SeriesID)
+	b, err := m.InsertBook(ctx.Payload.BookIsbn, ctx.Payload.BookName, ctx.Payload.SeriesID)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to insert book`, `error`, err)
-		if err == model.ErrDuplicateKey {
+		goa.ContextLogger(ctx).Error(`failed to insert book`, `error`, err.Error())
+		if err == model.ErrDuplicateKey || err == model.ErrNotFound {
 			return ctx.UnprocessableEntity()
 		}
 		return ctx.InternalServerError()
@@ -50,14 +50,14 @@ func (c *BooksController) Delete(ctx *app.DeleteBooksContext) error {
 	// BooksController_Delete: start_implement
 	m, err := c.fm()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	err = m.DeleteBook(ctx.BookID)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to delete book`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to delete book`, `error`, err.Error())
 		if err == model.ErrNotFound {
 			return ctx.NotFound()
 		}
@@ -73,20 +73,20 @@ func (c *BooksController) List(ctx *app.ListBooksContext) error {
 	// BooksController_List: start_implement
 	m, err := c.fm()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	books, err := m.ListBooks()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get book list`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to get book list`, `error`, err.Error())
 		return ctx.InternalServerError()
 	}
 
 	bs := make(app.BookCollection, len(books))
 	for i, bk := range books {
-		bs[i] = convert.ToBookMedia(&bk)
+		bs[i] = convert.ToBookMedia(bk)
 	}
 	return ctx.OK(bs)
 	// BooksController_List: end_implement
@@ -97,14 +97,14 @@ func (c *BooksController) Show(ctx *app.ShowBooksContext) error {
 	// BooksController_Show: start_implement
 	m, err := c.fm()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	b, err := m.GetBookByID(ctx.BookID)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get book`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to get book`, `error`, err.Error())
 		if err == model.ErrNotFound {
 			return ctx.NotFound()
 		}
@@ -120,14 +120,14 @@ func (c *BooksController) Update(ctx *app.UpdateBooksContext) error {
 	// BooksController_Update: start_implement
 	m, err := c.fm()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
-	err = m.UpdateBook(ctx.BookID, ctx.Payload.Name, ctx.Payload.SeriesID)
+	err = m.UpdateBook(ctx.BookID, ctx.Payload.BookName, ctx.Payload.SeriesID)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to update book`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to update book`, `error`, err.Error())
 		if err == model.ErrNotFound {
 			return ctx.NotFound()
 		}

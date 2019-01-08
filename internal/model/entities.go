@@ -30,14 +30,6 @@ type User struct {
 	Salt        []byte
 }
 
-// Book struct for books
-type Book struct {
-	ID   int64
-	ISBN string
-	Name string
-	URL  string
-}
-
 // Ownership struct for user book association
 type Ownership struct {
 	UserID int64
@@ -109,4 +101,22 @@ type Edition struct {
 	Collection   *Collection
 	PrintID      int64
 	Print        *Print
+}
+
+//Series struct for series
+type Series struct {
+	ID         int64
+	Name       string
+	CategoryID int64
+	Category   *Category
+}
+
+// Book struct for books
+type Book struct {
+	ID       int64
+	ISBN     string
+	Name     string
+	URL      string
+	SeriesID int64
+	Series   *Series
 }

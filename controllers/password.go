@@ -29,14 +29,14 @@ func (c *PasswordController) Get(ctx *app.GetPasswordContext) error {
 	// PasswordController_Get: start_implement
 	m, err := c.fm()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	u, err := m.GetUserByEmail(ctx.Email)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get user`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to get user`, `error`, err.Error())
 		if err == model.ErrNotFound {
 			return ctx.UnprocessableEntity()
 		}
@@ -45,13 +45,13 @@ func (c *PasswordController) Get(ctx *app.GetPasswordContext) error {
 
 	token, err := c.tok.GetPasswordToken(u.ID, u.Email)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get password token`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to get password token`, `error`, err.Error())
 		return ctx.InternalServerError()
 	}
 
 	err = c.mail.SendResetPasswordMail(u.Email, token)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to send password email`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to send password email`, `error`, err.Error())
 		return ctx.InternalServerError()
 	}
 
@@ -64,27 +64,31 @@ func (c *PasswordController) Update(ctx *app.UpdatePasswordContext) error {
 	// PasswordController_Update: start_implement
 	uID, uEmail, err := c.tok.ValidatePasswordToken(ctx.Payload.Token)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`invalid password token`, `error`, err)
+		goa.ContextLogger(ctx).Error(`invalid password token`, `error`, err.Error())
 		return ctx.UnprocessableEntity()
 	}
 
 	m, err := c.fm()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	err = m.UpdateUserPassword(int(uID), ctx.Payload.Password)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to update user password`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to update user password`, `error`, err.Error())
 		if err == model.ErrNotFound {
 			return ctx.UnprocessableEntity()
 		}
 		return ctx.InternalServerError()
 	}
 
-	_ = c.mail.SendPasswordUpdatedMail(uEmail)
+	err = c.mail.SendPasswordUpdatedMail(uEmail)
+	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to send password update email`, `error`, err.Error())
+		return ctx.InternalServerError()
+	}
 	return ctx.NoContent()
 	// PasswordController_Update: end_implement
 }

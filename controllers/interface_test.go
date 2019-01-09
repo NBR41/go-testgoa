@@ -946,19 +946,6 @@ func (mr *MockModelerMockRecorder) GetClassification(seriesID, classID interface
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetClassification", reflect.TypeOf((*MockModeler)(nil).GetClassification), seriesID, classID)
 }
 
-// ListClassificationBySeriesID mocks base method
-func (m *MockModeler) ListClassificationBySeriesID(seriesID int) ([]*model.Class, error) {
-	ret := m.ctrl.Call(m, "ListClassificationBySeriesID", seriesID)
-	ret0, _ := ret[0].([]*model.Class)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ListClassificationBySeriesID indicates an expected call of ListClassificationBySeriesID
-func (mr *MockModelerMockRecorder) ListClassificationBySeriesID(seriesID interface{}) *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListClassificationBySeriesID", reflect.TypeOf((*MockModeler)(nil).ListClassificationBySeriesID), seriesID)
-}
-
 // InsertClassification mocks base method
 func (m *MockModeler) InsertClassification(seriesID, classID int) (*model.Class, error) {
 	ret := m.ctrl.Call(m, "InsertClassification", seriesID, classID)
@@ -985,9 +972,9 @@ func (mr *MockModelerMockRecorder) DeleteClassification(seriesID, classID interf
 }
 
 // ListUsers mocks base method
-func (m *MockModeler) ListUsers() ([]model.User, error) {
+func (m *MockModeler) ListUsers() ([]*model.User, error) {
 	ret := m.ctrl.Call(m, "ListUsers")
-	ret0, _ := ret[0].([]model.User)
+	ret0, _ := ret[0].([]*model.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

@@ -98,7 +98,7 @@ type Modeler interface {
 	InsertClassification(seriesID, classID int) (*model.Class, error)
 	DeleteClassification(seriesID, classID int) error
 
-	ListUsers() ([]model.User, error)
+	ListUsers() ([]*model.User, error)
 	GetUserByID(id int) (*model.User, error)
 	GetUserByEmail(email string) (*model.User, error)
 	GetUserByNickname(nickname string) (*model.User, error)

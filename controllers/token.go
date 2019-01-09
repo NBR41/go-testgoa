@@ -28,7 +28,7 @@ func (c *TokenController) Access(ctx *app.AccessTokenContext) error {
 	// TokenController_Access: start_implement
 	authToken, err := c.tok.GetAuthToken(ctx.Value(CtxKey("user_id")).(int64), ctx.Value(CtxKey("is_admin")).(bool))
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get password token`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to get password token`, `error`, err.Error())
 		return ctx.InternalServerError()
 	}
 	return ctx.OK(&app.Token{Token: authToken})
@@ -40,14 +40,14 @@ func (c *TokenController) Auth(ctx *app.AuthTokenContext) error {
 	// TokenController_Auth: start_implement
 	m, err := c.fm()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	u, err := m.GetUserByID(int(ctx.Value(CtxKey("user_id")).(int64)))
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get user`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to get user`, `error`, err.Error())
 		if err == model.ErrNotFound {
 			return ctx.UnprocessableEntity()
 		}
@@ -56,13 +56,13 @@ func (c *TokenController) Auth(ctx *app.AuthTokenContext) error {
 
 	accToken, err := c.tok.GetAuthToken(u.ID, u.IsAdmin)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get access token`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to get access token`, `error`, err.Error())
 		return ctx.InternalServerError()
 	}
 
 	refToken, err := c.tok.GetRefreshToken(u.ID, u.IsAdmin)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get refresh token`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to get refresh token`, `error`, err.Error())
 		return ctx.InternalServerError()
 	}
 

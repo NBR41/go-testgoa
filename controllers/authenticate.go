@@ -28,14 +28,14 @@ func (c *AuthenticateController) Auth(ctx *app.AuthAuthenticateContext) error {
 	// AuthenticateController_Auth: start_implement
 	m, err := c.fm()
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
 		return ctx.ServiceUnavailable()
 	}
 	defer func() { m.Close() }()
 
 	u, err := m.GetAuthenticatedUser(ctx.Payload.Login, ctx.Payload.Password)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to auth`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to auth`, `error`, err.Error())
 		if err == model.ErrNotFound || err == model.ErrInvalidCredentials {
 			return ctx.UnprocessableEntity()
 		}
@@ -44,13 +44,13 @@ func (c *AuthenticateController) Auth(ctx *app.AuthAuthenticateContext) error {
 
 	accToken, err := c.tok.GetAuthToken(u.ID, u.IsAdmin)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get access token`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to get access token`, `error`, err.Error())
 		return ctx.InternalServerError()
 	}
 
 	refToken, err := c.tok.GetRefreshToken(u.ID, u.IsAdmin)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get refresh token`, `error`, err)
+		goa.ContextLogger(ctx).Error(`failed to get refresh token`, `error`, err.Error())
 		return ctx.InternalServerError()
 	}
 

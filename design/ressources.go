@@ -16,6 +16,7 @@ var _ = Resource("health", func() {
 	Action("health", func() {
 		Routing(GET("/health"))
 		Description("Perform health check.")
+		Response(InternalServerError)
 		Response(OK, "text/plain")
 	})
 })

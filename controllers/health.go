@@ -1,8 +1,6 @@
 package controllers
 
 import (
-	"fmt"
-
 	"github.com/NBR41/go-testgoa/app"
 	"github.com/goadesign/goa"
 )
@@ -29,7 +27,7 @@ func (c *HealthController) Health(ctx *app.HealthHealthContext) error {
 	m, err := c.fm()
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err)
-		return fmt.Errorf("failed to connect to DB")
+		return ctx.InternalServerError()
 	}
 	defer func() { m.Close() }()
 	return ctx.OK([]byte("ok"))

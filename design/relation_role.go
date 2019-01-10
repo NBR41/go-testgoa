@@ -23,8 +23,8 @@ var _ = Resource("relationRole", func() {
 		Response(BadRequest, ErrorMedia)
 	})
 
-	Action("listSeriesByAuthors", func() {
-		Description("List series by role and authors")
+	Action("listSeriesByAuthor", func() {
+		Description("List series by role and author")
 		Routing(GET(authorPath + authorIDPath + seriesPath))
 		Params(attrAuthorID)
 		// ok

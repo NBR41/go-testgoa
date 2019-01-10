@@ -15,6 +15,8 @@ type Modeler interface {
 	GetAuthorByID(id int) (*model.Author, error)
 	GetAuthorByName(name string) (*model.Author, error)
 	ListAuthors() ([]*model.Author, error)
+	ListAuthorsByCategoryID(categoryID int) ([]*model.Author, error)
+	ListAuthorsByRoleID(roleID int) ([]*model.Author, error)
 	InsertAuthor(name string) (*model.Author, error)
 	UpdateAuthor(id int, name string) error
 	DeleteAuthor(id int) error
@@ -23,6 +25,7 @@ type Modeler interface {
 	GetBookByISBN(isbn string) (*model.Book, error)
 	GetBookByName(name string) (*model.Book, error)
 	ListBooks() ([]*model.Book, error)
+	ListBooksByIDs(collectionID, printID, seriesID *int) ([]*model.Book, error)
 	InsertBook(isbn, name string, seriesID int) (*model.Book, error)
 	UpdateBook(id int, name *string, seriesID *int) error
 	DeleteBook(id int) error
@@ -30,6 +33,8 @@ type Modeler interface {
 	GetCategoryByID(id int) (*model.Category, error)
 	GetCategoryByName(name string) (*model.Category, error)
 	ListCategories() ([]*model.Category, error)
+	ListCategoriesByAuthorID(authorID int) ([]*model.Category, error)
+	ListCategoriesByClassID(classID int) ([]*model.Category, error)
 	InsertCategory(name string) (*model.Category, error)
 	UpdateCategory(id int, name string) error
 	DeleteCategory(id int) error
@@ -37,6 +42,7 @@ type Modeler interface {
 	GetPrintByID(id int) (*model.Print, error)
 	GetPrintByName(name string) (*model.Print, error)
 	ListPrints() ([]*model.Print, error)
+	ListPrintsByIDs(collectionID, seriesID *int) ([]*model.Print, error)
 	InsertPrint(name string) (*model.Print, error)
 	UpdatePrint(id int, name string) error
 	DeletePrint(id int) error
@@ -51,10 +57,12 @@ type Modeler interface {
 	GetClassByID(id int) (*model.Class, error)
 	GetClassByName(name string) (*model.Class, error)
 	ListClasses() ([]*model.Class, error)
+	ListClassesBySeriesID(seriesID int) ([]*model.Class, error)
+	ListClassesByAuthorID(authorID int) ([]*model.Class, error)
+	ListClassesByCategoryID(categoryID int) ([]*model.Class, error)
 	InsertClass(name string) (*model.Class, error)
 	UpdateClass(id int, name string) error
 	DeleteClass(id int) error
-	ListClassesBySeriesID(seriesID int) ([]*model.Class, error)
 
 	GetOwnership(userID, bookID int) (*model.Ownership, error)
 	ListOwnershipsByUserID(userID int) ([]*model.Ownership, error)
@@ -65,24 +73,28 @@ type Modeler interface {
 	GetRoleByID(id int) (*model.Role, error)
 	GetRoleByName(name string) (*model.Role, error)
 	ListRoles() ([]*model.Role, error)
+	ListRolesByAuthorID(authorID int) ([]*model.Role, error)
 	InsertRole(name string) (*model.Role, error)
 	UpdateRole(id int, name string) error
 	DeleteRole(id int) error
 
 	GetCollectionByID(id int) (*model.Collection, error)
 	GetCollectionByName(name string) (*model.Collection, error)
+	ListCollections() ([]*model.Collection, error)
+	ListCollectionsByEditorID(editorID int) ([]*model.Collection, error)
 	InsertCollection(name string, editorID int) (*model.Collection, error)
 	UpdateCollection(id int, name *string, editorID *int) error
 	DeleteCollection(id int) error
-	ListCollections() ([]*model.Collection, error)
-	ListCollectionsByEditorID(id int) ([]*model.Collection, error)
 
 	GetSeriesByID(id int) (*model.Series, error)
 	GetSeriesByName(name string) (*model.Series, error)
+	ListSeries() ([]*model.Series, error)
+	ListSeriesByIDs(authorID, roleID, categoryID, classID *int) ([]*model.Series, error)
+	ListSeriesByCollectionID(collectionID int) ([]*model.Series, error)
+	ListSeriesByCollectionIDPrintID(collectionID, printID int) ([]*model.Series, error)
 	InsertSeries(name string, categoryID int) (*model.Series, error)
 	UpdateSeries(id int, name *string, categoryID *int) error
 	DeleteSeries(id int) error
-	ListSeries() ([]*model.Series, error)
 
 	GetAuthorshipByID(id int) (*model.Authorship, error)
 	ListAuthorships() ([]*model.Authorship, error)
@@ -98,12 +110,12 @@ type Modeler interface {
 	InsertClassification(seriesID, classID int) (*model.Class, error)
 	DeleteClassification(seriesID, classID int) error
 
-	ListUsers() ([]*model.User, error)
 	GetUserByID(id int) (*model.User, error)
 	GetUserByEmail(email string) (*model.User, error)
 	GetUserByNickname(nickname string) (*model.User, error)
 	GetUserByEmailOrNickname(email, nickname string) (*model.User, error)
 	GetAuthenticatedUser(login, password string) (*model.User, error)
+	ListUsers() ([]*model.User, error)
 	InsertUser(email, nickname, password string) (*model.User, error)
 	UpdateUserNickname(id int, nickname string) error
 	UpdateUserPassword(id int, password string) error

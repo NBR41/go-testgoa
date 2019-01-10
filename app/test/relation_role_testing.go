@@ -424,11 +424,11 @@ func ListAuthorsRelationRoleServiceUnavailable(t goatest.TInterface, ctx context
 	return rw
 }
 
-// ListSeriesByAuthorsRelationRoleBadRequest runs the method ListSeriesByAuthors of the given controller with the given parameters.
+// ListSeriesByAuthorRelationRoleBadRequest runs the method ListSeriesByAuthor of the given controller with the given parameters.
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ListSeriesByAuthorsRelationRoleBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationRoleController, roleID int, authorID int) (http.ResponseWriter, error) {
+func ListSeriesByAuthorRelationRoleBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationRoleController, roleID int, authorID int) (http.ResponseWriter, error) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -462,7 +462,7 @@ func ListSeriesByAuthorsRelationRoleBadRequest(t goatest.TInterface, ctx context
 		ctx = context.Background()
 	}
 	goaCtx := goa.NewContext(goa.WithAction(ctx, "RelationRoleTest"), rw, req, prms)
-	listSeriesByAuthorsCtx, _err := app.NewListSeriesByAuthorsRelationRoleContext(goaCtx, req, service)
+	listSeriesByAuthorCtx, _err := app.NewListSeriesByAuthorRelationRoleContext(goaCtx, req, service)
 	if _err != nil {
 		e, ok := _err.(goa.ServiceError)
 		if !ok {
@@ -472,7 +472,7 @@ func ListSeriesByAuthorsRelationRoleBadRequest(t goatest.TInterface, ctx context
 	}
 
 	// Perform action
-	_err = ctrl.ListSeriesByAuthors(listSeriesByAuthorsCtx)
+	_err = ctrl.ListSeriesByAuthor(listSeriesByAuthorCtx)
 
 	// Validate response
 	if _err != nil {
@@ -494,11 +494,11 @@ func ListSeriesByAuthorsRelationRoleBadRequest(t goatest.TInterface, ctx context
 	return rw, mt
 }
 
-// ListSeriesByAuthorsRelationRoleInternalServerError runs the method ListSeriesByAuthors of the given controller with the given parameters.
+// ListSeriesByAuthorRelationRoleInternalServerError runs the method ListSeriesByAuthor of the given controller with the given parameters.
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ListSeriesByAuthorsRelationRoleInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationRoleController, roleID int, authorID int) http.ResponseWriter {
+func ListSeriesByAuthorRelationRoleInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationRoleController, roleID int, authorID int) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -531,7 +531,7 @@ func ListSeriesByAuthorsRelationRoleInternalServerError(t goatest.TInterface, ct
 		ctx = context.Background()
 	}
 	goaCtx := goa.NewContext(goa.WithAction(ctx, "RelationRoleTest"), rw, req, prms)
-	listSeriesByAuthorsCtx, _err := app.NewListSeriesByAuthorsRelationRoleContext(goaCtx, req, service)
+	listSeriesByAuthorCtx, _err := app.NewListSeriesByAuthorRelationRoleContext(goaCtx, req, service)
 	if _err != nil {
 		e, ok := _err.(goa.ServiceError)
 		if !ok {
@@ -542,7 +542,7 @@ func ListSeriesByAuthorsRelationRoleInternalServerError(t goatest.TInterface, ct
 	}
 
 	// Perform action
-	_err = ctrl.ListSeriesByAuthors(listSeriesByAuthorsCtx)
+	_err = ctrl.ListSeriesByAuthor(listSeriesByAuthorCtx)
 
 	// Validate response
 	if _err != nil {
@@ -556,11 +556,11 @@ func ListSeriesByAuthorsRelationRoleInternalServerError(t goatest.TInterface, ct
 	return rw
 }
 
-// ListSeriesByAuthorsRelationRoleNotFound runs the method ListSeriesByAuthors of the given controller with the given parameters.
+// ListSeriesByAuthorRelationRoleNotFound runs the method ListSeriesByAuthor of the given controller with the given parameters.
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ListSeriesByAuthorsRelationRoleNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationRoleController, roleID int, authorID int) http.ResponseWriter {
+func ListSeriesByAuthorRelationRoleNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationRoleController, roleID int, authorID int) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -593,7 +593,7 @@ func ListSeriesByAuthorsRelationRoleNotFound(t goatest.TInterface, ctx context.C
 		ctx = context.Background()
 	}
 	goaCtx := goa.NewContext(goa.WithAction(ctx, "RelationRoleTest"), rw, req, prms)
-	listSeriesByAuthorsCtx, _err := app.NewListSeriesByAuthorsRelationRoleContext(goaCtx, req, service)
+	listSeriesByAuthorCtx, _err := app.NewListSeriesByAuthorRelationRoleContext(goaCtx, req, service)
 	if _err != nil {
 		e, ok := _err.(goa.ServiceError)
 		if !ok {
@@ -604,7 +604,7 @@ func ListSeriesByAuthorsRelationRoleNotFound(t goatest.TInterface, ctx context.C
 	}
 
 	// Perform action
-	_err = ctrl.ListSeriesByAuthors(listSeriesByAuthorsCtx)
+	_err = ctrl.ListSeriesByAuthor(listSeriesByAuthorCtx)
 
 	// Validate response
 	if _err != nil {
@@ -618,11 +618,11 @@ func ListSeriesByAuthorsRelationRoleNotFound(t goatest.TInterface, ctx context.C
 	return rw
 }
 
-// ListSeriesByAuthorsRelationRoleOK runs the method ListSeriesByAuthors of the given controller with the given parameters.
+// ListSeriesByAuthorRelationRoleOK runs the method ListSeriesByAuthor of the given controller with the given parameters.
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ListSeriesByAuthorsRelationRoleOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationRoleController, roleID int, authorID int) (http.ResponseWriter, app.SeriesCollection) {
+func ListSeriesByAuthorRelationRoleOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationRoleController, roleID int, authorID int) (http.ResponseWriter, app.SeriesCollection) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -656,7 +656,7 @@ func ListSeriesByAuthorsRelationRoleOK(t goatest.TInterface, ctx context.Context
 		ctx = context.Background()
 	}
 	goaCtx := goa.NewContext(goa.WithAction(ctx, "RelationRoleTest"), rw, req, prms)
-	listSeriesByAuthorsCtx, _err := app.NewListSeriesByAuthorsRelationRoleContext(goaCtx, req, service)
+	listSeriesByAuthorCtx, _err := app.NewListSeriesByAuthorRelationRoleContext(goaCtx, req, service)
 	if _err != nil {
 		e, ok := _err.(goa.ServiceError)
 		if !ok {
@@ -667,7 +667,7 @@ func ListSeriesByAuthorsRelationRoleOK(t goatest.TInterface, ctx context.Context
 	}
 
 	// Perform action
-	_err = ctrl.ListSeriesByAuthors(listSeriesByAuthorsCtx)
+	_err = ctrl.ListSeriesByAuthor(listSeriesByAuthorCtx)
 
 	// Validate response
 	if _err != nil {
@@ -693,11 +693,11 @@ func ListSeriesByAuthorsRelationRoleOK(t goatest.TInterface, ctx context.Context
 	return rw, mt
 }
 
-// ListSeriesByAuthorsRelationRoleOKLink runs the method ListSeriesByAuthors of the given controller with the given parameters.
+// ListSeriesByAuthorRelationRoleOKLink runs the method ListSeriesByAuthor of the given controller with the given parameters.
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ListSeriesByAuthorsRelationRoleOKLink(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationRoleController, roleID int, authorID int) (http.ResponseWriter, app.SeriesLinkCollection) {
+func ListSeriesByAuthorRelationRoleOKLink(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationRoleController, roleID int, authorID int) (http.ResponseWriter, app.SeriesLinkCollection) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -731,7 +731,7 @@ func ListSeriesByAuthorsRelationRoleOKLink(t goatest.TInterface, ctx context.Con
 		ctx = context.Background()
 	}
 	goaCtx := goa.NewContext(goa.WithAction(ctx, "RelationRoleTest"), rw, req, prms)
-	listSeriesByAuthorsCtx, _err := app.NewListSeriesByAuthorsRelationRoleContext(goaCtx, req, service)
+	listSeriesByAuthorCtx, _err := app.NewListSeriesByAuthorRelationRoleContext(goaCtx, req, service)
 	if _err != nil {
 		e, ok := _err.(goa.ServiceError)
 		if !ok {
@@ -742,7 +742,7 @@ func ListSeriesByAuthorsRelationRoleOKLink(t goatest.TInterface, ctx context.Con
 	}
 
 	// Perform action
-	_err = ctrl.ListSeriesByAuthors(listSeriesByAuthorsCtx)
+	_err = ctrl.ListSeriesByAuthor(listSeriesByAuthorCtx)
 
 	// Validate response
 	if _err != nil {
@@ -768,11 +768,11 @@ func ListSeriesByAuthorsRelationRoleOKLink(t goatest.TInterface, ctx context.Con
 	return rw, mt
 }
 
-// ListSeriesByAuthorsRelationRoleServiceUnavailable runs the method ListSeriesByAuthors of the given controller with the given parameters.
+// ListSeriesByAuthorRelationRoleServiceUnavailable runs the method ListSeriesByAuthor of the given controller with the given parameters.
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ListSeriesByAuthorsRelationRoleServiceUnavailable(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationRoleController, roleID int, authorID int) http.ResponseWriter {
+func ListSeriesByAuthorRelationRoleServiceUnavailable(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationRoleController, roleID int, authorID int) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -805,7 +805,7 @@ func ListSeriesByAuthorsRelationRoleServiceUnavailable(t goatest.TInterface, ctx
 		ctx = context.Background()
 	}
 	goaCtx := goa.NewContext(goa.WithAction(ctx, "RelationRoleTest"), rw, req, prms)
-	listSeriesByAuthorsCtx, _err := app.NewListSeriesByAuthorsRelationRoleContext(goaCtx, req, service)
+	listSeriesByAuthorCtx, _err := app.NewListSeriesByAuthorRelationRoleContext(goaCtx, req, service)
 	if _err != nil {
 		e, ok := _err.(goa.ServiceError)
 		if !ok {
@@ -816,7 +816,7 @@ func ListSeriesByAuthorsRelationRoleServiceUnavailable(t goatest.TInterface, ctx
 	}
 
 	// Perform action
-	_err = ctrl.ListSeriesByAuthors(listSeriesByAuthorsCtx)
+	_err = ctrl.ListSeriesByAuthor(listSeriesByAuthorCtx)
 
 	// Validate response
 	if _err != nil {

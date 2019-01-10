@@ -39,6 +39,7 @@ var _ = Resource("relationClass", func() {
 	Action("listSeriesByCategory", func() {
 		Description("List series by class and category")
 		Routing(GET(categoryPath + categoryIDPath + seriesPath))
+		Params(attrCategoryID)
 		// ok
 		Response(OK, CollectionOf(SeriesMedia))
 		// class not found

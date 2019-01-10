@@ -2394,7 +2394,7 @@ type RelationCollectionController interface {
 	ListBooksByPrint(*ListBooksByPrintRelationCollectionContext) error
 	ListBooksByPrintsSeries(*ListBooksByPrintsSeriesRelationCollectionContext) error
 	ListBooksBySeries(*ListBooksBySeriesRelationCollectionContext) error
-	ListBooksBySeriesPrints(*ListBooksBySeriesPrintsRelationCollectionContext) error
+	ListBooksBySeriesPrint(*ListBooksBySeriesPrintRelationCollectionContext) error
 	ListPrints(*ListPrintsRelationCollectionContext) error
 	ListPrintsBySeries(*ListPrintsBySeriesRelationCollectionContext) error
 	ListSeries(*ListSeriesRelationCollectionContext) error
@@ -2485,15 +2485,15 @@ func MountRelationCollectionController(service *goa.Service, ctrl RelationCollec
 			return err
 		}
 		// Build the context
-		rctx, err := NewListBooksBySeriesPrintsRelationCollectionContext(ctx, req, service)
+		rctx, err := NewListBooksBySeriesPrintRelationCollectionContext(ctx, req, service)
 		if err != nil {
 			return err
 		}
-		return ctrl.ListBooksBySeriesPrints(rctx)
+		return ctrl.ListBooksBySeriesPrint(rctx)
 	}
 	h = handleRelationCollectionOrigin(h)
-	service.Mux.Handle("GET", "/collections/:collection_id/series/:series_id/prints/:print_id/books", ctrl.MuxHandler("listBooksBySeriesPrints", h, nil))
-	service.LogInfo("mount", "ctrl", "RelationCollection", "action", "ListBooksBySeriesPrints", "route", "GET /collections/:collection_id/series/:series_id/prints/:print_id/books")
+	service.Mux.Handle("GET", "/collections/:collection_id/series/:series_id/prints/:print_id/books", ctrl.MuxHandler("listBooksBySeriesPrint", h, nil))
+	service.LogInfo("mount", "ctrl", "RelationCollection", "action", "ListBooksBySeriesPrint", "route", "GET /collections/:collection_id/series/:series_id/prints/:print_id/books")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -2761,7 +2761,7 @@ func unmarshalUpdateRolesPayload(ctx context.Context, service *goa.Service, req 
 type RelationRoleController interface {
 	goa.Muxer
 	ListAuthors(*ListAuthorsRelationRoleContext) error
-	ListSeriesByAuthors(*ListSeriesByAuthorsRelationRoleContext) error
+	ListSeriesByAuthor(*ListSeriesByAuthorRelationRoleContext) error
 }
 
 // MountRelationRoleController "mounts" a RelationRole resource controller on the given service.
@@ -2793,15 +2793,15 @@ func MountRelationRoleController(service *goa.Service, ctrl RelationRoleControll
 			return err
 		}
 		// Build the context
-		rctx, err := NewListSeriesByAuthorsRelationRoleContext(ctx, req, service)
+		rctx, err := NewListSeriesByAuthorRelationRoleContext(ctx, req, service)
 		if err != nil {
 			return err
 		}
-		return ctrl.ListSeriesByAuthors(rctx)
+		return ctrl.ListSeriesByAuthor(rctx)
 	}
 	h = handleRelationRoleOrigin(h)
-	service.Mux.Handle("GET", "/roles/:role_id/authors/:author_id/series", ctrl.MuxHandler("listSeriesByAuthors", h, nil))
-	service.LogInfo("mount", "ctrl", "RelationRole", "action", "ListSeriesByAuthors", "route", "GET /roles/:role_id/authors/:author_id/series")
+	service.Mux.Handle("GET", "/roles/:role_id/authors/:author_id/series", ctrl.MuxHandler("listSeriesByAuthor", h, nil))
+	service.LogInfo("mount", "ctrl", "RelationRole", "action", "ListSeriesByAuthor", "route", "GET /roles/:role_id/authors/:author_id/series")
 }
 
 // handleRelationRoleOrigin applies the CORS response headers corresponding to the origin.

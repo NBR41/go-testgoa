@@ -65,6 +65,7 @@ var _ = Resource("relationAuthor", func() {
 	Action("listSeriesByCategory", func() {
 		Description("List series by author and category")
 		Routing(GET(categoryPath + categoryIDPath + seriesPath))
+		Params(attrCategoryID)
 		// ok
 		Response(OK, CollectionOf(SeriesMedia))
 		// class not found
@@ -78,6 +79,7 @@ var _ = Resource("relationAuthor", func() {
 	Action("listSeriesByClass", func() {
 		Description("List series by author and class")
 		Routing(GET(classPath + classIDPath + seriesPath))
+		Params(attrClassID)
 		// ok
 		Response(OK, CollectionOf(SeriesMedia))
 		// class not found
@@ -91,6 +93,7 @@ var _ = Resource("relationAuthor", func() {
 	Action("listSeriesByRole", func() {
 		Description("List series by author and role")
 		Routing(GET(rolePath + roleIDPath + seriesPath))
+		Params(attrRoleID)
 		// ok
 		Response(OK, CollectionOf(SeriesMedia))
 		// class not found

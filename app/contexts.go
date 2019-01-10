@@ -5260,7 +5260,7 @@ type ListSeriesByCategoryRelationAuthorContext struct {
 	*goa.ResponseData
 	*goa.RequestData
 	AuthorID   int
-	CategoryID string
+	CategoryID int
 }
 
 // NewListSeriesByCategoryRelationAuthorContext parses the incoming request URL and body, performs validations and creates the
@@ -5287,7 +5287,14 @@ func NewListSeriesByCategoryRelationAuthorContext(ctx context.Context, r *http.R
 	paramCategoryID := req.Params["category_id"]
 	if len(paramCategoryID) > 0 {
 		rawCategoryID := paramCategoryID[0]
-		rctx.CategoryID = rawCategoryID
+		if categoryID, err2 := strconv.Atoi(rawCategoryID); err2 == nil {
+			rctx.CategoryID = categoryID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("category_id", rawCategoryID, "integer"))
+		}
+		if rctx.CategoryID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`category_id`, rctx.CategoryID, 1, true))
+		}
 	}
 	return &rctx, err
 }
@@ -5346,7 +5353,7 @@ type ListSeriesByClassRelationAuthorContext struct {
 	*goa.ResponseData
 	*goa.RequestData
 	AuthorID int
-	ClassID  string
+	ClassID  int
 }
 
 // NewListSeriesByClassRelationAuthorContext parses the incoming request URL and body, performs validations and creates the
@@ -5373,7 +5380,14 @@ func NewListSeriesByClassRelationAuthorContext(ctx context.Context, r *http.Requ
 	paramClassID := req.Params["class_id"]
 	if len(paramClassID) > 0 {
 		rawClassID := paramClassID[0]
-		rctx.ClassID = rawClassID
+		if classID, err2 := strconv.Atoi(rawClassID); err2 == nil {
+			rctx.ClassID = classID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("class_id", rawClassID, "integer"))
+		}
+		if rctx.ClassID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`class_id`, rctx.ClassID, 1, true))
+		}
 	}
 	return &rctx, err
 }
@@ -5432,7 +5446,7 @@ type ListSeriesByRoleRelationAuthorContext struct {
 	*goa.ResponseData
 	*goa.RequestData
 	AuthorID int
-	RoleID   string
+	RoleID   int
 }
 
 // NewListSeriesByRoleRelationAuthorContext parses the incoming request URL and body, performs validations and creates the
@@ -5459,7 +5473,14 @@ func NewListSeriesByRoleRelationAuthorContext(ctx context.Context, r *http.Reque
 	paramRoleID := req.Params["role_id"]
 	if len(paramRoleID) > 0 {
 		rawRoleID := paramRoleID[0]
-		rctx.RoleID = rawRoleID
+		if roleID, err2 := strconv.Atoi(rawRoleID); err2 == nil {
+			rctx.RoleID = roleID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("role_id", rawRoleID, "integer"))
+		}
+		if rctx.RoleID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`role_id`, rctx.RoleID, 1, true))
+		}
 	}
 	return &rctx, err
 }
@@ -5758,7 +5779,7 @@ type ListSeriesByClassRelationCategoryContext struct {
 	*goa.ResponseData
 	*goa.RequestData
 	CategoryID int
-	ClassID    string
+	ClassID    int
 }
 
 // NewListSeriesByClassRelationCategoryContext parses the incoming request URL and body, performs validations and creates the
@@ -5785,7 +5806,14 @@ func NewListSeriesByClassRelationCategoryContext(ctx context.Context, r *http.Re
 	paramClassID := req.Params["class_id"]
 	if len(paramClassID) > 0 {
 		rawClassID := paramClassID[0]
-		rctx.ClassID = rawClassID
+		if classID, err2 := strconv.Atoi(rawClassID); err2 == nil {
+			rctx.ClassID = classID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("class_id", rawClassID, "integer"))
+		}
+		if rctx.ClassID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`class_id`, rctx.ClassID, 1, true))
+		}
 	}
 	return &rctx, err
 }
@@ -6003,7 +6031,7 @@ type ListSeriesByCategoryRelationClassContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
-	CategoryID string
+	CategoryID int
 	ClassID    int
 }
 
@@ -6019,7 +6047,14 @@ func NewListSeriesByCategoryRelationClassContext(ctx context.Context, r *http.Re
 	paramCategoryID := req.Params["category_id"]
 	if len(paramCategoryID) > 0 {
 		rawCategoryID := paramCategoryID[0]
-		rctx.CategoryID = rawCategoryID
+		if categoryID, err2 := strconv.Atoi(rawCategoryID); err2 == nil {
+			rctx.CategoryID = categoryID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("category_id", rawCategoryID, "integer"))
+		}
+		if rctx.CategoryID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`category_id`, rctx.CategoryID, 1, true))
+		}
 	}
 	paramClassID := req.Params["class_id"]
 	if len(paramClassID) > 0 {
@@ -6170,7 +6205,7 @@ type ListBooksByPrintRelationCollectionContext struct {
 	*goa.ResponseData
 	*goa.RequestData
 	CollectionID int
-	PrintID      string
+	PrintID      int
 }
 
 // NewListBooksByPrintRelationCollectionContext parses the incoming request URL and body, performs validations and creates the
@@ -6197,7 +6232,14 @@ func NewListBooksByPrintRelationCollectionContext(ctx context.Context, r *http.R
 	paramPrintID := req.Params["print_id"]
 	if len(paramPrintID) > 0 {
 		rawPrintID := paramPrintID[0]
-		rctx.PrintID = rawPrintID
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
 	}
 	return &rctx, err
 }
@@ -6256,8 +6298,8 @@ type ListBooksByPrintsSeriesRelationCollectionContext struct {
 	*goa.ResponseData
 	*goa.RequestData
 	CollectionID int
-	PrintID      string
-	SeriesID     string
+	PrintID      int
+	SeriesID     int
 }
 
 // NewListBooksByPrintsSeriesRelationCollectionContext parses the incoming request URL and body, performs validations and creates the
@@ -6284,12 +6326,26 @@ func NewListBooksByPrintsSeriesRelationCollectionContext(ctx context.Context, r 
 	paramPrintID := req.Params["print_id"]
 	if len(paramPrintID) > 0 {
 		rawPrintID := paramPrintID[0]
-		rctx.PrintID = rawPrintID
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
 	}
 	paramSeriesID := req.Params["series_id"]
 	if len(paramSeriesID) > 0 {
 		rawSeriesID := paramSeriesID[0]
-		rctx.SeriesID = rawSeriesID
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
 	}
 	return &rctx, err
 }
@@ -6348,7 +6404,7 @@ type ListBooksBySeriesRelationCollectionContext struct {
 	*goa.ResponseData
 	*goa.RequestData
 	CollectionID int
-	SeriesID     string
+	SeriesID     int
 }
 
 // NewListBooksBySeriesRelationCollectionContext parses the incoming request URL and body, performs validations and creates the
@@ -6375,7 +6431,14 @@ func NewListBooksBySeriesRelationCollectionContext(ctx context.Context, r *http.
 	paramSeriesID := req.Params["series_id"]
 	if len(paramSeriesID) > 0 {
 		rawSeriesID := paramSeriesID[0]
-		rctx.SeriesID = rawSeriesID
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
 	}
 	return &rctx, err
 }
@@ -6428,25 +6491,25 @@ func (ctx *ListBooksBySeriesRelationCollectionContext) ServiceUnavailable() erro
 	return nil
 }
 
-// ListBooksBySeriesPrintsRelationCollectionContext provides the relationCollection listBooksBySeriesPrints action context.
-type ListBooksBySeriesPrintsRelationCollectionContext struct {
+// ListBooksBySeriesPrintRelationCollectionContext provides the relationCollection listBooksBySeriesPrint action context.
+type ListBooksBySeriesPrintRelationCollectionContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
 	CollectionID int
-	PrintID      string
-	SeriesID     string
+	PrintID      int
+	SeriesID     int
 }
 
-// NewListBooksBySeriesPrintsRelationCollectionContext parses the incoming request URL and body, performs validations and creates the
-// context used by the relationCollection controller listBooksBySeriesPrints action.
-func NewListBooksBySeriesPrintsRelationCollectionContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksBySeriesPrintsRelationCollectionContext, error) {
+// NewListBooksBySeriesPrintRelationCollectionContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationCollection controller listBooksBySeriesPrint action.
+func NewListBooksBySeriesPrintRelationCollectionContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksBySeriesPrintRelationCollectionContext, error) {
 	var err error
 	resp := goa.ContextResponse(ctx)
 	resp.Service = service
 	req := goa.ContextRequest(ctx)
 	req.Request = r
-	rctx := ListBooksBySeriesPrintsRelationCollectionContext{Context: ctx, ResponseData: resp, RequestData: req}
+	rctx := ListBooksBySeriesPrintRelationCollectionContext{Context: ctx, ResponseData: resp, RequestData: req}
 	paramCollectionID := req.Params["collection_id"]
 	if len(paramCollectionID) > 0 {
 		rawCollectionID := paramCollectionID[0]
@@ -6462,18 +6525,32 @@ func NewListBooksBySeriesPrintsRelationCollectionContext(ctx context.Context, r 
 	paramPrintID := req.Params["print_id"]
 	if len(paramPrintID) > 0 {
 		rawPrintID := paramPrintID[0]
-		rctx.PrintID = rawPrintID
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
 	}
 	paramSeriesID := req.Params["series_id"]
 	if len(paramSeriesID) > 0 {
 		rawSeriesID := paramSeriesID[0]
-		rctx.SeriesID = rawSeriesID
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
 	}
 	return &rctx, err
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ListBooksBySeriesPrintsRelationCollectionContext) OK(r BookCollection) error {
+func (ctx *ListBooksBySeriesPrintRelationCollectionContext) OK(r BookCollection) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
 	}
@@ -6484,7 +6561,7 @@ func (ctx *ListBooksBySeriesPrintsRelationCollectionContext) OK(r BookCollection
 }
 
 // OKLink sends a HTTP response with status code 200.
-func (ctx *ListBooksBySeriesPrintsRelationCollectionContext) OKLink(r BookLinkCollection) error {
+func (ctx *ListBooksBySeriesPrintRelationCollectionContext) OKLink(r BookLinkCollection) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
 	}
@@ -6495,7 +6572,7 @@ func (ctx *ListBooksBySeriesPrintsRelationCollectionContext) OKLink(r BookLinkCo
 }
 
 // BadRequest sends a HTTP response with status code 400.
-func (ctx *ListBooksBySeriesPrintsRelationCollectionContext) BadRequest(r error) error {
+func (ctx *ListBooksBySeriesPrintRelationCollectionContext) BadRequest(r error) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
 	}
@@ -6503,19 +6580,19 @@ func (ctx *ListBooksBySeriesPrintsRelationCollectionContext) BadRequest(r error)
 }
 
 // NotFound sends a HTTP response with status code 404.
-func (ctx *ListBooksBySeriesPrintsRelationCollectionContext) NotFound() error {
+func (ctx *ListBooksBySeriesPrintRelationCollectionContext) NotFound() error {
 	ctx.ResponseData.WriteHeader(404)
 	return nil
 }
 
 // InternalServerError sends a HTTP response with status code 500.
-func (ctx *ListBooksBySeriesPrintsRelationCollectionContext) InternalServerError() error {
+func (ctx *ListBooksBySeriesPrintRelationCollectionContext) InternalServerError() error {
 	ctx.ResponseData.WriteHeader(500)
 	return nil
 }
 
 // ServiceUnavailable sends a HTTP response with status code 503.
-func (ctx *ListBooksBySeriesPrintsRelationCollectionContext) ServiceUnavailable() error {
+func (ctx *ListBooksBySeriesPrintRelationCollectionContext) ServiceUnavailable() error {
 	ctx.ResponseData.WriteHeader(503)
 	return nil
 }
@@ -6606,7 +6683,7 @@ type ListPrintsBySeriesRelationCollectionContext struct {
 	*goa.ResponseData
 	*goa.RequestData
 	CollectionID int
-	SeriesID     string
+	SeriesID     int
 }
 
 // NewListPrintsBySeriesRelationCollectionContext parses the incoming request URL and body, performs validations and creates the
@@ -6633,7 +6710,14 @@ func NewListPrintsBySeriesRelationCollectionContext(ctx context.Context, r *http
 	paramSeriesID := req.Params["series_id"]
 	if len(paramSeriesID) > 0 {
 		rawSeriesID := paramSeriesID[0]
-		rctx.SeriesID = rawSeriesID
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
 	}
 	return &rctx, err
 }
@@ -6772,7 +6856,7 @@ type ListSeriesByPrintRelationCollectionContext struct {
 	*goa.ResponseData
 	*goa.RequestData
 	CollectionID int
-	PrintID      string
+	PrintID      int
 }
 
 // NewListSeriesByPrintRelationCollectionContext parses the incoming request URL and body, performs validations and creates the
@@ -6799,7 +6883,14 @@ func NewListSeriesByPrintRelationCollectionContext(ctx context.Context, r *http.
 	paramPrintID := req.Params["print_id"]
 	if len(paramPrintID) > 0 {
 		rawPrintID := paramPrintID[0]
-		rctx.PrintID = rawPrintID
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
 	}
 	return &rctx, err
 }
@@ -7370,8 +7461,8 @@ func (ctx *ListAuthorsRelationRoleContext) ServiceUnavailable() error {
 	return nil
 }
 
-// ListSeriesByAuthorsRelationRoleContext provides the relationRole listSeriesByAuthors action context.
-type ListSeriesByAuthorsRelationRoleContext struct {
+// ListSeriesByAuthorRelationRoleContext provides the relationRole listSeriesByAuthor action context.
+type ListSeriesByAuthorRelationRoleContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
@@ -7379,15 +7470,15 @@ type ListSeriesByAuthorsRelationRoleContext struct {
 	RoleID   int
 }
 
-// NewListSeriesByAuthorsRelationRoleContext parses the incoming request URL and body, performs validations and creates the
-// context used by the relationRole controller listSeriesByAuthors action.
-func NewListSeriesByAuthorsRelationRoleContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListSeriesByAuthorsRelationRoleContext, error) {
+// NewListSeriesByAuthorRelationRoleContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationRole controller listSeriesByAuthor action.
+func NewListSeriesByAuthorRelationRoleContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListSeriesByAuthorRelationRoleContext, error) {
 	var err error
 	resp := goa.ContextResponse(ctx)
 	resp.Service = service
 	req := goa.ContextRequest(ctx)
 	req.Request = r
-	rctx := ListSeriesByAuthorsRelationRoleContext{Context: ctx, ResponseData: resp, RequestData: req}
+	rctx := ListSeriesByAuthorRelationRoleContext{Context: ctx, ResponseData: resp, RequestData: req}
 	paramAuthorID := req.Params["author_id"]
 	if len(paramAuthorID) > 0 {
 		rawAuthorID := paramAuthorID[0]
@@ -7416,7 +7507,7 @@ func NewListSeriesByAuthorsRelationRoleContext(ctx context.Context, r *http.Requ
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ListSeriesByAuthorsRelationRoleContext) OK(r SeriesCollection) error {
+func (ctx *ListSeriesByAuthorRelationRoleContext) OK(r SeriesCollection) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json; type=collection")
 	}
@@ -7427,7 +7518,7 @@ func (ctx *ListSeriesByAuthorsRelationRoleContext) OK(r SeriesCollection) error 
 }
 
 // OKLink sends a HTTP response with status code 200.
-func (ctx *ListSeriesByAuthorsRelationRoleContext) OKLink(r SeriesLinkCollection) error {
+func (ctx *ListSeriesByAuthorRelationRoleContext) OKLink(r SeriesLinkCollection) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json; type=collection")
 	}
@@ -7438,7 +7529,7 @@ func (ctx *ListSeriesByAuthorsRelationRoleContext) OKLink(r SeriesLinkCollection
 }
 
 // BadRequest sends a HTTP response with status code 400.
-func (ctx *ListSeriesByAuthorsRelationRoleContext) BadRequest(r error) error {
+func (ctx *ListSeriesByAuthorRelationRoleContext) BadRequest(r error) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
 	}
@@ -7446,19 +7537,19 @@ func (ctx *ListSeriesByAuthorsRelationRoleContext) BadRequest(r error) error {
 }
 
 // NotFound sends a HTTP response with status code 404.
-func (ctx *ListSeriesByAuthorsRelationRoleContext) NotFound() error {
+func (ctx *ListSeriesByAuthorRelationRoleContext) NotFound() error {
 	ctx.ResponseData.WriteHeader(404)
 	return nil
 }
 
 // InternalServerError sends a HTTP response with status code 500.
-func (ctx *ListSeriesByAuthorsRelationRoleContext) InternalServerError() error {
+func (ctx *ListSeriesByAuthorRelationRoleContext) InternalServerError() error {
 	ctx.ResponseData.WriteHeader(500)
 	return nil
 }
 
 // ServiceUnavailable sends a HTTP response with status code 503.
-func (ctx *ListSeriesByAuthorsRelationRoleContext) ServiceUnavailable() error {
+func (ctx *ListSeriesByAuthorRelationRoleContext) ServiceUnavailable() error {
 	ctx.ResponseData.WriteHeader(503)
 	return nil
 }

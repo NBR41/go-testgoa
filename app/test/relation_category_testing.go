@@ -1228,7 +1228,7 @@ func ListSeriesRelationCategoryServiceUnavailable(t goatest.TInterface, ctx cont
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ListSeriesByClassRelationCategoryBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationCategoryController, categoryID int, classID string) (http.ResponseWriter, error) {
+func ListSeriesByClassRelationCategoryBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationCategoryController, categoryID int, classID int) (http.ResponseWriter, error) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1298,7 +1298,7 @@ func ListSeriesByClassRelationCategoryBadRequest(t goatest.TInterface, ctx conte
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ListSeriesByClassRelationCategoryInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationCategoryController, categoryID int, classID string) http.ResponseWriter {
+func ListSeriesByClassRelationCategoryInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationCategoryController, categoryID int, classID int) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1360,7 +1360,7 @@ func ListSeriesByClassRelationCategoryInternalServerError(t goatest.TInterface, 
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ListSeriesByClassRelationCategoryNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationCategoryController, categoryID int, classID string) http.ResponseWriter {
+func ListSeriesByClassRelationCategoryNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationCategoryController, categoryID int, classID int) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1422,7 +1422,7 @@ func ListSeriesByClassRelationCategoryNotFound(t goatest.TInterface, ctx context
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ListSeriesByClassRelationCategoryOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationCategoryController, categoryID int, classID string) (http.ResponseWriter, app.SeriesCollection) {
+func ListSeriesByClassRelationCategoryOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationCategoryController, categoryID int, classID int) (http.ResponseWriter, app.SeriesCollection) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1497,7 +1497,7 @@ func ListSeriesByClassRelationCategoryOK(t goatest.TInterface, ctx context.Conte
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ListSeriesByClassRelationCategoryOKLink(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationCategoryController, categoryID int, classID string) (http.ResponseWriter, app.SeriesLinkCollection) {
+func ListSeriesByClassRelationCategoryOKLink(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationCategoryController, categoryID int, classID int) (http.ResponseWriter, app.SeriesLinkCollection) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1572,7 +1572,7 @@ func ListSeriesByClassRelationCategoryOKLink(t goatest.TInterface, ctx context.C
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ListSeriesByClassRelationCategoryServiceUnavailable(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationCategoryController, categoryID int, classID string) http.ResponseWriter {
+func ListSeriesByClassRelationCategoryServiceUnavailable(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationCategoryController, categoryID int, classID int) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer

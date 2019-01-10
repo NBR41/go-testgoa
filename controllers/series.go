@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"context"
+
 	"github.com/NBR41/go-testgoa/app"
 	"github.com/NBR41/go-testgoa/internal/convert"
 	"github.com/NBR41/go-testgoa/internal/model"
@@ -136,4 +138,34 @@ func (c *SeriesController) Update(ctx *app.UpdateSeriesContext) error {
 
 	return ctx.NoContent()
 	// SeriesController_Update: end_implement
+}
+
+type seriesResponse interface {
+	OK(r app.SeriesCollection) error
+	NotFound() error
+	InternalServerError() error
+	ServiceUnavailable() error
+}
+
+func listSeries(ctx context.Context, fm Fmodeler, rCtx seriesResponse, authorID, roleID, categoryID, classID *int) error {
+	m, err := fm()
+	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
+		return rCtx.ServiceUnavailable()
+	}
+	defer func() { m.Close() }()
+
+	list, err := m.ListSeriesByIDs(authorID, roleID, categoryID, classID)
+	if err != nil {
+		goa.ContextLogger(ctx).Error(`failed to get series list`, `error`, err.Error())
+		if err == model.ErrNotFound {
+			return rCtx.NotFound()
+		}
+		return rCtx.InternalServerError()
+	}
+	bs := make(app.SeriesCollection, len(list))
+	for i, bk := range list {
+		bs[i] = convert.ToSeriesMedia(bk)
+	}
+	return rCtx.OK(bs)
 }

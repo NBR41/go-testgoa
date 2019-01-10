@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"context"
 	"github.com/NBR41/go-testgoa/app"
 	"github.com/NBR41/go-testgoa/internal/convert"
 	"github.com/NBR41/go-testgoa/internal/model"
@@ -136,4 +137,34 @@ func (c *BooksController) Update(ctx *app.UpdateBooksContext) error {
 
 	return ctx.NoContent()
 	// BooksController_Update: end_implement
+}
+
+type booksResponse interface {
+	OK(r app.BookCollection) error
+	NotFound() error
+	InternalServerError() error
+	ServiceUnavailable() error
+}
+
+func listBooks(ctx context.Context, fm Fmodeler, rCtx booksResponse, collectionID, printID, seriesID *int) error {
+	m, err := fm()
+	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
+		return rCtx.ServiceUnavailable()
+	}
+	defer func() { m.Close() }()
+
+	list, err := m.ListBooksByIDs(collectionID, printID, seriesID)
+	if err != nil {
+		goa.ContextLogger(ctx).Error(`failed to get book list`, `error`, err.Error())
+		if err == model.ErrNotFound {
+			return rCtx.NotFound()
+		}
+		return rCtx.InternalServerError()
+	}
+	bs := make(app.BookCollection, len(list))
+	for i, bk := range list {
+		bs[i] = convert.ToBookMedia(bk)
+	}
+	return rCtx.OK(bs)
 }

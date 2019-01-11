@@ -2234,368 +2234,6 @@ func (ctx *UpdateClassesContext) ServiceUnavailable() error {
 	return nil
 }
 
-// CreateClassificationsContext provides the classifications create action context.
-type CreateClassificationsContext struct {
-	context.Context
-	*goa.ResponseData
-	*goa.RequestData
-	SeriesID int
-	Payload  *CreateClassificationsPayload
-}
-
-// NewCreateClassificationsContext parses the incoming request URL and body, performs validations and creates the
-// context used by the classifications controller create action.
-func NewCreateClassificationsContext(ctx context.Context, r *http.Request, service *goa.Service) (*CreateClassificationsContext, error) {
-	var err error
-	resp := goa.ContextResponse(ctx)
-	resp.Service = service
-	req := goa.ContextRequest(ctx)
-	req.Request = r
-	rctx := CreateClassificationsContext{Context: ctx, ResponseData: resp, RequestData: req}
-	paramSeriesID := req.Params["series_id"]
-	if len(paramSeriesID) > 0 {
-		rawSeriesID := paramSeriesID[0]
-		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
-			rctx.SeriesID = seriesID
-		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
-		}
-		if rctx.SeriesID < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
-		}
-	}
-	return &rctx, err
-}
-
-// createClassificationsPayload is the classifications create action payload.
-type createClassificationsPayload struct {
-	// Unique Class ID
-	ClassID *int `form:"class_id,omitempty" json:"class_id,omitempty" yaml:"class_id,omitempty" xml:"class_id,omitempty"`
-}
-
-// Validate runs the validation rules defined in the design.
-func (payload *createClassificationsPayload) Validate() (err error) {
-	if payload.ClassID == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "class_id"))
-	}
-	if payload.ClassID != nil {
-		if *payload.ClassID < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`raw.class_id`, *payload.ClassID, 1, true))
-		}
-	}
-	return
-}
-
-// Publicize creates CreateClassificationsPayload from createClassificationsPayload
-func (payload *createClassificationsPayload) Publicize() *CreateClassificationsPayload {
-	var pub CreateClassificationsPayload
-	if payload.ClassID != nil {
-		pub.ClassID = *payload.ClassID
-	}
-	return &pub
-}
-
-// CreateClassificationsPayload is the classifications create action payload.
-type CreateClassificationsPayload struct {
-	// Unique Class ID
-	ClassID int `form:"class_id" json:"class_id" yaml:"class_id" xml:"class_id"`
-}
-
-// Validate runs the validation rules defined in the design.
-func (payload *CreateClassificationsPayload) Validate() (err error) {
-	if payload.ClassID < 1 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError(`raw.class_id`, payload.ClassID, 1, true))
-	}
-	return
-}
-
-// Created sends a HTTP response with status code 201.
-func (ctx *CreateClassificationsContext) Created() error {
-	ctx.ResponseData.WriteHeader(201)
-	return nil
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *CreateClassificationsContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
-// Unauthorized sends a HTTP response with status code 401.
-func (ctx *CreateClassificationsContext) Unauthorized() error {
-	ctx.ResponseData.WriteHeader(401)
-	return nil
-}
-
-// NotFound sends a HTTP response with status code 404.
-func (ctx *CreateClassificationsContext) NotFound() error {
-	ctx.ResponseData.WriteHeader(404)
-	return nil
-}
-
-// UnprocessableEntity sends a HTTP response with status code 422.
-func (ctx *CreateClassificationsContext) UnprocessableEntity() error {
-	ctx.ResponseData.WriteHeader(422)
-	return nil
-}
-
-// InternalServerError sends a HTTP response with status code 500.
-func (ctx *CreateClassificationsContext) InternalServerError() error {
-	ctx.ResponseData.WriteHeader(500)
-	return nil
-}
-
-// ServiceUnavailable sends a HTTP response with status code 503.
-func (ctx *CreateClassificationsContext) ServiceUnavailable() error {
-	ctx.ResponseData.WriteHeader(503)
-	return nil
-}
-
-// DeleteClassificationsContext provides the classifications delete action context.
-type DeleteClassificationsContext struct {
-	context.Context
-	*goa.ResponseData
-	*goa.RequestData
-	ClassID  int
-	SeriesID int
-}
-
-// NewDeleteClassificationsContext parses the incoming request URL and body, performs validations and creates the
-// context used by the classifications controller delete action.
-func NewDeleteClassificationsContext(ctx context.Context, r *http.Request, service *goa.Service) (*DeleteClassificationsContext, error) {
-	var err error
-	resp := goa.ContextResponse(ctx)
-	resp.Service = service
-	req := goa.ContextRequest(ctx)
-	req.Request = r
-	rctx := DeleteClassificationsContext{Context: ctx, ResponseData: resp, RequestData: req}
-	paramClassID := req.Params["class_id"]
-	if len(paramClassID) > 0 {
-		rawClassID := paramClassID[0]
-		if classID, err2 := strconv.Atoi(rawClassID); err2 == nil {
-			rctx.ClassID = classID
-		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("class_id", rawClassID, "integer"))
-		}
-		if rctx.ClassID < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`class_id`, rctx.ClassID, 1, true))
-		}
-	}
-	paramSeriesID := req.Params["series_id"]
-	if len(paramSeriesID) > 0 {
-		rawSeriesID := paramSeriesID[0]
-		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
-			rctx.SeriesID = seriesID
-		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
-		}
-		if rctx.SeriesID < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
-		}
-	}
-	return &rctx, err
-}
-
-// NoContent sends a HTTP response with status code 204.
-func (ctx *DeleteClassificationsContext) NoContent() error {
-	ctx.ResponseData.WriteHeader(204)
-	return nil
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *DeleteClassificationsContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
-// Unauthorized sends a HTTP response with status code 401.
-func (ctx *DeleteClassificationsContext) Unauthorized() error {
-	ctx.ResponseData.WriteHeader(401)
-	return nil
-}
-
-// NotFound sends a HTTP response with status code 404.
-func (ctx *DeleteClassificationsContext) NotFound() error {
-	ctx.ResponseData.WriteHeader(404)
-	return nil
-}
-
-// InternalServerError sends a HTTP response with status code 500.
-func (ctx *DeleteClassificationsContext) InternalServerError() error {
-	ctx.ResponseData.WriteHeader(500)
-	return nil
-}
-
-// ServiceUnavailable sends a HTTP response with status code 503.
-func (ctx *DeleteClassificationsContext) ServiceUnavailable() error {
-	ctx.ResponseData.WriteHeader(503)
-	return nil
-}
-
-// ListClassificationsContext provides the classifications list action context.
-type ListClassificationsContext struct {
-	context.Context
-	*goa.ResponseData
-	*goa.RequestData
-	SeriesID int
-}
-
-// NewListClassificationsContext parses the incoming request URL and body, performs validations and creates the
-// context used by the classifications controller list action.
-func NewListClassificationsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListClassificationsContext, error) {
-	var err error
-	resp := goa.ContextResponse(ctx)
-	resp.Service = service
-	req := goa.ContextRequest(ctx)
-	req.Request = r
-	rctx := ListClassificationsContext{Context: ctx, ResponseData: resp, RequestData: req}
-	paramSeriesID := req.Params["series_id"]
-	if len(paramSeriesID) > 0 {
-		rawSeriesID := paramSeriesID[0]
-		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
-			rctx.SeriesID = seriesID
-		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
-		}
-		if rctx.SeriesID < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
-		}
-	}
-	return &rctx, err
-}
-
-// OK sends a HTTP response with status code 200.
-func (ctx *ListClassificationsContext) OK(r ClassificationCollection) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.classification+json; type=collection")
-	}
-	if r == nil {
-		r = ClassificationCollection{}
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ListClassificationsContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
-// Unauthorized sends a HTTP response with status code 401.
-func (ctx *ListClassificationsContext) Unauthorized() error {
-	ctx.ResponseData.WriteHeader(401)
-	return nil
-}
-
-// NotFound sends a HTTP response with status code 404.
-func (ctx *ListClassificationsContext) NotFound() error {
-	ctx.ResponseData.WriteHeader(404)
-	return nil
-}
-
-// InternalServerError sends a HTTP response with status code 500.
-func (ctx *ListClassificationsContext) InternalServerError() error {
-	ctx.ResponseData.WriteHeader(500)
-	return nil
-}
-
-// ServiceUnavailable sends a HTTP response with status code 503.
-func (ctx *ListClassificationsContext) ServiceUnavailable() error {
-	ctx.ResponseData.WriteHeader(503)
-	return nil
-}
-
-// ShowClassificationsContext provides the classifications show action context.
-type ShowClassificationsContext struct {
-	context.Context
-	*goa.ResponseData
-	*goa.RequestData
-	ClassID  int
-	SeriesID int
-}
-
-// NewShowClassificationsContext parses the incoming request URL and body, performs validations and creates the
-// context used by the classifications controller show action.
-func NewShowClassificationsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ShowClassificationsContext, error) {
-	var err error
-	resp := goa.ContextResponse(ctx)
-	resp.Service = service
-	req := goa.ContextRequest(ctx)
-	req.Request = r
-	rctx := ShowClassificationsContext{Context: ctx, ResponseData: resp, RequestData: req}
-	paramClassID := req.Params["class_id"]
-	if len(paramClassID) > 0 {
-		rawClassID := paramClassID[0]
-		if classID, err2 := strconv.Atoi(rawClassID); err2 == nil {
-			rctx.ClassID = classID
-		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("class_id", rawClassID, "integer"))
-		}
-		if rctx.ClassID < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`class_id`, rctx.ClassID, 1, true))
-		}
-	}
-	paramSeriesID := req.Params["series_id"]
-	if len(paramSeriesID) > 0 {
-		rawSeriesID := paramSeriesID[0]
-		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
-			rctx.SeriesID = seriesID
-		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
-		}
-		if rctx.SeriesID < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
-		}
-	}
-	return &rctx, err
-}
-
-// OK sends a HTTP response with status code 200.
-func (ctx *ShowClassificationsContext) OK(r *Classification) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.classification+json")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ShowClassificationsContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
-// Unauthorized sends a HTTP response with status code 401.
-func (ctx *ShowClassificationsContext) Unauthorized() error {
-	ctx.ResponseData.WriteHeader(401)
-	return nil
-}
-
-// NotFound sends a HTTP response with status code 404.
-func (ctx *ShowClassificationsContext) NotFound() error {
-	ctx.ResponseData.WriteHeader(404)
-	return nil
-}
-
-// InternalServerError sends a HTTP response with status code 500.
-func (ctx *ShowClassificationsContext) InternalServerError() error {
-	ctx.ResponseData.WriteHeader(500)
-	return nil
-}
-
-// ServiceUnavailable sends a HTTP response with status code 503.
-func (ctx *ShowClassificationsContext) ServiceUnavailable() error {
-	ctx.ResponseData.WriteHeader(503)
-	return nil
-}
-
 // CreateCollectionsContext provides the collections create action context.
 type CreateCollectionsContext struct {
 	context.Context
@@ -6292,8 +5930,8 @@ func (ctx *ListBooksByPrintRelationCollectionContext) ServiceUnavailable() error
 	return nil
 }
 
-// ListBooksByPrintsSeriesRelationCollectionContext provides the relationCollection listBooksByPrintsSeries action context.
-type ListBooksByPrintsSeriesRelationCollectionContext struct {
+// ListBooksByPrintSeriesRelationCollectionContext provides the relationCollection listBooksByPrintSeries action context.
+type ListBooksByPrintSeriesRelationCollectionContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
@@ -6302,15 +5940,15 @@ type ListBooksByPrintsSeriesRelationCollectionContext struct {
 	SeriesID     int
 }
 
-// NewListBooksByPrintsSeriesRelationCollectionContext parses the incoming request URL and body, performs validations and creates the
-// context used by the relationCollection controller listBooksByPrintsSeries action.
-func NewListBooksByPrintsSeriesRelationCollectionContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksByPrintsSeriesRelationCollectionContext, error) {
+// NewListBooksByPrintSeriesRelationCollectionContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationCollection controller listBooksByPrintSeries action.
+func NewListBooksByPrintSeriesRelationCollectionContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksByPrintSeriesRelationCollectionContext, error) {
 	var err error
 	resp := goa.ContextResponse(ctx)
 	resp.Service = service
 	req := goa.ContextRequest(ctx)
 	req.Request = r
-	rctx := ListBooksByPrintsSeriesRelationCollectionContext{Context: ctx, ResponseData: resp, RequestData: req}
+	rctx := ListBooksByPrintSeriesRelationCollectionContext{Context: ctx, ResponseData: resp, RequestData: req}
 	paramCollectionID := req.Params["collection_id"]
 	if len(paramCollectionID) > 0 {
 		rawCollectionID := paramCollectionID[0]
@@ -6351,7 +5989,7 @@ func NewListBooksByPrintsSeriesRelationCollectionContext(ctx context.Context, r 
 }
 
 // OK sends a HTTP response with status code 200.
-func (ctx *ListBooksByPrintsSeriesRelationCollectionContext) OK(r BookCollection) error {
+func (ctx *ListBooksByPrintSeriesRelationCollectionContext) OK(r BookCollection) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
 	}
@@ -6362,7 +6000,7 @@ func (ctx *ListBooksByPrintsSeriesRelationCollectionContext) OK(r BookCollection
 }
 
 // OKLink sends a HTTP response with status code 200.
-func (ctx *ListBooksByPrintsSeriesRelationCollectionContext) OKLink(r BookLinkCollection) error {
+func (ctx *ListBooksByPrintSeriesRelationCollectionContext) OKLink(r BookLinkCollection) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
 	}
@@ -6373,7 +6011,7 @@ func (ctx *ListBooksByPrintsSeriesRelationCollectionContext) OKLink(r BookLinkCo
 }
 
 // BadRequest sends a HTTP response with status code 400.
-func (ctx *ListBooksByPrintsSeriesRelationCollectionContext) BadRequest(r error) error {
+func (ctx *ListBooksByPrintSeriesRelationCollectionContext) BadRequest(r error) error {
 	if ctx.ResponseData.Header().Get("Content-Type") == "" {
 		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
 	}
@@ -6381,19 +6019,19 @@ func (ctx *ListBooksByPrintsSeriesRelationCollectionContext) BadRequest(r error)
 }
 
 // NotFound sends a HTTP response with status code 404.
-func (ctx *ListBooksByPrintsSeriesRelationCollectionContext) NotFound() error {
+func (ctx *ListBooksByPrintSeriesRelationCollectionContext) NotFound() error {
 	ctx.ResponseData.WriteHeader(404)
 	return nil
 }
 
 // InternalServerError sends a HTTP response with status code 500.
-func (ctx *ListBooksByPrintsSeriesRelationCollectionContext) InternalServerError() error {
+func (ctx *ListBooksByPrintSeriesRelationCollectionContext) InternalServerError() error {
 	ctx.ResponseData.WriteHeader(500)
 	return nil
 }
 
 // ServiceUnavailable sends a HTTP response with status code 503.
-func (ctx *ListBooksByPrintsSeriesRelationCollectionContext) ServiceUnavailable() error {
+func (ctx *ListBooksByPrintSeriesRelationCollectionContext) ServiceUnavailable() error {
 	ctx.ResponseData.WriteHeader(503)
 	return nil
 }
@@ -8022,6 +7660,368 @@ func (ctx *UpdateSeriesContext) InternalServerError() error {
 
 // ServiceUnavailable sends a HTTP response with status code 503.
 func (ctx *UpdateSeriesContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// CreateClassificationsContext provides the classifications create action context.
+type CreateClassificationsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	SeriesID int
+	Payload  *CreateClassificationsPayload
+}
+
+// NewCreateClassificationsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the classifications controller create action.
+func NewCreateClassificationsContext(ctx context.Context, r *http.Request, service *goa.Service) (*CreateClassificationsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := CreateClassificationsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// createClassificationsPayload is the classifications create action payload.
+type createClassificationsPayload struct {
+	// Unique Class ID
+	ClassID *int `form:"class_id,omitempty" json:"class_id,omitempty" yaml:"class_id,omitempty" xml:"class_id,omitempty"`
+}
+
+// Validate runs the validation rules defined in the design.
+func (payload *createClassificationsPayload) Validate() (err error) {
+	if payload.ClassID == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "class_id"))
+	}
+	if payload.ClassID != nil {
+		if *payload.ClassID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`raw.class_id`, *payload.ClassID, 1, true))
+		}
+	}
+	return
+}
+
+// Publicize creates CreateClassificationsPayload from createClassificationsPayload
+func (payload *createClassificationsPayload) Publicize() *CreateClassificationsPayload {
+	var pub CreateClassificationsPayload
+	if payload.ClassID != nil {
+		pub.ClassID = *payload.ClassID
+	}
+	return &pub
+}
+
+// CreateClassificationsPayload is the classifications create action payload.
+type CreateClassificationsPayload struct {
+	// Unique Class ID
+	ClassID int `form:"class_id" json:"class_id" yaml:"class_id" xml:"class_id"`
+}
+
+// Validate runs the validation rules defined in the design.
+func (payload *CreateClassificationsPayload) Validate() (err error) {
+	if payload.ClassID < 1 {
+		err = goa.MergeErrors(err, goa.InvalidRangeError(`raw.class_id`, payload.ClassID, 1, true))
+	}
+	return
+}
+
+// Created sends a HTTP response with status code 201.
+func (ctx *CreateClassificationsContext) Created() error {
+	ctx.ResponseData.WriteHeader(201)
+	return nil
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *CreateClassificationsContext) BadRequest(r error) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// Unauthorized sends a HTTP response with status code 401.
+func (ctx *CreateClassificationsContext) Unauthorized() error {
+	ctx.ResponseData.WriteHeader(401)
+	return nil
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *CreateClassificationsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// UnprocessableEntity sends a HTTP response with status code 422.
+func (ctx *CreateClassificationsContext) UnprocessableEntity() error {
+	ctx.ResponseData.WriteHeader(422)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *CreateClassificationsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *CreateClassificationsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// DeleteClassificationsContext provides the classifications delete action context.
+type DeleteClassificationsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	ClassID  int
+	SeriesID int
+}
+
+// NewDeleteClassificationsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the classifications controller delete action.
+func NewDeleteClassificationsContext(ctx context.Context, r *http.Request, service *goa.Service) (*DeleteClassificationsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := DeleteClassificationsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramClassID := req.Params["class_id"]
+	if len(paramClassID) > 0 {
+		rawClassID := paramClassID[0]
+		if classID, err2 := strconv.Atoi(rawClassID); err2 == nil {
+			rctx.ClassID = classID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("class_id", rawClassID, "integer"))
+		}
+		if rctx.ClassID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`class_id`, rctx.ClassID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// NoContent sends a HTTP response with status code 204.
+func (ctx *DeleteClassificationsContext) NoContent() error {
+	ctx.ResponseData.WriteHeader(204)
+	return nil
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *DeleteClassificationsContext) BadRequest(r error) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// Unauthorized sends a HTTP response with status code 401.
+func (ctx *DeleteClassificationsContext) Unauthorized() error {
+	ctx.ResponseData.WriteHeader(401)
+	return nil
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *DeleteClassificationsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *DeleteClassificationsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *DeleteClassificationsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListClassificationsContext provides the classifications list action context.
+type ListClassificationsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	SeriesID int
+}
+
+// NewListClassificationsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the classifications controller list action.
+func NewListClassificationsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListClassificationsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListClassificationsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListClassificationsContext) OK(r ClassificationCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.classification+json; type=collection")
+	}
+	if r == nil {
+		r = ClassificationCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *ListClassificationsContext) BadRequest(r error) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// Unauthorized sends a HTTP response with status code 401.
+func (ctx *ListClassificationsContext) Unauthorized() error {
+	ctx.ResponseData.WriteHeader(401)
+	return nil
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListClassificationsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListClassificationsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListClassificationsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ShowClassificationsContext provides the classifications show action context.
+type ShowClassificationsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	ClassID  int
+	SeriesID int
+}
+
+// NewShowClassificationsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the classifications controller show action.
+func NewShowClassificationsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ShowClassificationsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ShowClassificationsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramClassID := req.Params["class_id"]
+	if len(paramClassID) > 0 {
+		rawClassID := paramClassID[0]
+		if classID, err2 := strconv.Atoi(rawClassID); err2 == nil {
+			rctx.ClassID = classID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("class_id", rawClassID, "integer"))
+		}
+		if rctx.ClassID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`class_id`, rctx.ClassID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ShowClassificationsContext) OK(r *Classification) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.classification+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *ShowClassificationsContext) BadRequest(r error) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// Unauthorized sends a HTTP response with status code 401.
+func (ctx *ShowClassificationsContext) Unauthorized() error {
+	ctx.ResponseData.WriteHeader(401)
+	return nil
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ShowClassificationsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ShowClassificationsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ShowClassificationsContext) ServiceUnavailable() error {
 	ctx.ResponseData.WriteHeader(503)
 	return nil
 }

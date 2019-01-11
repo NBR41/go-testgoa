@@ -78,15 +78,15 @@ func (c *Client) NewCreateEditionsRequest(ctx context.Context, path string, payl
 }
 
 // DeleteEditionsPath computes a request path to the delete action of editions.
-func DeleteEditionsPath(editionID string) string {
-	param0 := editionID
+func DeleteEditionsPath(editionID int) string {
+	param0 := strconv.Itoa(editionID)
 
 	return fmt.Sprintf("/editions/%s", param0)
 }
 
 // delete book edition by id
-func (c *Client) DeleteEditions(ctx context.Context, path string, editorID *int) (*http.Response, error) {
-	req, err := c.NewDeleteEditionsRequest(ctx, path, editorID)
+func (c *Client) DeleteEditions(ctx context.Context, path string) (*http.Response, error) {
+	req, err := c.NewDeleteEditionsRequest(ctx, path)
 	if err != nil {
 		return nil, err
 	}
@@ -94,18 +94,12 @@ func (c *Client) DeleteEditions(ctx context.Context, path string, editorID *int)
 }
 
 // NewDeleteEditionsRequest create the request corresponding to the delete action endpoint of the editions resource.
-func (c *Client) NewDeleteEditionsRequest(ctx context.Context, path string, editorID *int) (*http.Request, error) {
+func (c *Client) NewDeleteEditionsRequest(ctx context.Context, path string) (*http.Request, error) {
 	scheme := c.Scheme
 	if scheme == "" {
 		scheme = "http"
 	}
 	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
-	values := u.Query()
-	if editorID != nil {
-		tmp101 := strconv.Itoa(*editorID)
-		values.Set("editor_id", tmp101)
-	}
-	u.RawQuery = values.Encode()
 	req, err := http.NewRequest("DELETE", u.String(), nil)
 	if err != nil {
 		return nil, err

@@ -155,12 +155,53 @@ func listSeries(ctx context.Context, fm Fmodeler, rCtx seriesResponse, authorID,
 	}
 	defer func() { m.Close() }()
 
+	if authorID != nil {
+		_, err = m.GetAuthorByID(*authorID)
+		if err != nil {
+			goa.ContextLogger(ctx).Error(`failed to get author`, `error`, err.Error())
+			if err == model.ErrNotFound {
+				return rCtx.NotFound()
+			}
+			return rCtx.InternalServerError()
+		}
+	}
+
+	if roleID != nil {
+		_, err = m.GetRoleByID(*roleID)
+		if err != nil {
+			goa.ContextLogger(ctx).Error(`failed to get role`, `error`, err.Error())
+			if err == model.ErrNotFound {
+				return rCtx.NotFound()
+			}
+			return rCtx.InternalServerError()
+		}
+	}
+
+	if categoryID != nil {
+		_, err = m.GetCategoryByID(*categoryID)
+		if err != nil {
+			goa.ContextLogger(ctx).Error(`failed to get category`, `error`, err.Error())
+			if err == model.ErrNotFound {
+				return rCtx.NotFound()
+			}
+			return rCtx.InternalServerError()
+		}
+	}
+
+	if classID != nil {
+		_, err = m.GetClassByID(*classID)
+		if err != nil {
+			goa.ContextLogger(ctx).Error(`failed to get class`, `error`, err.Error())
+			if err == model.ErrNotFound {
+				return rCtx.NotFound()
+			}
+			return rCtx.InternalServerError()
+		}
+	}
+
 	list, err := m.ListSeriesByIDs(authorID, roleID, categoryID, classID)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to get series list`, `error`, err.Error())
-		if err == model.ErrNotFound {
-			return rCtx.NotFound()
-		}
 		return rCtx.InternalServerError()
 	}
 	bs := make(app.SeriesCollection, len(list))

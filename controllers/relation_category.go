@@ -28,12 +28,18 @@ func (c *RelationCategoryController) ListAuthors(ctx *app.ListAuthorsRelationCat
 	}
 	defer func() { m.Close() }()
 
-	list, err := m.ListAuthorsByCategoryID(ctx.CategoryID)
+	_, err = m.GetCategoryByID(ctx.CategoryID)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get author list`, `error`, err.Error())
+		goa.ContextLogger(ctx).Error(`failed to get category`, `error`, err.Error())
 		if err == model.ErrNotFound {
 			return ctx.NotFound()
 		}
+		return ctx.InternalServerError()
+	}
+
+	list, err := m.ListAuthorsByCategoryID(ctx.CategoryID)
+	if err != nil {
+		goa.ContextLogger(ctx).Error(`failed to get author list`, `error`, err.Error())
 		return ctx.InternalServerError()
 	}
 	bs := make(app.AuthorCollection, len(list))
@@ -54,12 +60,18 @@ func (c *RelationCategoryController) ListClasses(ctx *app.ListClassesRelationCat
 	}
 	defer func() { m.Close() }()
 
-	list, err := m.ListClassesByCategoryID(ctx.CategoryID)
+	_, err = m.GetCategoryByID(ctx.CategoryID)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get class list`, `error`, err.Error())
+		goa.ContextLogger(ctx).Error(`failed to get category`, `error`, err.Error())
 		if err == model.ErrNotFound {
 			return ctx.NotFound()
 		}
+		return ctx.InternalServerError()
+	}
+
+	list, err := m.ListClassesByCategoryID(ctx.CategoryID)
+	if err != nil {
+		goa.ContextLogger(ctx).Error(`failed to get class list`, `error`, err.Error())
 		return ctx.InternalServerError()
 	}
 	bs := make(app.ClassCollection, len(list))

@@ -26,8 +26,8 @@ func ListAuthorsRelationRolePath(roleID int) string {
 }
 
 // List authors by role
-func (c *Client) ListAuthorsRelationRole(ctx context.Context, path string, authorID *int) (*http.Response, error) {
-	req, err := c.NewListAuthorsRelationRoleRequest(ctx, path, authorID)
+func (c *Client) ListAuthorsRelationRole(ctx context.Context, path string) (*http.Response, error) {
+	req, err := c.NewListAuthorsRelationRoleRequest(ctx, path)
 	if err != nil {
 		return nil, err
 	}
@@ -35,18 +35,12 @@ func (c *Client) ListAuthorsRelationRole(ctx context.Context, path string, autho
 }
 
 // NewListAuthorsRelationRoleRequest create the request corresponding to the listAuthors action endpoint of the relationRole resource.
-func (c *Client) NewListAuthorsRelationRoleRequest(ctx context.Context, path string, authorID *int) (*http.Request, error) {
+func (c *Client) NewListAuthorsRelationRoleRequest(ctx context.Context, path string) (*http.Request, error) {
 	scheme := c.Scheme
 	if scheme == "" {
 		scheme = "http"
 	}
 	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
-	values := u.Query()
-	if authorID != nil {
-		tmp102 := strconv.Itoa(*authorID)
-		values.Set("author_id", tmp102)
-	}
-	u.RawQuery = values.Encode()
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return nil, err
@@ -54,35 +48,30 @@ func (c *Client) NewListAuthorsRelationRoleRequest(ctx context.Context, path str
 	return req, nil
 }
 
-// ListSeriesByAuthorsRelationRolePath computes a request path to the listSeriesByAuthors action of relationRole.
-func ListSeriesByAuthorsRelationRolePath(roleID int) string {
+// ListSeriesByAuthorRelationRolePath computes a request path to the listSeriesByAuthor action of relationRole.
+func ListSeriesByAuthorRelationRolePath(roleID int, authorID int) string {
 	param0 := strconv.Itoa(roleID)
+	param1 := strconv.Itoa(authorID)
 
-	return fmt.Sprintf("/roles/%s/authors", param0)
+	return fmt.Sprintf("/roles/%s/authors/%s/series", param0, param1)
 }
 
-// List series by role and authors
-func (c *Client) ListSeriesByAuthorsRelationRole(ctx context.Context, path string, authorID *int) (*http.Response, error) {
-	req, err := c.NewListSeriesByAuthorsRelationRoleRequest(ctx, path, authorID)
+// List series by role and author
+func (c *Client) ListSeriesByAuthorRelationRole(ctx context.Context, path string) (*http.Response, error) {
+	req, err := c.NewListSeriesByAuthorRelationRoleRequest(ctx, path)
 	if err != nil {
 		return nil, err
 	}
 	return c.Client.Do(ctx, req)
 }
 
-// NewListSeriesByAuthorsRelationRoleRequest create the request corresponding to the listSeriesByAuthors action endpoint of the relationRole resource.
-func (c *Client) NewListSeriesByAuthorsRelationRoleRequest(ctx context.Context, path string, authorID *int) (*http.Request, error) {
+// NewListSeriesByAuthorRelationRoleRequest create the request corresponding to the listSeriesByAuthor action endpoint of the relationRole resource.
+func (c *Client) NewListSeriesByAuthorRelationRoleRequest(ctx context.Context, path string) (*http.Request, error) {
 	scheme := c.Scheme
 	if scheme == "" {
 		scheme = "http"
 	}
 	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
-	values := u.Query()
-	if authorID != nil {
-		tmp103 := strconv.Itoa(*authorID)
-		values.Set("author_id", tmp103)
-	}
-	u.RawQuery = values.Encode()
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return nil, err

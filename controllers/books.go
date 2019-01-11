@@ -154,12 +154,42 @@ func listBooks(ctx context.Context, fm Fmodeler, rCtx booksResponse, collectionI
 	}
 	defer func() { m.Close() }()
 
+	if collectionID != nil {
+		_, err = m.GetCollectionByID(*collectionID)
+		if err != nil {
+			goa.ContextLogger(ctx).Error(`failed to get collection`, `error`, err.Error())
+			if err == model.ErrNotFound {
+				return rCtx.NotFound()
+			}
+			return rCtx.InternalServerError()
+		}
+	}
+
+	if printID != nil {
+		_, err = m.GetPrintByID(*printID)
+		if err != nil {
+			goa.ContextLogger(ctx).Error(`failed to get print`, `error`, err.Error())
+			if err == model.ErrNotFound {
+				return rCtx.NotFound()
+			}
+			return rCtx.InternalServerError()
+		}
+	}
+
+	if seriesID != nil {
+		_, err = m.GetSeriesByID(*seriesID)
+		if err != nil {
+			goa.ContextLogger(ctx).Error(`failed to get series`, `error`, err.Error())
+			if err == model.ErrNotFound {
+				return rCtx.NotFound()
+			}
+			return rCtx.InternalServerError()
+		}
+	}
+
 	list, err := m.ListBooksByIDs(collectionID, printID, seriesID)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to get book list`, `error`, err.Error())
-		if err == model.ErrNotFound {
-			return rCtx.NotFound()
-		}
 		return rCtx.InternalServerError()
 	}
 	bs := make(app.BookCollection, len(list))

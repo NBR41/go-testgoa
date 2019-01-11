@@ -28,12 +28,18 @@ func (c *RelationClassController) ListCategories(ctx *app.ListCategoriesRelation
 	}
 	defer func() { m.Close() }()
 
-	list, err := m.ListCategoriesByClassID(ctx.ClassID)
+	_, err = m.GetClassByID(ctx.ClassID)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get category list`, `error`, err.Error())
+		goa.ContextLogger(ctx).Error(`failed to get class`, `error`, err.Error())
 		if err == model.ErrNotFound {
 			return ctx.NotFound()
 		}
+		return ctx.InternalServerError()
+	}
+
+	list, err := m.ListCategoriesByClassID(ctx.ClassID)
+	if err != nil {
+		goa.ContextLogger(ctx).Error(`failed to get category list`, `error`, err.Error())
 		return ctx.InternalServerError()
 	}
 	bs := make(app.CategoryCollection, len(list))

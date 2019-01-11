@@ -28,12 +28,18 @@ func (c *RelationAuthorController) ListCategories(ctx *app.ListCategoriesRelatio
 	}
 	defer func() { m.Close() }()
 
-	list, err := m.ListCategoriesByAuthorID(ctx.AuthorID)
+	_, err = m.GetAuthorByID(ctx.AuthorID)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get category list`, `error`, err.Error())
+		goa.ContextLogger(ctx).Error(`failed to get author`, `error`, err.Error())
 		if err == model.ErrNotFound {
 			return ctx.NotFound()
 		}
+		return ctx.InternalServerError()
+	}
+
+	list, err := m.ListCategoriesByAuthorID(ctx.AuthorID)
+	if err != nil {
+		goa.ContextLogger(ctx).Error(`failed to get category list`, `error`, err.Error())
 		return ctx.InternalServerError()
 	}
 	bs := make(app.CategoryCollection, len(list))
@@ -54,12 +60,18 @@ func (c *RelationAuthorController) ListClasses(ctx *app.ListClassesRelationAutho
 	}
 	defer func() { m.Close() }()
 
-	list, err := m.ListClassesByAuthorID(ctx.AuthorID)
+	_, err = m.GetAuthorByID(ctx.AuthorID)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get class list`, `error`, err.Error())
+		goa.ContextLogger(ctx).Error(`failed to get author`, `error`, err.Error())
 		if err == model.ErrNotFound {
 			return ctx.NotFound()
 		}
+		return ctx.InternalServerError()
+	}
+
+	list, err := m.ListClassesByAuthorID(ctx.AuthorID)
+	if err != nil {
+		goa.ContextLogger(ctx).Error(`failed to get class list`, `error`, err.Error())
 		return ctx.InternalServerError()
 	}
 	bs := make(app.ClassCollection, len(list))
@@ -80,12 +92,18 @@ func (c *RelationAuthorController) ListRoles(ctx *app.ListRolesRelationAuthorCon
 	}
 	defer func() { m.Close() }()
 
-	list, err := m.ListRolesByAuthorID(ctx.AuthorID)
+	_, err = m.GetAuthorByID(ctx.AuthorID)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get role list`, `error`, err.Error())
+		goa.ContextLogger(ctx).Error(`failed to get author`, `error`, err.Error())
 		if err == model.ErrNotFound {
 			return ctx.NotFound()
 		}
+		return ctx.InternalServerError()
+	}
+
+	list, err := m.ListRolesByAuthorID(ctx.AuthorID)
+	if err != nil {
+		goa.ContextLogger(ctx).Error(`failed to get role list`, `error`, err.Error())
 		return ctx.InternalServerError()
 	}
 	bs := make(app.RoleCollection, len(list))

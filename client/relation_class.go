@@ -79,9 +79,9 @@ func (c *Client) NewListSeriesRelationClassRequest(ctx context.Context, path str
 }
 
 // ListSeriesByCategoryRelationClassPath computes a request path to the listSeriesByCategory action of relationClass.
-func ListSeriesByCategoryRelationClassPath(classID int, categoryID string) string {
+func ListSeriesByCategoryRelationClassPath(classID int, categoryID int) string {
 	param0 := strconv.Itoa(classID)
-	param1 := categoryID
+	param1 := strconv.Itoa(categoryID)
 
 	return fmt.Sprintf("/classes/%s/categories/%s/series", param0, param1)
 }

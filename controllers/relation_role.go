@@ -28,12 +28,18 @@ func (c *RelationRoleController) ListAuthors(ctx *app.ListAuthorsRelationRoleCon
 	}
 	defer func() { m.Close() }()
 
-	list, err := m.ListAuthorsByRoleID(ctx.RoleID)
+	_, err = m.GetRoleByID(ctx.RoleID)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get author list`, `error`, err.Error())
+		goa.ContextLogger(ctx).Error(`failed to get role`, `error`, err.Error())
 		if err == model.ErrNotFound {
 			return ctx.NotFound()
 		}
+		return ctx.InternalServerError()
+	}
+
+	list, err := m.ListAuthorsByRoleID(ctx.RoleID)
+	if err != nil {
+		goa.ContextLogger(ctx).Error(`failed to get author list`, `error`, err.Error())
 		return ctx.InternalServerError()
 	}
 	bs := make(app.AuthorCollection, len(list))

@@ -830,11 +830,11 @@ func ListBooksByPrintRelationCollectionServiceUnavailable(t goatest.TInterface, 
 	return rw
 }
 
-// ListBooksByPrintsSeriesRelationCollectionBadRequest runs the method ListBooksByPrintsSeries of the given controller with the given parameters.
+// ListBooksByPrintSeriesRelationCollectionBadRequest runs the method ListBooksByPrintSeries of the given controller with the given parameters.
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ListBooksByPrintsSeriesRelationCollectionBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationCollectionController, collectionID int, printID int, seriesID int) (http.ResponseWriter, error) {
+func ListBooksByPrintSeriesRelationCollectionBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationCollectionController, collectionID int, printID int, seriesID int) (http.ResponseWriter, error) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -869,7 +869,7 @@ func ListBooksByPrintsSeriesRelationCollectionBadRequest(t goatest.TInterface, c
 		ctx = context.Background()
 	}
 	goaCtx := goa.NewContext(goa.WithAction(ctx, "RelationCollectionTest"), rw, req, prms)
-	listBooksByPrintsSeriesCtx, _err := app.NewListBooksByPrintsSeriesRelationCollectionContext(goaCtx, req, service)
+	listBooksByPrintSeriesCtx, _err := app.NewListBooksByPrintSeriesRelationCollectionContext(goaCtx, req, service)
 	if _err != nil {
 		e, ok := _err.(goa.ServiceError)
 		if !ok {
@@ -879,7 +879,7 @@ func ListBooksByPrintsSeriesRelationCollectionBadRequest(t goatest.TInterface, c
 	}
 
 	// Perform action
-	_err = ctrl.ListBooksByPrintsSeries(listBooksByPrintsSeriesCtx)
+	_err = ctrl.ListBooksByPrintSeries(listBooksByPrintSeriesCtx)
 
 	// Validate response
 	if _err != nil {
@@ -901,11 +901,11 @@ func ListBooksByPrintsSeriesRelationCollectionBadRequest(t goatest.TInterface, c
 	return rw, mt
 }
 
-// ListBooksByPrintsSeriesRelationCollectionInternalServerError runs the method ListBooksByPrintsSeries of the given controller with the given parameters.
+// ListBooksByPrintSeriesRelationCollectionInternalServerError runs the method ListBooksByPrintSeries of the given controller with the given parameters.
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ListBooksByPrintsSeriesRelationCollectionInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationCollectionController, collectionID int, printID int, seriesID int) http.ResponseWriter {
+func ListBooksByPrintSeriesRelationCollectionInternalServerError(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationCollectionController, collectionID int, printID int, seriesID int) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -939,7 +939,7 @@ func ListBooksByPrintsSeriesRelationCollectionInternalServerError(t goatest.TInt
 		ctx = context.Background()
 	}
 	goaCtx := goa.NewContext(goa.WithAction(ctx, "RelationCollectionTest"), rw, req, prms)
-	listBooksByPrintsSeriesCtx, _err := app.NewListBooksByPrintsSeriesRelationCollectionContext(goaCtx, req, service)
+	listBooksByPrintSeriesCtx, _err := app.NewListBooksByPrintSeriesRelationCollectionContext(goaCtx, req, service)
 	if _err != nil {
 		e, ok := _err.(goa.ServiceError)
 		if !ok {
@@ -950,7 +950,7 @@ func ListBooksByPrintsSeriesRelationCollectionInternalServerError(t goatest.TInt
 	}
 
 	// Perform action
-	_err = ctrl.ListBooksByPrintsSeries(listBooksByPrintsSeriesCtx)
+	_err = ctrl.ListBooksByPrintSeries(listBooksByPrintSeriesCtx)
 
 	// Validate response
 	if _err != nil {
@@ -964,11 +964,11 @@ func ListBooksByPrintsSeriesRelationCollectionInternalServerError(t goatest.TInt
 	return rw
 }
 
-// ListBooksByPrintsSeriesRelationCollectionNotFound runs the method ListBooksByPrintsSeries of the given controller with the given parameters.
+// ListBooksByPrintSeriesRelationCollectionNotFound runs the method ListBooksByPrintSeries of the given controller with the given parameters.
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ListBooksByPrintsSeriesRelationCollectionNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationCollectionController, collectionID int, printID int, seriesID int) http.ResponseWriter {
+func ListBooksByPrintSeriesRelationCollectionNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationCollectionController, collectionID int, printID int, seriesID int) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1002,7 +1002,7 @@ func ListBooksByPrintsSeriesRelationCollectionNotFound(t goatest.TInterface, ctx
 		ctx = context.Background()
 	}
 	goaCtx := goa.NewContext(goa.WithAction(ctx, "RelationCollectionTest"), rw, req, prms)
-	listBooksByPrintsSeriesCtx, _err := app.NewListBooksByPrintsSeriesRelationCollectionContext(goaCtx, req, service)
+	listBooksByPrintSeriesCtx, _err := app.NewListBooksByPrintSeriesRelationCollectionContext(goaCtx, req, service)
 	if _err != nil {
 		e, ok := _err.(goa.ServiceError)
 		if !ok {
@@ -1013,7 +1013,7 @@ func ListBooksByPrintsSeriesRelationCollectionNotFound(t goatest.TInterface, ctx
 	}
 
 	// Perform action
-	_err = ctrl.ListBooksByPrintsSeries(listBooksByPrintsSeriesCtx)
+	_err = ctrl.ListBooksByPrintSeries(listBooksByPrintSeriesCtx)
 
 	// Validate response
 	if _err != nil {
@@ -1027,11 +1027,11 @@ func ListBooksByPrintsSeriesRelationCollectionNotFound(t goatest.TInterface, ctx
 	return rw
 }
 
-// ListBooksByPrintsSeriesRelationCollectionOK runs the method ListBooksByPrintsSeries of the given controller with the given parameters.
+// ListBooksByPrintSeriesRelationCollectionOK runs the method ListBooksByPrintSeries of the given controller with the given parameters.
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ListBooksByPrintsSeriesRelationCollectionOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationCollectionController, collectionID int, printID int, seriesID int) (http.ResponseWriter, app.BookCollection) {
+func ListBooksByPrintSeriesRelationCollectionOK(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationCollectionController, collectionID int, printID int, seriesID int) (http.ResponseWriter, app.BookCollection) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1066,7 +1066,7 @@ func ListBooksByPrintsSeriesRelationCollectionOK(t goatest.TInterface, ctx conte
 		ctx = context.Background()
 	}
 	goaCtx := goa.NewContext(goa.WithAction(ctx, "RelationCollectionTest"), rw, req, prms)
-	listBooksByPrintsSeriesCtx, _err := app.NewListBooksByPrintsSeriesRelationCollectionContext(goaCtx, req, service)
+	listBooksByPrintSeriesCtx, _err := app.NewListBooksByPrintSeriesRelationCollectionContext(goaCtx, req, service)
 	if _err != nil {
 		e, ok := _err.(goa.ServiceError)
 		if !ok {
@@ -1077,7 +1077,7 @@ func ListBooksByPrintsSeriesRelationCollectionOK(t goatest.TInterface, ctx conte
 	}
 
 	// Perform action
-	_err = ctrl.ListBooksByPrintsSeries(listBooksByPrintsSeriesCtx)
+	_err = ctrl.ListBooksByPrintSeries(listBooksByPrintSeriesCtx)
 
 	// Validate response
 	if _err != nil {
@@ -1103,11 +1103,11 @@ func ListBooksByPrintsSeriesRelationCollectionOK(t goatest.TInterface, ctx conte
 	return rw, mt
 }
 
-// ListBooksByPrintsSeriesRelationCollectionOKLink runs the method ListBooksByPrintsSeries of the given controller with the given parameters.
+// ListBooksByPrintSeriesRelationCollectionOKLink runs the method ListBooksByPrintSeries of the given controller with the given parameters.
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ListBooksByPrintsSeriesRelationCollectionOKLink(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationCollectionController, collectionID int, printID int, seriesID int) (http.ResponseWriter, app.BookLinkCollection) {
+func ListBooksByPrintSeriesRelationCollectionOKLink(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationCollectionController, collectionID int, printID int, seriesID int) (http.ResponseWriter, app.BookLinkCollection) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1142,7 +1142,7 @@ func ListBooksByPrintsSeriesRelationCollectionOKLink(t goatest.TInterface, ctx c
 		ctx = context.Background()
 	}
 	goaCtx := goa.NewContext(goa.WithAction(ctx, "RelationCollectionTest"), rw, req, prms)
-	listBooksByPrintsSeriesCtx, _err := app.NewListBooksByPrintsSeriesRelationCollectionContext(goaCtx, req, service)
+	listBooksByPrintSeriesCtx, _err := app.NewListBooksByPrintSeriesRelationCollectionContext(goaCtx, req, service)
 	if _err != nil {
 		e, ok := _err.(goa.ServiceError)
 		if !ok {
@@ -1153,7 +1153,7 @@ func ListBooksByPrintsSeriesRelationCollectionOKLink(t goatest.TInterface, ctx c
 	}
 
 	// Perform action
-	_err = ctrl.ListBooksByPrintsSeries(listBooksByPrintsSeriesCtx)
+	_err = ctrl.ListBooksByPrintSeries(listBooksByPrintSeriesCtx)
 
 	// Validate response
 	if _err != nil {
@@ -1179,11 +1179,11 @@ func ListBooksByPrintsSeriesRelationCollectionOKLink(t goatest.TInterface, ctx c
 	return rw, mt
 }
 
-// ListBooksByPrintsSeriesRelationCollectionServiceUnavailable runs the method ListBooksByPrintsSeries of the given controller with the given parameters.
+// ListBooksByPrintSeriesRelationCollectionServiceUnavailable runs the method ListBooksByPrintSeries of the given controller with the given parameters.
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func ListBooksByPrintsSeriesRelationCollectionServiceUnavailable(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationCollectionController, collectionID int, printID int, seriesID int) http.ResponseWriter {
+func ListBooksByPrintSeriesRelationCollectionServiceUnavailable(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.RelationCollectionController, collectionID int, printID int, seriesID int) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -1217,7 +1217,7 @@ func ListBooksByPrintsSeriesRelationCollectionServiceUnavailable(t goatest.TInte
 		ctx = context.Background()
 	}
 	goaCtx := goa.NewContext(goa.WithAction(ctx, "RelationCollectionTest"), rw, req, prms)
-	listBooksByPrintsSeriesCtx, _err := app.NewListBooksByPrintsSeriesRelationCollectionContext(goaCtx, req, service)
+	listBooksByPrintSeriesCtx, _err := app.NewListBooksByPrintSeriesRelationCollectionContext(goaCtx, req, service)
 	if _err != nil {
 		e, ok := _err.(goa.ServiceError)
 		if !ok {
@@ -1228,7 +1228,7 @@ func ListBooksByPrintsSeriesRelationCollectionServiceUnavailable(t goatest.TInte
 	}
 
 	// Perform action
-	_err = ctrl.ListBooksByPrintsSeries(listBooksByPrintsSeriesCtx)
+	_err = ctrl.ListBooksByPrintSeries(listBooksByPrintSeriesCtx)
 
 	// Validate response
 	if _err != nil {

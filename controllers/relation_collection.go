@@ -32,11 +32,11 @@ func (c *RelationCollectionController) ListBooksByPrint(ctx *app.ListBooksByPrin
 	// RelationCollectionController_ListBooksByPrint: end_implement
 }
 
-// ListBooksByPrintsSeries runs the listBooksByPrintsSeries action.
-func (c *RelationCollectionController) ListBooksByPrintsSeries(ctx *app.ListBooksByPrintsSeriesRelationCollectionContext) error {
-	// RelationCollectionController_ListBooksByPrintsSeries: start_implement
+// ListBooksByPrintSeries runs the listBooksByPrintSeries action.
+func (c *RelationCollectionController) ListBooksByPrintSeries(ctx *app.ListBooksByPrintSeriesRelationCollectionContext) error {
+	// RelationCollectionController_ListBooksByPrintSeries: start_implement
 	return listBooks(ctx, c.fm, ctx, &ctx.CollectionID, &ctx.PrintID, &ctx.SeriesID)
-	// RelationCollectionController_ListBooksByPrintsSeries: end_implement
+	// RelationCollectionController_ListBooksByPrintSeries: end_implement
 }
 
 // ListBooksBySeries runs the listBooksBySeries action.
@@ -46,7 +46,7 @@ func (c *RelationCollectionController) ListBooksBySeries(ctx *app.ListBooksBySer
 	// RelationCollectionController_ListBooksBySeries: end_implement
 }
 
-// ListBooksBySeriesPrints runs the listBooksBySeriesPrint action.
+// ListBooksBySeriesPrint runs the listBooksBySeriesPrint action.
 func (c *RelationCollectionController) ListBooksBySeriesPrint(ctx *app.ListBooksBySeriesPrintRelationCollectionContext) error {
 	// RelationCollectionController_ListBooksBySeriesPrint: start_implement
 	return listBooks(ctx, c.fm, ctx, &ctx.CollectionID, &ctx.PrintID, &ctx.SeriesID)
@@ -77,12 +77,18 @@ func (c *RelationCollectionController) ListSeries(ctx *app.ListSeriesRelationCol
 	}
 	defer func() { m.Close() }()
 
-	list, err := m.ListSeriesByCollectionID(ctx.CollectionID)
+	_, err = m.GetCollectionByID(ctx.CollectionID)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get series list`, `error`, err.Error())
+		goa.ContextLogger(ctx).Error(`failed to get collection`, `error`, err.Error())
 		if err == model.ErrNotFound {
 			return ctx.NotFound()
 		}
+		return ctx.InternalServerError()
+	}
+
+	list, err := m.ListSeriesByCollectionID(ctx.CollectionID)
+	if err != nil {
+		goa.ContextLogger(ctx).Error(`failed to get series list`, `error`, err.Error())
 		return ctx.InternalServerError()
 	}
 	bs := make(app.SeriesCollection, len(list))
@@ -103,12 +109,27 @@ func (c *RelationCollectionController) ListSeriesByPrint(ctx *app.ListSeriesByPr
 	}
 	defer func() { m.Close() }()
 
-	list, err := m.ListSeriesByCollectionIDPrintID(ctx.CollectionID, ctx.PrintID)
+	_, err = m.GetCollectionByID(ctx.CollectionID)
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get series list`, `error`, err.Error())
+		goa.ContextLogger(ctx).Error(`failed to get collection`, `error`, err.Error())
 		if err == model.ErrNotFound {
 			return ctx.NotFound()
 		}
+		return ctx.InternalServerError()
+	}
+
+	_, err = m.GetPrintByID(ctx.PrintID)
+	if err != nil {
+		goa.ContextLogger(ctx).Error(`failed to get print`, `error`, err.Error())
+		if err == model.ErrNotFound {
+			return ctx.NotFound()
+		}
+		return ctx.InternalServerError()
+	}
+
+	list, err := m.ListSeriesByCollectionIDPrintID(ctx.CollectionID, ctx.PrintID)
+	if err != nil {
+		goa.ContextLogger(ctx).Error(`failed to get series list`, `error`, err.Error())
 		return ctx.InternalServerError()
 	}
 	bs := make(app.SeriesCollection, len(list))

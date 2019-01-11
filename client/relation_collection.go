@@ -19,11 +19,10 @@ import (
 )
 
 // ListBooksRelationCollectionPath computes a request path to the listBooks action of relationCollection.
-func ListBooksRelationCollectionPath(editorID int, collectionID int) string {
-	param0 := strconv.Itoa(editorID)
-	param1 := strconv.Itoa(collectionID)
+func ListBooksRelationCollectionPath(collectionID int) string {
+	param0 := strconv.Itoa(collectionID)
 
-	return fmt.Sprintf("/editors/%s/collections/%s/books", param0, param1)
+	return fmt.Sprintf("/collections/%s/books", param0)
 }
 
 // List books by collection
@@ -50,12 +49,11 @@ func (c *Client) NewListBooksRelationCollectionRequest(ctx context.Context, path
 }
 
 // ListBooksByPrintRelationCollectionPath computes a request path to the listBooksByPrint action of relationCollection.
-func ListBooksByPrintRelationCollectionPath(editorID int, collectionID int, printID string) string {
-	param0 := strconv.Itoa(editorID)
-	param1 := strconv.Itoa(collectionID)
-	param2 := printID
+func ListBooksByPrintRelationCollectionPath(collectionID int, printID int) string {
+	param0 := strconv.Itoa(collectionID)
+	param1 := strconv.Itoa(printID)
 
-	return fmt.Sprintf("/editors/%s/collections/%s/prints/%s/books", param0, param1, param2)
+	return fmt.Sprintf("/collections/%s/prints/%s/books", param0, param1)
 }
 
 // List books by collection and print
@@ -82,13 +80,12 @@ func (c *Client) NewListBooksByPrintRelationCollectionRequest(ctx context.Contex
 }
 
 // ListBooksByPrintsSeriesRelationCollectionPath computes a request path to the listBooksByPrintsSeries action of relationCollection.
-func ListBooksByPrintsSeriesRelationCollectionPath(editorID int, collectionID int, printID string, seriesID string) string {
-	param0 := strconv.Itoa(editorID)
-	param1 := strconv.Itoa(collectionID)
-	param2 := printID
-	param3 := seriesID
+func ListBooksByPrintsSeriesRelationCollectionPath(collectionID int, printID int, seriesID int) string {
+	param0 := strconv.Itoa(collectionID)
+	param1 := strconv.Itoa(printID)
+	param2 := strconv.Itoa(seriesID)
 
-	return fmt.Sprintf("/editors/%s/collections/%s/prints/%s/series/%s/books", param0, param1, param2, param3)
+	return fmt.Sprintf("/collections/%s/prints/%s/series/%s/books", param0, param1, param2)
 }
 
 // List books by collection, prints and series
@@ -115,12 +112,11 @@ func (c *Client) NewListBooksByPrintsSeriesRelationCollectionRequest(ctx context
 }
 
 // ListBooksBySeriesRelationCollectionPath computes a request path to the listBooksBySeries action of relationCollection.
-func ListBooksBySeriesRelationCollectionPath(editorID int, collectionID int, seriesID string) string {
-	param0 := strconv.Itoa(editorID)
-	param1 := strconv.Itoa(collectionID)
-	param2 := seriesID
+func ListBooksBySeriesRelationCollectionPath(collectionID int, seriesID int) string {
+	param0 := strconv.Itoa(collectionID)
+	param1 := strconv.Itoa(seriesID)
 
-	return fmt.Sprintf("/editors/%s/collections/%s/series/%s/books", param0, param1, param2)
+	return fmt.Sprintf("/collections/%s/series/%s/books", param0, param1)
 }
 
 // List books by collection and series
@@ -146,27 +142,26 @@ func (c *Client) NewListBooksBySeriesRelationCollectionRequest(ctx context.Conte
 	return req, nil
 }
 
-// ListBooksBySeriesPrintsRelationCollectionPath computes a request path to the listBooksBySeriesPrints action of relationCollection.
-func ListBooksBySeriesPrintsRelationCollectionPath(editorID int, collectionID int, seriesID string, printID string) string {
-	param0 := strconv.Itoa(editorID)
-	param1 := strconv.Itoa(collectionID)
-	param2 := seriesID
-	param3 := printID
+// ListBooksBySeriesPrintRelationCollectionPath computes a request path to the listBooksBySeriesPrint action of relationCollection.
+func ListBooksBySeriesPrintRelationCollectionPath(collectionID int, seriesID int, printID int) string {
+	param0 := strconv.Itoa(collectionID)
+	param1 := strconv.Itoa(seriesID)
+	param2 := strconv.Itoa(printID)
 
-	return fmt.Sprintf("/editors/%s/collections/%s/series/%s/prints/%s/books", param0, param1, param2, param3)
+	return fmt.Sprintf("/collections/%s/series/%s/prints/%s/books", param0, param1, param2)
 }
 
-// List books by collection, series and prints
-func (c *Client) ListBooksBySeriesPrintsRelationCollection(ctx context.Context, path string) (*http.Response, error) {
-	req, err := c.NewListBooksBySeriesPrintsRelationCollectionRequest(ctx, path)
+// List books by collection, series and print
+func (c *Client) ListBooksBySeriesPrintRelationCollection(ctx context.Context, path string) (*http.Response, error) {
+	req, err := c.NewListBooksBySeriesPrintRelationCollectionRequest(ctx, path)
 	if err != nil {
 		return nil, err
 	}
 	return c.Client.Do(ctx, req)
 }
 
-// NewListBooksBySeriesPrintsRelationCollectionRequest create the request corresponding to the listBooksBySeriesPrints action endpoint of the relationCollection resource.
-func (c *Client) NewListBooksBySeriesPrintsRelationCollectionRequest(ctx context.Context, path string) (*http.Request, error) {
+// NewListBooksBySeriesPrintRelationCollectionRequest create the request corresponding to the listBooksBySeriesPrint action endpoint of the relationCollection resource.
+func (c *Client) NewListBooksBySeriesPrintRelationCollectionRequest(ctx context.Context, path string) (*http.Request, error) {
 	scheme := c.Scheme
 	if scheme == "" {
 		scheme = "http"
@@ -180,11 +175,10 @@ func (c *Client) NewListBooksBySeriesPrintsRelationCollectionRequest(ctx context
 }
 
 // ListPrintsRelationCollectionPath computes a request path to the listPrints action of relationCollection.
-func ListPrintsRelationCollectionPath(editorID int, collectionID int) string {
-	param0 := strconv.Itoa(editorID)
-	param1 := strconv.Itoa(collectionID)
+func ListPrintsRelationCollectionPath(collectionID int) string {
+	param0 := strconv.Itoa(collectionID)
 
-	return fmt.Sprintf("/editors/%s/collections/%s/prints", param0, param1)
+	return fmt.Sprintf("/collections/%s/prints", param0)
 }
 
 // List prints by collection
@@ -211,12 +205,11 @@ func (c *Client) NewListPrintsRelationCollectionRequest(ctx context.Context, pat
 }
 
 // ListPrintsBySeriesRelationCollectionPath computes a request path to the listPrintsBySeries action of relationCollection.
-func ListPrintsBySeriesRelationCollectionPath(editorID int, collectionID int, seriesID string) string {
-	param0 := strconv.Itoa(editorID)
-	param1 := strconv.Itoa(collectionID)
-	param2 := seriesID
+func ListPrintsBySeriesRelationCollectionPath(collectionID int, seriesID int) string {
+	param0 := strconv.Itoa(collectionID)
+	param1 := strconv.Itoa(seriesID)
 
-	return fmt.Sprintf("/editors/%s/collections/%s/series/%s/prints", param0, param1, param2)
+	return fmt.Sprintf("/collections/%s/series/%s/prints", param0, param1)
 }
 
 // List prints by collection and series
@@ -243,11 +236,10 @@ func (c *Client) NewListPrintsBySeriesRelationCollectionRequest(ctx context.Cont
 }
 
 // ListSeriesRelationCollectionPath computes a request path to the listSeries action of relationCollection.
-func ListSeriesRelationCollectionPath(editorID int, collectionID int) string {
-	param0 := strconv.Itoa(editorID)
-	param1 := strconv.Itoa(collectionID)
+func ListSeriesRelationCollectionPath(collectionID int) string {
+	param0 := strconv.Itoa(collectionID)
 
-	return fmt.Sprintf("/editors/%s/collections/%s/series", param0, param1)
+	return fmt.Sprintf("/collections/%s/series", param0)
 }
 
 // List series by collection
@@ -274,12 +266,11 @@ func (c *Client) NewListSeriesRelationCollectionRequest(ctx context.Context, pat
 }
 
 // ListSeriesByPrintRelationCollectionPath computes a request path to the listSeriesByPrint action of relationCollection.
-func ListSeriesByPrintRelationCollectionPath(editorID int, collectionID int, printID string) string {
-	param0 := strconv.Itoa(editorID)
-	param1 := strconv.Itoa(collectionID)
-	param2 := printID
+func ListSeriesByPrintRelationCollectionPath(collectionID int, printID int) string {
+	param0 := strconv.Itoa(collectionID)
+	param1 := strconv.Itoa(printID)
 
-	return fmt.Sprintf("/editors/%s/collections/%s/prints/%s/series", param0, param1, param2)
+	return fmt.Sprintf("/collections/%s/prints/%s/series", param0, param1)
 }
 
 // List series by collection and print

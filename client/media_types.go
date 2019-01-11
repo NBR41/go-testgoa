@@ -141,6 +141,8 @@ type Authorship struct {
 	Author *Author `form:"author,omitempty" json:"author,omitempty" yaml:"author,omitempty" xml:"author,omitempty"`
 	// Unique Author ID
 	AuthorID int `form:"author_id" json:"author_id" yaml:"author_id" xml:"author_id"`
+	// Unique Authorship ID
+	AuthorshipID int `form:"authorship_id" json:"authorship_id" yaml:"authorship_id" xml:"authorship_id"`
 	// book struct
 	Book *Book `form:"book,omitempty" json:"book,omitempty" yaml:"book,omitempty" xml:"book,omitempty"`
 	// Unique Book ID
@@ -166,6 +168,9 @@ func (mt *Authorship) Validate() (err error) {
 	}
 	if mt.AuthorID < 1 {
 		err = goa.MergeErrors(err, goa.InvalidRangeError(`response.author_id`, mt.AuthorID, 1, true))
+	}
+	if mt.AuthorshipID < 1 {
+		err = goa.MergeErrors(err, goa.InvalidRangeError(`response.authorship_id`, mt.AuthorshipID, 1, true))
 	}
 	if mt.Book != nil {
 		if err2 := mt.Book.Validate(); err2 != nil {
@@ -655,6 +660,63 @@ func (c *Client) DecodeClassLinkCollection(resp *http.Response) (ClassLinkCollec
 	return decoded, err
 }
 
+// A series classification (default view)
+//
+// Identifier: application/vnd.classification+json; view=default
+type Classification struct {
+	// class struct
+	Class *Class `form:"class" json:"class" yaml:"class" xml:"class"`
+	// API href for making requests
+	Href string `form:"href" json:"href" yaml:"href" xml:"href"`
+}
+
+// Validate validates the Classification media type instance.
+func (mt *Classification) Validate() (err error) {
+	if mt.Class == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "class"))
+	}
+	if mt.Href == "" {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "href"))
+	}
+	if mt.Class != nil {
+		if err2 := mt.Class.Validate(); err2 != nil {
+			err = goa.MergeErrors(err, err2)
+		}
+	}
+	return
+}
+
+// DecodeClassification decodes the Classification instance encoded in resp body.
+func (c *Client) DecodeClassification(resp *http.Response) (*Classification, error) {
+	var decoded Classification
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return &decoded, err
+}
+
+// ClassificationCollection is the media type for an array of Classification (default view)
+//
+// Identifier: application/vnd.classification+json; type=collection; view=default
+type ClassificationCollection []*Classification
+
+// Validate validates the ClassificationCollection media type instance.
+func (mt ClassificationCollection) Validate() (err error) {
+	for _, e := range mt {
+		if e != nil {
+			if err2 := e.Validate(); err2 != nil {
+				err = goa.MergeErrors(err, err2)
+			}
+		}
+	}
+	return
+}
+
+// DecodeClassificationCollection decodes the ClassificationCollection instance encoded in resp body.
+func (c *Client) DecodeClassificationCollection(resp *http.Response) (ClassificationCollection, error) {
+	var decoded ClassificationCollection
+	err := c.Decoder.Decode(&decoded, resp.Body, resp.Header.Get("Content-Type"))
+	return decoded, err
+}
+
 // A Collection (default view)
 //
 // Identifier: application/vnd.collection+json; view=default
@@ -802,6 +864,8 @@ type Edition struct {
 	Collection *Collection `form:"collection,omitempty" json:"collection,omitempty" yaml:"collection,omitempty" xml:"collection,omitempty"`
 	// Unique Collection ID
 	CollectionID int `form:"collection_id" json:"collection_id" yaml:"collection_id" xml:"collection_id"`
+	// Unique Edition ID
+	EditionID int `form:"edition_id" json:"edition_id" yaml:"edition_id" xml:"edition_id"`
 	// API href for making requests
 	Href string `form:"href" json:"href" yaml:"href" xml:"href"`
 	// print struct
@@ -831,6 +895,9 @@ func (mt *Edition) Validate() (err error) {
 	}
 	if mt.CollectionID < 1 {
 		err = goa.MergeErrors(err, goa.InvalidRangeError(`response.collection_id`, mt.CollectionID, 1, true))
+	}
+	if mt.EditionID < 1 {
+		err = goa.MergeErrors(err, goa.InvalidRangeError(`response.edition_id`, mt.EditionID, 1, true))
 	}
 	if mt.Print != nil {
 		if err2 := mt.Print.Validate(); err2 != nil {

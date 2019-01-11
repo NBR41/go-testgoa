@@ -2392,7 +2392,7 @@ type RelationCollectionController interface {
 	goa.Muxer
 	ListBooks(*ListBooksRelationCollectionContext) error
 	ListBooksByPrint(*ListBooksByPrintRelationCollectionContext) error
-	ListBooksByPrintsSeries(*ListBooksByPrintsSeriesRelationCollectionContext) error
+	ListBooksByPrintSeries(*ListBooksByPrintSeriesRelationCollectionContext) error
 	ListBooksBySeries(*ListBooksBySeriesRelationCollectionContext) error
 	ListBooksBySeriesPrint(*ListBooksBySeriesPrintRelationCollectionContext) error
 	ListPrints(*ListPrintsRelationCollectionContext) error
@@ -2453,15 +2453,15 @@ func MountRelationCollectionController(service *goa.Service, ctrl RelationCollec
 			return err
 		}
 		// Build the context
-		rctx, err := NewListBooksByPrintsSeriesRelationCollectionContext(ctx, req, service)
+		rctx, err := NewListBooksByPrintSeriesRelationCollectionContext(ctx, req, service)
 		if err != nil {
 			return err
 		}
-		return ctrl.ListBooksByPrintsSeries(rctx)
+		return ctrl.ListBooksByPrintSeries(rctx)
 	}
 	h = handleRelationCollectionOrigin(h)
-	service.Mux.Handle("GET", "/collections/:collection_id/prints/:print_id/series/:series_id/books", ctrl.MuxHandler("listBooksByPrintsSeries", h, nil))
-	service.LogInfo("mount", "ctrl", "RelationCollection", "action", "ListBooksByPrintsSeries", "route", "GET /collections/:collection_id/prints/:print_id/series/:series_id/books")
+	service.Mux.Handle("GET", "/collections/:collection_id/prints/:print_id/series/:series_id/books", ctrl.MuxHandler("listBooksByPrintSeries", h, nil))
+	service.LogInfo("mount", "ctrl", "RelationCollection", "action", "ListBooksByPrintSeries", "route", "GET /collections/:collection_id/prints/:print_id/series/:series_id/books")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request

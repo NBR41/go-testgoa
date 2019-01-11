@@ -21,8 +21,10 @@ import (
 
 // CreateBooksPayload is the books create action payload.
 type CreateBooksPayload struct {
-	Isbn string `form:"isbn" json:"isbn" yaml:"isbn" xml:"isbn"`
-	Name string `form:"name" json:"name" yaml:"name" xml:"name"`
+	// Book ISBN
+	BookIsbn string `form:"book_isbn" json:"book_isbn" yaml:"book_isbn" xml:"book_isbn"`
+	// Book Name
+	BookName string `form:"book_name" json:"book_name" yaml:"book_name" xml:"book_name"`
 	// Unique Series ID
 	SeriesID int `form:"series_id" json:"series_id" yaml:"series_id" xml:"series_id"`
 }
@@ -171,7 +173,8 @@ func (c *Client) NewShowBooksRequest(ctx context.Context, path string) (*http.Re
 
 // UpdateBooksPayload is the books update action payload.
 type UpdateBooksPayload struct {
-	Name *string `form:"name,omitempty" json:"name,omitempty" yaml:"name,omitempty" xml:"name,omitempty"`
+	// Book Name
+	BookName *string `form:"book_name,omitempty" json:"book_name,omitempty" yaml:"book_name,omitempty" xml:"book_name,omitempty"`
 	// Unique Series ID
 	SeriesID *int `form:"series_id,omitempty" json:"series_id,omitempty" yaml:"series_id,omitempty" xml:"series_id,omitempty"`
 }

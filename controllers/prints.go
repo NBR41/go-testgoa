@@ -154,6 +154,28 @@ func listPrints(ctx context.Context, fm Fmodeler, rCtx printsResponse, collectio
 	}
 	defer func() { m.Close() }()
 
+	if collectionID != nil {
+		_, err = m.GetCollectionByID(*collectionID)
+		if err != nil {
+			goa.ContextLogger(ctx).Error(`failed to get collection`, `error`, err.Error())
+			if err == model.ErrNotFound {
+				return rCtx.NotFound()
+			}
+			return rCtx.InternalServerError()
+		}
+	}
+
+	if seriesID != nil {
+		_, err = m.GetSeriesByID(*seriesID)
+		if err != nil {
+			goa.ContextLogger(ctx).Error(`failed to get series`, `error`, err.Error())
+			if err == model.ErrNotFound {
+				return rCtx.NotFound()
+			}
+			return rCtx.InternalServerError()
+		}
+	}
+
 	list, err := m.ListPrintsByIDs(collectionID, seriesID)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to get print list`, `error`, err.Error())

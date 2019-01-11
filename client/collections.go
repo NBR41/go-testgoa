@@ -28,10 +28,9 @@ type CreateCollectionsPayload struct {
 }
 
 // CreateCollectionsPath computes a request path to the create action of collections.
-func CreateCollectionsPath(editorID int) string {
-	param0 := strconv.Itoa(editorID)
+func CreateCollectionsPath() string {
 
-	return fmt.Sprintf("/editors/%s/collections", param0)
+	return fmt.Sprintf("/collections")
 }
 
 // Create new collection
@@ -77,11 +76,10 @@ func (c *Client) NewCreateCollectionsRequest(ctx context.Context, path string, p
 }
 
 // DeleteCollectionsPath computes a request path to the delete action of collections.
-func DeleteCollectionsPath(editorID int, collectionID int) string {
-	param0 := strconv.Itoa(editorID)
-	param1 := strconv.Itoa(collectionID)
+func DeleteCollectionsPath(collectionID int) string {
+	param0 := strconv.Itoa(collectionID)
 
-	return fmt.Sprintf("/editors/%s/collections/%s", param0, param1)
+	return fmt.Sprintf("/collections/%s", param0)
 }
 
 // delete collection by id
@@ -113,10 +111,9 @@ func (c *Client) NewDeleteCollectionsRequest(ctx context.Context, path string) (
 }
 
 // ListCollectionsPath computes a request path to the list action of collections.
-func ListCollectionsPath(editorID int) string {
-	param0 := strconv.Itoa(editorID)
+func ListCollectionsPath() string {
 
-	return fmt.Sprintf("/editors/%s/collections", param0)
+	return fmt.Sprintf("/collections")
 }
 
 // List collections
@@ -143,11 +140,10 @@ func (c *Client) NewListCollectionsRequest(ctx context.Context, path string) (*h
 }
 
 // ShowCollectionsPath computes a request path to the show action of collections.
-func ShowCollectionsPath(editorID int, collectionID int) string {
-	param0 := strconv.Itoa(editorID)
-	param1 := strconv.Itoa(collectionID)
+func ShowCollectionsPath(collectionID int) string {
+	param0 := strconv.Itoa(collectionID)
 
-	return fmt.Sprintf("/editors/%s/collections/%s", param0, param1)
+	return fmt.Sprintf("/collections/%s", param0)
 }
 
 // Get collection by id
@@ -182,11 +178,10 @@ type UpdateCollectionsPayload struct {
 }
 
 // UpdateCollectionsPath computes a request path to the update action of collections.
-func UpdateCollectionsPath(editorID int, collectionID int) string {
-	param0 := strconv.Itoa(editorID)
-	param1 := strconv.Itoa(collectionID)
+func UpdateCollectionsPath(collectionID int) string {
+	param0 := strconv.Itoa(collectionID)
 
-	return fmt.Sprintf("/editors/%s/collections/%s", param0, param1)
+	return fmt.Sprintf("/collections/%s", param0)
 }
 
 // Update collection by id

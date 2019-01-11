@@ -139,9 +139,9 @@ func (c *Client) NewListSeriesRelationAuthorRequest(ctx context.Context, path st
 }
 
 // ListSeriesByCategoryRelationAuthorPath computes a request path to the listSeriesByCategory action of relationAuthor.
-func ListSeriesByCategoryRelationAuthorPath(authorID int, categoryID string) string {
+func ListSeriesByCategoryRelationAuthorPath(authorID int, categoryID int) string {
 	param0 := strconv.Itoa(authorID)
-	param1 := categoryID
+	param1 := strconv.Itoa(categoryID)
 
 	return fmt.Sprintf("/authors/%s/categories/%s/series", param0, param1)
 }
@@ -170,9 +170,9 @@ func (c *Client) NewListSeriesByCategoryRelationAuthorRequest(ctx context.Contex
 }
 
 // ListSeriesByClassRelationAuthorPath computes a request path to the listSeriesByClass action of relationAuthor.
-func ListSeriesByClassRelationAuthorPath(authorID int, classID string) string {
+func ListSeriesByClassRelationAuthorPath(authorID int, classID int) string {
 	param0 := strconv.Itoa(authorID)
-	param1 := classID
+	param1 := strconv.Itoa(classID)
 
 	return fmt.Sprintf("/authors/%s/classes/%s/series", param0, param1)
 }
@@ -201,9 +201,9 @@ func (c *Client) NewListSeriesByClassRelationAuthorRequest(ctx context.Context, 
 }
 
 // ListSeriesByRoleRelationAuthorPath computes a request path to the listSeriesByRole action of relationAuthor.
-func ListSeriesByRoleRelationAuthorPath(authorID int, roleID string) string {
+func ListSeriesByRoleRelationAuthorPath(authorID int, roleID int) string {
 	param0 := strconv.Itoa(authorID)
-	param1 := roleID
+	param1 := strconv.Itoa(roleID)
 
 	return fmt.Sprintf("/authors/%s/roles/%s/series", param0, param1)
 }

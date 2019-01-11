@@ -105,7 +105,7 @@ var _ = Resource("relationCollection", func() {
 		Response(BadRequest, ErrorMedia)
 	})
 
-	Action("listBooksByPrintsSeries", func() {
+	Action("listBooksByPrintSeries", func() {
 		Description("List books by collection, prints and series")
 		Routing(GET(printPath + printIDPath + seriesPath + seriesIDPath + bookPath))
 		Params(func() {

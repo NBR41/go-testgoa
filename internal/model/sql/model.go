@@ -2,6 +2,7 @@ package sql
 
 import (
 	"database/sql"
+	"strings"
 
 	// enable mysql driver
 	_ "github.com/go-sql-driver/mysql"
@@ -26,7 +27,7 @@ type Model struct {
 	db    *sql.DB
 }
 
-// NewModel returns new instance of model
+// New returns new instance of model
 func New(f ConnGetter, pass model.Passworder) (*Model, error) {
 	db, err := f()
 	if err != nil {
@@ -48,10 +49,20 @@ func (m *Model) exec(query string, params ...interface{}) error {
 	nb, err := res.RowsAffected()
 	switch {
 	case err != nil:
-		return err
+		return filterError(err)
 	case nb == 0:
 		return model.ErrNotFound
 	default:
 		return nil
 	}
+}
+
+func filterError(err error) error {
+	if strings.HasPrefix(err.Error(), "ERROR 1452") {
+		return model.ErrNotFound
+	}
+	if strings.HasPrefix(err.Error(), "ERROR 1062") {
+		return model.ErrDuplicateKey
+	}
+	return err
 }

@@ -40,7 +40,7 @@ func main() {
 	// Mount "authors" controller
 	app.MountAuthorsController(service, controllers.NewAuthorsController(service, conf.fmod))
 	// Mount "authorships" controller
-	app.MountAuthorshipsController(service, controllers.NewAuthorshipsController(service))
+	app.MountAuthorshipsController(service, controllers.NewAuthorshipsController(service, conf.fmod))
 	// Mount "books" controller
 	app.MountBooksController(service, controllers.NewBooksController(service, conf.fmod))
 	// Mount "categories" controller
@@ -48,11 +48,11 @@ func main() {
 	// Mount "classes" controller
 	app.MountClassesController(service, controllers.NewClassesController(service, conf.fmod))
 	// Mount "classifications" controller
-	app.MountClassificationsController(service, controllers.NewClassificationsController(service))
+	app.MountClassificationsController(service, controllers.NewClassificationsController(service, conf.fmod))
 	// Mount "collections" controller
-	app.MountCollectionsController(service, controllers.NewCollectionsController(service))
+	app.MountCollectionsController(service, controllers.NewCollectionsController(service, conf.fmod))
 	// Mount "editions" controller
-	app.MountEditionsController(service, controllers.NewEditionsController(service))
+	app.MountEditionsController(service, controllers.NewEditionsController(service, conf.fmod))
 	// Mount "editors" controller
 	app.MountEditorsController(service, controllers.NewEditorsController(service, conf.fmod))
 	// Mount "health" controller
@@ -64,19 +64,19 @@ func main() {
 	// Mount "prints" controller
 	app.MountPrintsController(service, controllers.NewPrintsController(service, conf.fmod))
 	// Mount "relationAuthor" controller
-	app.MountRelationAuthorController(service, controllers.NewRelationAuthorController(service))
+	app.MountRelationAuthorController(service, controllers.NewRelationAuthorController(service, conf.fmod))
 	// Mount "relationCategory" controller
-	app.MountRelationCategoryController(service, controllers.NewRelationCategoryController(service))
+	app.MountRelationCategoryController(service, controllers.NewRelationCategoryController(service, conf.fmod))
 	// Mount "relationClass" controller
-	app.MountRelationClassController(service, controllers.NewRelationClassController(service))
+	app.MountRelationClassController(service, controllers.NewRelationClassController(service, conf.fmod))
 	// Mount "relationCollection" controller
-	app.MountRelationCollectionController(service, controllers.NewRelationCollectionController(service))
+	app.MountRelationCollectionController(service, controllers.NewRelationCollectionController(service, conf.fmod))
 	// Mount "relationRole" controller
-	app.MountRelationRoleController(service, controllers.NewRelationRoleController(service))
+	app.MountRelationRoleController(service, controllers.NewRelationRoleController(service, conf.fmod))
 	// Mount "roles" controller
 	app.MountRolesController(service, controllers.NewRolesController(service, conf.fmod))
 	// Mount "series" controller
-	app.MountSeriesController(service, controllers.NewSeriesController(service))
+	app.MountSeriesController(service, controllers.NewSeriesController(service, conf.fmod))
 	// Mount "swagger" controller
 	app.MountSwaggerController(service, controllers.NewSwaggerController(service))
 	// Mount "token" controller

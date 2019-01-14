@@ -218,6 +218,64 @@ func TestListRoles(t *testing.T) {
 	}
 }
 
+func TestListRolesByAuthorID(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	qry := `SELECT r.id, r.name FROM role r JOIN authorship a ON \(a.role_id = r.id\) where a.author_id = \?`
+	secQry := `SELECT id, name FROM author where id = \?`
+	mock.ExpectQuery(secQry).WithArgs(1).WillReturnError(errors.New("query error"))
+	mock.ExpectQuery(secQry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}))
+	mock.ExpectQuery(secQry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "baz"))
+	mock.ExpectQuery(qry).WillReturnError(errors.New("query error"))
+	mock.ExpectQuery(secQry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "baz"))
+	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow("foo", "bar"))
+	mock.ExpectQuery(secQry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "baz"))
+	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "foo").RowError(0, errors.New("scan error")))
+	mock.ExpectQuery(secQry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "baz"))
+	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "foo"))
+
+	m, _ := New(ConnGetter(func() (*sql.DB, error) {
+		return db, nil
+	}), nil)
+
+	tests := []struct {
+		desc string
+		exp  []model.Role
+		err  error
+	}{
+		{"author query error", nil, errors.New("query error")},
+		{"author not found", nil, model.ErrNotFound},
+		{"query error", nil, errors.New("query error")},
+		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
+		{"scan error", nil, errors.New("scan error")},
+		{"valid", []model.Role{model.Role{ID: 1, Name: "foo"}}, nil},
+	}
+
+	for i := range tests {
+		v, err := m.ListRolesByAuthorID(1)
+		if err != nil {
+			if tests[i].err == nil {
+				t.Errorf("unexpected error for [%s], [%v]", tests[i].desc, err)
+				continue
+			}
+			if tests[i].err.Error() != err.Error() {
+				t.Errorf("unexpected error for [%s], exp [%v] got [%v]", tests[i].desc, tests[i].err, err)
+				continue
+			}
+			continue
+		}
+
+		if tests[i].err != nil {
+			t.Errorf("expecting error for [%s]", tests[i].desc)
+		}
+		if diff := pretty.Compare(v, tests[i].exp); diff != "" {
+			t.Errorf("unexpected value for [%s]\n%s", tests[i].desc, diff)
+		}
+	}
+}
+
 func TestUpdateRole(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	if err != nil {

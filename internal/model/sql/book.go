@@ -2,13 +2,14 @@ package sql
 
 import (
 	"database/sql"
+	"strings"
 
 	"github.com/NBR41/go-testgoa/internal/model"
 )
 
 func (m *Model) getBook(query string, params ...interface{}) (*model.Book, error) {
 	var b = model.Book{}
-	err := m.db.QueryRow(query, params...).Scan(&b.ID, &b.ISBN, &b.Name)
+	err := m.db.QueryRow(query, params...).Scan(&b.ID, &b.ISBN, &b.Name, &b.SeriesID)
 	switch {
 	case err == sql.ErrNoRows:
 		return nil, model.ErrNotFound
@@ -19,59 +20,16 @@ func (m *Model) getBook(query string, params ...interface{}) (*model.Book, error
 	}
 }
 
-// InsertBook inserts book
-func (m *Model) InsertBook(isbn, name string, seriesID int) (*model.Book, error) {
-	_, err := m.GetBookByISBN(isbn)
-	switch {
-	case err != nil && err != model.ErrNotFound:
-		return nil, err
-	case err == nil:
-		return nil, model.ErrDuplicateKey
-	}
-	res, err := m.db.Exec(
-		`
-INSERT INTO book (id, isbn, name, series_id, create_ts, update_ts)
-VALUES (null, ?, ?, ?, NOW(), NOW())
-ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`,
-		isbn, name, seriesID,
-	)
-	if err != nil {
-		return nil, err
-	}
-	var id int64
-	id, err = res.LastInsertId()
-	if err != nil {
-		return nil, err
-	}
-	return &model.Book{ID: id, ISBN: isbn, Name: name}, nil
-}
-
-// GetBookByID returns book by ID
-func (m *Model) GetBookByID(id int) (*model.Book, error) {
-	return m.getBook(`SELECT id, isbn, name from book where id = ?`, id)
-}
-
-// GetBookByISBN returns book by ISBN
-func (m *Model) GetBookByISBN(isbn string) (*model.Book, error) {
-	return m.getBook(`SELECT id, isbn, name from book where isbn = ?`, isbn)
-}
-
-// GetBookByName returns book by name
-func (m *Model) GetBookByName(name string) (*model.Book, error) {
-	return m.getBook(`SELECT id, isbn, name from book where name = ?`, name)
-}
-
-// GetBookList returns book list
-func (m *Model) ListBooks() ([]model.Book, error) {
-	rows, err := m.db.Query(`SELECT id, isbn, name FROM book`)
+func (m *Model) listBooks(query string, params ...interface{}) ([]*model.Book, error) {
+	rows, err := m.db.Query(query, params...)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var l = []model.Book{}
+	var l = []*model.Book{}
 	for rows.Next() {
-		b := model.Book{}
-		if err := rows.Scan(&b.ID, &b.ISBN, &b.Name); err != nil {
+		b := &model.Book{}
+		if err := rows.Scan(&b.ID, &b.ISBN, &b.Name, &b.SeriesID); err != nil {
 			return nil, err
 		}
 		l = append(l, b)
@@ -83,12 +41,103 @@ func (m *Model) ListBooks() ([]model.Book, error) {
 	return l, nil
 }
 
+// GetBookByID returns book by ID
+func (m *Model) GetBookByID(id int) (*model.Book, error) {
+	return m.getBook(`SELECT id, isbn, name, series_id from book where id = ?`, id)
+}
+
+// GetBookByISBN returns book by ISBN
+func (m *Model) GetBookByISBN(isbn string) (*model.Book, error) {
+	return m.getBook(`SELECT id, isbn, name, series_id from book where isbn = ?`, isbn)
+}
+
+// GetBookByName returns book by name
+func (m *Model) GetBookByName(name string) (*model.Book, error) {
+	return m.getBook(`SELECT id, isbn, name, series_id from book where name = ?`, name)
+}
+
+// ListBooks returns book list
+func (m *Model) ListBooks() ([]*model.Book, error) {
+	return m.listBooks(`SELECT id, isbn, name, series_id FROM book`)
+}
+
+// ListBooksByIDs returns book list filtered by collection or print or series
+func (m *Model) ListBooksByIDs(collectionID, printID, seriesID *int) ([]*model.Book, error) {
+	if collectionID == nil && printID == nil && seriesID == nil {
+		return m.ListBooks()
+	}
+	qry := `SELECT distinct b.id, b.isbn, b.name, b.series_id FROM book b`
+	where := []string{}
+	vals := []interface{}{}
+	if seriesID != nil {
+		if _, err := m.GetSeriesByID(*seriesID); err != nil {
+			return nil, err
+		}
+		where = append(where, `b.series_id = ?`)
+		vals = append(vals, *seriesID)
+	}
+	if collectionID != nil || printID != nil {
+		qry += ` JOIN edition e on (e.book_id = b.id)`
+		if collectionID != nil {
+			if _, err := m.GetCollectionByID(*collectionID); err != nil {
+				return nil, err
+			}
+			where = append(where, `e.collection_id = ?`)
+			vals = append(vals, *collectionID)
+		}
+		if printID != nil {
+			if _, err := m.GetPrintByID(*printID); err != nil {
+				return nil, err
+			}
+			where = append(where, `e.print_id = ?`)
+			vals = append(vals, *printID)
+		}
+	}
+	return m.listBooks(qry+` WHERE `+strings.Join(where, " AND "), vals...)
+}
+
+// InsertBook inserts book
+func (m *Model) InsertBook(isbn, name string, seriesID int) (*model.Book, error) {
+	res, err := m.db.Exec(
+		`
+INSERT INTO book (id, isbn, name, series_id, create_ts, update_ts)
+VALUES (null, ?, ?, ?, NOW(), NOW())
+ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`,
+		isbn, name, seriesID,
+	)
+	if err != nil {
+		return nil, filterError(err)
+	}
+	var id int64
+	id, err = res.LastInsertId()
+	if err != nil {
+		return nil, err
+	}
+	return &model.Book{ID: id, ISBN: isbn, Name: name, SeriesID: int64(seriesID)}, nil
+}
+
 // UpdateBook update book infos
-// TODO modify query
 func (m *Model) UpdateBook(id int, name *string, seriesID *int) error {
+	if name == nil && seriesID == nil {
+		return nil
+	}
+	cols := []string{}
+	vals := []interface{}{}
+	if name != nil {
+		cols = append(cols, "name = ?")
+		vals = append(vals, *name)
+	}
+	if seriesID != nil {
+		if _, err := m.GetSeriesByID(*seriesID); err != nil {
+			return err
+		}
+		cols = append(cols, "series_id = ?")
+		vals = append(vals, *seriesID)
+	}
+	vals = append(vals, id)
 	return m.exec(
-		`UPDATE book set name = ?, update_ts = NOW() where id = ?`,
-		*name, id,
+		`UPDATE book set `+strings.Join(cols, ",")+`, update_ts = NOW() where id = ?`,
+		vals...,
 	)
 }
 

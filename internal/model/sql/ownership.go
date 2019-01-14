@@ -4,8 +4,12 @@ import (
 	"github.com/NBR41/go-testgoa/internal/model"
 )
 
-// GetOwnershipList returns book list by user ID
+// ListOwnershipsByUserID returns book list by user ID
 func (m *Model) ListOwnershipsByUserID(userID int) ([]*model.Ownership, error) {
+	_, err := m.GetUserByID(userID)
+	if err != nil {
+		return nil, err
+	}
 	rows, err := m.db.Query(
 		`
 SELECT b.id, b.isbn, b.name
@@ -43,7 +47,7 @@ JOIN books b ON (u.book_id = b.id) where user_id = ?`,
 func (m *Model) GetOwnership(userID, bookID int) (*model.Ownership, error) {
 	b, err := m.getBook(
 		`
-SELECT b.id, b.isbn, b.name
+SELECT b.id, b.isbn, b.name, b.series_id
 FROM ownership u
 JOIN books b ON (u.book_id = b.id)
 where u.user_id = ? and b.id = ?`,
@@ -65,7 +69,7 @@ ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`,
 		userID, bookID,
 	)
 	if err != nil {
-		return nil, err
+		return nil, filterError(err)
 	}
 	return &model.Ownership{UserID: int64(userID), BookID: int64(bookID)}, nil
 }

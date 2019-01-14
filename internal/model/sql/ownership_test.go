@@ -19,10 +19,18 @@ func TestListOwnershipsByUserID(t *testing.T) {
 SELECT b.id, b.isbn, b.name
 FROM ownership u
 JOIN books b ON \(u.book_id = b.id\) where user_id = \?`
+	uQry := `SELECT id, nickname, email, activated, admin FROM user WHERE id = \?`
+	mock.ExpectQuery(uQry).WithArgs(123).WillReturnError(errors.New("query error"))
+	mock.ExpectQuery(uQry).WithArgs(123).WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "activated", "admin"}))
+	mock.ExpectQuery(uQry).WithArgs(123).WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "activated", "admin"}).AddRow(2, "bar", "qux", 1, 1))
 	mock.ExpectQuery(qry).WithArgs(123).WillReturnError(errors.New("query error"))
+	mock.ExpectQuery(uQry).WithArgs(123).WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "activated", "admin"}).AddRow(2, "bar", "qux", 1, 1))
 	mock.ExpectQuery(qry).WithArgs(123).WillReturnRows(sqlmock.NewRows([]string{"id", "isbn", "name"}))
+	mock.ExpectQuery(uQry).WithArgs(123).WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "activated", "admin"}).AddRow(2, "bar", "qux", 1, 1))
 	mock.ExpectQuery(qry).WithArgs(123).WillReturnRows(sqlmock.NewRows([]string{"id", "isbn", "name"}).AddRow("foo", "bar", "baz"))
+	mock.ExpectQuery(uQry).WithArgs(123).WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "activated", "admin"}).AddRow(2, "bar", "qux", 1, 1))
 	mock.ExpectQuery(qry).WithArgs(123).WillReturnRows(sqlmock.NewRows([]string{"id", "isbn", "name"}).AddRow(456, "foo", "bar").RowError(0, errors.New("scan error")))
+	mock.ExpectQuery(uQry).WithArgs(123).WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "activated", "admin"}).AddRow(2, "bar", "qux", 1, 1))
 	mock.ExpectQuery(qry).WithArgs(123).WillReturnRows(sqlmock.NewRows([]string{"id", "isbn", "name"}).AddRow(456, "foo", "bar"))
 
 	m, _ := New(ConnGetter(func() (*sql.DB, error) {
@@ -34,6 +42,8 @@ JOIN books b ON \(u.book_id = b.id\) where user_id = \?`
 		exp  []*model.Ownership
 		err  error
 	}{
+		{"query error on user", nil, errors.New("query error")},
+		{"user not found", nil, model.ErrNotFound},
 		{"query error", nil, errors.New("query error")},
 		{"no rows", []*model.Ownership{}, nil},
 		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
@@ -68,13 +78,13 @@ func TestGetOwnership(t *testing.T) {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
 	qry := `
-SELECT b.id, b.isbn, b.name
+SELECT b.id, b.isbn, b.name, b.series_id
 FROM ownership u
 JOIN books b ON \(u.book_id = b.id\)
 where u.user_id = \? and b.id = \?`
 	mock.ExpectQuery(qry).WithArgs(123, 456).WillReturnError(errors.New("query error"))
-	mock.ExpectQuery(qry).WithArgs(123, 456).WillReturnRows(sqlmock.NewRows([]string{"book_id", "isbn", "name"}))
-	mock.ExpectQuery(qry).WithArgs(123, 456).WillReturnRows(sqlmock.NewRows([]string{"book_id", "isbn", "name"}).AddRow(456, "foo", "bar"))
+	mock.ExpectQuery(qry).WithArgs(123, 456).WillReturnRows(sqlmock.NewRows([]string{"book_id", "isbn", "name", "series_id"}))
+	mock.ExpectQuery(qry).WithArgs(123, 456).WillReturnRows(sqlmock.NewRows([]string{"book_id", "isbn", "name", "series_id"}).AddRow(456, "foo", "bar", 789))
 
 	m, _ := New(ConnGetter(func() (*sql.DB, error) {
 		return db, nil
@@ -86,7 +96,7 @@ where u.user_id = \? and b.id = \?`
 	}{
 		{"query error", nil, errors.New("query error")},
 		{"not found", nil, model.ErrNotFound},
-		{"valid", &model.Ownership{UserID: 123, BookID: 456, Book: &model.Book{ID: 456, ISBN: "foo", Name: "bar"}}, nil},
+		{"valid", &model.Ownership{UserID: 123, BookID: 456, Book: &model.Book{ID: 456, ISBN: "foo", Name: "bar", SeriesID: 789}}, nil},
 	}
 
 	for i := range tests {

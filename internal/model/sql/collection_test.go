@@ -274,7 +274,7 @@ func TestListCollections(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `SELECT c.id, c.name, e.id, e.name FROM collection c JOIN editors e ON \(e.id = c.editor_id\)`
+	qry := `SELECT distinct c.id, c.name, e.id, e.name FROM collection c JOIN editors e ON \(e.id = c.editor_id\)`
 	mock.ExpectQuery(qry).WillReturnError(errors.New("query error"))
 	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "eid", "ename"}).AddRow("foo", "bar", "baz", "qux"))
 	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "eid", "ename"}).AddRow(1, "foo", 2, "bar").RowError(0, errors.New("scan error")))
@@ -323,10 +323,17 @@ func TestListCollectionsByEditorID(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `SELECT c.id, c.name, e.id, e.name FROM collection c JOIN editors e ON \(e.id = c.editor_id\) where e.id = \?`
-	mock.ExpectQuery(qry).WillReturnError(errors.New("query error"))
+	qry := `SELECT distinct c.id, c.name, e.id, e.name FROM collection c JOIN editors e ON \(e.id = c.editor_id\) where e.id = \?`
+	edQry := `SELECT id, name FROM editor where id = \?`
+	mock.ExpectQuery(edQry).WithArgs(2).WillReturnError(errors.New("query error"))
+	mock.ExpectQuery(edQry).WithArgs(2).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}))
+	mock.ExpectQuery(edQry).WithArgs(2).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(2, "bar"))
+	mock.ExpectQuery(qry).WithArgs(2).WillReturnError(errors.New("query error"))
+	mock.ExpectQuery(edQry).WithArgs(2).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(2, "bar"))
 	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "eid", "ename"}).AddRow("foo", "bar", "baz", "qux"))
+	mock.ExpectQuery(edQry).WithArgs(2).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(2, "bar"))
 	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "eid", "ename"}).AddRow(1, "foo", 2, "bar").RowError(0, errors.New("scan error")))
+	mock.ExpectQuery(edQry).WithArgs(2).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(2, "bar"))
 	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "eid", "ename"}).AddRow(1, "foo", 2, "bar"))
 
 	m, _ := New(ConnGetter(func() (*sql.DB, error) {
@@ -338,6 +345,8 @@ func TestListCollectionsByEditorID(t *testing.T) {
 		exp  []*model.Collection
 		err  error
 	}{
+		{"query error on editor", nil, errors.New("query error")},
+		{"editor not found", nil, model.ErrNotFound},
 		{"query error", nil, errors.New("query error")},
 		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
 		{"scan error", nil, errors.New("scan error")},

@@ -19,16 +19,8 @@ func (m *Model) getCategory(query string, params ...interface{}) (*model.Categor
 	}
 }
 
-func (m *Model) GetCategoryByID(id int) (*model.Category, error) {
-	return m.getCategory(`SELECT id, name FROM category where id = ?`, id)
-}
-
-func (m *Model) GetCategoryByName(name string) (*model.Category, error) {
-	return m.getCategory(`SELECT id, name FROM category where name = ?`, name)
-}
-
-func (m *Model) ListCategories() ([]*model.Category, error) {
-	rows, err := m.db.Query(`SELECT id, name FROM category`)
+func (m *Model) listCategories(query string, params ...interface{}) ([]*model.Category, error) {
+	rows, err := m.db.Query(query, params...)
 	if err != nil {
 		return nil, err
 	}
@@ -48,14 +40,54 @@ func (m *Model) ListCategories() ([]*model.Category, error) {
 	return l, nil
 }
 
-func (m *Model) InsertCategory(name string) (*model.Category, error) {
-	_, err := m.GetCategoryByName(name)
-	switch {
-	case err != nil && err != model.ErrNotFound:
+// GetCategoryByID returns category by ID
+func (m *Model) GetCategoryByID(id int) (*model.Category, error) {
+	return m.getCategory(`SELECT id, name FROM category where id = ?`, id)
+}
+
+// GetCategoryByName returns category by name
+func (m *Model) GetCategoryByName(name string) (*model.Category, error) {
+	return m.getCategory(`SELECT id, name FROM category where name = ?`, name)
+}
+
+// ListCategories list categories
+func (m *Model) ListCategories() ([]*model.Category, error) {
+	return m.listCategories(`SELECT id, name FROM category`)
+}
+
+// ListCategoriesByAuthorID list categories by author id
+func (m *Model) ListCategoriesByAuthorID(authorID int) ([]*model.Category, error) {
+	if _, err := m.GetAuthorByID(authorID); err != nil {
 		return nil, err
-	case err == nil:
-		return nil, model.ErrDuplicateKey
 	}
+	return m.listCategories(`
+SELECT distinct c.id, c.name
+FROM category c
+JOIN series s ON (s.category_id = c.id)
+JOIN book b ON (b.series_id = s.id)
+JOIN authorship a ON (a.book_id = b.id)
+WHERE a.author_id = ?`,
+		authorID,
+	)
+}
+
+// ListCategoriesByClassID list categories by class id
+func (m *Model) ListCategoriesByClassID(classID int) ([]*model.Category, error) {
+	if _, err := m.GetClassByID(classID); err != nil {
+		return nil, err
+	}
+	return m.listCategories(`
+SELECT distinct c.id, c.name
+FROM category c
+JOIN series s ON (s.category_id = c.id)
+JOIN classification cl ON (cl.series_id = s.id)
+WHERE cl.class_id = ?`,
+		classID,
+	)
+}
+
+// InsertCategory inserts category
+func (m *Model) InsertCategory(name string) (*model.Category, error) {
 	res, err := m.db.Exec(
 		`
 INSERT INTO category (id, name, create_ts, update_ts)
@@ -64,7 +96,7 @@ ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`,
 		name,
 	)
 	if err != nil {
-		return nil, err
+		return nil, filterError(err)
 	}
 	var id int64
 	id, err = res.LastInsertId()
@@ -74,6 +106,7 @@ ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`,
 	return &model.Category{ID: id, Name: name}, nil
 }
 
+// UpdateCategory update category
 func (m *Model) UpdateCategory(id int, name string) error {
 	return m.exec(
 		`UPDATE category SET name = ?, update_ts = NOW() WHERE id = ?`,
@@ -81,6 +114,7 @@ func (m *Model) UpdateCategory(id int, name string) error {
 	)
 }
 
+// DeleteCategory delete category
 func (m *Model) DeleteCategory(id int) error {
 	return m.exec(`DELETE FROM category where id = ?`, id)
 }

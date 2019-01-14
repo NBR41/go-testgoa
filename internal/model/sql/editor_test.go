@@ -21,14 +21,9 @@ INSERT INTO editor \(id, name, create_ts, update_ts\)
 VALUES \(null, \?, NOW\(\), NOW\(\)\)
 ON DUPLICATE KEY UPDATE update_ts = VALUES\(update_ts\)`
 
-	nameqry := `SELECT id, name FROM editor where name = \?`
-	mock.ExpectQuery(nameqry).WithArgs("foo").WillReturnError(errors.New("duplicate error"))
-	mock.ExpectQuery(nameqry).WithArgs("foo").WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "foo"))
-	mock.ExpectQuery(nameqry).WithArgs("foo").WillReturnError(model.ErrNotFound)
+	mock.ExpectExec(qry).WithArgs("foo").WillReturnError(errors.New("ERROR 1062"))
 	mock.ExpectExec(qry).WithArgs("foo").WillReturnError(errors.New("query error"))
-	mock.ExpectQuery(nameqry).WithArgs("foo").WillReturnError(model.ErrNotFound)
 	mock.ExpectExec(qry).WithArgs("foo").WillReturnResult(sqlmock.NewErrorResult(errors.New("result error")))
-	mock.ExpectQuery(nameqry).WithArgs("foo").WillReturnError(model.ErrNotFound)
 	mock.ExpectExec(qry).WithArgs("foo").WillReturnResult(sqlmock.NewResult(123, 1))
 
 	m, _ := New(ConnGetter(func() (*sql.DB, error) {
@@ -40,7 +35,6 @@ ON DUPLICATE KEY UPDATE update_ts = VALUES\(update_ts\)`
 		exp  *model.Editor
 		err  error
 	}{
-		{"duplicate error", nil, errors.New("duplicate error")},
 		{"duplicate", nil, model.ErrDuplicateKey},
 		{"query error", nil, errors.New("query error")},
 		{"result error", nil, errors.New("result error")},

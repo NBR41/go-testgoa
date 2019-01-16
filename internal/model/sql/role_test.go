@@ -16,19 +16,10 @@ func TestInsertRole(t *testing.T) {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
 
-	qry := `
-INSERT INTO role \(id, name, create_ts, update_ts\)
-VALUES \(null, \?, NOW\(\), NOW\(\)\)
-ON DUPLICATE KEY UPDATE update_ts = VALUES\(update_ts\)`
-
-	nameqry := `SELECT id, name FROM role where name = \?`
-	mock.ExpectQuery(nameqry).WithArgs("foo").WillReturnError(errors.New("duplicate error"))
-	mock.ExpectQuery(nameqry).WithArgs("foo").WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "foo"))
-	mock.ExpectQuery(nameqry).WithArgs("foo").WillReturnError(model.ErrNotFound)
+	qry := escapeQuery(qryInsertRole)
+	mock.ExpectExec(qry).WithArgs("foo").WillReturnError(errors.New(duplicateErr))
 	mock.ExpectExec(qry).WithArgs("foo").WillReturnError(errors.New("query error"))
-	mock.ExpectQuery(nameqry).WithArgs("foo").WillReturnError(model.ErrNotFound)
 	mock.ExpectExec(qry).WithArgs("foo").WillReturnResult(sqlmock.NewErrorResult(errors.New("result error")))
-	mock.ExpectQuery(nameqry).WithArgs("foo").WillReturnError(model.ErrNotFound)
 	mock.ExpectExec(qry).WithArgs("foo").WillReturnResult(sqlmock.NewResult(123, 1))
 
 	m, _ := New(ConnGetter(func() (*sql.DB, error) {
@@ -40,7 +31,6 @@ ON DUPLICATE KEY UPDATE update_ts = VALUES\(update_ts\)`
 		exp  *model.Role
 		err  error
 	}{
-		{"duplicate error", nil, errors.New("duplicate error")},
 		{"duplicate", nil, model.ErrDuplicateKey},
 		{"query error", nil, errors.New("query error")},
 		{"result error", nil, errors.New("result error")},
@@ -74,7 +64,7 @@ func TestGetRoleByID(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `SELECT id, name FROM role where id = \?`
+	qry := escapeQuery(qryGetRoleByID)
 	mock.ExpectQuery(qry).WithArgs(123).WillReturnError(errors.New("query error"))
 	mock.ExpectQuery(qry).WithArgs(123).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}))
 	mock.ExpectQuery(qry).WithArgs(123).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow("foo", "bar"))
@@ -124,7 +114,7 @@ func TestGetRoleByName(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `SELECT id, name FROM role where name = \?`
+	qry := escapeQuery(qryGetRoleByName)
 	mock.ExpectQuery(qry).WithArgs("foo").WillReturnError(errors.New("query error"))
 	mock.ExpectQuery(qry).WithArgs("foo").WillReturnRows(sqlmock.NewRows([]string{"id", "name"}))
 	mock.ExpectQuery(qry).WithArgs("foo").WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow("foo", "bar"))
@@ -174,7 +164,7 @@ func TestListRoles(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `SELECT id, name FROM role`
+	qry := escapeQuery(qryListRoles)
 	mock.ExpectQuery(qry).WillReturnError(errors.New("query error"))
 	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow("foo", "bar"))
 	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "foo").RowError(0, errors.New("scan error")))
@@ -223,17 +213,10 @@ func TestListRolesByAuthorID(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `SELECT r.id, r.name FROM role r JOIN authorship a ON \(a.role_id = r.id\) where a.author_id = \?`
-	secQry := `SELECT id, name FROM author where id = \?`
-	mock.ExpectQuery(secQry).WithArgs(1).WillReturnError(errors.New("query error"))
-	mock.ExpectQuery(secQry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}))
-	mock.ExpectQuery(secQry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "baz"))
+	qry := escapeQuery(qryListRolesByAuthorID)
 	mock.ExpectQuery(qry).WillReturnError(errors.New("query error"))
-	mock.ExpectQuery(secQry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "baz"))
 	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow("foo", "bar"))
-	mock.ExpectQuery(secQry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "baz"))
 	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "foo").RowError(0, errors.New("scan error")))
-	mock.ExpectQuery(secQry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "baz"))
 	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "foo"))
 
 	m, _ := New(ConnGetter(func() (*sql.DB, error) {
@@ -245,8 +228,6 @@ func TestListRolesByAuthorID(t *testing.T) {
 		exp  []model.Role
 		err  error
 	}{
-		{"author query error", nil, errors.New("query error")},
-		{"author not found", nil, model.ErrNotFound},
 		{"query error", nil, errors.New("query error")},
 		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
 		{"scan error", nil, errors.New("scan error")},
@@ -281,7 +262,7 @@ func TestUpdateRole(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `UPDATE role SET name = \?, update_ts = NOW\(\) WHERE id = \?`
+	qry := escapeQuery(qryUpdateRole)
 	mock.ExpectExec(qry).WithArgs("foo", 123).WillReturnError(errors.New("query error"))
 	mock.ExpectExec(qry).WithArgs("foo", 123).WillReturnResult(sqlmock.NewResult(0, 0))
 	mock.ExpectExec(qry).WithArgs("foo", 123).WillReturnResult(sqlmock.NewResult(0, 1))
@@ -320,7 +301,7 @@ func TestDeleteRole(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `DELETE FROM role where id = \?`
+	qry := escapeQuery(qryDeleteRole)
 	mock.ExpectExec(qry).WithArgs(123).WillReturnError(errors.New("query error"))
 	mock.ExpectExec(qry).WithArgs(123).WillReturnResult(sqlmock.NewErrorResult(errors.New("result error")))
 	mock.ExpectExec(qry).WithArgs(123).WillReturnResult(sqlmock.NewResult(0, 0))

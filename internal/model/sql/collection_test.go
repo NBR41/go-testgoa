@@ -15,11 +15,7 @@ func TestGetCollectionByID(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `
-SELECT c.id, c.name, e.id, e.name
-FROM collection c
-JOIN editors e ON \(e.id = c.editor_id\)
-WHERE c.id = \?`
+	qry := escapeQuery(qryGetCollectionByID)
 	mock.ExpectQuery(qry).WithArgs(123).WillReturnError(errors.New("query error"))
 	mock.ExpectQuery(qry).WithArgs(123).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "eid", "ename"}))
 	mock.ExpectQuery(qry).WithArgs(123).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "eid", "ename"}).AddRow("foo", "bar", "baz", "qux"))
@@ -69,11 +65,7 @@ func TestGetCollectionByName(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `
-SELECT c.id, c.name, e.id, e.name
-FROM collection c
-JOIN editors e ON \(e.id = c.editor_id\)
-WHERE c.name = \?`
+	qry := escapeQuery(qryGetCollectionByName)
 	mock.ExpectQuery(qry).WithArgs("foo").WillReturnError(errors.New("query error"))
 	mock.ExpectQuery(qry).WithArgs("foo").WillReturnRows(sqlmock.NewRows([]string{"id", "name", "eid", "ename"}))
 	mock.ExpectQuery(qry).WithArgs("foo").WillReturnRows(sqlmock.NewRows([]string{"id", "name", "eid", "ename"}).AddRow("foo", "bar", "baz", "qux"))
@@ -124,18 +116,10 @@ func TestInsertCollection(t *testing.T) {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
 
-	qry := `
-INSERT INTO collection \(id, name, editor_id, create_ts, update_ts\)
-VALUES \(null, \?, \?, NOW\(\), NOW\(\)\)
-ON DUPLICATE KEY UPDATE update_ts = VALUES\(update_ts\)`
-
-	idqry := `SELECT id, name FROM editor where id = \?`
-	mock.ExpectQuery(idqry).WithArgs(456).WillReturnError(errors.New("duplicate error"))
-	mock.ExpectQuery(idqry).WithArgs(456).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(456, "bar"))
+	qry := escapeQuery(qryInsertCollection)
+	mock.ExpectExec(qry).WithArgs("foo", 456).WillReturnError(errors.New(duplicateErr))
 	mock.ExpectExec(qry).WithArgs("foo", 456).WillReturnError(errors.New("query error"))
-	mock.ExpectQuery(idqry).WithArgs(456).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(456, "bar"))
 	mock.ExpectExec(qry).WithArgs("foo", 456).WillReturnResult(sqlmock.NewErrorResult(errors.New("result error")))
-	mock.ExpectQuery(idqry).WithArgs(456).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(456, "bar"))
 	mock.ExpectExec(qry).WithArgs("foo", 456).WillReturnResult(sqlmock.NewResult(123, 1))
 
 	m, _ := New(ConnGetter(func() (*sql.DB, error) {
@@ -147,10 +131,10 @@ ON DUPLICATE KEY UPDATE update_ts = VALUES\(update_ts\)`
 		exp  *model.Collection
 		err  error
 	}{
-		{"duplicate error", nil, errors.New("duplicate error")},
+		{"duplicate error", nil, model.ErrDuplicateKey},
 		{"query error", nil, errors.New("query error")},
 		{"result error", nil, errors.New("result error")},
-		{"valid", &model.Collection{ID: 123, Name: "foo", EditorID: 456, Editor: &model.Editor{ID: 456, Name: "bar"}}, nil},
+		{"valid", &model.Collection{ID: 123, Name: "foo", EditorID: 456}, nil},
 	}
 
 	for i := range tests {
@@ -180,15 +164,12 @@ func TestUpdateCollection(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	idqry := `SELECT id, name FROM editor where id = \?`
-	mock.ExpectExec(`UPDATE collection SET name = \?, update_ts = NOW\(\) where id = \?`).WithArgs("foo", 123).WillReturnError(errors.New("update error"))
-	mock.ExpectQuery(idqry).WithArgs(456).WillReturnError(sql.ErrNoRows)
-	mock.ExpectQuery(idqry).WithArgs(456).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(456, "bar"))
-	mock.ExpectExec(`UPDATE collection SET name = \?, editor_id = \?, update_ts = NOW\(\) where id = \?`).WithArgs("foo", 456, 123).WillReturnError(errors.New("update error"))
-	mock.ExpectQuery(idqry).WithArgs(456).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(456, "bar"))
-	mock.ExpectExec(`UPDATE collection SET name = \?, editor_id = \?, update_ts = NOW\(\) where id = \?`).WithArgs("foo", 456, 123).WillReturnResult(sqlmock.NewResult(0, 0))
-	mock.ExpectQuery(idqry).WithArgs(456).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(456, "bar"))
-	mock.ExpectExec(`UPDATE collection SET name = \?, editor_id = \?, update_ts = NOW\(\) where id = \?`).WithArgs("foo", 456, 123).WillReturnResult(sqlmock.NewResult(0, 1))
+	mock.ExpectExec(`UPDATE collection SET name = \?, update_ts = NOW\(\) WHERE id = \?`).WithArgs("foo", 123).WillReturnError(errors.New("update error"))
+	mock.ExpectExec(`UPDATE collection SET name = \?, editor_id = \?, update_ts = NOW\(\) WHERE id = \?`).WithArgs("foo", 456, 123).WillReturnError(errors.New("update error"))
+	mock.ExpectExec(`UPDATE collection SET name = \?, editor_id = \?, update_ts = NOW\(\) WHERE id = \?`).WithArgs("foo", 456, 123).WillReturnError(errors.New(duplicateErr))
+	mock.ExpectExec(`UPDATE collection SET name = \?, editor_id = \?, update_ts = NOW\(\) WHERE id = \?`).WithArgs("foo", 456, 123).WillReturnError(errors.New(fkErr))
+	mock.ExpectExec(`UPDATE collection SET name = \?, editor_id = \?, update_ts = NOW\(\) WHERE id = \?`).WithArgs("foo", 456, 123).WillReturnResult(sqlmock.NewResult(0, 0))
+	mock.ExpectExec(`UPDATE collection SET name = \?, editor_id = \?, update_ts = NOW\(\) WHERE id = \?`).WithArgs("foo", 456, 123).WillReturnResult(sqlmock.NewResult(0, 1))
 
 	m, _ := New(ConnGetter(func() (*sql.DB, error) {
 		return db, nil
@@ -203,10 +184,11 @@ func TestUpdateCollection(t *testing.T) {
 		err      error
 	}{
 		{"no values", nil, nil, nil},
-		{"name error", &name, nil, errors.New("update error")},
-		{"name, editor error not found", &name, &editorID, model.ErrNotFound},
+		{"update name error", &name, nil, errors.New("update error")},
 		{"name, editor error", &name, &editorID, errors.New("update error")},
-		{"name, editor not found", &name, &editorID, model.ErrNotFound},
+		{"name, editor duplicate", &name, &editorID, model.ErrDuplicateKey},
+		{"name, editor not found", &name, &editorID, model.ErrInvalidID},
+		{"collection not found ", &name, &editorID, model.ErrNotFound},
 		{"name, editor valid", &name, &editorID, nil},
 	}
 	for i := range tests {
@@ -233,7 +215,7 @@ func TestDeleteCollection(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `DELETE FROM collection where id = \?`
+	qry := escapeQuery(qryDeleteCollection)
 	mock.ExpectExec(qry).WithArgs(123).WillReturnError(errors.New("query error"))
 	mock.ExpectExec(qry).WithArgs(123).WillReturnResult(sqlmock.NewErrorResult(errors.New("result error")))
 	mock.ExpectExec(qry).WithArgs(123).WillReturnResult(sqlmock.NewResult(0, 0))
@@ -274,7 +256,7 @@ func TestListCollections(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `SELECT distinct c.id, c.name, e.id, e.name FROM collection c JOIN editors e ON \(e.id = c.editor_id\)`
+	qry := escapeQuery(qryListCollections)
 	mock.ExpectQuery(qry).WillReturnError(errors.New("query error"))
 	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "eid", "ename"}).AddRow("foo", "bar", "baz", "qux"))
 	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "eid", "ename"}).AddRow(1, "foo", 2, "bar").RowError(0, errors.New("scan error")))
@@ -323,17 +305,10 @@ func TestListCollectionsByEditorID(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `SELECT distinct c.id, c.name, e.id, e.name FROM collection c JOIN editors e ON \(e.id = c.editor_id\) where e.id = \?`
-	edQry := `SELECT id, name FROM editor where id = \?`
-	mock.ExpectQuery(edQry).WithArgs(2).WillReturnError(errors.New("query error"))
-	mock.ExpectQuery(edQry).WithArgs(2).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}))
-	mock.ExpectQuery(edQry).WithArgs(2).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(2, "bar"))
+	qry := escapeQuery(qryListCollectionsByEditorID)
 	mock.ExpectQuery(qry).WithArgs(2).WillReturnError(errors.New("query error"))
-	mock.ExpectQuery(edQry).WithArgs(2).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(2, "bar"))
 	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "eid", "ename"}).AddRow("foo", "bar", "baz", "qux"))
-	mock.ExpectQuery(edQry).WithArgs(2).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(2, "bar"))
 	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "eid", "ename"}).AddRow(1, "foo", 2, "bar").RowError(0, errors.New("scan error")))
-	mock.ExpectQuery(edQry).WithArgs(2).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(2, "bar"))
 	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "eid", "ename"}).AddRow(1, "foo", 2, "bar"))
 
 	m, _ := New(ConnGetter(func() (*sql.DB, error) {
@@ -345,8 +320,6 @@ func TestListCollectionsByEditorID(t *testing.T) {
 		exp  []*model.Collection
 		err  error
 	}{
-		{"query error on editor", nil, errors.New("query error")},
-		{"editor not found", nil, model.ErrNotFound},
 		{"query error", nil, errors.New("query error")},
 		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
 		{"scan error", nil, errors.New("scan error")},

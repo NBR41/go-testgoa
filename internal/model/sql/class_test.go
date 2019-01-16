@@ -16,12 +16,8 @@ func TestInsertClass(t *testing.T) {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
 
-	qry := `
-INSERT INTO class \(id, name, create_ts, update_ts\)
-VALUES \(null, \?, NOW\(\), NOW\(\)\)
-ON DUPLICATE KEY UPDATE update_ts = VALUES\(update_ts\)`
-
-	mock.ExpectExec(qry).WithArgs("foo").WillReturnError(errors.New("ERROR 1062"))
+	qry := escapeQuery(qryInsertClass)
+	mock.ExpectExec(qry).WithArgs("foo").WillReturnError(errors.New(duplicateErr))
 	mock.ExpectExec(qry).WithArgs("foo").WillReturnError(errors.New("query error"))
 	mock.ExpectExec(qry).WithArgs("foo").WillReturnResult(sqlmock.NewErrorResult(errors.New("result error")))
 	mock.ExpectExec(qry).WithArgs("foo").WillReturnResult(sqlmock.NewResult(123, 1))
@@ -68,7 +64,7 @@ func TestGetClassByID(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `SELECT id, name FROM class where id = \?`
+	qry := escapeQuery(qryGetClassByID)
 	mock.ExpectQuery(qry).WithArgs(123).WillReturnError(errors.New("query error"))
 	mock.ExpectQuery(qry).WithArgs(123).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}))
 	mock.ExpectQuery(qry).WithArgs(123).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow("foo", "bar"))
@@ -118,7 +114,7 @@ func TestGetClassByName(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `SELECT id, name FROM class where name = \?`
+	qry := escapeQuery(qryGetClassByName)
 	mock.ExpectQuery(qry).WithArgs("foo").WillReturnError(errors.New("query error"))
 	mock.ExpectQuery(qry).WithArgs("foo").WillReturnRows(sqlmock.NewRows([]string{"id", "name"}))
 	mock.ExpectQuery(qry).WithArgs("foo").WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow("foo", "bar"))
@@ -168,7 +164,7 @@ func TestListClasses(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `SELECT id, name FROM class`
+	qry := escapeQuery(qryListClasses)
 	mock.ExpectQuery(qry).WillReturnError(errors.New("query error"))
 	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow("foo", "bar"))
 	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "foo").RowError(0, errors.New("scan error")))
@@ -217,21 +213,10 @@ func TestListClassesBySeriesID(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `
-SELECT distinct cl.id, cl.name
-FROM class cl
-JOIN classification c ON \(c.class_id = cl.id\)
-WHERE c.series_id = \?`
-	secQry := `SELECT s.id, s.name, c.id, c.name FROM series s JOIN category c ON \(c.id = s.category_id\) WHERE s.id = \?`
-	mock.ExpectQuery(secQry).WithArgs(1).WillReturnError(errors.New("query error"))
-	mock.ExpectQuery(secQry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"sid", "sname", "cid", "cname"}))
-	mock.ExpectQuery(secQry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"sid", "sname", "cid", "cname"}).AddRow(1, "baz", 2, "quux"))
+	qry := escapeQuery(qryListClassesBySeriesID)
 	mock.ExpectQuery(qry).WithArgs(1).WillReturnError(errors.New("query error"))
-	mock.ExpectQuery(secQry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"sid", "sname", "cid", "cname"}).AddRow(1, "baz", 2, "quux"))
 	mock.ExpectQuery(qry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow("foo", "bar"))
-	mock.ExpectQuery(secQry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"sid", "sname", "cid", "cname"}).AddRow(1, "baz", 2, "quux"))
 	mock.ExpectQuery(qry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "foo").RowError(0, errors.New("scan error")))
-	mock.ExpectQuery(secQry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"sid", "sname", "cid", "cname"}).AddRow(1, "baz", 2, "quux"))
 	mock.ExpectQuery(qry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "foo"))
 
 	m, _ := New(ConnGetter(func() (*sql.DB, error) {
@@ -243,8 +228,6 @@ WHERE c.series_id = \?`
 		exp  []model.Class
 		err  error
 	}{
-		{"series query error", nil, errors.New("query error")},
-		{"series not found", nil, model.ErrNotFound},
 		{"query error", nil, errors.New("query error")},
 		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
 		{"scan error", nil, errors.New("scan error")},
@@ -279,24 +262,10 @@ func TestListClassesByAuthorID(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `
-SELECT distinct cl.id, cl.name
-FROM class cl
-JOIN classification c ON \(c.class_id = cl.id\)
-JOIN series s ON \(s.series_id = s.id\)
-JOIN book b ON \(b.series_id = s.id\)
-JOIN authorship a \(a.book_id = b.id\)
-WHERE a.author_id = \?`
-	secQry := `SELECT id, name FROM author where id = \?`
-	mock.ExpectQuery(secQry).WithArgs(1).WillReturnError(errors.New("query error"))
-	mock.ExpectQuery(secQry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}))
-	mock.ExpectQuery(secQry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "baz"))
+	qry := escapeQuery(qryListClassesByAuthorID)
 	mock.ExpectQuery(qry).WithArgs(1).WillReturnError(errors.New("query error"))
-	mock.ExpectQuery(secQry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "baz"))
 	mock.ExpectQuery(qry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow("foo", "bar"))
-	mock.ExpectQuery(secQry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "baz"))
 	mock.ExpectQuery(qry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "foo").RowError(0, errors.New("scan error")))
-	mock.ExpectQuery(secQry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "baz"))
 	mock.ExpectQuery(qry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "foo"))
 
 	m, _ := New(ConnGetter(func() (*sql.DB, error) {
@@ -308,8 +277,6 @@ WHERE a.author_id = \?`
 		exp  []model.Class
 		err  error
 	}{
-		{"author query error", nil, errors.New("query error")},
-		{"author not found", nil, model.ErrNotFound},
 		{"query error", nil, errors.New("query error")},
 		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
 		{"scan error", nil, errors.New("scan error")},
@@ -344,22 +311,10 @@ func TestListClassesByCategoryID(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `
-SELECT distinct cl.id, cl.name
-FROM class cl
-JOIN classification c ON \(c.class_id = cl.id\)
-JOIN series s ON \(s.series_id = s.id\)
-WHERE s.category_id = \?`
-	secQry := `SELECT id, name FROM category where id = \?`
-	mock.ExpectQuery(secQry).WithArgs(1).WillReturnError(errors.New("query error"))
-	mock.ExpectQuery(secQry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}))
-	mock.ExpectQuery(secQry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "baz"))
+	qry := escapeQuery(qryListClassesByCategoryID)
 	mock.ExpectQuery(qry).WithArgs(1).WillReturnError(errors.New("query error"))
-	mock.ExpectQuery(secQry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "baz"))
 	mock.ExpectQuery(qry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow("foo", "bar"))
-	mock.ExpectQuery(secQry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "baz"))
 	mock.ExpectQuery(qry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "foo").RowError(0, errors.New("scan error")))
-	mock.ExpectQuery(secQry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "baz"))
 	mock.ExpectQuery(qry).WithArgs(1).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "foo"))
 
 	m, _ := New(ConnGetter(func() (*sql.DB, error) {
@@ -371,8 +326,6 @@ WHERE s.category_id = \?`
 		exp  []model.Class
 		err  error
 	}{
-		{"category query error", nil, errors.New("query error")},
-		{"category not found", nil, model.ErrNotFound},
 		{"query error", nil, errors.New("query error")},
 		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
 		{"scan error", nil, errors.New("scan error")},
@@ -407,7 +360,7 @@ func TestUpdateClass(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `UPDATE class SET name = \?, update_ts = NOW\(\) WHERE id = \?`
+	qry := escapeQuery(qryUpdateClass)
 	mock.ExpectExec(qry).WithArgs("foo", 123).WillReturnError(errors.New("query error"))
 	mock.ExpectExec(qry).WithArgs("foo", 123).WillReturnResult(sqlmock.NewResult(0, 0))
 	mock.ExpectExec(qry).WithArgs("foo", 123).WillReturnResult(sqlmock.NewResult(0, 1))
@@ -446,7 +399,7 @@ func TestDeleteClass(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `DELETE FROM class where id = \?`
+	qry := escapeQuery(qryDeleteClass)
 	mock.ExpectExec(qry).WithArgs(123).WillReturnError(errors.New("query error"))
 	mock.ExpectExec(qry).WithArgs(123).WillReturnResult(sqlmock.NewErrorResult(errors.New("result error")))
 	mock.ExpectExec(qry).WithArgs(123).WillReturnResult(sqlmock.NewResult(0, 0))

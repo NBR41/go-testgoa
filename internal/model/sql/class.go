@@ -6,6 +6,37 @@ import (
 	"github.com/NBR41/go-testgoa/internal/model"
 )
 
+const (
+	qryGetClassByID          = `SELECT id, name FROM class WHERE id = ?`
+	qryGetClassByName        = `SELECT id, name FROM class WHERE name = ?`
+	qryListClasses           = `SELECT id, name FROM class`
+	qryListClassesBySeriesID = `
+SELECT distinct cl.id, cl.name
+FROM class cl
+JOIN classification c ON (c.class_id = cl.id)
+WHERE c.series_id = ?`
+	qryListClassesByAuthorID = `
+SELECT distinct cl.id, cl.name
+FROM class cl
+JOIN classification c ON (c.class_id = cl.id)
+JOIN series s ON (s.series_id = s.id)
+JOIN book b ON (b.series_id = s.id)
+JOIN authorship a (a.book_id = b.id)
+WHERE a.author_id = ?`
+	qryListClassesByCategoryID = `
+SELECT distinct cl.id, cl.name
+FROM class cl
+JOIN classification c ON (c.class_id = cl.id)
+JOIN series s ON (s.series_id = s.id)
+WHERE s.category_id = ?`
+	qryInsertClass = `
+INSERT INTO class (id, name, create_ts, update_ts)
+VALUES (null, ?, NOW(), NOW())
+ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`
+	qryUpdateClass = `UPDATE class SET name = ?, update_ts = NOW() WHERE id = ?`
+	qryDeleteClass = `DELETE FROM class WHERE id = ?`
+)
+
 func (m *Model) getClass(query string, params ...interface{}) (*model.Class, error) {
 	var v = model.Class{}
 	err := m.db.QueryRow(query, params...).Scan(&v.ID, &v.Name)
@@ -42,74 +73,37 @@ func (m *Model) listClasses(query string, params ...interface{}) ([]*model.Class
 
 // GetClassByID returns class by ID
 func (m *Model) GetClassByID(id int) (*model.Class, error) {
-	return m.getClass(`SELECT id, name FROM class where id = ?`, id)
+	return m.getClass(qryGetClassByID, id)
 }
 
 // GetClassByName returns class by name
 func (m *Model) GetClassByName(name string) (*model.Class, error) {
-	return m.getClass(`SELECT id, name FROM class where name = ?`, name)
+	return m.getClass(qryGetClassByName, name)
 }
 
 // ListClasses list classes
 func (m *Model) ListClasses() ([]*model.Class, error) {
-	return m.listClasses(`SELECT id, name FROM class`)
+	return m.listClasses(qryListClasses)
 }
 
 // ListClassesBySeriesID list classes by series ID
 func (m *Model) ListClassesBySeriesID(seriesID int) ([]*model.Class, error) {
-	if _, err := m.GetSeriesByID(seriesID); err != nil {
-		return nil, err
-	}
-	return m.listClasses(`
-SELECT distinct cl.id, cl.name
-FROM class cl
-JOIN classification c ON (c.class_id = cl.id)
-WHERE c.series_id = ?`,
-		seriesID,
-	)
+	return m.listClasses(qryListClassesBySeriesID, seriesID)
 }
 
 // ListClassesByAuthorID list classes by author ID
 func (m *Model) ListClassesByAuthorID(authorID int) ([]*model.Class, error) {
-	if _, err := m.GetAuthorByID(authorID); err != nil {
-		return nil, err
-	}
-	return m.listClasses(`
-SELECT distinct cl.id, cl.name
-FROM class cl
-JOIN classification c ON (c.class_id = cl.id)
-JOIN series s ON (s.series_id = s.id)
-JOIN book b ON (b.series_id = s.id)
-JOIN authorship a (a.book_id = b.id)
-WHERE a.author_id = ?`,
-		authorID,
-	)
+	return m.listClasses(qryListClassesByAuthorID, authorID)
 }
 
 // ListClassesByCategoryID list classes by category ID
 func (m *Model) ListClassesByCategoryID(categoryID int) ([]*model.Class, error) {
-	if _, err := m.GetCategoryByID(categoryID); err != nil {
-		return nil, err
-	}
-	return m.listClasses(`
-SELECT distinct cl.id, cl.name
-FROM class cl
-JOIN classification c ON (c.class_id = cl.id)
-JOIN series s ON (s.series_id = s.id)
-WHERE s.category_id = ?`,
-		categoryID,
-	)
+	return m.listClasses(qryListClassesByCategoryID, categoryID)
 }
 
 // InsertClass inserts class
 func (m *Model) InsertClass(name string) (*model.Class, error) {
-	res, err := m.db.Exec(
-		`
-INSERT INTO class (id, name, create_ts, update_ts)
-VALUES (null, ?, NOW(), NOW())
-ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`,
-		name,
-	)
+	res, err := m.db.Exec(qryInsertClass, name)
 	if err != nil {
 		return nil, filterError(err)
 	}
@@ -123,13 +117,10 @@ ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`,
 
 // UpdateClass update class
 func (m *Model) UpdateClass(id int, name string) error {
-	return m.exec(
-		`UPDATE class SET name = ?, update_ts = NOW() WHERE id = ?`,
-		name, id,
-	)
+	return m.exec(qryUpdateClass, name, id)
 }
 
 // DeleteClass delete class
 func (m *Model) DeleteClass(id int) error {
-	return m.exec(`DELETE FROM class where id = ?`, id)
+	return m.exec(qryDeleteClass, id)
 }

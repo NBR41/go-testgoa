@@ -4,19 +4,32 @@ import (
 	"github.com/NBR41/go-testgoa/internal/model"
 )
 
+const (
+	qryListOwnershipsByUserID = `
+SELECT b.id, b.isbn, b.name
+FROM ownership u
+JOIN books b ON (u.book_id = b.id)
+WHERE user_id = ?`
+	qryGetOwnership = `
+SELECT b.id, b.isbn, b.name, b.series_id
+FROM ownership u
+JOIN books b ON (u.book_id = b.id)
+WHERE u.user_id = ? AND b.id = ?`
+	qryInsertOwnership = `
+INSERT INTO ownership (user_id, book_id, create_ts, update_ts)
+VALUES (?, ?, NOW(), NOW())
+ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`
+	qryUpdateOwnership = `UPDATE ownership set update_ts = NOW() WHERE user_id = ? AND book_id = ?`
+	qryDeleteOwnership = `DELETE FROM ownership WHERE user_id = ? AND book_id = ?`
+)
+
 // ListOwnershipsByUserID returns book list by user ID
 func (m *Model) ListOwnershipsByUserID(userID int) ([]*model.Ownership, error) {
 	_, err := m.GetUserByID(userID)
 	if err != nil {
 		return nil, err
 	}
-	rows, err := m.db.Query(
-		`
-SELECT b.id, b.isbn, b.name
-FROM ownership u
-JOIN books b ON (u.book_id = b.id) where user_id = ?`,
-		userID,
-	)
+	rows, err := m.db.Query(qryListOwnershipsByUserID, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -45,14 +58,7 @@ JOIN books b ON (u.book_id = b.id) where user_id = ?`,
 
 // GetOwnership returns user book association
 func (m *Model) GetOwnership(userID, bookID int) (*model.Ownership, error) {
-	b, err := m.getBook(
-		`
-SELECT b.id, b.isbn, b.name, b.series_id
-FROM ownership u
-JOIN books b ON (u.book_id = b.id)
-where u.user_id = ? and b.id = ?`,
-		userID, bookID,
-	)
+	b, err := m.getBook(qryGetOwnership, userID, bookID)
 	if err != nil {
 		return nil, err
 	}
@@ -61,13 +67,7 @@ where u.user_id = ? and b.id = ?`,
 
 // InsertOwnership inserts user book association
 func (m *Model) InsertOwnership(userID, bookID int) (*model.Ownership, error) {
-	_, err := m.db.Exec(
-		`
-INSERT INTO ownership (user_id, book_id, create_ts, update_ts)
-VALUES (?, ?, NOW(), NOW())
-ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`,
-		userID, bookID,
-	)
+	_, err := m.db.Exec(qryInsertOwnership, userID, bookID)
 	if err != nil {
 		return nil, filterError(err)
 	}
@@ -76,13 +76,10 @@ ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`,
 
 //UpdateOwnership update ownership
 func (m *Model) UpdateOwnership(userID, bookID int) error {
-	return m.exec(
-		`UPDATE ownership set update_ts = NOW() where user_id = ? and book_id = ?`,
-		userID, bookID,
-	)
+	return m.exec(qryUpdateOwnership, userID, bookID)
 }
 
 // DeleteOwnership deletes user book association
 func (m *Model) DeleteOwnership(userID, bookID int) error {
-	return m.exec(`DELETE FROM ownership where user_id = ? and book_id = ?`, userID, bookID)
+	return m.exec(qryDeleteOwnership, userID, bookID)
 }

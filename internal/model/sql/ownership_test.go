@@ -15,11 +15,8 @@ func TestListOwnershipsByUserID(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `
-SELECT b.id, b.isbn, b.name
-FROM ownership u
-JOIN books b ON \(u.book_id = b.id\) where user_id = \?`
-	uQry := `SELECT id, nickname, email, activated, admin FROM user WHERE id = \?`
+	qry := escapeQuery(qryListOwnershipsByUserID)
+	uQry := escapeQuery(qryGetUserByID)
 	mock.ExpectQuery(uQry).WithArgs(123).WillReturnError(errors.New("query error"))
 	mock.ExpectQuery(uQry).WithArgs(123).WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "activated", "admin"}))
 	mock.ExpectQuery(uQry).WithArgs(123).WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "activated", "admin"}).AddRow(2, "bar", "qux", 1, 1))
@@ -77,11 +74,7 @@ func TestGetOwnership(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `
-SELECT b.id, b.isbn, b.name, b.series_id
-FROM ownership u
-JOIN books b ON \(u.book_id = b.id\)
-where u.user_id = \? and b.id = \?`
+	qry := escapeQuery(qryGetOwnership)
 	mock.ExpectQuery(qry).WithArgs(123, 456).WillReturnError(errors.New("query error"))
 	mock.ExpectQuery(qry).WithArgs(123, 456).WillReturnRows(sqlmock.NewRows([]string{"book_id", "isbn", "name", "series_id"}))
 	mock.ExpectQuery(qry).WithArgs(123, 456).WillReturnRows(sqlmock.NewRows([]string{"book_id", "isbn", "name", "series_id"}).AddRow(456, "foo", "bar", 789))
@@ -126,10 +119,7 @@ func TestInsertOwnership(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `
-INSERT INTO ownership \(user_id, book_id, create_ts, update_ts\)
-VALUES \(\?, \?, NOW\(\), NOW\(\)\)
-ON DUPLICATE KEY UPDATE update_ts = VALUES\(update_ts\)`
+	qry := escapeQuery(qryInsertOwnership)
 	mock.ExpectExec(qry).WithArgs(123, 456).WillReturnError(errors.New("query error"))
 	mock.ExpectExec(qry).WithArgs(123, 456).WillReturnResult(sqlmock.NewResult(0, 1))
 
@@ -171,7 +161,7 @@ func TestUpdateOwnership(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `UPDATE ownership set update_ts = NOW\(\) where user_id = \? and book_id = \?`
+	qry := escapeQuery(qryUpdateOwnership)
 	mock.ExpectExec(qry).WithArgs(123, 456).WillReturnError(errors.New("query error"))
 	mock.ExpectExec(qry).WithArgs(123, 456).WillReturnResult(sqlmock.NewErrorResult(errors.New("result error")))
 	mock.ExpectExec(qry).WithArgs(123, 456).WillReturnResult(sqlmock.NewResult(0, 0))
@@ -212,7 +202,7 @@ func TestDeleteOwnership(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `DELETE FROM ownership where user_id = \? and book_id = \?`
+	qry := escapeQuery(qryDeleteOwnership)
 	mock.ExpectExec(qry).WithArgs(123, 456).WillReturnError(errors.New("query error"))
 	mock.ExpectExec(qry).WithArgs(123, 456).WillReturnResult(sqlmock.NewErrorResult(errors.New("result error")))
 	mock.ExpectExec(qry).WithArgs(123, 456).WillReturnResult(sqlmock.NewResult(0, 0))

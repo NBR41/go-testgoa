@@ -16,15 +16,22 @@ type ConnGetter func() (*sql.DB, error)
 //GetConnGetter return a connection getter func
 func GetConnGetter(connString string) ConnGetter {
 	return func() (*sql.DB, error) {
-		return sql.Open("mysql", connString+"?charset=utf8mb4,utf8")
+		db, err := sql.Open("mysql", connString+"?charset=utf8mb4,utf8")
+		if err != nil {
+			return nil, err
+		}
+		if err = db.Ping(); err != nil {
+			db.Close()
+			return nil, err
+		}
+		return db, nil
 	}
 }
 
 // Model struct for model
 type Model struct {
-	fConn ConnGetter
-	pass  model.Passworder
-	db    *sql.DB
+	pass model.Passworder
+	db   *sql.DB
 }
 
 // New returns new instance of model
@@ -44,7 +51,7 @@ func (m *Model) Close() error {
 func (m *Model) exec(query string, params ...interface{}) error {
 	res, err := m.db.Exec(query, params...)
 	if err != nil {
-		return err
+		return filterError(err)
 	}
 	nb, err := res.RowsAffected()
 	switch {
@@ -57,12 +64,17 @@ func (m *Model) exec(query string, params ...interface{}) error {
 	}
 }
 
+const (
+	duplicateErr = "ERROR 1062"
+	fkErr        = "ERROR 1452"
+)
+
 func filterError(err error) error {
-	if strings.HasPrefix(err.Error(), "ERROR 1452") {
-		return model.ErrNotFound
-	}
-	if strings.HasPrefix(err.Error(), "ERROR 1062") {
+	if strings.HasPrefix(err.Error(), duplicateErr) {
 		return model.ErrDuplicateKey
+	}
+	if strings.HasPrefix(err.Error(), fkErr) {
+		return model.ErrInvalidID
 	}
 	return err
 }

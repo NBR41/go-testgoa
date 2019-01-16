@@ -16,7 +16,7 @@ func TestListUsers(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `SELECT id, nickname, email, verified, admin FROM user`
+	qry := escapeQuery(qryListUsers)
 	mock.
 		ExpectQuery(qry).
 		WillReturnError(errors.New("query error"))
@@ -73,7 +73,7 @@ func TestGetUserByID(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `SELECT id, nickname, email, activated, admin FROM user WHERE id = ?`
+	qry := escapeQuery(qryGetUserByID)
 	mock.
 		ExpectQuery(qry).
 		WithArgs(123).
@@ -138,7 +138,7 @@ func TestGetUserByEmail(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `SELECT id, nickname, email, activated, admin FROM user WHERE email = ?`
+	qry := escapeQuery(qryGetUserByEmail)
 	mock.
 		ExpectQuery(qry).
 		WithArgs("foo@bar.com").
@@ -203,7 +203,7 @@ func TestGetUserByNickname(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `SELECT id, nickname, email, activated, admin FROM user WHERE nickname = ?`
+	qry := escapeQuery(qryGetUserByNickname)
 	mock.
 		ExpectQuery(qry).
 		WithArgs("foo").
@@ -268,7 +268,7 @@ func TestGetUserByEmailOrNickname(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `SELECT id, nickname, email, activated, admin FROM user WHERE email = \? OR nickname = \?`
+	qry := escapeQuery(qryGetUserByEmailOrNickname)
 	mock.
 		ExpectQuery(qry).
 		WithArgs("foo@bar.com", "foo").
@@ -342,10 +342,7 @@ func TestGetAuthenticatedUser(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `
-SELECT id, nickname, email, activated, admin, salt, password
-FROM user
-WHERE email = \? OR nickname =\?`
+	qry := escapeQuery(qryGetAuthenticatedUser)
 	dbmock.
 		ExpectQuery(qry).
 		WithArgs("foo", "foo").
@@ -424,30 +421,17 @@ func TestInsertUser(t *testing.T) {
 		mock.EXPECT().CryptPassword("baz").Return([]byte("qux"), []byte("quux"), nil),
 		mock.EXPECT().CryptPassword("baz").Return([]byte("qux"), []byte("quux"), nil),
 		mock.EXPECT().CryptPassword("baz").Return([]byte("qux"), []byte("quux"), nil),
+		mock.EXPECT().CryptPassword("baz").Return([]byte("qux"), []byte("quux"), nil),
 	)
 
 	db, dbmock, err := sqlmock.New()
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	userqry := `SELECT id, nickname, email, activated, admin FROM user WHERE email = \? OR nickname = \?`
-	qry := `
-INSERT INTO user \(id, nickname, email, salt, password, activated, admin, create_ts, update_ts\)
-VALUES \(null, \?, \?, \?, \?, 0, 0, NOW\(\), NOW\(\)\)
-ON DUPLICATE KEY UPDATE update_ts = VALUES\(update_ts\)`
-	dbmock.ExpectQuery(userqry).WithArgs("foo", "bar").WillReturnError(errors.New("get user error"))
-
-	dbmock.ExpectQuery(userqry).WithArgs("foo", "bar").WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "verified", "admin"}).AddRow(1, "foo", "bar", 1, 1))
-
-	dbmock.ExpectQuery(userqry).WithArgs("foo", "bar").WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "verified", "admin"}))
-
-	dbmock.ExpectQuery(userqry).WithArgs("foo", "bar").WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "verified", "admin"}))
+	qry := escapeQuery(qryInsertUser)
+	dbmock.ExpectExec(qry).WithArgs("bar", "foo", []byte("qux"), []byte("quux")).WillReturnError(errors.New(duplicateErr))
 	dbmock.ExpectExec(qry).WithArgs("bar", "foo", []byte("qux"), []byte("quux")).WillReturnError(errors.New("query error"))
-
-	dbmock.ExpectQuery(userqry).WithArgs("foo", "bar").WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "verified", "admin"}))
 	dbmock.ExpectExec(qry).WithArgs("bar", "foo", []byte("qux"), []byte("quux")).WillReturnResult(sqlmock.NewErrorResult(errors.New("result error")))
-
-	dbmock.ExpectQuery(userqry).WithArgs("foo", "bar").WillReturnRows(sqlmock.NewRows([]string{"id", "nickname", "email", "verified", "admin"}))
 	dbmock.ExpectExec(qry).WithArgs("bar", "foo", []byte("qux"), []byte("quux")).WillReturnResult(sqlmock.NewResult(123, 1))
 
 	m, _ := New(ConnGetter(func() (*sql.DB, error) {
@@ -459,9 +443,8 @@ ON DUPLICATE KEY UPDATE update_ts = VALUES\(update_ts\)`
 		exp  *model.User
 		err  error
 	}{
-		{"get user error", nil, errors.New("get user error")},
-		{"duplicate", nil, model.ErrDuplicateKey},
 		{"crypt error", nil, errors.New("crypt error")},
+		{"query error", nil, model.ErrDuplicateKey},
 		{"query error", nil, errors.New("query error")},
 		{"result error", nil, errors.New("result error")},
 		{"valid", &model.User{ID: 123, Email: "foo", Nickname: "bar"}, nil},
@@ -494,7 +477,7 @@ func TestUpdateUserNickname(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `UPDATE user set nickname = \?, update_ts = NOW\(\) where id = \?`
+	qry := escapeQuery(qryUpdateUserNickname)
 	mock.ExpectExec(qry).WithArgs("foo", 123).WillReturnError(errors.New("query error"))
 	mock.ExpectExec(qry).WithArgs("foo", 123).WillReturnResult(sqlmock.NewErrorResult(errors.New("result error")))
 	mock.ExpectExec(qry).WithArgs("foo", 123).WillReturnResult(sqlmock.NewResult(0, 0))
@@ -546,7 +529,7 @@ func TestUpdateUserPassword(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `UPDATE user set salt = \?, password = \?, update_ts = NOW\(\) where id = \?`
+	qry := escapeQuery(qryUpdateUserPassword)
 	dbmock.ExpectExec(qry).WithArgs([]byte("gulp"), []byte("qux"), 123).WillReturnError(errors.New("query error"))
 	dbmock.ExpectExec(qry).WithArgs([]byte("gulp"), []byte("qux"), 123).WillReturnResult(sqlmock.NewErrorResult(errors.New("result error")))
 	dbmock.ExpectExec(qry).WithArgs([]byte("gulp"), []byte("qux"), 123).WillReturnResult(sqlmock.NewResult(0, 0))
@@ -588,7 +571,7 @@ func TestUpdateUserActivation(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `UPDATE user set activated = \?, update_ts = NOW\(\) where id = \?`
+	qry := escapeQuery(qryUpdateUserActivation)
 	mock.ExpectExec(qry).WithArgs(true, 123).WillReturnError(errors.New("query error"))
 	mock.ExpectExec(qry).WithArgs(true, 123).WillReturnResult(sqlmock.NewErrorResult(errors.New("result error")))
 	mock.ExpectExec(qry).WithArgs(true, 123).WillReturnResult(sqlmock.NewResult(0, 0))
@@ -629,7 +612,7 @@ func TestDeleteUser(t *testing.T) {
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := `DELETE FROM user where id = \?`
+	qry := escapeQuery(qryDeleteUser)
 	mock.ExpectExec(qry).WithArgs(123).WillReturnError(errors.New("query error"))
 	mock.ExpectExec(qry).WithArgs(123).WillReturnResult(sqlmock.NewErrorResult(errors.New("result error")))
 	mock.ExpectExec(qry).WithArgs(123).WillReturnResult(sqlmock.NewResult(0, 0))

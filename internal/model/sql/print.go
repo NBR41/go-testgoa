@@ -7,6 +7,18 @@ import (
 	"github.com/NBR41/go-testgoa/internal/model"
 )
 
+const (
+	qryGetPrintByID   = `SELECT id, name FROM print WHERE id = ?`
+	qryGetPrintByName = `SELECT id, name FROM print WHERE name = ?`
+	qryListPrints     = `SELECT id, name FROM print`
+	qryInsertPrint    = `
+INSERT INTO print (id, name, create_ts, update_ts)
+VALUES (null, ?, NOW(), NOW())
+ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`
+	qryUpdatePrint = `UPDATE print SET name = ?, update_ts = NOW() WHERE id = ?`
+	qryDeletePrint = `DELETE FROM print WHERE id = ?`
+)
+
 func (m *Model) getPrint(query string, params ...interface{}) (*model.Print, error) {
 	var v = model.Print{}
 	err := m.db.QueryRow(query, params...).Scan(&v.ID, &v.Name)
@@ -44,17 +56,17 @@ func (m *Model) listPrints(query string, params ...interface{}) ([]*model.Print,
 
 // GetPrintByID returns print by ID
 func (m *Model) GetPrintByID(id int) (*model.Print, error) {
-	return m.getPrint(`SELECT id, name FROM print where id = ?`, id)
+	return m.getPrint(qryGetPrintByID, id)
 }
 
 // GetPrintByName returns print by name
 func (m *Model) GetPrintByName(name string) (*model.Print, error) {
-	return m.getPrint(`SELECT id, name FROM print where name = ?`, name)
+	return m.getPrint(qryGetPrintByName, name)
 }
 
 // ListPrints list prints
 func (m *Model) ListPrints() ([]*model.Print, error) {
-	return m.listPrints(`SELECT id, name FROM print`)
+	return m.listPrints(qryListPrints)
 }
 
 // ListPrintsByIDs list prints by collection id or series id
@@ -66,16 +78,10 @@ func (m *Model) ListPrintsByIDs(collectionID, seriesID *int) ([]*model.Print, er
 	where := []string{}
 	vals := []interface{}{}
 	if collectionID != nil {
-		if _, err := m.GetCollectionByID(*collectionID); err != nil {
-			return nil, err
-		}
 		where = append(where, `e.collection_id = ?`)
 		vals = append(vals, *collectionID)
 	}
 	if seriesID != nil {
-		if _, err := m.GetSeriesByID(*seriesID); err != nil {
-			return nil, err
-		}
 		qry += ` JOIN book b ON (e.book_id = b.id)`
 		where = append(where, `b.series_id = ?`)
 		vals = append(vals, *seriesID)
@@ -85,13 +91,7 @@ func (m *Model) ListPrintsByIDs(collectionID, seriesID *int) ([]*model.Print, er
 
 // InsertPrint inserts print
 func (m *Model) InsertPrint(name string) (*model.Print, error) {
-	res, err := m.db.Exec(
-		`
-INSERT INTO print (id, name, create_ts, update_ts)
-VALUES (null, ?, NOW(), NOW())
-ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`,
-		name,
-	)
+	res, err := m.db.Exec(qryInsertPrint, name)
 	if err != nil {
 		return nil, filterError(err)
 	}
@@ -105,13 +105,10 @@ ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`,
 
 // UpdatePrint update print
 func (m *Model) UpdatePrint(id int, name string) error {
-	return m.exec(
-		`UPDATE print SET name = ?, update_ts = NOW() WHERE id = ?`,
-		name, id,
-	)
+	return m.exec(qryUpdatePrint, name, id)
 }
 
 // DeletePrint delete print
 func (m *Model) DeletePrint(id int) error {
-	return m.exec(`DELETE FROM print where id = ?`, id)
+	return m.exec(qryDeletePrint, id)
 }

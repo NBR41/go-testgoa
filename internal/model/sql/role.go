@@ -6,6 +6,19 @@ import (
 	"github.com/NBR41/go-testgoa/internal/model"
 )
 
+const (
+	qryGetRoleByID         = `SELECT id, name FROM role WHERE id = ?`
+	qryGetRoleByName       = `SELECT id, name FROM role WHERE name = ?`
+	qryListRoles           = `SELECT id, name FROM role`
+	qryListRolesByAuthorID = `SELECT r.id, r.name FROM role r JOIN authorship a ON (a.role_id = r.id) WHERE a.author_id = ?`
+	qryInsertRole          = `
+INSERT INTO role (id, name, create_ts, update_ts)
+VALUES (null, ?, NOW(), NOW())
+ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`
+	qryUpdateRole = `UPDATE role SET name = ?, update_ts = NOW() WHERE id = ?`
+	qryDeleteRole = `DELETE FROM role WHERE id = ?`
+)
+
 func (m *Model) getRole(query string, params ...interface{}) (*model.Role, error) {
 	var v = model.Role{}
 	err := m.db.QueryRow(query, params...).Scan(&v.ID, &v.Name)
@@ -42,44 +55,29 @@ func (m *Model) listRoles(query string, params ...interface{}) ([]*model.Role, e
 
 // GetRoleByID returns role by ID
 func (m *Model) GetRoleByID(id int) (*model.Role, error) {
-	return m.getRole(`SELECT id, name FROM role where id = ?`, id)
+	return m.getRole(qryGetRoleByID, id)
 }
 
 // GetRoleByName returns role by name
 func (m *Model) GetRoleByName(name string) (*model.Role, error) {
-	return m.getRole(`SELECT id, name FROM role where name = ?`, name)
+	return m.getRole(qryGetRoleByName, name)
 }
 
 // ListRoles list roles
 func (m *Model) ListRoles() ([]*model.Role, error) {
-	return m.listRoles(`SELECT id, name FROM role`)
+	return m.listRoles(qryListRoles)
 }
 
+// ListRolesByAuthorID list roles by author id
 func (m *Model) ListRolesByAuthorID(authorID int) ([]*model.Role, error) {
-	if _, err := m.GetAuthorByID(authorID); err != nil {
-		return nil, err
-	}
-	return m.listRoles(`SELECT r.id, r.name FROM role r JOIN authorship a ON (a.role_id = r.id) where a.author_id = ?`, authorID)
+	return m.listRoles(qryListRolesByAuthorID, authorID)
 }
 
 // InsertRole inserts role
 func (m *Model) InsertRole(name string) (*model.Role, error) {
-	_, err := m.GetRoleByName(name)
-	switch {
-	case err != nil && err != model.ErrNotFound:
-		return nil, err
-	case err == nil:
-		return nil, model.ErrDuplicateKey
-	}
-	res, err := m.db.Exec(
-		`
-INSERT INTO role (id, name, create_ts, update_ts)
-VALUES (null, ?, NOW(), NOW())
-ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`,
-		name,
-	)
+	res, err := m.db.Exec(qryInsertRole, name)
 	if err != nil {
-		return nil, err
+		return nil, filterError(err)
 	}
 	var id int64
 	id, err = res.LastInsertId()
@@ -91,13 +89,10 @@ ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`,
 
 // UpdateRole update role
 func (m *Model) UpdateRole(id int, name string) error {
-	return m.exec(
-		`UPDATE role SET name = ?, update_ts = NOW() WHERE id = ?`,
-		name, id,
-	)
+	return m.exec(qryUpdateRole, name, id)
 }
 
 // DeleteRole delete role
 func (m *Model) DeleteRole(id int) error {
-	return m.exec(`DELETE FROM role where id = ?`, id)
+	return m.exec(qryDeleteRole, id)
 }

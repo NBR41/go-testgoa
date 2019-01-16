@@ -223,6 +223,8 @@ func TestAuthorUpdate(t *testing.T) {
 		mock.EXPECT().Close(),
 		mock.EXPECT().UpdateAuthor(123, "foo").Return(model.ErrNotFound),
 		mock.EXPECT().Close(),
+		mock.EXPECT().UpdateAuthor(123, "foo").Return(model.ErrDuplicateKey),
+		mock.EXPECT().Close(),
 		mock.EXPECT().UpdateAuthor(123, "foo").Return(nil),
 		mock.EXPECT().Close(),
 	)
@@ -252,6 +254,13 @@ func TestAuthorUpdate(t *testing.T) {
 	logbuf.Reset()
 	test.UpdateAuthorsNotFound(t, ctx, service, ctrl, 123, &app.UpdateAuthorsPayload{AuthorName: "foo"})
 	exp = "[EROR] failed to update author error=not found\n"
+	if exp != logbuf.String() {
+		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
+	}
+
+	logbuf.Reset()
+	test.UpdateAuthorsUnprocessableEntity(t, ctx, service, ctrl, 123, &app.UpdateAuthorsPayload{AuthorName: "foo"})
+	exp = "[EROR] failed to update author error=duplicate key\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}

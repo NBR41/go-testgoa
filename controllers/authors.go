@@ -130,10 +130,14 @@ func (c *AuthorsController) Update(ctx *app.UpdateAuthorsContext) error {
 	err = m.UpdateAuthor(ctx.AuthorID, ctx.Payload.AuthorName)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to update author`, `error`, err.Error())
-		if err == model.ErrNotFound {
+		switch err {
+		case model.ErrNotFound:
 			return ctx.NotFound()
+		case model.ErrDuplicateKey:
+			return ctx.UnprocessableEntity()
+		default:
+			return ctx.InternalServerError()
 		}
-		return ctx.InternalServerError()
 	}
 
 	return ctx.NoContent()

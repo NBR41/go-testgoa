@@ -25,7 +25,7 @@ func TestCollectionsCreate(t *testing.T) {
 		mock.EXPECT().Close(),
 		mock.EXPECT().InsertCollection("foo", 1).Return(nil, model.ErrDuplicateKey),
 		mock.EXPECT().Close(),
-		mock.EXPECT().InsertCollection("foo", 1).Return(nil, model.ErrNotFound),
+		mock.EXPECT().InsertCollection("foo", 1).Return(nil, model.ErrInvalidID),
 		mock.EXPECT().Close(),
 		mock.EXPECT().InsertCollection("foo", 1).Return(&model.Collection{ID: 2, Name: "foo", EditorID: 1}, nil),
 		mock.EXPECT().Close(),
@@ -62,7 +62,7 @@ func TestCollectionsCreate(t *testing.T) {
 
 	logbuf.Reset()
 	test.CreateCollectionsUnprocessableEntity(t, ctx, service, ctrl, &app.CreateCollectionsPayload{CollectionName: "foo", EditorID: 1})
-	exp = "[EROR] failed to insert collection error=not found\n"
+	exp = "[EROR] failed to insert collection error=invalid id\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
@@ -234,6 +234,10 @@ func TestCollectionsUpdate(t *testing.T) {
 		mock.EXPECT().Close(),
 		mock.EXPECT().UpdateCollection(123, &name, &editorID).Return(model.ErrNotFound),
 		mock.EXPECT().Close(),
+		mock.EXPECT().UpdateCollection(123, &name, &editorID).Return(model.ErrInvalidID),
+		mock.EXPECT().Close(),
+		mock.EXPECT().UpdateCollection(123, &name, &editorID).Return(model.ErrDuplicateKey),
+		mock.EXPECT().Close(),
 		mock.EXPECT().UpdateCollection(123, &name, &editorID).Return(nil),
 		mock.EXPECT().Close(),
 	)
@@ -263,6 +267,20 @@ func TestCollectionsUpdate(t *testing.T) {
 	logbuf.Reset()
 	test.UpdateCollectionsNotFound(t, ctx, service, ctrl, 123, &app.UpdateCollectionsPayload{CollectionName: &name, EditorID: &editorID})
 	exp = "[EROR] failed to update collection error=not found\n"
+	if exp != logbuf.String() {
+		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
+	}
+
+	logbuf.Reset()
+	test.UpdateCollectionsUnprocessableEntity(t, ctx, service, ctrl, 123, &app.UpdateCollectionsPayload{CollectionName: &name, EditorID: &editorID})
+	exp = "[EROR] failed to update collection error=invalid id\n"
+	if exp != logbuf.String() {
+		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
+	}
+
+	logbuf.Reset()
+	test.UpdateCollectionsUnprocessableEntity(t, ctx, service, ctrl, 123, &app.UpdateCollectionsPayload{CollectionName: &name, EditorID: &editorID})
+	exp = "[EROR] failed to update collection error=duplicate key\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}

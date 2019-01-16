@@ -128,10 +128,14 @@ func (c *RolesController) Update(ctx *app.UpdateRolesContext) error {
 	err = m.UpdateRole(ctx.RoleID, ctx.Payload.RoleName)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to update role`, `error`, err.Error())
-		if err == model.ErrNotFound {
+		switch err {
+		case model.ErrNotFound:
 			return ctx.NotFound()
+		case model.ErrDuplicateKey:
+			return ctx.UnprocessableEntity()
+		default:
+			return ctx.InternalServerError()
 		}
-		return ctx.InternalServerError()
 	}
 
 	return ctx.NoContent()

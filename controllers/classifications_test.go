@@ -25,7 +25,7 @@ func TestClassificationsCreate(t *testing.T) {
 		mock.EXPECT().Close(),
 		mock.EXPECT().InsertClassification(1, 2).Return(nil, model.ErrDuplicateKey),
 		mock.EXPECT().Close(),
-		mock.EXPECT().InsertClassification(1, 2).Return(nil, model.ErrNotFound),
+		mock.EXPECT().InsertClassification(1, 2).Return(nil, model.ErrInvalidID),
 		mock.EXPECT().Close(),
 		mock.EXPECT().InsertClassification(1, 2).Return(&model.Class{ID: 2, Name: "foo"}, nil),
 		mock.EXPECT().Close(),
@@ -62,7 +62,7 @@ func TestClassificationsCreate(t *testing.T) {
 
 	logbuf.Reset()
 	test.CreateClassificationsUnprocessableEntity(t, ctx, service, ctrl, 1, &app.CreateClassificationsPayload{ClassID: 2})
-	exp = "[EROR] failed to insert classification error=not found\n"
+	exp = "[EROR] failed to insert classification error=invalid id\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}

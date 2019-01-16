@@ -223,6 +223,8 @@ func TestEditorUpdate(t *testing.T) {
 		mock.EXPECT().Close(),
 		mock.EXPECT().UpdateEditor(123, "foo").Return(model.ErrNotFound),
 		mock.EXPECT().Close(),
+		mock.EXPECT().UpdateEditor(123, "foo").Return(model.ErrDuplicateKey),
+		mock.EXPECT().Close(),
 		mock.EXPECT().UpdateEditor(123, "foo").Return(nil),
 		mock.EXPECT().Close(),
 	)
@@ -252,6 +254,13 @@ func TestEditorUpdate(t *testing.T) {
 	logbuf.Reset()
 	test.UpdateEditorsNotFound(t, ctx, service, ctrl, 123, &app.UpdateEditorsPayload{EditorName: "foo"})
 	exp = "[EROR] failed to update editor error=not found\n"
+	if exp != logbuf.String() {
+		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
+	}
+
+	logbuf.Reset()
+	test.UpdateEditorsUnprocessableEntity(t, ctx, service, ctrl, 123, &app.UpdateEditorsPayload{EditorName: "foo"})
+	exp = "[EROR] failed to update editor error=duplicate key\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}

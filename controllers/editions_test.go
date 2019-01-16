@@ -25,7 +25,7 @@ func TestEditionsCreate(t *testing.T) {
 		mock.EXPECT().Close(),
 		mock.EXPECT().InsertEdition(1, 2, 3).Return(nil, model.ErrDuplicateKey),
 		mock.EXPECT().Close(),
-		mock.EXPECT().InsertEdition(1, 2, 3).Return(nil, model.ErrNotFound),
+		mock.EXPECT().InsertEdition(1, 2, 3).Return(nil, model.ErrInvalidID),
 		mock.EXPECT().Close(),
 		mock.EXPECT().InsertEdition(1, 2, 3).Return(&model.Edition{ID: 4, BookID: 1, CollectionID: 2, PrintID: 3}, nil),
 		mock.EXPECT().Close(),
@@ -62,7 +62,7 @@ func TestEditionsCreate(t *testing.T) {
 
 	logbuf.Reset()
 	test.CreateEditionsUnprocessableEntity(t, ctx, service, ctrl, &app.CreateEditionsPayload{BookID: 1, CollectionID: 2, PrintID: 3})
-	exp = "[EROR] failed to insert edition error=not found\n"
+	exp = "[EROR] failed to insert edition error=invalid id\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}

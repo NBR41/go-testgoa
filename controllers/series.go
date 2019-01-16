@@ -36,10 +36,14 @@ func (c *SeriesController) Create(ctx *app.CreateSeriesContext) error {
 	v, err := m.InsertSeries(ctx.Payload.SeriesName, ctx.Payload.CategoryID)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to insert series`, `error`, err.Error())
-		if err == model.ErrDuplicateKey || err == model.ErrNotFound {
+		switch err {
+		case model.ErrDuplicateKey:
 			return ctx.UnprocessableEntity()
+		case model.ErrInvalidID:
+			return ctx.UnprocessableEntity()
+		default:
+			return ctx.InternalServerError()
 		}
-		return ctx.InternalServerError()
 	}
 
 	ctx.ResponseData.Header().Set("Location", app.SeriesHref(v.ID))
@@ -130,10 +134,16 @@ func (c *SeriesController) Update(ctx *app.UpdateSeriesContext) error {
 	err = m.UpdateSeries(ctx.SeriesID, ctx.Payload.SeriesName, ctx.Payload.CategoryID)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to update series`, `error`, err.Error())
-		if err == model.ErrNotFound {
+		switch err {
+		case model.ErrNotFound:
 			return ctx.NotFound()
+		case model.ErrInvalidID:
+			return ctx.UnprocessableEntity()
+		case model.ErrDuplicateKey:
+			return ctx.UnprocessableEntity()
+		default:
+			return ctx.InternalServerError()
 		}
-		return ctx.InternalServerError()
 	}
 
 	return ctx.NoContent()

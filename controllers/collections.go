@@ -34,10 +34,14 @@ func (c *CollectionsController) Create(ctx *app.CreateCollectionsContext) error 
 	v, err := m.InsertCollection(ctx.Payload.CollectionName, ctx.Payload.EditorID)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to insert collection`, `error`, err.Error())
-		if err == model.ErrDuplicateKey || err == model.ErrNotFound {
+		switch err {
+		case model.ErrDuplicateKey:
 			return ctx.UnprocessableEntity()
+		case model.ErrInvalidID:
+			return ctx.UnprocessableEntity()
+		default:
+			return ctx.InternalServerError()
 		}
-		return ctx.InternalServerError()
 	}
 
 	ctx.ResponseData.Header().Set("Location", app.CollectionsHref(v.ID))
@@ -128,10 +132,16 @@ func (c *CollectionsController) Update(ctx *app.UpdateCollectionsContext) error 
 	err = m.UpdateCollection(ctx.CollectionID, ctx.Payload.CollectionName, ctx.Payload.EditorID)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to update collection`, `error`, err.Error())
-		if err == model.ErrNotFound {
+		switch err {
+		case model.ErrNotFound:
 			return ctx.NotFound()
+		case model.ErrInvalidID:
+			return ctx.UnprocessableEntity()
+		case model.ErrDuplicateKey:
+			return ctx.UnprocessableEntity()
+		default:
+			return ctx.InternalServerError()
 		}
-		return ctx.InternalServerError()
 	}
 
 	return ctx.NoContent()

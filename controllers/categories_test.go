@@ -223,6 +223,8 @@ func TestCategoryUpdate(t *testing.T) {
 		mock.EXPECT().Close(),
 		mock.EXPECT().UpdateCategory(123, "foo").Return(model.ErrNotFound),
 		mock.EXPECT().Close(),
+		mock.EXPECT().UpdateCategory(123, "foo").Return(model.ErrDuplicateKey),
+		mock.EXPECT().Close(),
 		mock.EXPECT().UpdateCategory(123, "foo").Return(nil),
 		mock.EXPECT().Close(),
 	)
@@ -252,6 +254,13 @@ func TestCategoryUpdate(t *testing.T) {
 	logbuf.Reset()
 	test.UpdateCategoriesNotFound(t, ctx, service, ctrl, 123, &app.UpdateCategoriesPayload{CategoryName: "foo"})
 	exp = "[EROR] failed to update category error=not found\n"
+	if exp != logbuf.String() {
+		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
+	}
+
+	logbuf.Reset()
+	test.UpdateCategoriesUnprocessableEntity(t, ctx, service, ctrl, 123, &app.UpdateCategoriesPayload{CategoryName: "foo"})
+	exp = "[EROR] failed to update category error=duplicate key\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}

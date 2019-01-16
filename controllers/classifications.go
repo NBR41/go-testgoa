@@ -34,10 +34,14 @@ func (c *ClassificationsController) Create(ctx *app.CreateClassificationsContext
 	_, err = m.InsertClassification(ctx.SeriesID, ctx.Payload.ClassID)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to insert classification`, `error`, err.Error())
-		if err == model.ErrDuplicateKey || err == model.ErrNotFound {
+		switch err {
+		case model.ErrDuplicateKey:
 			return ctx.UnprocessableEntity()
+		case model.ErrInvalidID:
+			return ctx.UnprocessableEntity()
+		default:
+			return ctx.InternalServerError()
 		}
-		return ctx.InternalServerError()
 	}
 
 	ctx.ResponseData.Header().Set("Location", app.ClassificationsHref(ctx.SeriesID, ctx.Payload.ClassID))

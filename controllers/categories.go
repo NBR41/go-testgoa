@@ -128,10 +128,14 @@ func (c *CategoriesController) Update(ctx *app.UpdateCategoriesContext) error {
 	err = m.UpdateCategory(ctx.CategoryID, ctx.Payload.CategoryName)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to update category`, `error`, err.Error())
-		if err == model.ErrNotFound {
+		switch err {
+		case model.ErrNotFound:
 			return ctx.NotFound()
+		case model.ErrDuplicateKey:
+			return ctx.UnprocessableEntity()
+		default:
+			return ctx.InternalServerError()
 		}
-		return ctx.InternalServerError()
 	}
 
 	return ctx.NoContent()

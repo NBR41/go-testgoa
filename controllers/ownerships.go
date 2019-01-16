@@ -40,10 +40,14 @@ func (c *OwnershipsController) Create(ctx *app.CreateOwnershipsContext) error {
 		if err == model.ErrNotFound {
 			return ctx.NotFound()
 		}
-		if err == model.ErrDuplicateKey || err == model.ErrInvalidID {
+		switch err {
+		case model.ErrDuplicateKey:
 			return ctx.UnprocessableEntity()
+		case model.ErrInvalidID:
+			return ctx.UnprocessableEntity()
+		default:
+			return ctx.InternalServerError()
 		}
-		return ctx.InternalServerError()
 	}
 
 	ctx.ResponseData.Header().Set("Location", app.OwnershipsHref(ctx.UserID, o.BookID))
@@ -82,10 +86,14 @@ func (c *OwnershipsController) Add(ctx *app.AddOwnershipsContext) error {
 			book, err = m.InsertBook(ctx.Payload.BookIsbn, bookName, seriesID)
 			if err != nil {
 				goa.ContextLogger(ctx).Error(`unable to insert book`, `error`, err.Error())
-				if err == model.ErrDuplicateKey {
+				switch err {
+				case model.ErrInvalidID:
 					return ctx.UnprocessableEntity(err)
+				case model.ErrDuplicateKey:
+					return ctx.UnprocessableEntity(err)
+				default:
+					return ctx.InternalServerError()
 				}
-				return ctx.InternalServerError()
 			}
 		} else {
 			goa.ContextLogger(ctx).Error(`unable to get book by isbn`, `error`, err.Error())
@@ -96,13 +104,16 @@ func (c *OwnershipsController) Add(ctx *app.AddOwnershipsContext) error {
 	_, err = m.InsertOwnership(ctx.UserID, int(book.ID))
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`unable to insert ownership`, `error`, err.Error())
-		if err == model.ErrNotFound {
+		switch err {
+		case model.ErrNotFound:
 			return ctx.NotFound()
-		}
-		if err == model.ErrDuplicateKey || err == model.ErrInvalidID {
+		case model.ErrInvalidID:
 			return ctx.UnprocessableEntity(err)
+		case model.ErrDuplicateKey:
+			return ctx.UnprocessableEntity(err)
+		default:
+			return ctx.InternalServerError()
 		}
-		return ctx.InternalServerError()
 	}
 
 	ctx.ResponseData.Header().Set("Location", app.OwnershipsHref(ctx.UserID, book.ID))

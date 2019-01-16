@@ -123,6 +123,10 @@ func TestOwnershipsAdd(t *testing.T) {
 		mmock.EXPECT().Close(),
 		mmock.EXPECT().GetBookByISBN("baz").Return(nil, model.ErrNotFound),
 		amock.EXPECT().GetBookName("baz").Return("bar", nil),
+		mmock.EXPECT().InsertBook("baz", "bar", 0).Return(nil, model.ErrInvalidID),
+		mmock.EXPECT().Close(),
+		mmock.EXPECT().GetBookByISBN("baz").Return(nil, model.ErrNotFound),
+		amock.EXPECT().GetBookName("baz").Return("bar", nil),
 		mmock.EXPECT().InsertBook("baz", "bar", 0).Return(book, nil),
 		mmock.EXPECT().InsertOwnership(123, 456).Return(nil, nil),
 		mmock.EXPECT().Close(),
@@ -193,6 +197,13 @@ func TestOwnershipsAdd(t *testing.T) {
 	logbuf.Reset()
 	test.AddOwnershipsUnprocessableEntity(t, ctx, service, ctrl, 123, payload)
 	exp = "[EROR] unable to insert book error=duplicate key\n"
+	if exp != logbuf.String() {
+		t.Errorf("unexpected log\nexp [%s]\ngot [%s]", exp, logbuf.String())
+	}
+
+	logbuf.Reset()
+	test.AddOwnershipsUnprocessableEntity(t, ctx, service, ctrl, 123, payload)
+	exp = "[EROR] unable to insert book error=invalid id\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\nexp [%s]\ngot [%s]", exp, logbuf.String())
 	}

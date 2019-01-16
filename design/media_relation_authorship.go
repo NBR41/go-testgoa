@@ -75,8 +75,6 @@ var _ = Resource("authorships", func() {
 		Response(Unauthorized)
 		// OK
 		Response(Created, "/authorships/[0-9]+")
-		// user NotFound
-		Response(NotFound)
 		// App error
 		Response(UnprocessableEntity)
 		// Errors

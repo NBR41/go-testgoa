@@ -25,7 +25,7 @@ func TestSeriesCreate(t *testing.T) {
 		mock.EXPECT().Close(),
 		mock.EXPECT().InsertSeries("foo", 1).Return(nil, model.ErrDuplicateKey),
 		mock.EXPECT().Close(),
-		mock.EXPECT().InsertSeries("foo", 1).Return(nil, model.ErrNotFound),
+		mock.EXPECT().InsertSeries("foo", 1).Return(nil, model.ErrInvalidID),
 		mock.EXPECT().Close(),
 		mock.EXPECT().InsertSeries("foo", 1).Return(&model.Series{ID: 2, Name: "foo", CategoryID: 1}, nil),
 		mock.EXPECT().Close(),
@@ -62,7 +62,7 @@ func TestSeriesCreate(t *testing.T) {
 
 	logbuf.Reset()
 	test.CreateSeriesUnprocessableEntity(t, ctx, service, ctrl, &app.CreateSeriesPayload{SeriesName: "foo", CategoryID: 1})
-	exp = "[EROR] failed to insert series error=not found\n"
+	exp = "[EROR] failed to insert series error=invalid id\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
@@ -234,6 +234,10 @@ func TestSeriesUpdate(t *testing.T) {
 		mock.EXPECT().Close(),
 		mock.EXPECT().UpdateSeries(123, &name, &editorID).Return(model.ErrNotFound),
 		mock.EXPECT().Close(),
+		mock.EXPECT().UpdateSeries(123, &name, &editorID).Return(model.ErrInvalidID),
+		mock.EXPECT().Close(),
+		mock.EXPECT().UpdateSeries(123, &name, &editorID).Return(model.ErrDuplicateKey),
+		mock.EXPECT().Close(),
 		mock.EXPECT().UpdateSeries(123, &name, &editorID).Return(nil),
 		mock.EXPECT().Close(),
 	)
@@ -263,6 +267,20 @@ func TestSeriesUpdate(t *testing.T) {
 	logbuf.Reset()
 	test.UpdateSeriesNotFound(t, ctx, service, ctrl, 123, &app.UpdateSeriesPayload{SeriesName: &name, CategoryID: &editorID})
 	exp = "[EROR] failed to update series error=not found\n"
+	if exp != logbuf.String() {
+		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
+	}
+
+	logbuf.Reset()
+	test.UpdateSeriesUnprocessableEntity(t, ctx, service, ctrl, 123, &app.UpdateSeriesPayload{SeriesName: &name, CategoryID: &editorID})
+	exp = "[EROR] failed to update series error=invalid id\n"
+	if exp != logbuf.String() {
+		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
+	}
+
+	logbuf.Reset()
+	test.UpdateSeriesUnprocessableEntity(t, ctx, service, ctrl, 123, &app.UpdateSeriesPayload{SeriesName: &name, CategoryID: &editorID})
+	exp = "[EROR] failed to update series error=duplicate key\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}

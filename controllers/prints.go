@@ -129,10 +129,14 @@ func (c *PrintsController) Update(ctx *app.UpdatePrintsContext) error {
 	err = m.UpdatePrint(ctx.PrintID, ctx.Payload.PrintName)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to update print`, `error`, err.Error())
-		if err == model.ErrNotFound {
+		switch err {
+		case model.ErrNotFound:
 			return ctx.NotFound()
+		case model.ErrDuplicateKey:
+			return ctx.UnprocessableEntity()
+		default:
+			return ctx.InternalServerError()
 		}
-		return ctx.InternalServerError()
 	}
 
 	return ctx.NoContent()
@@ -179,9 +183,6 @@ func listPrints(ctx context.Context, fm Fmodeler, rCtx printsResponse, collectio
 	list, err := m.ListPrintsByIDs(collectionID, seriesID)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to get print list`, `error`, err.Error())
-		if err == model.ErrNotFound {
-			return rCtx.NotFound()
-		}
 		return rCtx.InternalServerError()
 	}
 	bs := make(app.PrintCollection, len(list))

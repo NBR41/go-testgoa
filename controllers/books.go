@@ -35,10 +35,14 @@ func (c *BooksController) Create(ctx *app.CreateBooksContext) error {
 	b, err := m.InsertBook(ctx.Payload.BookIsbn, ctx.Payload.BookName, ctx.Payload.SeriesID)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to insert book`, `error`, err.Error())
-		if err == model.ErrDuplicateKey || err == model.ErrNotFound {
+		switch err {
+		case model.ErrDuplicateKey:
 			return ctx.UnprocessableEntity()
+		case model.ErrInvalidID:
+			return ctx.UnprocessableEntity()
+		default:
+			return ctx.InternalServerError()
 		}
-		return ctx.InternalServerError()
 	}
 
 	ctx.ResponseData.Header().Set("Location", app.BooksHref(b.ID))
@@ -129,10 +133,16 @@ func (c *BooksController) Update(ctx *app.UpdateBooksContext) error {
 	err = m.UpdateBook(ctx.BookID, ctx.Payload.BookName, ctx.Payload.SeriesID)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to update book`, `error`, err.Error())
-		if err == model.ErrNotFound {
+		switch err {
+		case model.ErrNotFound:
 			return ctx.NotFound()
+		case model.ErrInvalidID:
+			return ctx.UnprocessableEntity()
+		case model.ErrDuplicateKey:
+			return ctx.UnprocessableEntity()
+		default:
+			return ctx.InternalServerError()
 		}
-		return ctx.InternalServerError()
 	}
 
 	return ctx.NoContent()

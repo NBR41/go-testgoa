@@ -223,6 +223,8 @@ func TestClassUpdate(t *testing.T) {
 		mock.EXPECT().Close(),
 		mock.EXPECT().UpdateClass(123, "foo").Return(model.ErrNotFound),
 		mock.EXPECT().Close(),
+		mock.EXPECT().UpdateClass(123, "foo").Return(model.ErrDuplicateKey),
+		mock.EXPECT().Close(),
 		mock.EXPECT().UpdateClass(123, "foo").Return(nil),
 		mock.EXPECT().Close(),
 	)
@@ -252,6 +254,13 @@ func TestClassUpdate(t *testing.T) {
 	logbuf.Reset()
 	test.UpdateClassesNotFound(t, ctx, service, ctrl, 123, &app.UpdateClassesPayload{ClassName: "foo"})
 	exp = "[EROR] failed to update genre error=not found\n"
+	if exp != logbuf.String() {
+		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
+	}
+
+	logbuf.Reset()
+	test.UpdateClassesUnprocessableEntity(t, ctx, service, ctrl, 123, &app.UpdateClassesPayload{ClassName: "foo"})
+	exp = "[EROR] failed to update genre error=duplicate key\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}

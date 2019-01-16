@@ -223,6 +223,8 @@ func TestPrintUpdate(t *testing.T) {
 		mock.EXPECT().Close(),
 		mock.EXPECT().UpdatePrint(123, "foo").Return(model.ErrNotFound),
 		mock.EXPECT().Close(),
+		mock.EXPECT().UpdatePrint(123, "foo").Return(model.ErrDuplicateKey),
+		mock.EXPECT().Close(),
 		mock.EXPECT().UpdatePrint(123, "foo").Return(nil),
 		mock.EXPECT().Close(),
 	)
@@ -252,6 +254,13 @@ func TestPrintUpdate(t *testing.T) {
 	logbuf.Reset()
 	test.UpdatePrintsNotFound(t, ctx, service, ctrl, 123, &app.UpdatePrintsPayload{PrintName: "foo"})
 	exp = "[EROR] failed to update print error=not found\n"
+	if exp != logbuf.String() {
+		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
+	}
+
+	logbuf.Reset()
+	test.UpdatePrintsUnprocessableEntity(t, ctx, service, ctrl, 123, &app.UpdatePrintsPayload{PrintName: "foo"})
+	exp = "[EROR] failed to update print error=duplicate key\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}

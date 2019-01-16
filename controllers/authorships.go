@@ -34,10 +34,14 @@ func (c *AuthorshipsController) Create(ctx *app.CreateAuthorshipsContext) error 
 	v, err := m.InsertAuthorship(ctx.Payload.AuthorID, ctx.Payload.BookID, ctx.Payload.RoleID)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to insert authorship`, `error`, err.Error())
-		if err == model.ErrDuplicateKey || err == model.ErrNotFound {
+		switch err {
+		case model.ErrInvalidID:
 			return ctx.UnprocessableEntity()
+		case model.ErrDuplicateKey:
+			return ctx.UnprocessableEntity()
+		default:
+			return ctx.InternalServerError()
 		}
-		return ctx.InternalServerError()
 	}
 
 	ctx.ResponseData.Header().Set("Location", app.AuthorshipsHref(v.ID))

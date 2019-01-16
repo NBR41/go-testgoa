@@ -34,10 +34,14 @@ func (c *EditionsController) Create(ctx *app.CreateEditionsContext) error {
 	v, err := m.InsertEdition(ctx.Payload.BookID, ctx.Payload.CollectionID, ctx.Payload.PrintID)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to insert edition`, `error`, err.Error())
-		if err == model.ErrDuplicateKey || err == model.ErrNotFound {
+		switch err {
+		case model.ErrDuplicateKey:
 			return ctx.UnprocessableEntity()
+		case model.ErrInvalidID:
+			return ctx.UnprocessableEntity()
+		default:
+			return ctx.InternalServerError()
 		}
-		return ctx.InternalServerError()
 	}
 
 	ctx.ResponseData.Header().Set("Location", app.EditionsHref(v.ID))

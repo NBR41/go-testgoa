@@ -25,7 +25,7 @@ func TestBooksCreate(t *testing.T) {
 		mock.EXPECT().Close(),
 		mock.EXPECT().InsertBook("foo", "bar", 1).Return(nil, model.ErrDuplicateKey),
 		mock.EXPECT().Close(),
-		mock.EXPECT().InsertBook("foo", "bar", 1).Return(nil, model.ErrNotFound),
+		mock.EXPECT().InsertBook("foo", "bar", 1).Return(nil, model.ErrInvalidID),
 		mock.EXPECT().Close(),
 		mock.EXPECT().InsertBook("foo", "bar", 1).Return(&model.Book{ID: 2, ISBN: "foo", Name: "bar", SeriesID: 1}, nil),
 		mock.EXPECT().Close(),
@@ -62,7 +62,7 @@ func TestBooksCreate(t *testing.T) {
 
 	logbuf.Reset()
 	test.CreateBooksUnprocessableEntity(t, ctx, service, ctrl, &app.CreateBooksPayload{BookIsbn: "foo", BookName: "bar", SeriesID: 1})
-	exp = "[EROR] failed to insert book error=not found\n"
+	exp = "[EROR] failed to insert book error=invalid id\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
@@ -234,6 +234,10 @@ func TestBooksUpdate(t *testing.T) {
 		mock.EXPECT().Close(),
 		mock.EXPECT().UpdateBook(123, &bookName, &seriesID).Return(model.ErrNotFound),
 		mock.EXPECT().Close(),
+		mock.EXPECT().UpdateBook(123, &bookName, &seriesID).Return(model.ErrInvalidID),
+		mock.EXPECT().Close(),
+		mock.EXPECT().UpdateBook(123, &bookName, &seriesID).Return(model.ErrDuplicateKey),
+		mock.EXPECT().Close(),
 		mock.EXPECT().UpdateBook(123, &bookName, &seriesID).Return(nil),
 		mock.EXPECT().Close(),
 	)
@@ -263,6 +267,20 @@ func TestBooksUpdate(t *testing.T) {
 	logbuf.Reset()
 	test.UpdateBooksNotFound(t, ctx, service, ctrl, 123, &app.UpdateBooksPayload{BookName: &bookName, SeriesID: &seriesID})
 	exp = "[EROR] failed to update book error=not found\n"
+	if exp != logbuf.String() {
+		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
+	}
+
+	logbuf.Reset()
+	test.UpdateBooksUnprocessableEntity(t, ctx, service, ctrl, 123, &app.UpdateBooksPayload{BookName: &bookName, SeriesID: &seriesID})
+	exp = "[EROR] failed to update book error=invalid id\n"
+	if exp != logbuf.String() {
+		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
+	}
+
+	logbuf.Reset()
+	test.UpdateBooksUnprocessableEntity(t, ctx, service, ctrl, 123, &app.UpdateBooksPayload{BookName: &bookName, SeriesID: &seriesID})
+	exp = "[EROR] failed to update book error=duplicate key\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}

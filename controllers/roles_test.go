@@ -223,6 +223,8 @@ func TestRoleUpdate(t *testing.T) {
 		mock.EXPECT().Close(),
 		mock.EXPECT().UpdateRole(123, "foo").Return(model.ErrNotFound),
 		mock.EXPECT().Close(),
+		mock.EXPECT().UpdateRole(123, "foo").Return(model.ErrDuplicateKey),
+		mock.EXPECT().Close(),
 		mock.EXPECT().UpdateRole(123, "foo").Return(nil),
 		mock.EXPECT().Close(),
 	)
@@ -252,6 +254,13 @@ func TestRoleUpdate(t *testing.T) {
 	logbuf.Reset()
 	test.UpdateRolesNotFound(t, ctx, service, ctrl, 123, &app.UpdateRolesPayload{RoleName: "foo"})
 	exp = "[EROR] failed to update role error=not found\n"
+	if exp != logbuf.String() {
+		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
+	}
+
+	logbuf.Reset()
+	test.UpdateRolesUnprocessableEntity(t, ctx, service, ctrl, 123, &app.UpdateRolesPayload{RoleName: "foo"})
+	exp = "[EROR] failed to update role error=duplicate key\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}

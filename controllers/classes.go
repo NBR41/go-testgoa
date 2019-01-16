@@ -128,10 +128,14 @@ func (c *ClassesController) Update(ctx *app.UpdateClassesContext) error {
 	err = m.UpdateClass(ctx.ClassID, ctx.Payload.ClassName)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to update genre`, `error`, err.Error())
-		if err == model.ErrNotFound {
+		switch err {
+		case model.ErrNotFound:
 			return ctx.NotFound()
+		case model.ErrDuplicateKey:
+			return ctx.UnprocessableEntity()
+		default:
+			return ctx.InternalServerError()
 		}
-		return ctx.InternalServerError()
 	}
 
 	return ctx.NoContent()

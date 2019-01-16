@@ -23,9 +23,9 @@ func TestAuthorshipsCreate(t *testing.T) {
 	gomock.InOrder(
 		mock.EXPECT().InsertAuthorship(1, 2, 3).Return(nil, errors.New("insert error")),
 		mock.EXPECT().Close(),
-		mock.EXPECT().InsertAuthorship(1, 2, 3).Return(nil, model.ErrDuplicateKey),
+		mock.EXPECT().InsertAuthorship(1, 2, 3).Return(nil, model.ErrInvalidID),
 		mock.EXPECT().Close(),
-		mock.EXPECT().InsertAuthorship(1, 2, 3).Return(nil, model.ErrNotFound),
+		mock.EXPECT().InsertAuthorship(1, 2, 3).Return(nil, model.ErrDuplicateKey),
 		mock.EXPECT().Close(),
 		mock.EXPECT().InsertAuthorship(1, 2, 3).Return(&model.Authorship{ID: 4, AuthorID: 1, BookID: 2, RoleID: 3}, nil),
 		mock.EXPECT().Close(),
@@ -55,14 +55,14 @@ func TestAuthorshipsCreate(t *testing.T) {
 
 	logbuf.Reset()
 	test.CreateAuthorshipsUnprocessableEntity(t, ctx, service, ctrl, &app.CreateAuthorshipsPayload{AuthorID: 1, BookID: 2, RoleID: 3})
-	exp = "[EROR] failed to insert authorship error=duplicate key\n"
+	exp = "[EROR] failed to insert authorship error=invalid id\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
 	logbuf.Reset()
 	test.CreateAuthorshipsUnprocessableEntity(t, ctx, service, ctrl, &app.CreateAuthorshipsPayload{AuthorID: 1, BookID: 2, RoleID: 3})
-	exp = "[EROR] failed to insert authorship error=not found\n"
+	exp = "[EROR] failed to insert authorship error=duplicate key\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}

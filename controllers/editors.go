@@ -128,10 +128,14 @@ func (c *EditorsController) Update(ctx *app.UpdateEditorsContext) error {
 	err = m.UpdateEditor(ctx.EditorID, ctx.Payload.EditorName)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to update editor`, `error`, err.Error())
-		if err == model.ErrNotFound {
+		switch err {
+		case model.ErrNotFound:
 			return ctx.NotFound()
+		case model.ErrDuplicateKey:
+			return ctx.UnprocessableEntity()
+		default:
+			return ctx.InternalServerError()
 		}
-		return ctx.InternalServerError()
 	}
 
 	return ctx.NoContent()

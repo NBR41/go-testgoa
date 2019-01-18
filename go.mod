@@ -16,7 +16,7 @@ require (
 	github.com/satori/go.uuid v1.2.1-0.20181028125025-b2ce2384e17b
 	github.com/zach-klippenstein/goregen v0.0.0-20160303162051-795b5e3961ea // indirect
 	golang.org/x/crypto v0.0.0-20181203042331-505ab145d0a9
-	golang.org/x/net v0.0.0-20190107155100-1a61f4433d85 // indirect
+	golang.org/x/net v0.0.0-20190110200230-915654e7eabc // indirect
 	golang.org/x/tools v0.0.0-20181210225255-6a3e9aa2ab77 // indirect
 	google.golang.org/api v0.0.0-20181206211257-1a5ef82f9af4
 	gopkg.in/yaml.v2 v2.2.2 // indirect

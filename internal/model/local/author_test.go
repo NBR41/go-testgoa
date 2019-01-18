@@ -83,6 +83,16 @@ func TestUpdateAuthor(t *testing.T) {
 	err := l.UpdateAuthor(10, "test10")
 	expectingError(t, err, model.ErrNotFound)
 
+	//duplicate name
+	err = l.UpdateAuthor(1, "author1")
+	switch err {
+	case nil:
+		t.Fatal("expecting error", err)
+	case model.ErrDuplicateKey:
+	default:
+		t.Fatal("unexpected error", err)
+	}
+
 	//update author
 	err = l.UpdateAuthor(1, "author2")
 	if err != nil {
@@ -112,4 +122,58 @@ func TestDeleteAuthor(t *testing.T) {
 	}
 	_, err = l.GetAuthorByID(1)
 	expectingError(t, err, model.ErrNotFound)
+}
+
+func TestListAuthorsByCategoryID(t *testing.T) {
+	l := New(nil)
+
+	//empty list
+	li, err := l.ListAuthorsByCategoryID(999)
+	if err != nil {
+		t.Fatalf("unexpected error [%v]", err)
+	} else {
+		if len(li) != 0 {
+			t.Fatal("unexpected value")
+		}
+	}
+
+	//valid list
+	li, err = l.ListAuthorsByCategoryID(1)
+	if err != nil {
+		t.Fatalf("unexpected error [%v]", err)
+	} else {
+		if len(li) != 1 {
+			t.Fatal("unexpected value")
+		}
+		if li[0] != l.authors[1] {
+			t.Fatal("unexpected value")
+		}
+	}
+}
+
+func TestListAuthorsByRoleID(t *testing.T) {
+	l := New(nil)
+
+	//empty list
+	li, err := l.ListAuthorsByRoleID(999)
+	if err != nil {
+		t.Fatalf("unexpected error [%v]", err)
+	} else {
+		if len(li) != 0 {
+			t.Fatal("unexpected value")
+		}
+	}
+
+	//valid list
+	li, err = l.ListAuthorsByRoleID(1)
+	if err != nil {
+		t.Fatalf("unexpected error [%v]", err)
+	} else {
+		if len(li) != 1 {
+			t.Fatal("unexpected value")
+		}
+		if li[0] != l.authors[1] {
+			t.Fatal("unexpected value")
+		}
+	}
 }

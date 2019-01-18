@@ -59,10 +59,7 @@ func (db *Local) InsertRole(name string) (*model.Role, error) {
 	db.Lock()
 	defer db.Unlock()
 	_, err := db.getRoleByName(name)
-	switch {
-	case err != nil && err != model.ErrNotFound:
-		return nil, err
-	case err == nil:
+	if err == nil {
 		return nil, model.ErrDuplicateKey
 	}
 	idx := len(db.roles) + 1
@@ -79,6 +76,10 @@ func (db *Local) UpdateRole(id int, name string) error {
 	if err != nil {
 		return err
 	}
+	_, err = db.getRoleByName(name)
+	if err == nil {
+		return model.ErrDuplicateKey
+	}
 	v.Name = name
 	return nil
 }
@@ -93,4 +94,23 @@ func (db *Local) DeleteRole(id int) error {
 	}
 	delete(db.roles, id)
 	return nil
+}
+
+//ListRolesByAuthorID list roles by author id
+func (db *Local) ListRolesByAuthorID(authorID int) ([]*model.Role, error) {
+	db.Lock()
+	defer db.Unlock()
+	roleIDs := make(map[int]struct{})
+	for i := range db.authorships {
+		if db.authorships[i].AuthorID == int64(authorID) {
+			roleIDs[int(db.authorships[i].RoleID)] = struct{}{}
+		}
+	}
+	ret := []*model.Role{}
+	for i := range roleIDs {
+		if _, ok := db.roles[i]; ok {
+			ret = append(ret, db.roles[i])
+		}
+	}
+	return ret, nil
 }

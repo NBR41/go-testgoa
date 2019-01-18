@@ -7,7 +7,7 @@ import (
 )
 
 // ListUsers returns user list
-func (db *Local) ListUsers() ([]model.User, error) {
+func (db *Local) ListUsers() ([]*model.User, error) {
 	db.Lock()
 	defer db.Unlock()
 	ids := make([]int, len(db.users))
@@ -17,9 +17,9 @@ func (db *Local) ListUsers() ([]model.User, error) {
 		i++
 	}
 	sort.Ints(ids)
-	list := make([]model.User, len(ids))
+	list := make([]*model.User, len(ids))
 	for i, id := range ids {
-		list[i] = *db.users[id]
+		list[i] = db.users[id]
 	}
 	return list, nil
 }
@@ -142,7 +142,6 @@ func (db *Local) UpdateUserNickname(id int, nickname string) error {
 			u.Nickname = nickname
 			return nil
 		}
-		return err
 	}
 
 	if exU.ID != int64(id) {

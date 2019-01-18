@@ -40,6 +40,12 @@ func TestGetCollectionByName(t *testing.T) {
 func TestInsertCollection(t *testing.T) {
 	l := New(nil)
 
+	_, err := l.InsertCollection("collection1", 3)
+	expectingError(t, err, model.ErrDuplicateKey)
+	// editor not found
+	_, err = l.InsertCollection("collection2", 999)
+	expectingError(t, err, model.ErrInvalidID)
+
 	// insert
 	b, err := l.InsertCollection("collection2", 1)
 	if err != nil {
@@ -55,33 +61,35 @@ func TestInsertCollection(t *testing.T) {
 	if !reflect.DeepEqual(b, b2) {
 		t.Fatal("unexpected user value")
 	}
-
-	// editor not found
-	b, err = l.InsertCollection("collection3", 3)
-	expectingError(t, err, model.ErrNotFound)
 }
 
 func TestUpdateCollection(t *testing.T) {
 	l := New(nil)
-	n1, n2 := "test10", "collection2"
+	n0 := "test10"
+	n1 := "collection1"
+	n2 := "collection2"
+	n3 := "collection3"
 	e1 := 5
-
 	e, err := l.InsertEditor("editor2")
 	if err != nil {
 		t.Fatalf("unexpected error, %v", err)
 	}
+	e2 := int(e.ID)
 
 	// collection doesn't exist
-	err = l.UpdateCollection(10, &n1, nil)
+	err = l.UpdateCollection(10, &n0, nil)
 	expectingError(t, err, model.ErrNotFound)
+	//same name
+	err = l.UpdateCollection(1, &n1, &e2)
+	expectingError(t, err, model.ErrDuplicateKey)
+	t.Log(n3)
 
 	// editor doesn't exist
 	err = l.UpdateCollection(1, &n2, &e1)
-	expectingError(t, err, model.ErrNotFound)
+	expectingError(t, err, model.ErrInvalidID)
 
 	//update collection
-	e2 := int(e.ID)
-	err = l.UpdateCollection(1, &n2, &e2)
+	err = l.UpdateCollection(1, &n3, &e2)
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}
@@ -90,8 +98,8 @@ func TestUpdateCollection(t *testing.T) {
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}
-	if u.Name != "collection2" {
-		t.Fatalf("expecting category2, got %s", u.Name)
+	if u.Name != n3 {
+		t.Fatalf("expecting %s, got %s", n3, u.Name)
 	}
 	if u.EditorID != e.ID {
 		t.Fatalf("expecting editor id %d, got %d", e.ID, u.EditorID)

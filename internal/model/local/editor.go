@@ -59,10 +59,7 @@ func (db *Local) InsertEditor(name string) (*model.Editor, error) {
 	db.Lock()
 	defer db.Unlock()
 	_, err := db.getEditorByName(name)
-	switch {
-	case err != nil && err != model.ErrNotFound:
-		return nil, err
-	case err == nil:
+	if err == nil {
 		return nil, model.ErrDuplicateKey
 	}
 	idx := len(db.editors) + 1
@@ -78,6 +75,10 @@ func (db *Local) UpdateEditor(id int, name string) error {
 	v, err := db.getEditorByID(id)
 	if err != nil {
 		return err
+	}
+	_, err = db.getEditorByName(name)
+	if err == nil {
+		return model.ErrDuplicateKey
 	}
 	v.Name = name
 	return nil

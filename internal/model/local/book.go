@@ -11,11 +11,16 @@ func (db *Local) InsertBook(isbn, name string, seriesID int) (*model.Book, error
 	db.Lock()
 	defer db.Unlock()
 	_, err := db.getBookByISBN(isbn)
-	switch {
-	case err != nil && err != model.ErrNotFound:
-		return nil, err
-	case err == nil:
+	if err == nil {
 		return nil, model.ErrDuplicateKey
+	}
+	_, err = db.getBookByName(name)
+	if err == nil {
+		return nil, model.ErrDuplicateKey
+	}
+	_, err = db.getSeriesByID(seriesID)
+	if err == model.ErrNotFound {
+		return nil, model.ErrInvalidID
 	}
 	idx := len(db.books) + 1
 	b := &model.Book{ID: int64(idx), ISBN: isbn, Name: name}
@@ -37,16 +42,20 @@ func (db *Local) getBookByID(id int) (*model.Book, error) {
 	return nil, model.ErrNotFound
 }
 
-// GetBookByName returns book by name
-func (db *Local) GetBookByName(name string) (*model.Book, error) {
-	db.Lock()
-	defer db.Unlock()
+func (db *Local) getBookByName(name string) (*model.Book, error) {
 	for i := range db.books {
 		if db.books[i].Name == name {
 			return db.books[i], nil
 		}
 	}
 	return nil, model.ErrNotFound
+}
+
+// GetBookByName returns book by name
+func (db *Local) GetBookByName(name string) (*model.Book, error) {
+	db.Lock()
+	defer db.Unlock()
+	return db.getBookByName(name)
 }
 
 // GetBookByISBN returns book by isbn
@@ -66,7 +75,7 @@ func (db *Local) getBookByISBN(isbn string) (*model.Book, error) {
 }
 
 // ListBooks returns book list
-func (db *Local) ListBooks() ([]model.Book, error) {
+func (db *Local) ListBooks() ([]*model.Book, error) {
 	db.Lock()
 	defer db.Unlock()
 	ids := make([]int, len(db.books))
@@ -76,9 +85,9 @@ func (db *Local) ListBooks() ([]model.Book, error) {
 		i++
 	}
 	sort.Ints(ids)
-	list := make([]model.Book, len(ids))
+	list := make([]*model.Book, len(ids))
 	for i, id := range ids {
-		list[i] = *db.books[id]
+		list[i] = db.books[id]
 	}
 	return list, nil
 }
@@ -91,9 +100,21 @@ func (db *Local) UpdateBook(id int, name *string, seriesID *int) error {
 	if err != nil {
 		return err
 	}
-	b.Name = *name
+	if name != nil {
+		_, err := db.getBookByName(*name)
+		if err == nil {
+			return model.ErrDuplicateKey
+		}
+		b.Name = *name
+	}
+	if seriesID != nil {
+		_, err := db.getSeriesByID(*seriesID)
+		if err == model.ErrNotFound {
+			return model.ErrInvalidID
+		}
+		b.SeriesID = int64(*seriesID)
+	}
 	return nil
-
 }
 
 // DeleteBook delete book by ID
@@ -106,4 +127,29 @@ func (db *Local) DeleteBook(id int) error {
 	}
 	delete(db.books, id)
 	return nil
+}
+
+//ListBooksByIDs list books by ids
+func (db *Local) ListBooksByIDs(collectionID, printID, seriesID *int) ([]*model.Book, error) {
+	db.Lock()
+	defer db.Unlock()
+	bookIDs := make(map[int]struct{})
+
+	for i := range db.editions {
+		if (collectionID == nil || db.editions[i].CollectionID == int64(*collectionID)) &&
+			(printID == nil || db.editions[i].PrintID == int64(*printID)) {
+			bookIDs[int(db.editions[i].BookID)] = struct{}{}
+		}
+	}
+
+	ret := []*model.Book{}
+	for i := range db.books {
+		if seriesID != nil && db.books[i].SeriesID != int64(*seriesID) {
+			continue
+		}
+		if _, ok := bookIDs[int(db.books[i].ID)]; ok {
+			ret = append(ret, db.books[i])
+		}
+	}
+	return ret, nil
 }

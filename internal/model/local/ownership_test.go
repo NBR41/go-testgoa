@@ -56,13 +56,13 @@ func TestInsertOwnership(t *testing.T) {
 
 	// not found
 	o, err := l.InsertOwnership(5, 5)
-	expectingError(t, err, model.ErrNotFound)
+	expectingError(t, err, model.ErrInvalidID)
 	// user not found
 	o, err = l.InsertOwnership(5, 1)
-	expectingError(t, err, model.ErrNotFound)
+	expectingError(t, err, model.ErrInvalidID)
 	// book not found
 	o, err = l.InsertOwnership(1, 5)
-	expectingError(t, err, model.ErrNotFound)
+	expectingError(t, err, model.ErrInvalidID)
 	//  duplicate key
 	o, err = l.InsertOwnership(1, 1)
 	expectingError(t, err, model.ErrDuplicateKey)

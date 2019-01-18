@@ -1,9 +1,8 @@
 package local
 
 import (
-	"sort"
-
 	"github.com/NBR41/go-testgoa/internal/model"
+	"sort"
 )
 
 func (db *Local) getAuthorByID(id int) (*model.Author, error) {
@@ -59,10 +58,7 @@ func (db *Local) InsertAuthor(name string) (*model.Author, error) {
 	db.Lock()
 	defer db.Unlock()
 	_, err := db.getAuthorByName(name)
-	switch {
-	case err != nil && err != model.ErrNotFound:
-		return nil, err
-	case err == nil:
+	if err == nil {
 		return nil, model.ErrDuplicateKey
 	}
 	idx := len(db.authors) + 1
@@ -79,6 +75,12 @@ func (db *Local) UpdateAuthor(id int, name string) error {
 	if err != nil {
 		return err
 	}
+
+	_, err = db.getAuthorByName(name)
+	if err == nil {
+		return model.ErrDuplicateKey
+	}
+
 	v.Name = name
 	return nil
 }
@@ -93,4 +95,61 @@ func (db *Local) DeleteAuthor(id int) error {
 	}
 	delete(db.authors, id)
 	return nil
+}
+
+//ListAuthorsByCategoryID list author by category id
+func (db *Local) ListAuthorsByCategoryID(categoryID int) ([]*model.Author, error) {
+	db.Lock()
+	defer db.Unlock()
+	ret := []*model.Author{}
+	seriesIDs := []int{}
+	for i := range db.series {
+		if db.series[i].CategoryID == int64(categoryID) {
+			seriesIDs = append(seriesIDs, i)
+		}
+	}
+
+	bookIDs := []int{}
+	for i := range seriesIDs {
+		for j := range db.books {
+			if db.books[j].SeriesID == int64(seriesIDs[i]) {
+				bookIDs = append(bookIDs, j)
+			}
+		}
+	}
+
+	authors := make(map[int64]*model.Author)
+	for i := range bookIDs {
+		for j := range db.authorships {
+			if db.authorships[j].BookID == int64(bookIDs[i]) {
+				if _, ok := db.authors[int(db.authorships[j].AuthorID)]; ok {
+					authors[db.authorships[j].AuthorID] = db.authors[int(db.authorships[j].AuthorID)]
+				}
+			}
+		}
+	}
+
+	for i := range authors {
+		ret = append(ret, authors[i])
+	}
+	return ret, nil
+}
+
+//ListAuthorsByRoleID list authors by role id
+func (db *Local) ListAuthorsByRoleID(roleID int) ([]*model.Author, error) {
+	db.Lock()
+	defer db.Unlock()
+	ret := []*model.Author{}
+	authors := make(map[int64]*model.Author)
+	for i := range db.authorships {
+		if db.authorships[i].RoleID == int64(roleID) {
+			if _, ok := db.authors[int(db.authorships[i].AuthorID)]; ok {
+				authors[db.authorships[i].AuthorID] = db.authors[int(db.authorships[i].AuthorID)]
+			}
+		}
+	}
+	for i := range authors {
+		ret = append(ret, authors[i])
+	}
+	return ret, nil
 }

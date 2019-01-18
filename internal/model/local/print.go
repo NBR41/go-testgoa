@@ -59,10 +59,7 @@ func (db *Local) InsertPrint(name string) (*model.Print, error) {
 	db.Lock()
 	defer db.Unlock()
 	_, err := db.getPrintByName(name)
-	switch {
-	case err != nil && err != model.ErrNotFound:
-		return nil, err
-	case err == nil:
+	if err == nil {
 		return nil, model.ErrDuplicateKey
 	}
 	idx := len(db.prints) + 1
@@ -79,6 +76,10 @@ func (db *Local) UpdatePrint(id int, name string) error {
 	if err != nil {
 		return err
 	}
+	_, err = db.getPrintByName(name)
+	if err == nil {
+		return model.ErrDuplicateKey
+	}
 	v.Name = name
 	return nil
 }
@@ -93,4 +94,51 @@ func (db *Local) DeletePrint(id int) error {
 	}
 	delete(db.prints, id)
 	return nil
+}
+
+//ListPrintsByIDs list prints by ids
+func (db *Local) ListPrintsByIDs(collectionID, seriesID *int) ([]*model.Print, error) {
+	db.Lock()
+	defer db.Unlock()
+	printIDs := make(map[int]struct{})
+	switch {
+	case collectionID != nil && seriesID != nil:
+		bookIDs := make(map[int64]struct{})
+		for i := range db.books {
+			if db.books[i].SeriesID == int64(*seriesID) {
+				bookIDs[db.books[i].ID] = struct{}{}
+			}
+		}
+		for j := range db.editions {
+			if _, ok := bookIDs[db.editions[j].BookID]; ok && int64(*collectionID) == db.editions[j].CollectionID {
+				printIDs[int(db.editions[j].PrintID)] = struct{}{}
+			}
+		}
+
+	case collectionID != nil && seriesID == nil:
+		for j := range db.editions {
+			if int64(*collectionID) == db.editions[j].CollectionID {
+				printIDs[int(db.editions[j].PrintID)] = struct{}{}
+			}
+		}
+	case collectionID == nil && seriesID != nil:
+		bookIDs := make(map[int64]struct{})
+		for i := range db.books {
+			if db.books[i].SeriesID == int64(*seriesID) {
+				bookIDs[db.books[i].ID] = struct{}{}
+			}
+		}
+		for j := range db.editions {
+			if _, ok := bookIDs[db.editions[j].BookID]; ok {
+				printIDs[int(db.editions[j].PrintID)] = struct{}{}
+			}
+		}
+	}
+	ret := []*model.Print{}
+	for k := range printIDs {
+		if _, ok := db.prints[k]; ok {
+			ret = append(ret, db.prints[k])
+		}
+	}
+	return ret, nil
 }

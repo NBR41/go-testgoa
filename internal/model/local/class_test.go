@@ -83,6 +83,16 @@ func TestUpdateClass(t *testing.T) {
 	err := l.UpdateClass(10, "test10")
 	expectingError(t, err, model.ErrNotFound)
 
+	//duplicate name
+	err = l.UpdateClass(1, "class1")
+	switch err {
+	case nil:
+		t.Fatal("expecting error", err)
+	case model.ErrDuplicateKey:
+	default:
+		t.Fatal("unexpected error", err)
+	}
+
 	//update genre
 	err = l.UpdateClass(1, "genre2")
 	if err != nil {
@@ -112,4 +122,85 @@ func TestDeleteClass(t *testing.T) {
 	}
 	_, err = l.GetClassByID(1)
 	expectingError(t, err, model.ErrNotFound)
+}
+
+func TestListClassesBySeriesID(t *testing.T) {
+	l := New(nil)
+
+	//empty list
+	li, err := l.ListClassesBySeriesID(999)
+	if err != nil {
+		t.Fatalf("unexpected error [%v]", err)
+	} else {
+		if len(li) != 0 {
+			t.Fatal("unexpected value")
+		}
+	}
+
+	//valid list
+	li, err = l.ListClassesBySeriesID(1)
+	if err != nil {
+		t.Fatalf("unexpected error [%v]", err)
+	} else {
+		if len(li) != 1 {
+			t.Fatal("unexpected value")
+		}
+		if li[0] != l.classes[1] {
+			t.Fatal("unexpected value")
+		}
+	}
+}
+
+func TestListClassesByAuthorID(t *testing.T) {
+	l := New(nil)
+
+	//empty list
+	li, err := l.ListClassesByAuthorID(999)
+	if err != nil {
+		t.Fatalf("unexpected error [%v]", err)
+	} else {
+		if len(li) != 0 {
+			t.Fatal("unexpected value")
+		}
+	}
+
+	//valid list
+	li, err = l.ListClassesByAuthorID(1)
+	if err != nil {
+		t.Fatalf("unexpected error [%v]", err)
+	} else {
+		if len(li) != 1 {
+			t.Fatal("unexpected value")
+		}
+		if li[0] != l.classes[1] {
+			t.Fatal("unexpected value")
+		}
+	}
+}
+
+func TestListClassesByCategoryID(t *testing.T) {
+	l := New(nil)
+
+	//empty list
+	li, err := l.ListClassesByCategoryID(999)
+	if err != nil {
+		t.Fatalf("unexpected error [%v]", err)
+	} else {
+		if len(li) != 0 {
+			t.Fatal("unexpected value")
+		}
+	}
+
+	//valid list
+	li, err = l.ListClassesByCategoryID(1)
+	if err != nil {
+		t.Fatalf("unexpected error [%v]", err)
+	} else {
+		if len(li) != 1 {
+			t.Fatal("unexpected value")
+		}
+		if li[0] != l.classes[1] {
+			t.Fatal("unexpected value")
+		}
+	}
 }

@@ -42,19 +42,19 @@ func (m *Model) getUser(query string, params ...interface{}) (*model.User, error
 }
 
 // ListUsers returns user list
-func (m *Model) ListUsers() ([]model.User, error) {
+func (m *Model) ListUsers() ([]*model.User, error) {
 	rows, err := m.db.Query(qryListUsers)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var l = []model.User{}
+	var l = []*model.User{}
 	for rows.Next() {
 		u := model.User{}
 		if err := rows.Scan(&u.ID, &u.Nickname, &u.Email, &u.IsValidated, &u.IsAdmin); err != nil {
 			return nil, err
 		}
-		l = append(l, u)
+		l = append(l, &u)
 	}
 	if err := rows.Err(); err != nil {
 		return nil, err

@@ -83,6 +83,16 @@ func TestUpdateEditor(t *testing.T) {
 	err := l.UpdateEditor(10, "test10")
 	expectingError(t, err, model.ErrNotFound)
 
+	//duplicate name
+	err = l.UpdateEditor(1, "editor1")
+	switch err {
+	case nil:
+		t.Fatal("expecting error", err)
+	case model.ErrDuplicateKey:
+	default:
+		t.Fatal("unexpected error", err)
+	}
+
 	//update editor
 	err = l.UpdateEditor(1, "editor2")
 	if err != nil {

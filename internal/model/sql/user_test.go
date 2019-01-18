@@ -36,13 +36,13 @@ func TestListUsers(t *testing.T) {
 
 	tests := []struct {
 		desc string
-		exp  []model.User
+		exp  []*model.User
 		err  error
 	}{
 		{"query error", nil, errors.New("query error")},
 		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
 		{"scan error", nil, errors.New("scan error")},
-		{"valid", []model.User{{ID: 1, Nickname: "nick", Email: "foo@bar.com", IsValidated: true, IsAdmin: true}}, nil},
+		{"valid", []*model.User{&model.User{ID: 1, Nickname: "nick", Email: "foo@bar.com", IsValidated: true, IsAdmin: true}}, nil},
 	}
 
 	for i := range tests {

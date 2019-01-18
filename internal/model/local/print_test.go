@@ -83,6 +83,16 @@ func TestUpdatePrint(t *testing.T) {
 	err := l.UpdatePrint(10, "test10")
 	expectingError(t, err, model.ErrNotFound)
 
+	//duplicate name
+	err = l.UpdatePrint(1, "print1")
+	switch err {
+	case nil:
+		t.Fatal("expecting error", err)
+	case model.ErrDuplicateKey:
+	default:
+		t.Fatal("unexpected error", err)
+	}
+
 	//update print
 	err = l.UpdatePrint(1, "print2")
 	if err != nil {
@@ -112,4 +122,52 @@ func TestDeletePrint(t *testing.T) {
 	}
 	_, err = l.GetPrintByID(1)
 	expectingError(t, err, model.ErrNotFound)
+}
+
+func TestListPrintsByIDs(t *testing.T) {
+	l := New(nil)
+	collection1, collection2, series1, series2 := 999, 1, 999, 1
+	li, err := l.ListPrintsByIDs(&collection1, &series1)
+	if err != nil {
+		t.Fatal("unexpected error", err)
+	}
+	if len(li) != 0 {
+		t.Errorf("unexpected length, exp 0 got %d", len(li))
+	}
+
+	li, err = l.ListPrintsByIDs(&collection2, &series2)
+	if err != nil {
+		t.Fatal("unexpected error", err)
+	}
+	if len(li) != 1 {
+		t.Errorf("unexpected length, exp 1 got %d", len(li))
+	} else {
+		if li[0] != l.prints[1] {
+			t.Fatal("unexpected value")
+		}
+	}
+
+	li, err = l.ListPrintsByIDs(&collection2, nil)
+	if err != nil {
+		t.Fatal("unexpected error", err)
+	}
+	if len(li) != 1 {
+		t.Errorf("unexpected length, exp 1 got %d", len(li))
+	} else {
+		if li[0] != l.prints[1] {
+			t.Fatal("unexpected value")
+		}
+	}
+
+	li, err = l.ListPrintsByIDs(nil, &series2)
+	if err != nil {
+		t.Fatal("unexpected error", err)
+	}
+	if len(li) != 1 {
+		t.Errorf("unexpected length, exp 1 got %d", len(li))
+	} else {
+		if li[0] != l.prints[1] {
+			t.Fatal("unexpected value")
+		}
+	}
 }

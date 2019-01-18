@@ -20,10 +20,7 @@ func (db *Local) GetCollectionByID(id int) (*model.Collection, error) {
 	return db.getCollectionByID(id)
 }
 
-//GetCollectionByName return a collection by name
-func (db *Local) GetCollectionByName(name string) (*model.Collection, error) {
-	db.Lock()
-	defer db.Unlock()
+func (db *Local) getCollectionByName(name string) (*model.Collection, error) {
 	for i := range db.collections {
 		if db.collections[i].Name == name {
 			return db.collections[i], nil
@@ -32,13 +29,23 @@ func (db *Local) GetCollectionByName(name string) (*model.Collection, error) {
 	return nil, model.ErrNotFound
 }
 
+//GetCollectionByName return a collection by name
+func (db *Local) GetCollectionByName(name string) (*model.Collection, error) {
+	db.Lock()
+	defer db.Unlock()
+	return db.getCollectionByName(name)
+}
+
 //InsertCollection insert a collection and return it
 func (db *Local) InsertCollection(name string, editorID int) (*model.Collection, error) {
 	db.Lock()
 	defer db.Unlock()
+	if _, err := db.getCollectionByName(name); err == nil {
+		return nil, model.ErrDuplicateKey
+	}
 	e, err := db.getEditorByID(editorID)
 	if err != nil {
-		return nil, err
+		return nil, model.ErrInvalidID
 	}
 	idx := len(db.collections) + 1
 	v := &model.Collection{ID: int64(idx), Name: name, EditorID: int64(editorID), Editor: e}
@@ -55,12 +62,15 @@ func (db *Local) UpdateCollection(id int, name *string, editorID *int) error {
 		return err
 	}
 	if name != nil {
+		if _, err = db.getCollectionByName(*name); err == nil {
+			return model.ErrDuplicateKey
+		}
 		c.Name = *name
 	}
 	if editorID != nil {
 		e, err := db.getEditorByID(*editorID)
-		if err != nil {
-			return err
+		if err == model.ErrNotFound {
+			return model.ErrInvalidID
 		}
 		c.EditorID = e.ID
 		c.Editor = e
@@ -105,7 +115,7 @@ func (db *Local) ListCollectionsByEditorID(id int) ([]*model.Collection, error) 
 	ids := []int{}
 	for i := range db.collections {
 		if db.collections[i].EditorID == int64(id) {
-			ids = append(ids, id)
+			ids = append(ids, i)
 		}
 	}
 	sort.Ints(ids)

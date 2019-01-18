@@ -10,21 +10,32 @@ import (
 type Local struct {
 	pass model.Passworder
 	sync.Mutex
-	users       map[int]*model.User
-	books       map[int]*model.Book
-	ownerships  map[int][]*model.Book
-	authors     map[int]*model.Author
-	categories  map[int]*model.Category
-	collections map[int]*model.Collection
-	prints      map[int]*model.Print
-	editors     map[int]*model.Editor
-	classes     map[int]*model.Class
-	roles       map[int]*model.Role
+	users           map[int]*model.User
+	books           map[int]*model.Book
+	ownerships      map[int][]*model.Book
+	authors         map[int]*model.Author
+	categories      map[int]*model.Category
+	collections     map[int]*model.Collection
+	prints          map[int]*model.Print
+	editors         map[int]*model.Editor
+	classes         map[int]*model.Class
+	roles           map[int]*model.Role
+	series          map[int]*model.Series
+	authorships     map[int]*model.Authorship
+	editions        map[int]*model.Edition
+	classifications map[int]*classification
+}
+
+type classification struct {
+	ID       int
+	SeriesID int
+	ClassID  int
+	Class    *model.Class
 }
 
 // New returns new instance of Local storage
 func New(pass model.Passworder) *Local {
-	book := &model.Book{ID: 1, ISBN: "isbn-123", Name: "test1"}
+	book := &model.Book{ID: 1, ISBN: "isbn-123", Name: "test1", SeriesID: 1}
 	book2 := &model.Book{ID: 2, ISBN: "isbn-456", Name: "test2"}
 	book3 := &model.Book{ID: 3, ISBN: "isbn-789", Name: "test3"}
 	book4 := &model.Book{ID: 4, ISBN: "isbn-135", Name: "test4"}
@@ -35,6 +46,11 @@ func New(pass model.Passworder) *Local {
 	class := &model.Class{ID: 1, Name: "class1"}
 	role := &model.Role{ID: 1, Name: "role1"}
 	collection := &model.Collection{ID: 1, Name: "collection1", EditorID: 1, Editor: editor}
+	series := &model.Series{ID: 1, Name: "series1", CategoryID: 1, Category: category}
+	authorship := &model.Authorship{ID: 1, AuthorID: 1, RoleID: 1, BookID: 1}
+	edition := &model.Edition{ID: 1, CollectionID: 1, BookID: 1, PrintID: 1}
+	classific := &classification{ID: 1, SeriesID: 1, ClassID: 1, Class: class}
+
 	return &Local{
 		pass: pass,
 		users: map[int]*model.User{
@@ -62,13 +78,17 @@ func New(pass model.Passworder) *Local {
 			2: []*model.Book{},
 			3: []*model.Book{book2, book3},
 		},
-		authors:     map[int]*model.Author{1: author},
-		categories:  map[int]*model.Category{1: category},
-		prints:      map[int]*model.Print{1: print},
-		editors:     map[int]*model.Editor{1: editor},
-		classes:     map[int]*model.Class{1: class},
-		roles:       map[int]*model.Role{1: role},
-		collections: map[int]*model.Collection{1: collection},
+		authors:         map[int]*model.Author{1: author},
+		categories:      map[int]*model.Category{1: category},
+		prints:          map[int]*model.Print{1: print},
+		editors:         map[int]*model.Editor{1: editor},
+		classes:         map[int]*model.Class{1: class},
+		roles:           map[int]*model.Role{1: role},
+		collections:     map[int]*model.Collection{1: collection},
+		series:          map[int]*model.Series{1: series},
+		authorships:     map[int]*model.Authorship{1: authorship},
+		editions:        map[int]*model.Edition{1: edition},
+		classifications: map[int]*classification{1: classific},
 	}
 }
 

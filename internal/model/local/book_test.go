@@ -10,6 +10,16 @@ import (
 func TestInsertBook(t *testing.T) {
 	l := New(nil)
 
+	//duplicate ISBN
+	_, err := l.InsertBook("isbn-123", "foo", 1)
+	expectingError(t, err, model.ErrDuplicateKey)
+	//duplicate ISBN
+	_, err = l.InsertBook("isbn-foo", "test1", 1)
+	expectingError(t, err, model.ErrDuplicateKey)
+	// invalid series id
+	_, err = l.InsertBook("isbn-foo", "foo", 999)
+	expectingError(t, err, model.ErrInvalidID)
+
 	// insert
 	b, err := l.InsertBook("isbn-foo", "foo", 1)
 	if err != nil {
@@ -25,10 +35,6 @@ func TestInsertBook(t *testing.T) {
 	if !reflect.DeepEqual(b, b2) {
 		t.Fatal("unexpected user value")
 	}
-
-	// duplicate book name
-	b, err = l.InsertBook("isbn-foo", "foo", 1)
-	expectingError(t, err, model.ErrDuplicateKey)
 }
 
 func TestGetBookByID(t *testing.T) {
@@ -94,11 +100,21 @@ func TestListBooks(t *testing.T) {
 func TestUpdateBook(t *testing.T) {
 	l := New(nil)
 	n1 := "test10"
-	// user doesn't exist
+	n2 := "test20"
+	s1 := 999
+	s2 := int(l.books[1].SeriesID)
+	// book doesn't exist
 	err := l.UpdateBook(10, &n1, nil)
 	expectingError(t, err, model.ErrNotFound)
 
-	err = l.UpdateBook(1, &n1, nil)
+	//duplicate book name
+	err = l.UpdateBook(1, &l.books[1].Name, nil)
+	expectingError(t, err, model.ErrDuplicateKey)
+	//invalid id
+	err = l.UpdateBook(1, &n1, &s1)
+	expectingError(t, err, model.ErrInvalidID)
+
+	err = l.UpdateBook(1, &n2, &s2)
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}
@@ -106,7 +122,7 @@ func TestUpdateBook(t *testing.T) {
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}
-	if u.Name != "test10" {
+	if u.Name != "test20" {
 		t.Fatalf("expecting test10, got %s", u.Name)
 	}
 }
@@ -125,4 +141,45 @@ func TestDeleteBook(t *testing.T) {
 	}
 	_, err = l.GetBookByID(1)
 	expectingError(t, err, model.ErrNotFound)
+}
+
+func TestListBooksByIDs(t *testing.T) {
+	l := New(nil)
+	collection1, print1, series1 := 999, 999, 999
+	collection2, print2, series2 := 1, 1, 1
+	//empty list
+	li, err := l.ListBooksByIDs(&collection1, &print1, &series1)
+	if err != nil {
+		t.Fatalf("unexpected error [%v]", err)
+	} else {
+		if len(li) != 0 {
+			t.Fatal("unexpected value")
+		}
+	}
+
+	//valid list
+	li, err = l.ListBooksByIDs(&collection2, &print2, &series2)
+	if err != nil {
+		t.Fatalf("unexpected error [%v]", err)
+	} else {
+		if len(li) != 1 {
+			t.Fatal("unexpected value")
+		}
+		if li[0] != l.books[1] {
+			t.Fatal("unexpected value")
+		}
+	}
+
+	//valid list
+	li, err = l.ListBooksByIDs(nil, nil, &series2)
+	if err != nil {
+		t.Fatalf("unexpected error [%v]", err)
+	} else {
+		if len(li) != 1 {
+			t.Fatal("unexpected value")
+		}
+		if li[0] != l.books[1] {
+			t.Fatal("unexpected value")
+		}
+	}
 }

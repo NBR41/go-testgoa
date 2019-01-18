@@ -4,7 +4,7 @@ import (
 	"github.com/NBR41/go-testgoa/internal/model"
 )
 
-// GetOwnershipList returns book list by user ID
+// ListOwnershipsByUserID returns book list by user ID
 func (db *Local) ListOwnershipsByUserID(userID int) ([]*model.Ownership, error) {
 	db.Lock()
 	defer db.Unlock()
@@ -50,12 +50,12 @@ func (db *Local) InsertOwnership(userID, bookID int) (*model.Ownership, error) {
 	defer db.Unlock()
 	l, ok := db.ownerships[userID]
 	if !ok {
-		return nil, model.ErrNotFound
+		return nil, model.ErrInvalidID
 	}
 
 	b, ok := db.books[bookID]
 	if !ok {
-		return nil, model.ErrNotFound
+		return nil, model.ErrInvalidID
 	}
 
 	for i := range l {

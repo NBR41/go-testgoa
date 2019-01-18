@@ -83,6 +83,16 @@ func TestUpdateCategory(t *testing.T) {
 	err := l.UpdateCategory(10, "test10")
 	expectingError(t, err, model.ErrNotFound)
 
+	//duplicate name
+	err = l.UpdateCategory(1, "category1")
+	switch err {
+	case nil:
+		t.Fatal("expecting error", err)
+	case model.ErrDuplicateKey:
+	default:
+		t.Fatal("unexpected error", err)
+	}
+
 	//update category
 	err = l.UpdateCategory(1, "category2")
 	if err != nil {
@@ -112,4 +122,48 @@ func TestDeleteCategory(t *testing.T) {
 	}
 	_, err = l.GetCategoryByID(1)
 	expectingError(t, err, model.ErrNotFound)
+}
+
+func TestListCategoriesByAuthorID(t *testing.T) {
+	l := New(nil)
+	bs, err := l.ListCategoriesByAuthorID(999)
+	if err != nil {
+		t.Fatal("unexpected error", err)
+	}
+	if len(bs) != 0 {
+		t.Errorf("unexpected length, exp 0 got %d", len(bs))
+	}
+
+	bs, err = l.ListCategoriesByAuthorID(1)
+	if err != nil {
+		t.Fatal("unexpected error", err)
+	}
+	if len(bs) != 1 {
+		t.Errorf("unexpected length, exp 1 got %d", len(bs))
+	}
+	if !reflect.DeepEqual(bs[0], l.categories[1]) {
+		t.Fatal("unexpected user value")
+	}
+}
+
+func TestListCategoriesByClassID(t *testing.T) {
+	l := New(nil)
+	bs, err := l.ListCategoriesByClassID(999)
+	if err != nil {
+		t.Fatal("unexpected error", err)
+	}
+	if len(bs) != 0 {
+		t.Errorf("unexpected length, exp 0 got %d", len(bs))
+	}
+
+	bs, err = l.ListCategoriesByClassID(1)
+	if err != nil {
+		t.Fatal("unexpected error", err)
+	}
+	if len(bs) != 1 {
+		t.Errorf("unexpected length, exp 1 got %d", len(bs))
+	}
+	if !reflect.DeepEqual(bs[0], l.categories[1]) {
+		t.Fatal("unexpected user value")
+	}
 }

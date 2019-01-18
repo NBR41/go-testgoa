@@ -83,6 +83,16 @@ func TestUpdateRole(t *testing.T) {
 	err := l.UpdateRole(10, "test10")
 	expectingError(t, err, model.ErrNotFound)
 
+	//duplicate name
+	err = l.UpdateRole(1, "role1")
+	switch err {
+	case nil:
+		t.Fatal("expecting error", err)
+	case model.ErrDuplicateKey:
+	default:
+		t.Fatal("unexpected error", err)
+	}
+
 	//update role
 	err = l.UpdateRole(1, "role2")
 	if err != nil {
@@ -112,4 +122,31 @@ func TestDeleteRole(t *testing.T) {
 	}
 	_, err = l.GetRoleByID(1)
 	expectingError(t, err, model.ErrNotFound)
+}
+
+func TestListRolesByAuthorID(t *testing.T) {
+	l := New(nil)
+
+	//empty list
+	li, err := l.ListRolesByAuthorID(999)
+	if err != nil {
+		t.Fatalf("unexpected error [%v]", err)
+	} else {
+		if len(li) != 0 {
+			t.Fatal("unexpected value")
+		}
+	}
+
+	//valid list
+	li, err = l.ListRolesByAuthorID(1)
+	if err != nil {
+		t.Fatalf("unexpected error [%v]", err)
+	} else {
+		if len(li) != 1 {
+			t.Fatal("unexpected value")
+		}
+		if li[0] != l.roles[1] {
+			t.Fatal("unexpected value")
+		}
+	}
 }

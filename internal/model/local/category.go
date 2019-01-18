@@ -59,10 +59,7 @@ func (db *Local) InsertCategory(name string) (*model.Category, error) {
 	db.Lock()
 	defer db.Unlock()
 	_, err := db.getCategoryByName(name)
-	switch {
-	case err != nil && err != model.ErrNotFound:
-		return nil, err
-	case err == nil:
+	if err == nil {
 		return nil, model.ErrDuplicateKey
 	}
 	idx := len(db.categories) + 1
@@ -79,6 +76,10 @@ func (db *Local) UpdateCategory(id int, name string) error {
 	if err != nil {
 		return err
 	}
+	_, err = db.getCategoryByName(name)
+	if err == nil {
+		return model.ErrDuplicateKey
+	}
 	v.Name = name
 	return nil
 }
@@ -93,4 +94,63 @@ func (db *Local) DeleteCategory(id int) error {
 	}
 	delete(db.categories, id)
 	return nil
+}
+
+//ListCategoriesByAuthorID list categories by author id
+func (db *Local) ListCategoriesByAuthorID(authorID int) ([]*model.Category, error) {
+	db.Lock()
+	defer db.Unlock()
+
+	bookIDs := make(map[int]struct{})
+	for i := range db.authorships {
+		if db.authorships[i].AuthorID == int64(authorID) {
+			bookIDs[int(db.authorships[i].BookID)] = struct{}{}
+		}
+	}
+
+	seriesIDs := make(map[int]struct{})
+	for i := range bookIDs {
+		if _, ok := db.books[i]; ok {
+			seriesIDs[int(db.books[i].SeriesID)] = struct{}{}
+		}
+	}
+
+	categoryIDs := make(map[int]struct{})
+	for i := range seriesIDs {
+		if _, ok := db.series[i]; ok {
+			categoryIDs[int(db.series[i].CategoryID)] = struct{}{}
+		}
+	}
+	return db.buildCategoryList(categoryIDs)
+}
+
+//ListCategoriesByClassID list categories by class id
+func (db *Local) ListCategoriesByClassID(classID int) ([]*model.Category, error) {
+	db.Lock()
+	defer db.Unlock()
+	seriesIDs := make(map[int]struct{})
+	for i := range db.classifications {
+		if db.classifications[i].ClassID == classID {
+			seriesIDs[int(db.classifications[i].SeriesID)] = struct{}{}
+		}
+	}
+
+	categoryIDs := make(map[int]struct{})
+	for i := range seriesIDs {
+		if _, ok := db.series[i]; ok {
+			categoryIDs[int(db.series[i].CategoryID)] = struct{}{}
+		}
+	}
+
+	return db.buildCategoryList(categoryIDs)
+}
+
+func (db *Local) buildCategoryList(idsb map[int]struct{}) ([]*model.Category, error) {
+	ret := []*model.Category{}
+	for k := range idsb {
+		if _, ok := db.categories[k]; ok {
+			ret = append(ret, db.categories[k])
+		}
+	}
+	return ret, nil
 }

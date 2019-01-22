@@ -3,7 +3,6 @@ package design
 // package "design"
 import (
 	// Use . imports to enable the DSL
-	. "github.com/goadesign/goa/design"
 	. "github.com/goadesign/goa/design/apidsl"
 )
 
@@ -13,27 +12,13 @@ var _ = Resource("relationRole", func() {
 	Action("listAuthors", func() {
 		Description("List authors by role")
 		Routing(GET(authorPath))
-		// ok
-		Response(OK, CollectionOf(AuthorMedia))
-		// class not found
-		Response(NotFound)
-		// Errors
-		Response(InternalServerError)
-		Response(ServiceUnavailable)
-		Response(BadRequest, ErrorMedia)
+		fAuthorList()
 	})
 
 	Action("listSeriesByAuthor", func() {
 		Description("List series by role and author")
 		Routing(GET(authorPath + authorIDPath + seriesPath))
 		Params(attrAuthorID)
-		// ok
-		Response(OK, CollectionOf(SeriesMedia))
-		// class not found
-		Response(NotFound)
-		// Errors
-		Response(InternalServerError)
-		Response(ServiceUnavailable)
-		Response(BadRequest, ErrorMedia)
+		fSeriesList()
 	})
 })

@@ -14,6 +14,16 @@ var (
 	attrCategoryName = func() {
 		Attribute("category_name", String, "Category Name (Shonen/Shojo/Seinen)", defStringConstraint)
 	}
+
+	fCategoryList = func() {
+		// ok
+		Response(OK, CollectionOf(CategoryMedia))
+		// class not found
+		Response(NotFound)
+		// Errors
+		Response(InternalServerError)
+		Response(ServiceUnavailable)
+	}
 )
 
 //CategoryMedia defines the media type used to render categories.

@@ -12,6 +12,16 @@ var (
 	editorIDPath   = "/:editor_id"
 	attrEditorID   = func() { Attribute("editor_id", Integer, "Unique Editor ID", defIDConstraint) }
 	attrEditorName = func() { Attribute("editor_name", String, "Editor Name (Glénat/Delcourt)", defStringConstraint) }
+
+	fEditorList = func() {
+		// ok
+		Response(OK, CollectionOf(EditorMedia))
+		// class not found
+		Response(NotFound)
+		// Errors
+		Response(InternalServerError)
+		Response(ServiceUnavailable)
+	}
 )
 
 //EditorMedia defines the media type used to render editors.

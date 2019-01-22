@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"context"
 	"github.com/NBR41/go-testgoa/app"
 	"github.com/NBR41/go-testgoa/internal/convert"
 	"github.com/NBR41/go-testgoa/internal/model"
@@ -83,7 +82,7 @@ func (c *BooksController) List(ctx *app.ListBooksContext) error {
 	}
 	defer func() { m.Close() }()
 
-	books, err := m.ListBooks()
+	books, err := m.ListBooksByIDs(nil, nil, nil, nil)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to get book list`, `error`, err.Error())
 		return ctx.InternalServerError()
@@ -147,64 +146,4 @@ func (c *BooksController) Update(ctx *app.UpdateBooksContext) error {
 
 	return ctx.NoContent()
 	// BooksController_Update: end_implement
-}
-
-type booksResponse interface {
-	OK(r app.BookCollection) error
-	NotFound() error
-	InternalServerError() error
-	ServiceUnavailable() error
-}
-
-func listBooks(ctx context.Context, fm Fmodeler, rCtx booksResponse, collectionID, printID, seriesID *int) error {
-	m, err := fm()
-	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
-		return rCtx.ServiceUnavailable()
-	}
-	defer func() { m.Close() }()
-
-	if collectionID != nil {
-		_, err = m.GetCollectionByID(*collectionID)
-		if err != nil {
-			goa.ContextLogger(ctx).Error(`failed to get collection`, `error`, err.Error())
-			if err == model.ErrNotFound {
-				return rCtx.NotFound()
-			}
-			return rCtx.InternalServerError()
-		}
-	}
-
-	if printID != nil {
-		_, err = m.GetPrintByID(*printID)
-		if err != nil {
-			goa.ContextLogger(ctx).Error(`failed to get print`, `error`, err.Error())
-			if err == model.ErrNotFound {
-				return rCtx.NotFound()
-			}
-			return rCtx.InternalServerError()
-		}
-	}
-
-	if seriesID != nil {
-		_, err = m.GetSeriesByID(*seriesID)
-		if err != nil {
-			goa.ContextLogger(ctx).Error(`failed to get series`, `error`, err.Error())
-			if err == model.ErrNotFound {
-				return rCtx.NotFound()
-			}
-			return rCtx.InternalServerError()
-		}
-	}
-
-	list, err := m.ListBooksByIDs(collectionID, printID, seriesID)
-	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get book list`, `error`, err.Error())
-		return rCtx.InternalServerError()
-	}
-	bs := make(app.BookCollection, len(list))
-	for i, bk := range list {
-		bs[i] = convert.ToBookMedia(bk)
-	}
-	return rCtx.OK(bs)
 }

@@ -82,7 +82,7 @@ func (c *ClassificationsController) List(ctx *app.ListClassificationsContext) er
 	}
 	defer func() { m.Close() }()
 
-	list, err := m.ListClassesBySeriesID(ctx.SeriesID)
+	list, err := m.ListClassesByIDs(nil, nil, &ctx.SeriesID)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to get classification list`, `error`, err.Error())
 		return ctx.InternalServerError()

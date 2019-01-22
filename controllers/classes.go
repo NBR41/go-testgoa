@@ -78,7 +78,7 @@ func (c *ClassesController) List(ctx *app.ListClassesContext) error {
 	}
 	defer func() { m.Close() }()
 
-	list, err := m.ListClasses()
+	list, err := m.ListClassesByIDs(nil, nil, nil)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to get genre list`, `error`, err.Error())
 		return ctx.InternalServerError()

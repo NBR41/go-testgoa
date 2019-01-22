@@ -127,13 +127,14 @@ func TestClassificationsDelete(t *testing.T) {
 }
 
 func TestClassificationsList(t *testing.T) {
+	var seriesID int = 2
 	mctrl := gomock.NewController(t)
 	defer mctrl.Finish()
 	mock := NewMockModeler(mctrl)
 	gomock.InOrder(
-		mock.EXPECT().ListClassesBySeriesID(2).Return(nil, errors.New("list error")),
+		mock.EXPECT().ListClassesByIDs(nil, nil, &seriesID).Return(nil, errors.New("list error")),
 		mock.EXPECT().Close(),
-		mock.EXPECT().ListClassesBySeriesID(2).Return([]*model.Class{&model.Class{ID: 1, Name: "foo"}, &model.Class{ID: 2, Name: "bar"}}, nil),
+		mock.EXPECT().ListClassesByIDs(nil, nil, &seriesID).Return([]*model.Class{&model.Class{ID: 1, Name: "foo"}, &model.Class{ID: 2, Name: "bar"}}, nil),
 		mock.EXPECT().Close(),
 	)
 	service := goa.New("my-inventory-test")
@@ -142,7 +143,7 @@ func TestClassificationsList(t *testing.T) {
 	ctrl := NewClassificationsController(service, Fmodeler(func() (Modeler, error) {
 		return nil, errors.New("model error")
 	}))
-	test.ListClassificationsServiceUnavailable(t, ctx, service, ctrl, 2)
+	test.ListClassificationsServiceUnavailable(t, ctx, service, ctrl, seriesID)
 	exp := "[EROR] unable to get model error=model error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
@@ -153,13 +154,13 @@ func TestClassificationsList(t *testing.T) {
 	}))
 
 	logbuf.Reset()
-	test.ListClassificationsInternalServerError(t, ctx, service, ctrl, 2)
+	test.ListClassificationsInternalServerError(t, ctx, service, ctrl, seriesID)
 	exp = "[EROR] failed to get classification list error=list error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
 
-	_, res := test.ListClassificationsOK(t, ctx, service, ctrl, 2)
+	_, res := test.ListClassificationsOK(t, ctx, service, ctrl, seriesID)
 	expres := app.ClassificationCollection{
 		convert.ToClassificationMedia(2, &model.Class{ID: 1, Name: "foo"}),
 		convert.ToClassificationMedia(2, &model.Class{ID: 2, Name: "bar"}),

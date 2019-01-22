@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"context"
 	"github.com/NBR41/go-testgoa/app"
 	"github.com/NBR41/go-testgoa/internal/convert"
 	"github.com/NBR41/go-testgoa/internal/model"
@@ -79,7 +78,7 @@ func (c *PrintsController) List(ctx *app.ListPrintsContext) error {
 	}
 	defer func() { m.Close() }()
 
-	list, err := m.ListPrints()
+	list, err := m.ListPrintsByIDs(nil, nil, nil)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to get print list`, `error`, err.Error())
 		return ctx.InternalServerError()
@@ -141,53 +140,4 @@ func (c *PrintsController) Update(ctx *app.UpdatePrintsContext) error {
 
 	return ctx.NoContent()
 	// PrintsController_Update: end_implement
-}
-
-type printsResponse interface {
-	OK(r app.PrintCollection) error
-	NotFound() error
-	InternalServerError() error
-	ServiceUnavailable() error
-}
-
-func listPrints(ctx context.Context, fm Fmodeler, rCtx printsResponse, collectionID, seriesID *int) error {
-	m, err := fm()
-	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
-		return rCtx.ServiceUnavailable()
-	}
-	defer func() { m.Close() }()
-
-	if collectionID != nil {
-		_, err = m.GetCollectionByID(*collectionID)
-		if err != nil {
-			goa.ContextLogger(ctx).Error(`failed to get collection`, `error`, err.Error())
-			if err == model.ErrNotFound {
-				return rCtx.NotFound()
-			}
-			return rCtx.InternalServerError()
-		}
-	}
-
-	if seriesID != nil {
-		_, err = m.GetSeriesByID(*seriesID)
-		if err != nil {
-			goa.ContextLogger(ctx).Error(`failed to get series`, `error`, err.Error())
-			if err == model.ErrNotFound {
-				return rCtx.NotFound()
-			}
-			return rCtx.InternalServerError()
-		}
-	}
-
-	list, err := m.ListPrintsByIDs(collectionID, seriesID)
-	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get print list`, `error`, err.Error())
-		return rCtx.InternalServerError()
-	}
-	bs := make(app.PrintCollection, len(list))
-	for i, bk := range list {
-		bs[i] = convert.ToPrintMedia(bk)
-	}
-	return rCtx.OK(bs)
 }

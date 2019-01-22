@@ -3,7 +3,6 @@ package design
 // package "design"
 import (
 	// Use . imports to enable the DSL
-	. "github.com/goadesign/goa/design"
 	. "github.com/goadesign/goa/design/apidsl"
 )
 
@@ -13,94 +12,45 @@ var _ = Resource("relationAuthor", func() {
 	Action("listCategories", func() {
 		Description("List categories by author")
 		Routing(GET(categoryPath))
-		// ok
-		Response(OK, CollectionOf(CategoryMedia))
-		// class not found
-		Response(NotFound)
-		// Errors
-		Response(InternalServerError)
-		Response(ServiceUnavailable)
-		Response(BadRequest, ErrorMedia)
+		fCategoryList()
 	})
 
 	Action("listClasses", func() {
 		Description("List classes by author")
 		Routing(GET(classPath))
-		// ok
-		Response(OK, CollectionOf(ClassMedia))
-		// class not found
-		Response(NotFound)
-		// Errors
-		Response(InternalServerError)
-		Response(ServiceUnavailable)
-		Response(BadRequest, ErrorMedia)
+		fClassList()
 	})
 
 	Action("listRoles", func() {
 		Description("List roles by author")
 		Routing(GET(rolePath))
-		// ok
-		Response(OK, CollectionOf(RoleMedia))
-		// class not found
-		Response(NotFound)
-		// Errors
-		Response(InternalServerError)
-		Response(ServiceUnavailable)
-		Response(BadRequest, ErrorMedia)
+		fRoleList()
 	})
 
 	Action("listSeries", func() {
 		Description("List series by author")
 		Routing(GET(seriesPath))
-		// ok
-		Response(OK, CollectionOf(SeriesMedia))
-		// class not found
-		Response(NotFound)
-		// Errors
-		Response(InternalServerError)
-		Response(ServiceUnavailable)
-		Response(BadRequest, ErrorMedia)
+		fSeriesList()
 	})
 
 	Action("listSeriesByCategory", func() {
 		Description("List series by author and category")
 		Routing(GET(categoryPath + categoryIDPath + seriesPath))
 		Params(attrCategoryID)
-		// ok
-		Response(OK, CollectionOf(SeriesMedia))
-		// class not found
-		Response(NotFound)
-		// Errors
-		Response(InternalServerError)
-		Response(ServiceUnavailable)
-		Response(BadRequest, ErrorMedia)
+		fSeriesList()
 	})
 
 	Action("listSeriesByClass", func() {
 		Description("List series by author and class")
 		Routing(GET(classPath + classIDPath + seriesPath))
 		Params(attrClassID)
-		// ok
-		Response(OK, CollectionOf(SeriesMedia))
-		// class not found
-		Response(NotFound)
-		// Errors
-		Response(InternalServerError)
-		Response(ServiceUnavailable)
-		Response(BadRequest, ErrorMedia)
+		fSeriesList()
 	})
 
 	Action("listSeriesByRole", func() {
 		Description("List series by author and role")
 		Routing(GET(rolePath + roleIDPath + seriesPath))
 		Params(attrRoleID)
-		// ok
-		Response(OK, CollectionOf(SeriesMedia))
-		// class not found
-		Response(NotFound)
-		// Errors
-		Response(InternalServerError)
-		Response(ServiceUnavailable)
-		Response(BadRequest, ErrorMedia)
+		fSeriesList()
 	})
 })

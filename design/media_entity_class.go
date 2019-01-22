@@ -12,6 +12,16 @@ var (
 	classIDPath   = "/:class_id"
 	attrClassID   = func() { Attribute("class_id", Integer, "Unique Class ID", defIDConstraint) }
 	attrClassName = func() { Attribute("class_name", String, "Class Name (Thriller/Romance/...)", defStringConstraint) }
+
+	fClassList = func() {
+		// ok
+		Response(OK, CollectionOf(ClassMedia))
+		// class not found
+		Response(NotFound)
+		// Errors
+		Response(InternalServerError)
+		Response(ServiceUnavailable)
+	}
 )
 
 //ClassMedia defines the media type used to render classes.

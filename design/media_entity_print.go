@@ -14,6 +14,16 @@ var (
 	attrPrintName = func() {
 		Attribute("print_name", String, "Print Name (Deluxe/Ultimate/Pocket)", defStringConstraint)
 	}
+
+	fPrintList = func() {
+		// ok
+		Response(OK, CollectionOf(PrintMedia))
+		// class not found
+		Response(NotFound)
+		// Errors
+		Response(InternalServerError)
+		Response(ServiceUnavailable)
+	}
 )
 
 //PrintMedia defines the media type used to render edition types.

@@ -131,9 +131,9 @@ func TestBooksList(t *testing.T) {
 	defer mctrl.Finish()
 	mock := NewMockModeler(mctrl)
 	gomock.InOrder(
-		mock.EXPECT().ListBooks().Return(nil, errors.New("list error")),
+		mock.EXPECT().ListBooksByIDs(nil, nil, nil, nil).Return(nil, errors.New("list error")),
 		mock.EXPECT().Close(),
-		mock.EXPECT().ListBooks().Return([]*model.Book{&model.Book{ID: 1, ISBN: "foo1", Name: "bar1", SeriesID: 2}, &model.Book{ID: 3, ISBN: "foo2", Name: "bar2", SeriesID: 4}}, nil),
+		mock.EXPECT().ListBooksByIDs(nil, nil, nil, nil).Return([]*model.Book{&model.Book{ID: 1, ISBN: "foo1", Name: "bar1", SeriesID: 2}, &model.Book{ID: 3, ISBN: "foo2", Name: "bar2", SeriesID: 4}}, nil),
 		mock.EXPECT().Close(),
 	)
 	service := goa.New("my-inventory-test")

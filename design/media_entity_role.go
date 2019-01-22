@@ -12,6 +12,16 @@ var (
 	roleIDPath   = "/:role_id"
 	attrRoleID   = func() { Attribute("role_id", Integer, "Unique Role ID", defIDConstraint) }
 	attrRoleName = func() { Attribute("role_name", String, "Role Name (Author/Scenarist/Cartoonist)", defStringConstraint) }
+
+	fRoleList = func() {
+		// ok
+		Response(OK, CollectionOf(RoleMedia))
+		// class not found
+		Response(NotFound)
+		// Errors
+		Response(InternalServerError)
+		Response(ServiceUnavailable)
+	}
 )
 
 //RoleMedia defines the media type used to render roles.

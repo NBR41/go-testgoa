@@ -13,6 +13,16 @@ var (
 	attrBookID   = func() { Attribute("book_id", Integer, "Unique Book ID", defIDConstraint) }
 	attrBookISBN = func() { Attribute("book_isbn", String, "Book ISBN", defStringConstraint) }
 	attrBookName = func() { Attribute("book_name", String, "Book Name", defStringConstraint) }
+
+	fBookList = func() {
+		// ok
+		Response(OK, CollectionOf(BookMedia))
+		// class not found
+		Response(NotFound)
+		// Errors
+		Response(InternalServerError)
+		Response(ServiceUnavailable)
+	}
 )
 
 // BookMedia defines the media type used to render books.

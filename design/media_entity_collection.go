@@ -14,6 +14,16 @@ var (
 	attrCollectionName = func() {
 		Attribute("collection_name", String, "Collection Name (Découverte/Shonen)", defStringConstraint)
 	}
+
+	fCollectionList = func() {
+		// ok
+		Response(OK, CollectionOf(CollectionMedia))
+		// class not found
+		Response(NotFound)
+		// Errors
+		Response(InternalServerError)
+		Response(ServiceUnavailable)
+	}
 )
 
 //CollectionMedia defines the media type used to render collections.

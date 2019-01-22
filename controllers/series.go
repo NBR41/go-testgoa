@@ -1,8 +1,6 @@
 package controllers
 
 import (
-	"context"
-
 	"github.com/NBR41/go-testgoa/app"
 	"github.com/NBR41/go-testgoa/internal/convert"
 	"github.com/NBR41/go-testgoa/internal/model"
@@ -84,7 +82,7 @@ func (c *SeriesController) List(ctx *app.ListSeriesContext) error {
 	}
 	defer func() { m.Close() }()
 
-	list, err := m.ListSeries()
+	list, err := m.ListSeriesByIDs(nil, nil, nil, nil)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to get series list`, `error`, err.Error())
 		return ctx.InternalServerError()
@@ -148,75 +146,4 @@ func (c *SeriesController) Update(ctx *app.UpdateSeriesContext) error {
 
 	return ctx.NoContent()
 	// SeriesController_Update: end_implement
-}
-
-type seriesResponse interface {
-	OK(r app.SeriesCollection) error
-	NotFound() error
-	InternalServerError() error
-	ServiceUnavailable() error
-}
-
-func listSeries(ctx context.Context, fm Fmodeler, rCtx seriesResponse, authorID, roleID, categoryID, classID *int) error {
-	m, err := fm()
-	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
-		return rCtx.ServiceUnavailable()
-	}
-	defer func() { m.Close() }()
-
-	if authorID != nil {
-		_, err = m.GetAuthorByID(*authorID)
-		if err != nil {
-			goa.ContextLogger(ctx).Error(`failed to get author`, `error`, err.Error())
-			if err == model.ErrNotFound {
-				return rCtx.NotFound()
-			}
-			return rCtx.InternalServerError()
-		}
-	}
-
-	if roleID != nil {
-		_, err = m.GetRoleByID(*roleID)
-		if err != nil {
-			goa.ContextLogger(ctx).Error(`failed to get role`, `error`, err.Error())
-			if err == model.ErrNotFound {
-				return rCtx.NotFound()
-			}
-			return rCtx.InternalServerError()
-		}
-	}
-
-	if categoryID != nil {
-		_, err = m.GetCategoryByID(*categoryID)
-		if err != nil {
-			goa.ContextLogger(ctx).Error(`failed to get category`, `error`, err.Error())
-			if err == model.ErrNotFound {
-				return rCtx.NotFound()
-			}
-			return rCtx.InternalServerError()
-		}
-	}
-
-	if classID != nil {
-		_, err = m.GetClassByID(*classID)
-		if err != nil {
-			goa.ContextLogger(ctx).Error(`failed to get class`, `error`, err.Error())
-			if err == model.ErrNotFound {
-				return rCtx.NotFound()
-			}
-			return rCtx.InternalServerError()
-		}
-	}
-
-	list, err := m.ListSeriesByIDs(authorID, roleID, categoryID, classID)
-	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get series list`, `error`, err.Error())
-		return rCtx.InternalServerError()
-	}
-	bs := make(app.SeriesCollection, len(list))
-	for i, bk := range list {
-		bs[i] = convert.ToSeriesMedia(bk)
-	}
-	return rCtx.OK(bs)
 }

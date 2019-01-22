@@ -82,7 +82,7 @@ func (c *CollectionsController) List(ctx *app.ListCollectionsContext) error {
 	}
 	defer func() { m.Close() }()
 
-	list, err := m.ListCollections()
+	list, err := m.ListCollectionsByIDs(nil, nil, nil)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to get collection list`, `error`, err.Error())
 		return ctx.InternalServerError()

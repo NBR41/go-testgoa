@@ -12,6 +12,16 @@ var (
 	seriesIDPath   = "/:series_id"
 	attrSeriesID   = func() { Attribute("series_id", Integer, "Unique Series ID", defIDConstraint) }
 	attrSeriesName = func() { Attribute("series_name", String, "Series Name (Akira/Dragon ball)", defStringConstraint) }
+
+	fSeriesList = func() {
+		// ok
+		Response(OK, CollectionOf(SeriesMedia))
+		// class not found
+		Response(NotFound)
+		// Errors
+		Response(InternalServerError)
+		Response(ServiceUnavailable)
+	}
 )
 
 //SeriesMedia defines the media type used to render series.

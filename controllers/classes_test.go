@@ -122,9 +122,9 @@ func TestClassList(t *testing.T) {
 	defer mctrl.Finish()
 	mock := NewMockModeler(mctrl)
 	gomock.InOrder(
-		mock.EXPECT().ListClasses().Return(nil, errors.New("list error")),
+		mock.EXPECT().ListClassesByIDs(nil, nil, nil).Return(nil, errors.New("list error")),
 		mock.EXPECT().Close(),
-		mock.EXPECT().ListClasses().Return([]*model.Class{&model.Class{ID: 123, Name: "foo"}, &model.Class{ID: 456, Name: "bar"}}, nil),
+		mock.EXPECT().ListClassesByIDs(nil, nil, nil).Return([]*model.Class{&model.Class{ID: 123, Name: "foo"}, &model.Class{ID: 456, Name: "bar"}}, nil),
 		mock.EXPECT().Close(),
 	)
 	service := goa.New("my-inventory-test")

@@ -78,7 +78,7 @@ func (c *EditorsController) List(ctx *app.ListEditorsContext) error {
 	}
 	defer func() { m.Close() }()
 
-	list, err := m.ListEditors()
+	list, err := m.ListEditorsByIDs(nil, nil)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to get editor list`, `error`, err.Error())
 		return ctx.InternalServerError()

@@ -11,74 +11,25 @@ import (
 type RelationAuthorController struct {
 	*goa.Controller
 	fm Fmodeler
+	l  Lister
 }
 
 // NewRelationAuthorController creates a relationAuthor controller.
-func NewRelationAuthorController(service *goa.Service, fm Fmodeler) *RelationAuthorController {
-	return &RelationAuthorController{Controller: service.NewController("RelationAuthorController"), fm: fm}
+func NewRelationAuthorController(service *goa.Service, fm Fmodeler, l Lister) *RelationAuthorController {
+	return &RelationAuthorController{Controller: service.NewController("RelationAuthorController"), fm: fm, l: l}
 }
 
 // ListCategories runs the listCategories action.
 func (c *RelationAuthorController) ListCategories(ctx *app.ListCategoriesRelationAuthorContext) error {
 	// RelationAuthorController_ListCategories: start_implement
-	m, err := c.fm()
-	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
-		return ctx.ServiceUnavailable()
-	}
-	defer func() { m.Close() }()
-
-	_, err = m.GetAuthorByID(ctx.AuthorID)
-	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get author`, `error`, err.Error())
-		if err == model.ErrNotFound {
-			return ctx.NotFound()
-		}
-		return ctx.InternalServerError()
-	}
-
-	list, err := m.ListCategoriesByAuthorID(ctx.AuthorID)
-	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get category list`, `error`, err.Error())
-		return ctx.InternalServerError()
-	}
-	bs := make(app.CategoryCollection, len(list))
-	for i, bk := range list {
-		bs[i] = convert.ToCategoryMedia(bk)
-	}
-	return ctx.OK(bs)
+	return c.l.ListCategories(ctx, c.fm, ctx, &ctx.AuthorID, nil)
 	// RelationAuthorController_ListCategories: end_implement
 }
 
 // ListClasses runs the listClasses action.
 func (c *RelationAuthorController) ListClasses(ctx *app.ListClassesRelationAuthorContext) error {
 	// RelationAuthorController_ListClasses: start_implement
-	m, err := c.fm()
-	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
-		return ctx.ServiceUnavailable()
-	}
-	defer func() { m.Close() }()
-
-	_, err = m.GetAuthorByID(ctx.AuthorID)
-	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get author`, `error`, err.Error())
-		if err == model.ErrNotFound {
-			return ctx.NotFound()
-		}
-		return ctx.InternalServerError()
-	}
-
-	list, err := m.ListClassesByAuthorID(ctx.AuthorID)
-	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get class list`, `error`, err.Error())
-		return ctx.InternalServerError()
-	}
-	bs := make(app.ClassCollection, len(list))
-	for i, bk := range list {
-		bs[i] = convert.ToClassMedia(bk)
-	}
-	return ctx.OK(bs)
+	return c.l.ListClasses(ctx, c.fm, ctx, &ctx.AuthorID, nil, nil)
 	// RelationAuthorController_ListClasses: end_implement
 }
 
@@ -101,7 +52,7 @@ func (c *RelationAuthorController) ListRoles(ctx *app.ListRolesRelationAuthorCon
 		return ctx.InternalServerError()
 	}
 
-	list, err := m.ListRolesByAuthorID(ctx.AuthorID)
+	list, err := m.ListRolesByIDs(&ctx.AuthorID)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to get role list`, `error`, err.Error())
 		return ctx.InternalServerError()
@@ -117,27 +68,27 @@ func (c *RelationAuthorController) ListRoles(ctx *app.ListRolesRelationAuthorCon
 // ListSeries runs the listSeries action.
 func (c *RelationAuthorController) ListSeries(ctx *app.ListSeriesRelationAuthorContext) error {
 	// RelationAuthorController_ListSeries: start_implement
-	return listSeries(ctx, c.fm, ctx, &ctx.AuthorID, nil, nil, nil)
+	return c.l.ListSeries(ctx, c.fm, ctx, &ctx.AuthorID, nil, nil, nil)
 	// RelationAuthorController_ListSeries: end_implement
 }
 
 // ListSeriesByCategory runs the listSeriesByCategory action.
 func (c *RelationAuthorController) ListSeriesByCategory(ctx *app.ListSeriesByCategoryRelationAuthorContext) error {
 	// RelationAuthorController_ListSeriesByCategory: start_implement
-	return listSeries(ctx, c.fm, ctx, &ctx.AuthorID, nil, &ctx.CategoryID, nil)
+	return c.l.ListSeries(ctx, c.fm, ctx, &ctx.AuthorID, &ctx.CategoryID, nil, nil)
 	// RelationAuthorController_ListSeriesByCategory: end_implement
 }
 
 // ListSeriesByClass runs the listSeriesByClass action.
 func (c *RelationAuthorController) ListSeriesByClass(ctx *app.ListSeriesByClassRelationAuthorContext) error {
 	// RelationAuthorController_ListSeriesByClass: start_implement
-	return listSeries(ctx, c.fm, ctx, &ctx.AuthorID, nil, nil, &ctx.ClassID)
+	return c.l.ListSeries(ctx, c.fm, ctx, &ctx.AuthorID, nil, &ctx.ClassID, nil)
 	// RelationAuthorController_ListSeriesByClass: end_implement
 }
 
 // ListSeriesByRole runs the listSeriesByRole action.
 func (c *RelationAuthorController) ListSeriesByRole(ctx *app.ListSeriesByRoleRelationAuthorContext) error {
 	// RelationAuthorController_ListSeriesByRole: start_implement
-	return listSeries(ctx, c.fm, ctx, &ctx.AuthorID, &ctx.RoleID, nil, nil)
+	return c.l.ListSeries(ctx, c.fm, ctx, &ctx.AuthorID, nil, nil, &ctx.RoleID)
 	// RelationAuthorController_ListSeriesByRole: end_implement
 }

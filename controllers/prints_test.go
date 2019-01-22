@@ -122,9 +122,9 @@ func TestPrintList(t *testing.T) {
 	defer mctrl.Finish()
 	mock := NewMockModeler(mctrl)
 	gomock.InOrder(
-		mock.EXPECT().ListPrints().Return(nil, errors.New("list error")),
+		mock.EXPECT().ListPrintsByIDs(nil, nil, nil).Return(nil, errors.New("list error")),
 		mock.EXPECT().Close(),
-		mock.EXPECT().ListPrints().Return([]*model.Print{&model.Print{ID: 123, Name: "foo"}, &model.Print{ID: 456, Name: "bar"}}, nil),
+		mock.EXPECT().ListPrintsByIDs(nil, nil, nil).Return([]*model.Print{&model.Print{ID: 123, Name: "foo"}, &model.Print{ID: 456, Name: "bar"}}, nil),
 		mock.EXPECT().Close(),
 	)
 	service := goa.New("my-inventory-test")

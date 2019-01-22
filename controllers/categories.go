@@ -78,7 +78,7 @@ func (c *CategoriesController) List(ctx *app.ListCategoriesContext) error {
 	}
 	defer func() { m.Close() }()
 
-	list, err := m.ListCategories()
+	list, err := m.ListCategoriesByIDs(nil, nil)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to get category list`, `error`, err.Error())
 		return ctx.InternalServerError()

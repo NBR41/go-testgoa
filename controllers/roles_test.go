@@ -122,9 +122,9 @@ func TestRoleList(t *testing.T) {
 	defer mctrl.Finish()
 	mock := NewMockModeler(mctrl)
 	gomock.InOrder(
-		mock.EXPECT().ListRoles().Return(nil, errors.New("list error")),
+		mock.EXPECT().ListRolesByIDs(nil).Return(nil, errors.New("list error")),
 		mock.EXPECT().Close(),
-		mock.EXPECT().ListRoles().Return([]*model.Role{&model.Role{ID: 123, Name: "foo"}, &model.Role{ID: 456, Name: "bar"}}, nil),
+		mock.EXPECT().ListRolesByIDs(nil).Return([]*model.Role{&model.Role{ID: 123, Name: "foo"}, &model.Role{ID: 456, Name: "bar"}}, nil),
 		mock.EXPECT().Close(),
 	)
 	service := goa.New("my-inventory-test")

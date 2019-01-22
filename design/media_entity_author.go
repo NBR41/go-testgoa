@@ -12,6 +12,16 @@ var (
 	authorIDPath   = "/:author_id"
 	attrAuthorID   = func() { Attribute("author_id", Integer, "Unique Author ID", defIDConstraint) }
 	attrAuthorName = func() { Attribute("author_name", String, "Author Name", defStringConstraint) }
+
+	fAuthorList = func() {
+		// ok
+		Response(OK, CollectionOf(AuthorMedia))
+		// class not found
+		Response(NotFound)
+		// Errors
+		Response(InternalServerError)
+		Response(ServiceUnavailable)
+	}
 )
 
 //AuthorMedia defines the media type used to render authors.

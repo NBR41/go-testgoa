@@ -629,12 +629,6 @@ func (ctx *CreateAuthorshipsContext) Unauthorized() error {
 	return nil
 }
 
-// NotFound sends a HTTP response with status code 404.
-func (ctx *CreateAuthorshipsContext) NotFound() error {
-	ctx.ResponseData.WriteHeader(404)
-	return nil
-}
-
 // UnprocessableEntity sends a HTTP response with status code 422.
 func (ctx *CreateAuthorshipsContext) UnprocessableEntity() error {
 	ctx.ResponseData.WriteHeader(422)
@@ -2230,6 +2224,368 @@ func (ctx *UpdateClassesContext) InternalServerError() error {
 
 // ServiceUnavailable sends a HTTP response with status code 503.
 func (ctx *UpdateClassesContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// CreateClassificationsContext provides the classifications create action context.
+type CreateClassificationsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	SeriesID int
+	Payload  *CreateClassificationsPayload
+}
+
+// NewCreateClassificationsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the classifications controller create action.
+func NewCreateClassificationsContext(ctx context.Context, r *http.Request, service *goa.Service) (*CreateClassificationsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := CreateClassificationsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// createClassificationsPayload is the classifications create action payload.
+type createClassificationsPayload struct {
+	// Unique Class ID
+	ClassID *int `form:"class_id,omitempty" json:"class_id,omitempty" yaml:"class_id,omitempty" xml:"class_id,omitempty"`
+}
+
+// Validate runs the validation rules defined in the design.
+func (payload *createClassificationsPayload) Validate() (err error) {
+	if payload.ClassID == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "class_id"))
+	}
+	if payload.ClassID != nil {
+		if *payload.ClassID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`raw.class_id`, *payload.ClassID, 1, true))
+		}
+	}
+	return
+}
+
+// Publicize creates CreateClassificationsPayload from createClassificationsPayload
+func (payload *createClassificationsPayload) Publicize() *CreateClassificationsPayload {
+	var pub CreateClassificationsPayload
+	if payload.ClassID != nil {
+		pub.ClassID = *payload.ClassID
+	}
+	return &pub
+}
+
+// CreateClassificationsPayload is the classifications create action payload.
+type CreateClassificationsPayload struct {
+	// Unique Class ID
+	ClassID int `form:"class_id" json:"class_id" yaml:"class_id" xml:"class_id"`
+}
+
+// Validate runs the validation rules defined in the design.
+func (payload *CreateClassificationsPayload) Validate() (err error) {
+	if payload.ClassID < 1 {
+		err = goa.MergeErrors(err, goa.InvalidRangeError(`raw.class_id`, payload.ClassID, 1, true))
+	}
+	return
+}
+
+// Created sends a HTTP response with status code 201.
+func (ctx *CreateClassificationsContext) Created() error {
+	ctx.ResponseData.WriteHeader(201)
+	return nil
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *CreateClassificationsContext) BadRequest(r error) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// Unauthorized sends a HTTP response with status code 401.
+func (ctx *CreateClassificationsContext) Unauthorized() error {
+	ctx.ResponseData.WriteHeader(401)
+	return nil
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *CreateClassificationsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// UnprocessableEntity sends a HTTP response with status code 422.
+func (ctx *CreateClassificationsContext) UnprocessableEntity() error {
+	ctx.ResponseData.WriteHeader(422)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *CreateClassificationsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *CreateClassificationsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// DeleteClassificationsContext provides the classifications delete action context.
+type DeleteClassificationsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	ClassID  int
+	SeriesID int
+}
+
+// NewDeleteClassificationsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the classifications controller delete action.
+func NewDeleteClassificationsContext(ctx context.Context, r *http.Request, service *goa.Service) (*DeleteClassificationsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := DeleteClassificationsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramClassID := req.Params["class_id"]
+	if len(paramClassID) > 0 {
+		rawClassID := paramClassID[0]
+		if classID, err2 := strconv.Atoi(rawClassID); err2 == nil {
+			rctx.ClassID = classID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("class_id", rawClassID, "integer"))
+		}
+		if rctx.ClassID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`class_id`, rctx.ClassID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// NoContent sends a HTTP response with status code 204.
+func (ctx *DeleteClassificationsContext) NoContent() error {
+	ctx.ResponseData.WriteHeader(204)
+	return nil
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *DeleteClassificationsContext) BadRequest(r error) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// Unauthorized sends a HTTP response with status code 401.
+func (ctx *DeleteClassificationsContext) Unauthorized() error {
+	ctx.ResponseData.WriteHeader(401)
+	return nil
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *DeleteClassificationsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *DeleteClassificationsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *DeleteClassificationsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListClassificationsContext provides the classifications list action context.
+type ListClassificationsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	SeriesID int
+}
+
+// NewListClassificationsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the classifications controller list action.
+func NewListClassificationsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListClassificationsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListClassificationsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListClassificationsContext) OK(r ClassificationCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.classification+json; type=collection")
+	}
+	if r == nil {
+		r = ClassificationCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *ListClassificationsContext) BadRequest(r error) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// Unauthorized sends a HTTP response with status code 401.
+func (ctx *ListClassificationsContext) Unauthorized() error {
+	ctx.ResponseData.WriteHeader(401)
+	return nil
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListClassificationsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListClassificationsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListClassificationsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ShowClassificationsContext provides the classifications show action context.
+type ShowClassificationsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	ClassID  int
+	SeriesID int
+}
+
+// NewShowClassificationsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the classifications controller show action.
+func NewShowClassificationsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ShowClassificationsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ShowClassificationsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramClassID := req.Params["class_id"]
+	if len(paramClassID) > 0 {
+		rawClassID := paramClassID[0]
+		if classID, err2 := strconv.Atoi(rawClassID); err2 == nil {
+			rctx.ClassID = classID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("class_id", rawClassID, "integer"))
+		}
+		if rctx.ClassID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`class_id`, rctx.ClassID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ShowClassificationsContext) OK(r *Classification) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.classification+json")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *ShowClassificationsContext) BadRequest(r error) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// Unauthorized sends a HTTP response with status code 401.
+func (ctx *ShowClassificationsContext) Unauthorized() error {
+	ctx.ResponseData.WriteHeader(401)
+	return nil
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ShowClassificationsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ShowClassificationsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ShowClassificationsContext) ServiceUnavailable() error {
 	ctx.ResponseData.WriteHeader(503)
 	return nil
 }
@@ -4626,14 +4982,6 @@ func (ctx *ListCategoriesRelationAuthorContext) OKLink(r CategoryLinkCollection)
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
 
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ListCategoriesRelationAuthorContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
 // NotFound sends a HTTP response with status code 404.
 func (ctx *ListCategoriesRelationAuthorContext) NotFound() error {
 	ctx.ResponseData.WriteHeader(404)
@@ -4704,14 +5052,6 @@ func (ctx *ListClassesRelationAuthorContext) OKLink(r ClassLinkCollection) error
 		r = ClassLinkCollection{}
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ListClassesRelationAuthorContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
 }
 
 // NotFound sends a HTTP response with status code 404.
@@ -4786,14 +5126,6 @@ func (ctx *ListRolesRelationAuthorContext) OKLink(r RoleLinkCollection) error {
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
 
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ListRolesRelationAuthorContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
 // NotFound sends a HTTP response with status code 404.
 func (ctx *ListRolesRelationAuthorContext) NotFound() error {
 	ctx.ResponseData.WriteHeader(404)
@@ -4864,14 +5196,6 @@ func (ctx *ListSeriesRelationAuthorContext) OKLink(r SeriesLinkCollection) error
 		r = SeriesLinkCollection{}
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ListSeriesRelationAuthorContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
 }
 
 // NotFound sends a HTTP response with status code 404.
@@ -4959,14 +5283,6 @@ func (ctx *ListSeriesByCategoryRelationAuthorContext) OKLink(r SeriesLinkCollect
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
 
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ListSeriesByCategoryRelationAuthorContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
 // NotFound sends a HTTP response with status code 404.
 func (ctx *ListSeriesByCategoryRelationAuthorContext) NotFound() error {
 	ctx.ResponseData.WriteHeader(404)
@@ -5050,14 +5366,6 @@ func (ctx *ListSeriesByClassRelationAuthorContext) OKLink(r SeriesLinkCollection
 		r = SeriesLinkCollection{}
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ListSeriesByClassRelationAuthorContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
 }
 
 // NotFound sends a HTTP response with status code 404.
@@ -5145,14 +5453,6 @@ func (ctx *ListSeriesByRoleRelationAuthorContext) OKLink(r SeriesLinkCollection)
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
 
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ListSeriesByRoleRelationAuthorContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
 // NotFound sends a HTTP response with status code 404.
 func (ctx *ListSeriesByRoleRelationAuthorContext) NotFound() error {
 	ctx.ResponseData.WriteHeader(404)
@@ -5223,14 +5523,6 @@ func (ctx *ListAuthorsRelationCategoryContext) OKLink(r AuthorLinkCollection) er
 		r = AuthorLinkCollection{}
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ListAuthorsRelationCategoryContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
 }
 
 // NotFound sends a HTTP response with status code 404.
@@ -5305,14 +5597,6 @@ func (ctx *ListClassesRelationCategoryContext) OKLink(r ClassLinkCollection) err
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
 
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ListClassesRelationCategoryContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
 // NotFound sends a HTTP response with status code 404.
 func (ctx *ListClassesRelationCategoryContext) NotFound() error {
 	ctx.ResponseData.WriteHeader(404)
@@ -5383,14 +5667,6 @@ func (ctx *ListSeriesRelationCategoryContext) OKLink(r SeriesLinkCollection) err
 		r = SeriesLinkCollection{}
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ListSeriesRelationCategoryContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
 }
 
 // NotFound sends a HTTP response with status code 404.
@@ -5478,14 +5754,6 @@ func (ctx *ListSeriesByClassRelationCategoryContext) OKLink(r SeriesLinkCollecti
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
 
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ListSeriesByClassRelationCategoryContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
 // NotFound sends a HTTP response with status code 404.
 func (ctx *ListSeriesByClassRelationCategoryContext) NotFound() error {
 	ctx.ResponseData.WriteHeader(404)
@@ -5558,14 +5826,6 @@ func (ctx *ListCategoriesRelationClassContext) OKLink(r CategoryLinkCollection) 
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
 
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ListCategoriesRelationClassContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
 // NotFound sends a HTTP response with status code 404.
 func (ctx *ListCategoriesRelationClassContext) NotFound() error {
 	ctx.ResponseData.WriteHeader(404)
@@ -5636,14 +5896,6 @@ func (ctx *ListSeriesRelationClassContext) OKLink(r SeriesLinkCollection) error 
 		r = SeriesLinkCollection{}
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ListSeriesRelationClassContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
 }
 
 // NotFound sends a HTTP response with status code 404.
@@ -5731,14 +5983,6 @@ func (ctx *ListSeriesByCategoryRelationClassContext) OKLink(r SeriesLinkCollecti
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
 
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ListSeriesByCategoryRelationClassContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
 // NotFound sends a HTTP response with status code 404.
 func (ctx *ListSeriesByCategoryRelationClassContext) NotFound() error {
 	ctx.ResponseData.WriteHeader(404)
@@ -5809,14 +6053,6 @@ func (ctx *ListBooksRelationCollectionContext) OKLink(r BookLinkCollection) erro
 		r = BookLinkCollection{}
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ListBooksRelationCollectionContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
 }
 
 // NotFound sends a HTTP response with status code 404.
@@ -5902,14 +6138,6 @@ func (ctx *ListBooksByPrintRelationCollectionContext) OKLink(r BookLinkCollectio
 		r = BookLinkCollection{}
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ListBooksByPrintRelationCollectionContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
 }
 
 // NotFound sends a HTTP response with status code 404.
@@ -6010,14 +6238,6 @@ func (ctx *ListBooksByPrintSeriesRelationCollectionContext) OKLink(r BookLinkCol
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
 
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ListBooksByPrintSeriesRelationCollectionContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
 // NotFound sends a HTTP response with status code 404.
 func (ctx *ListBooksByPrintSeriesRelationCollectionContext) NotFound() error {
 	ctx.ResponseData.WriteHeader(404)
@@ -6101,14 +6321,6 @@ func (ctx *ListBooksBySeriesRelationCollectionContext) OKLink(r BookLinkCollecti
 		r = BookLinkCollection{}
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ListBooksBySeriesRelationCollectionContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
 }
 
 // NotFound sends a HTTP response with status code 404.
@@ -6209,14 +6421,6 @@ func (ctx *ListBooksBySeriesPrintRelationCollectionContext) OKLink(r BookLinkCol
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
 
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ListBooksBySeriesPrintRelationCollectionContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
 // NotFound sends a HTTP response with status code 404.
 func (ctx *ListBooksBySeriesPrintRelationCollectionContext) NotFound() error {
 	ctx.ResponseData.WriteHeader(404)
@@ -6287,14 +6491,6 @@ func (ctx *ListPrintsRelationCollectionContext) OKLink(r PrintLinkCollection) er
 		r = PrintLinkCollection{}
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ListPrintsRelationCollectionContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
 }
 
 // NotFound sends a HTTP response with status code 404.
@@ -6382,14 +6578,6 @@ func (ctx *ListPrintsBySeriesRelationCollectionContext) OKLink(r PrintLinkCollec
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
 
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ListPrintsBySeriesRelationCollectionContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
 // NotFound sends a HTTP response with status code 404.
 func (ctx *ListPrintsBySeriesRelationCollectionContext) NotFound() error {
 	ctx.ResponseData.WriteHeader(404)
@@ -6460,14 +6648,6 @@ func (ctx *ListSeriesRelationCollectionContext) OKLink(r SeriesLinkCollection) e
 		r = SeriesLinkCollection{}
 	}
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ListSeriesRelationCollectionContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
 }
 
 // NotFound sends a HTTP response with status code 404.
@@ -6555,14 +6735,6 @@ func (ctx *ListSeriesByPrintRelationCollectionContext) OKLink(r SeriesLinkCollec
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
 
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ListSeriesByPrintRelationCollectionContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
 // NotFound sends a HTTP response with status code 404.
 func (ctx *ListSeriesByPrintRelationCollectionContext) NotFound() error {
 	ctx.ResponseData.WriteHeader(404)
@@ -6577,6 +6749,5751 @@ func (ctx *ListSeriesByPrintRelationCollectionContext) InternalServerError() err
 
 // ServiceUnavailable sends a HTTP response with status code 503.
 func (ctx *ListSeriesByPrintRelationCollectionContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksRelationEditorsContext provides the relationEditors listBooks action context.
+type ListBooksRelationEditorsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	EditorID int
+}
+
+// NewListBooksRelationEditorsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationEditors controller listBooks action.
+func NewListBooksRelationEditorsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksRelationEditorsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksRelationEditorsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksRelationEditorsContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksRelationEditorsContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksRelationEditorsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksRelationEditorsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksRelationEditorsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListCollectionsRelationEditorsContext provides the relationEditors listCollections action context.
+type ListCollectionsRelationEditorsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	EditorID int
+}
+
+// NewListCollectionsRelationEditorsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationEditors controller listCollections action.
+func NewListCollectionsRelationEditorsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListCollectionsRelationEditorsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListCollectionsRelationEditorsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListCollectionsRelationEditorsContext) OK(r CollectionCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.collection+json; type=collection")
+	}
+	if r == nil {
+		r = CollectionCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListCollectionsRelationEditorsContext) OKLink(r CollectionLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.collection+json; type=collection")
+	}
+	if r == nil {
+		r = CollectionLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListCollectionsRelationEditorsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListCollectionsRelationEditorsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListCollectionsRelationEditorsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListPrintsRelationEditorsContext provides the relationEditors listPrints action context.
+type ListPrintsRelationEditorsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	EditorID int
+}
+
+// NewListPrintsRelationEditorsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationEditors controller listPrints action.
+func NewListPrintsRelationEditorsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListPrintsRelationEditorsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListPrintsRelationEditorsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListPrintsRelationEditorsContext) OK(r PrintCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.print+json; type=collection")
+	}
+	if r == nil {
+		r = PrintCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListPrintsRelationEditorsContext) OKLink(r PrintLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.print+json; type=collection")
+	}
+	if r == nil {
+		r = PrintLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListPrintsRelationEditorsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListPrintsRelationEditorsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListPrintsRelationEditorsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListSeriesRelationEditorsContext provides the relationEditors listSeries action context.
+type ListSeriesRelationEditorsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	EditorID int
+}
+
+// NewListSeriesRelationEditorsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationEditors controller listSeries action.
+func NewListSeriesRelationEditorsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListSeriesRelationEditorsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListSeriesRelationEditorsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListSeriesRelationEditorsContext) OK(r SeriesCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json; type=collection")
+	}
+	if r == nil {
+		r = SeriesCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListSeriesRelationEditorsContext) OKLink(r SeriesLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json; type=collection")
+	}
+	if r == nil {
+		r = SeriesLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListSeriesRelationEditorsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListSeriesRelationEditorsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListSeriesRelationEditorsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksRelationEditorsCollectionsContext provides the relationEditorsCollections listBooks action context.
+type ListBooksRelationEditorsCollectionsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	EditorID     int
+}
+
+// NewListBooksRelationEditorsCollectionsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationEditorsCollections controller listBooks action.
+func NewListBooksRelationEditorsCollectionsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksRelationEditorsCollectionsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksRelationEditorsCollectionsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksRelationEditorsCollectionsContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksRelationEditorsCollectionsContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksRelationEditorsCollectionsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksRelationEditorsCollectionsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksRelationEditorsCollectionsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksByPrintRelationEditorsCollectionsContext provides the relationEditorsCollections listBooksByPrint action context.
+type ListBooksByPrintRelationEditorsCollectionsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	EditorID     int
+	PrintID      int
+}
+
+// NewListBooksByPrintRelationEditorsCollectionsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationEditorsCollections controller listBooksByPrint action.
+func NewListBooksByPrintRelationEditorsCollectionsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksByPrintRelationEditorsCollectionsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksByPrintRelationEditorsCollectionsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksByPrintRelationEditorsCollectionsContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksByPrintRelationEditorsCollectionsContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksByPrintRelationEditorsCollectionsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksByPrintRelationEditorsCollectionsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksByPrintRelationEditorsCollectionsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksByPrintSeriesRelationEditorsCollectionsContext provides the relationEditorsCollections listBooksByPrintSeries action context.
+type ListBooksByPrintSeriesRelationEditorsCollectionsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	EditorID     int
+	PrintID      int
+	SeriesID     int
+}
+
+// NewListBooksByPrintSeriesRelationEditorsCollectionsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationEditorsCollections controller listBooksByPrintSeries action.
+func NewListBooksByPrintSeriesRelationEditorsCollectionsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksByPrintSeriesRelationEditorsCollectionsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksByPrintSeriesRelationEditorsCollectionsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksByPrintSeriesRelationEditorsCollectionsContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksByPrintSeriesRelationEditorsCollectionsContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksByPrintSeriesRelationEditorsCollectionsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksByPrintSeriesRelationEditorsCollectionsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksByPrintSeriesRelationEditorsCollectionsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksBySeriesRelationEditorsCollectionsContext provides the relationEditorsCollections listBooksBySeries action context.
+type ListBooksBySeriesRelationEditorsCollectionsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	EditorID     int
+	SeriesID     int
+}
+
+// NewListBooksBySeriesRelationEditorsCollectionsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationEditorsCollections controller listBooksBySeries action.
+func NewListBooksBySeriesRelationEditorsCollectionsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksBySeriesRelationEditorsCollectionsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksBySeriesRelationEditorsCollectionsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksBySeriesRelationEditorsCollectionsContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksBySeriesRelationEditorsCollectionsContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksBySeriesRelationEditorsCollectionsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksBySeriesRelationEditorsCollectionsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksBySeriesRelationEditorsCollectionsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksBySeriesPrintRelationEditorsCollectionsContext provides the relationEditorsCollections listBooksBySeriesPrint action context.
+type ListBooksBySeriesPrintRelationEditorsCollectionsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	EditorID     int
+	PrintID      int
+	SeriesID     int
+}
+
+// NewListBooksBySeriesPrintRelationEditorsCollectionsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationEditorsCollections controller listBooksBySeriesPrint action.
+func NewListBooksBySeriesPrintRelationEditorsCollectionsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksBySeriesPrintRelationEditorsCollectionsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksBySeriesPrintRelationEditorsCollectionsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksBySeriesPrintRelationEditorsCollectionsContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksBySeriesPrintRelationEditorsCollectionsContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksBySeriesPrintRelationEditorsCollectionsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksBySeriesPrintRelationEditorsCollectionsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksBySeriesPrintRelationEditorsCollectionsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListPrintsRelationEditorsCollectionsContext provides the relationEditorsCollections listPrints action context.
+type ListPrintsRelationEditorsCollectionsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	EditorID     int
+}
+
+// NewListPrintsRelationEditorsCollectionsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationEditorsCollections controller listPrints action.
+func NewListPrintsRelationEditorsCollectionsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListPrintsRelationEditorsCollectionsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListPrintsRelationEditorsCollectionsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListPrintsRelationEditorsCollectionsContext) OK(r PrintCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.print+json; type=collection")
+	}
+	if r == nil {
+		r = PrintCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListPrintsRelationEditorsCollectionsContext) OKLink(r PrintLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.print+json; type=collection")
+	}
+	if r == nil {
+		r = PrintLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListPrintsRelationEditorsCollectionsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListPrintsRelationEditorsCollectionsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListPrintsRelationEditorsCollectionsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListPrintsBySeriesRelationEditorsCollectionsContext provides the relationEditorsCollections listPrintsBySeries action context.
+type ListPrintsBySeriesRelationEditorsCollectionsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	EditorID     int
+	SeriesID     int
+}
+
+// NewListPrintsBySeriesRelationEditorsCollectionsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationEditorsCollections controller listPrintsBySeries action.
+func NewListPrintsBySeriesRelationEditorsCollectionsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListPrintsBySeriesRelationEditorsCollectionsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListPrintsBySeriesRelationEditorsCollectionsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListPrintsBySeriesRelationEditorsCollectionsContext) OK(r PrintCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.print+json; type=collection")
+	}
+	if r == nil {
+		r = PrintCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListPrintsBySeriesRelationEditorsCollectionsContext) OKLink(r PrintLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.print+json; type=collection")
+	}
+	if r == nil {
+		r = PrintLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListPrintsBySeriesRelationEditorsCollectionsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListPrintsBySeriesRelationEditorsCollectionsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListPrintsBySeriesRelationEditorsCollectionsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListSeriesRelationEditorsCollectionsContext provides the relationEditorsCollections listSeries action context.
+type ListSeriesRelationEditorsCollectionsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	EditorID     int
+}
+
+// NewListSeriesRelationEditorsCollectionsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationEditorsCollections controller listSeries action.
+func NewListSeriesRelationEditorsCollectionsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListSeriesRelationEditorsCollectionsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListSeriesRelationEditorsCollectionsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListSeriesRelationEditorsCollectionsContext) OK(r SeriesCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json; type=collection")
+	}
+	if r == nil {
+		r = SeriesCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListSeriesRelationEditorsCollectionsContext) OKLink(r SeriesLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json; type=collection")
+	}
+	if r == nil {
+		r = SeriesLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListSeriesRelationEditorsCollectionsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListSeriesRelationEditorsCollectionsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListSeriesRelationEditorsCollectionsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListSeriesByPrintRelationEditorsCollectionsContext provides the relationEditorsCollections listSeriesByPrint action context.
+type ListSeriesByPrintRelationEditorsCollectionsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	EditorID     int
+	PrintID      int
+}
+
+// NewListSeriesByPrintRelationEditorsCollectionsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationEditorsCollections controller listSeriesByPrint action.
+func NewListSeriesByPrintRelationEditorsCollectionsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListSeriesByPrintRelationEditorsCollectionsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListSeriesByPrintRelationEditorsCollectionsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListSeriesByPrintRelationEditorsCollectionsContext) OK(r SeriesCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json; type=collection")
+	}
+	if r == nil {
+		r = SeriesCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListSeriesByPrintRelationEditorsCollectionsContext) OKLink(r SeriesLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json; type=collection")
+	}
+	if r == nil {
+		r = SeriesLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListSeriesByPrintRelationEditorsCollectionsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListSeriesByPrintRelationEditorsCollectionsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListSeriesByPrintRelationEditorsCollectionsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksRelationEditorsPrintsContext provides the relationEditorsPrints listBooks action context.
+type ListBooksRelationEditorsPrintsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	EditorID int
+	PrintID  int
+}
+
+// NewListBooksRelationEditorsPrintsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationEditorsPrints controller listBooks action.
+func NewListBooksRelationEditorsPrintsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksRelationEditorsPrintsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksRelationEditorsPrintsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksRelationEditorsPrintsContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksRelationEditorsPrintsContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksRelationEditorsPrintsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksRelationEditorsPrintsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksRelationEditorsPrintsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksByCollectionRelationEditorsPrintsContext provides the relationEditorsPrints listBooksByCollection action context.
+type ListBooksByCollectionRelationEditorsPrintsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	EditorID     int
+	PrintID      int
+}
+
+// NewListBooksByCollectionRelationEditorsPrintsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationEditorsPrints controller listBooksByCollection action.
+func NewListBooksByCollectionRelationEditorsPrintsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksByCollectionRelationEditorsPrintsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksByCollectionRelationEditorsPrintsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksByCollectionRelationEditorsPrintsContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksByCollectionRelationEditorsPrintsContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksByCollectionRelationEditorsPrintsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksByCollectionRelationEditorsPrintsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksByCollectionRelationEditorsPrintsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksByCollectionSeriesRelationEditorsPrintsContext provides the relationEditorsPrints listBooksByCollectionSeries action context.
+type ListBooksByCollectionSeriesRelationEditorsPrintsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	EditorID     int
+	PrintID      int
+	SeriesID     int
+}
+
+// NewListBooksByCollectionSeriesRelationEditorsPrintsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationEditorsPrints controller listBooksByCollectionSeries action.
+func NewListBooksByCollectionSeriesRelationEditorsPrintsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksByCollectionSeriesRelationEditorsPrintsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksByCollectionSeriesRelationEditorsPrintsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksByCollectionSeriesRelationEditorsPrintsContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksByCollectionSeriesRelationEditorsPrintsContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksByCollectionSeriesRelationEditorsPrintsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksByCollectionSeriesRelationEditorsPrintsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksByCollectionSeriesRelationEditorsPrintsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksBySeriesRelationEditorsPrintsContext provides the relationEditorsPrints listBooksBySeries action context.
+type ListBooksBySeriesRelationEditorsPrintsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	EditorID int
+	PrintID  int
+	SeriesID int
+}
+
+// NewListBooksBySeriesRelationEditorsPrintsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationEditorsPrints controller listBooksBySeries action.
+func NewListBooksBySeriesRelationEditorsPrintsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksBySeriesRelationEditorsPrintsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksBySeriesRelationEditorsPrintsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksBySeriesRelationEditorsPrintsContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksBySeriesRelationEditorsPrintsContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksBySeriesRelationEditorsPrintsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksBySeriesRelationEditorsPrintsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksBySeriesRelationEditorsPrintsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksBySeriesCollectionRelationEditorsPrintsContext provides the relationEditorsPrints listBooksBySeriesCollection action context.
+type ListBooksBySeriesCollectionRelationEditorsPrintsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	EditorID     int
+	PrintID      int
+	SeriesID     int
+}
+
+// NewListBooksBySeriesCollectionRelationEditorsPrintsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationEditorsPrints controller listBooksBySeriesCollection action.
+func NewListBooksBySeriesCollectionRelationEditorsPrintsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksBySeriesCollectionRelationEditorsPrintsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksBySeriesCollectionRelationEditorsPrintsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksBySeriesCollectionRelationEditorsPrintsContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksBySeriesCollectionRelationEditorsPrintsContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksBySeriesCollectionRelationEditorsPrintsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksBySeriesCollectionRelationEditorsPrintsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksBySeriesCollectionRelationEditorsPrintsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListCollectionsRelationEditorsPrintsContext provides the relationEditorsPrints listCollections action context.
+type ListCollectionsRelationEditorsPrintsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	EditorID int
+	PrintID  int
+}
+
+// NewListCollectionsRelationEditorsPrintsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationEditorsPrints controller listCollections action.
+func NewListCollectionsRelationEditorsPrintsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListCollectionsRelationEditorsPrintsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListCollectionsRelationEditorsPrintsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListCollectionsRelationEditorsPrintsContext) OK(r CollectionCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.collection+json; type=collection")
+	}
+	if r == nil {
+		r = CollectionCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListCollectionsRelationEditorsPrintsContext) OKLink(r CollectionLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.collection+json; type=collection")
+	}
+	if r == nil {
+		r = CollectionLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListCollectionsRelationEditorsPrintsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListCollectionsRelationEditorsPrintsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListCollectionsRelationEditorsPrintsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListCollectionsBySeriesRelationEditorsPrintsContext provides the relationEditorsPrints listCollectionsBySeries action context.
+type ListCollectionsBySeriesRelationEditorsPrintsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	EditorID int
+	PrintID  int
+	SeriesID int
+}
+
+// NewListCollectionsBySeriesRelationEditorsPrintsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationEditorsPrints controller listCollectionsBySeries action.
+func NewListCollectionsBySeriesRelationEditorsPrintsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListCollectionsBySeriesRelationEditorsPrintsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListCollectionsBySeriesRelationEditorsPrintsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListCollectionsBySeriesRelationEditorsPrintsContext) OK(r CollectionCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.collection+json; type=collection")
+	}
+	if r == nil {
+		r = CollectionCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListCollectionsBySeriesRelationEditorsPrintsContext) OKLink(r CollectionLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.collection+json; type=collection")
+	}
+	if r == nil {
+		r = CollectionLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListCollectionsBySeriesRelationEditorsPrintsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListCollectionsBySeriesRelationEditorsPrintsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListCollectionsBySeriesRelationEditorsPrintsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListSeriesRelationEditorsPrintsContext provides the relationEditorsPrints listSeries action context.
+type ListSeriesRelationEditorsPrintsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	EditorID int
+	PrintID  int
+}
+
+// NewListSeriesRelationEditorsPrintsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationEditorsPrints controller listSeries action.
+func NewListSeriesRelationEditorsPrintsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListSeriesRelationEditorsPrintsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListSeriesRelationEditorsPrintsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListSeriesRelationEditorsPrintsContext) OK(r SeriesCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json; type=collection")
+	}
+	if r == nil {
+		r = SeriesCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListSeriesRelationEditorsPrintsContext) OKLink(r SeriesLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json; type=collection")
+	}
+	if r == nil {
+		r = SeriesLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListSeriesRelationEditorsPrintsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListSeriesRelationEditorsPrintsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListSeriesRelationEditorsPrintsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListSeriesByCollectionRelationEditorsPrintsContext provides the relationEditorsPrints listSeriesByCollection action context.
+type ListSeriesByCollectionRelationEditorsPrintsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	EditorID     int
+	PrintID      int
+}
+
+// NewListSeriesByCollectionRelationEditorsPrintsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationEditorsPrints controller listSeriesByCollection action.
+func NewListSeriesByCollectionRelationEditorsPrintsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListSeriesByCollectionRelationEditorsPrintsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListSeriesByCollectionRelationEditorsPrintsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListSeriesByCollectionRelationEditorsPrintsContext) OK(r SeriesCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json; type=collection")
+	}
+	if r == nil {
+		r = SeriesCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListSeriesByCollectionRelationEditorsPrintsContext) OKLink(r SeriesLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json; type=collection")
+	}
+	if r == nil {
+		r = SeriesLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListSeriesByCollectionRelationEditorsPrintsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListSeriesByCollectionRelationEditorsPrintsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListSeriesByCollectionRelationEditorsPrintsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksRelationEditorsSeriesContext provides the relationEditorsSeries listBooks action context.
+type ListBooksRelationEditorsSeriesContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	EditorID int
+	SeriesID int
+}
+
+// NewListBooksRelationEditorsSeriesContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationEditorsSeries controller listBooks action.
+func NewListBooksRelationEditorsSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksRelationEditorsSeriesContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksRelationEditorsSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksRelationEditorsSeriesContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksRelationEditorsSeriesContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksRelationEditorsSeriesContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksRelationEditorsSeriesContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksRelationEditorsSeriesContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksByCollectionRelationEditorsSeriesContext provides the relationEditorsSeries listBooksByCollection action context.
+type ListBooksByCollectionRelationEditorsSeriesContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	EditorID     int
+	SeriesID     int
+}
+
+// NewListBooksByCollectionRelationEditorsSeriesContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationEditorsSeries controller listBooksByCollection action.
+func NewListBooksByCollectionRelationEditorsSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksByCollectionRelationEditorsSeriesContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksByCollectionRelationEditorsSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksByCollectionRelationEditorsSeriesContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksByCollectionRelationEditorsSeriesContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksByCollectionRelationEditorsSeriesContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksByCollectionRelationEditorsSeriesContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksByCollectionRelationEditorsSeriesContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksByCollectionPrintRelationEditorsSeriesContext provides the relationEditorsSeries listBooksByCollectionPrint action context.
+type ListBooksByCollectionPrintRelationEditorsSeriesContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	EditorID     int
+	PrintID      int
+	SeriesID     int
+}
+
+// NewListBooksByCollectionPrintRelationEditorsSeriesContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationEditorsSeries controller listBooksByCollectionPrint action.
+func NewListBooksByCollectionPrintRelationEditorsSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksByCollectionPrintRelationEditorsSeriesContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksByCollectionPrintRelationEditorsSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksByCollectionPrintRelationEditorsSeriesContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksByCollectionPrintRelationEditorsSeriesContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksByCollectionPrintRelationEditorsSeriesContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksByCollectionPrintRelationEditorsSeriesContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksByCollectionPrintRelationEditorsSeriesContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksByPrintRelationEditorsSeriesContext provides the relationEditorsSeries listBooksByPrint action context.
+type ListBooksByPrintRelationEditorsSeriesContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	EditorID int
+	PrintID  int
+	SeriesID int
+}
+
+// NewListBooksByPrintRelationEditorsSeriesContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationEditorsSeries controller listBooksByPrint action.
+func NewListBooksByPrintRelationEditorsSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksByPrintRelationEditorsSeriesContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksByPrintRelationEditorsSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksByPrintRelationEditorsSeriesContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksByPrintRelationEditorsSeriesContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksByPrintRelationEditorsSeriesContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksByPrintRelationEditorsSeriesContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksByPrintRelationEditorsSeriesContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksByPrintCollectionRelationEditorsSeriesContext provides the relationEditorsSeries listBooksByPrintCollection action context.
+type ListBooksByPrintCollectionRelationEditorsSeriesContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	EditorID     int
+	PrintID      int
+	SeriesID     int
+}
+
+// NewListBooksByPrintCollectionRelationEditorsSeriesContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationEditorsSeries controller listBooksByPrintCollection action.
+func NewListBooksByPrintCollectionRelationEditorsSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksByPrintCollectionRelationEditorsSeriesContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksByPrintCollectionRelationEditorsSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksByPrintCollectionRelationEditorsSeriesContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksByPrintCollectionRelationEditorsSeriesContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksByPrintCollectionRelationEditorsSeriesContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksByPrintCollectionRelationEditorsSeriesContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksByPrintCollectionRelationEditorsSeriesContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListCollectionsRelationEditorsSeriesContext provides the relationEditorsSeries listCollections action context.
+type ListCollectionsRelationEditorsSeriesContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	EditorID int
+	SeriesID int
+}
+
+// NewListCollectionsRelationEditorsSeriesContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationEditorsSeries controller listCollections action.
+func NewListCollectionsRelationEditorsSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListCollectionsRelationEditorsSeriesContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListCollectionsRelationEditorsSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListCollectionsRelationEditorsSeriesContext) OK(r CollectionCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.collection+json; type=collection")
+	}
+	if r == nil {
+		r = CollectionCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListCollectionsRelationEditorsSeriesContext) OKLink(r CollectionLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.collection+json; type=collection")
+	}
+	if r == nil {
+		r = CollectionLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListCollectionsRelationEditorsSeriesContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListCollectionsRelationEditorsSeriesContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListCollectionsRelationEditorsSeriesContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListCollectionsByPrintRelationEditorsSeriesContext provides the relationEditorsSeries listCollectionsByPrint action context.
+type ListCollectionsByPrintRelationEditorsSeriesContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	EditorID int
+	PrintID  int
+	SeriesID int
+}
+
+// NewListCollectionsByPrintRelationEditorsSeriesContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationEditorsSeries controller listCollectionsByPrint action.
+func NewListCollectionsByPrintRelationEditorsSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListCollectionsByPrintRelationEditorsSeriesContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListCollectionsByPrintRelationEditorsSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListCollectionsByPrintRelationEditorsSeriesContext) OK(r CollectionCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.collection+json; type=collection")
+	}
+	if r == nil {
+		r = CollectionCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListCollectionsByPrintRelationEditorsSeriesContext) OKLink(r CollectionLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.collection+json; type=collection")
+	}
+	if r == nil {
+		r = CollectionLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListCollectionsByPrintRelationEditorsSeriesContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListCollectionsByPrintRelationEditorsSeriesContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListCollectionsByPrintRelationEditorsSeriesContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListPrintsRelationEditorsSeriesContext provides the relationEditorsSeries listPrints action context.
+type ListPrintsRelationEditorsSeriesContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	EditorID int
+	SeriesID int
+}
+
+// NewListPrintsRelationEditorsSeriesContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationEditorsSeries controller listPrints action.
+func NewListPrintsRelationEditorsSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListPrintsRelationEditorsSeriesContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListPrintsRelationEditorsSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListPrintsRelationEditorsSeriesContext) OK(r PrintCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.print+json; type=collection")
+	}
+	if r == nil {
+		r = PrintCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListPrintsRelationEditorsSeriesContext) OKLink(r PrintLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.print+json; type=collection")
+	}
+	if r == nil {
+		r = PrintLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListPrintsRelationEditorsSeriesContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListPrintsRelationEditorsSeriesContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListPrintsRelationEditorsSeriesContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListPrintsByCollectionRelationEditorsSeriesContext provides the relationEditorsSeries listPrintsByCollection action context.
+type ListPrintsByCollectionRelationEditorsSeriesContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	EditorID     int
+	SeriesID     int
+}
+
+// NewListPrintsByCollectionRelationEditorsSeriesContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationEditorsSeries controller listPrintsByCollection action.
+func NewListPrintsByCollectionRelationEditorsSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListPrintsByCollectionRelationEditorsSeriesContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListPrintsByCollectionRelationEditorsSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListPrintsByCollectionRelationEditorsSeriesContext) OK(r PrintCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.print+json; type=collection")
+	}
+	if r == nil {
+		r = PrintCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListPrintsByCollectionRelationEditorsSeriesContext) OKLink(r PrintLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.print+json; type=collection")
+	}
+	if r == nil {
+		r = PrintLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListPrintsByCollectionRelationEditorsSeriesContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListPrintsByCollectionRelationEditorsSeriesContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListPrintsByCollectionRelationEditorsSeriesContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksRelationPrintsContext provides the relationPrints listBooks action context.
+type ListBooksRelationPrintsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	PrintID int
+}
+
+// NewListBooksRelationPrintsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationPrints controller listBooks action.
+func NewListBooksRelationPrintsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksRelationPrintsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksRelationPrintsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksRelationPrintsContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksRelationPrintsContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksRelationPrintsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksRelationPrintsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksRelationPrintsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListCollectionsRelationPrintsContext provides the relationPrints listCollections action context.
+type ListCollectionsRelationPrintsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	PrintID int
+}
+
+// NewListCollectionsRelationPrintsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationPrints controller listCollections action.
+func NewListCollectionsRelationPrintsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListCollectionsRelationPrintsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListCollectionsRelationPrintsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListCollectionsRelationPrintsContext) OK(r CollectionCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.collection+json; type=collection")
+	}
+	if r == nil {
+		r = CollectionCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListCollectionsRelationPrintsContext) OKLink(r CollectionLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.collection+json; type=collection")
+	}
+	if r == nil {
+		r = CollectionLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListCollectionsRelationPrintsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListCollectionsRelationPrintsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListCollectionsRelationPrintsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListEditorsRelationPrintsContext provides the relationPrints listEditors action context.
+type ListEditorsRelationPrintsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	PrintID int
+}
+
+// NewListEditorsRelationPrintsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationPrints controller listEditors action.
+func NewListEditorsRelationPrintsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListEditorsRelationPrintsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListEditorsRelationPrintsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListEditorsRelationPrintsContext) OK(r EditorCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.editor+json; type=collection")
+	}
+	if r == nil {
+		r = EditorCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListEditorsRelationPrintsContext) OKLink(r EditorLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.editor+json; type=collection")
+	}
+	if r == nil {
+		r = EditorLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListEditorsRelationPrintsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListEditorsRelationPrintsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListEditorsRelationPrintsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListSeriesRelationPrintsContext provides the relationPrints listSeries action context.
+type ListSeriesRelationPrintsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	PrintID int
+}
+
+// NewListSeriesRelationPrintsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationPrints controller listSeries action.
+func NewListSeriesRelationPrintsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListSeriesRelationPrintsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListSeriesRelationPrintsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListSeriesRelationPrintsContext) OK(r SeriesCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json; type=collection")
+	}
+	if r == nil {
+		r = SeriesCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListSeriesRelationPrintsContext) OKLink(r SeriesLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json; type=collection")
+	}
+	if r == nil {
+		r = SeriesLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListSeriesRelationPrintsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListSeriesRelationPrintsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListSeriesRelationPrintsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksRelationPrintsCollectionsContext provides the relationPrintsCollections listBooks action context.
+type ListBooksRelationPrintsCollectionsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	PrintID      int
+}
+
+// NewListBooksRelationPrintsCollectionsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationPrintsCollections controller listBooks action.
+func NewListBooksRelationPrintsCollectionsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksRelationPrintsCollectionsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksRelationPrintsCollectionsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksRelationPrintsCollectionsContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksRelationPrintsCollectionsContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksRelationPrintsCollectionsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksRelationPrintsCollectionsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksRelationPrintsCollectionsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksBySeriesRelationPrintsCollectionsContext provides the relationPrintsCollections listBooksBySeries action context.
+type ListBooksBySeriesRelationPrintsCollectionsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	PrintID      int
+	SeriesID     int
+}
+
+// NewListBooksBySeriesRelationPrintsCollectionsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationPrintsCollections controller listBooksBySeries action.
+func NewListBooksBySeriesRelationPrintsCollectionsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksBySeriesRelationPrintsCollectionsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksBySeriesRelationPrintsCollectionsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksBySeriesRelationPrintsCollectionsContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksBySeriesRelationPrintsCollectionsContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksBySeriesRelationPrintsCollectionsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksBySeriesRelationPrintsCollectionsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksBySeriesRelationPrintsCollectionsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListSeriesRelationPrintsCollectionsContext provides the relationPrintsCollections listSeries action context.
+type ListSeriesRelationPrintsCollectionsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	PrintID      int
+}
+
+// NewListSeriesRelationPrintsCollectionsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationPrintsCollections controller listSeries action.
+func NewListSeriesRelationPrintsCollectionsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListSeriesRelationPrintsCollectionsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListSeriesRelationPrintsCollectionsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListSeriesRelationPrintsCollectionsContext) OK(r SeriesCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json; type=collection")
+	}
+	if r == nil {
+		r = SeriesCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListSeriesRelationPrintsCollectionsContext) OKLink(r SeriesLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json; type=collection")
+	}
+	if r == nil {
+		r = SeriesLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListSeriesRelationPrintsCollectionsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListSeriesRelationPrintsCollectionsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListSeriesRelationPrintsCollectionsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksRelationPrintsEditorsContext provides the relationPrintsEditors listBooks action context.
+type ListBooksRelationPrintsEditorsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	EditorID int
+	PrintID  int
+}
+
+// NewListBooksRelationPrintsEditorsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationPrintsEditors controller listBooks action.
+func NewListBooksRelationPrintsEditorsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksRelationPrintsEditorsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksRelationPrintsEditorsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksRelationPrintsEditorsContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksRelationPrintsEditorsContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksRelationPrintsEditorsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksRelationPrintsEditorsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksRelationPrintsEditorsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksByCollectionRelationPrintsEditorsContext provides the relationPrintsEditors listBooksByCollection action context.
+type ListBooksByCollectionRelationPrintsEditorsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	EditorID     int
+	PrintID      int
+}
+
+// NewListBooksByCollectionRelationPrintsEditorsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationPrintsEditors controller listBooksByCollection action.
+func NewListBooksByCollectionRelationPrintsEditorsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksByCollectionRelationPrintsEditorsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksByCollectionRelationPrintsEditorsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksByCollectionRelationPrintsEditorsContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksByCollectionRelationPrintsEditorsContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksByCollectionRelationPrintsEditorsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksByCollectionRelationPrintsEditorsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksByCollectionRelationPrintsEditorsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksByCollectionSeriesRelationPrintsEditorsContext provides the relationPrintsEditors listBooksByCollectionSeries action context.
+type ListBooksByCollectionSeriesRelationPrintsEditorsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	EditorID     int
+	PrintID      int
+	SeriesID     int
+}
+
+// NewListBooksByCollectionSeriesRelationPrintsEditorsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationPrintsEditors controller listBooksByCollectionSeries action.
+func NewListBooksByCollectionSeriesRelationPrintsEditorsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksByCollectionSeriesRelationPrintsEditorsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksByCollectionSeriesRelationPrintsEditorsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksByCollectionSeriesRelationPrintsEditorsContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksByCollectionSeriesRelationPrintsEditorsContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksByCollectionSeriesRelationPrintsEditorsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksByCollectionSeriesRelationPrintsEditorsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksByCollectionSeriesRelationPrintsEditorsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksBySeriesRelationPrintsEditorsContext provides the relationPrintsEditors listBooksBySeries action context.
+type ListBooksBySeriesRelationPrintsEditorsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	EditorID int
+	PrintID  int
+	SeriesID int
+}
+
+// NewListBooksBySeriesRelationPrintsEditorsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationPrintsEditors controller listBooksBySeries action.
+func NewListBooksBySeriesRelationPrintsEditorsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksBySeriesRelationPrintsEditorsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksBySeriesRelationPrintsEditorsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksBySeriesRelationPrintsEditorsContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksBySeriesRelationPrintsEditorsContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksBySeriesRelationPrintsEditorsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksBySeriesRelationPrintsEditorsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksBySeriesRelationPrintsEditorsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksBySeriesCollectionRelationPrintsEditorsContext provides the relationPrintsEditors listBooksBySeriesCollection action context.
+type ListBooksBySeriesCollectionRelationPrintsEditorsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	EditorID     int
+	PrintID      int
+	SeriesID     int
+}
+
+// NewListBooksBySeriesCollectionRelationPrintsEditorsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationPrintsEditors controller listBooksBySeriesCollection action.
+func NewListBooksBySeriesCollectionRelationPrintsEditorsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksBySeriesCollectionRelationPrintsEditorsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksBySeriesCollectionRelationPrintsEditorsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksBySeriesCollectionRelationPrintsEditorsContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksBySeriesCollectionRelationPrintsEditorsContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksBySeriesCollectionRelationPrintsEditorsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksBySeriesCollectionRelationPrintsEditorsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksBySeriesCollectionRelationPrintsEditorsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListCollectionsRelationPrintsEditorsContext provides the relationPrintsEditors listCollections action context.
+type ListCollectionsRelationPrintsEditorsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	EditorID int
+	PrintID  int
+}
+
+// NewListCollectionsRelationPrintsEditorsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationPrintsEditors controller listCollections action.
+func NewListCollectionsRelationPrintsEditorsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListCollectionsRelationPrintsEditorsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListCollectionsRelationPrintsEditorsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListCollectionsRelationPrintsEditorsContext) OK(r CollectionCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.collection+json; type=collection")
+	}
+	if r == nil {
+		r = CollectionCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListCollectionsRelationPrintsEditorsContext) OKLink(r CollectionLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.collection+json; type=collection")
+	}
+	if r == nil {
+		r = CollectionLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListCollectionsRelationPrintsEditorsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListCollectionsRelationPrintsEditorsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListCollectionsRelationPrintsEditorsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListCollectionsBySeriesRelationPrintsEditorsContext provides the relationPrintsEditors listCollectionsBySeries action context.
+type ListCollectionsBySeriesRelationPrintsEditorsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	EditorID int
+	PrintID  int
+	SeriesID int
+}
+
+// NewListCollectionsBySeriesRelationPrintsEditorsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationPrintsEditors controller listCollectionsBySeries action.
+func NewListCollectionsBySeriesRelationPrintsEditorsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListCollectionsBySeriesRelationPrintsEditorsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListCollectionsBySeriesRelationPrintsEditorsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListCollectionsBySeriesRelationPrintsEditorsContext) OK(r CollectionCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.collection+json; type=collection")
+	}
+	if r == nil {
+		r = CollectionCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListCollectionsBySeriesRelationPrintsEditorsContext) OKLink(r CollectionLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.collection+json; type=collection")
+	}
+	if r == nil {
+		r = CollectionLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListCollectionsBySeriesRelationPrintsEditorsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListCollectionsBySeriesRelationPrintsEditorsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListCollectionsBySeriesRelationPrintsEditorsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListSeriesRelationPrintsEditorsContext provides the relationPrintsEditors listSeries action context.
+type ListSeriesRelationPrintsEditorsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	EditorID int
+	PrintID  int
+}
+
+// NewListSeriesRelationPrintsEditorsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationPrintsEditors controller listSeries action.
+func NewListSeriesRelationPrintsEditorsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListSeriesRelationPrintsEditorsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListSeriesRelationPrintsEditorsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListSeriesRelationPrintsEditorsContext) OK(r SeriesCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json; type=collection")
+	}
+	if r == nil {
+		r = SeriesCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListSeriesRelationPrintsEditorsContext) OKLink(r SeriesLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json; type=collection")
+	}
+	if r == nil {
+		r = SeriesLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListSeriesRelationPrintsEditorsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListSeriesRelationPrintsEditorsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListSeriesRelationPrintsEditorsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListSeriesByCollectionRelationPrintsEditorsContext provides the relationPrintsEditors listSeriesByCollection action context.
+type ListSeriesByCollectionRelationPrintsEditorsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	EditorID     int
+	PrintID      int
+}
+
+// NewListSeriesByCollectionRelationPrintsEditorsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationPrintsEditors controller listSeriesByCollection action.
+func NewListSeriesByCollectionRelationPrintsEditorsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListSeriesByCollectionRelationPrintsEditorsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListSeriesByCollectionRelationPrintsEditorsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListSeriesByCollectionRelationPrintsEditorsContext) OK(r SeriesCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json; type=collection")
+	}
+	if r == nil {
+		r = SeriesCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListSeriesByCollectionRelationPrintsEditorsContext) OKLink(r SeriesLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json; type=collection")
+	}
+	if r == nil {
+		r = SeriesLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListSeriesByCollectionRelationPrintsEditorsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListSeriesByCollectionRelationPrintsEditorsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListSeriesByCollectionRelationPrintsEditorsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksRelationPrintsSeriesContext provides the relationPrintsSeries listBooks action context.
+type ListBooksRelationPrintsSeriesContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	PrintID  int
+	SeriesID int
+}
+
+// NewListBooksRelationPrintsSeriesContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationPrintsSeries controller listBooks action.
+func NewListBooksRelationPrintsSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksRelationPrintsSeriesContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksRelationPrintsSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksRelationPrintsSeriesContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksRelationPrintsSeriesContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksRelationPrintsSeriesContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksRelationPrintsSeriesContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksRelationPrintsSeriesContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksByCollectionRelationPrintsSeriesContext provides the relationPrintsSeries listBooksByCollection action context.
+type ListBooksByCollectionRelationPrintsSeriesContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	PrintID      int
+	SeriesID     int
+}
+
+// NewListBooksByCollectionRelationPrintsSeriesContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationPrintsSeries controller listBooksByCollection action.
+func NewListBooksByCollectionRelationPrintsSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksByCollectionRelationPrintsSeriesContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksByCollectionRelationPrintsSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksByCollectionRelationPrintsSeriesContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksByCollectionRelationPrintsSeriesContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksByCollectionRelationPrintsSeriesContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksByCollectionRelationPrintsSeriesContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksByCollectionRelationPrintsSeriesContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksByCollectionEditorRelationPrintsSeriesContext provides the relationPrintsSeries listBooksByCollectionEditor action context.
+type ListBooksByCollectionEditorRelationPrintsSeriesContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	EditorID     int
+	PrintID      int
+	SeriesID     int
+}
+
+// NewListBooksByCollectionEditorRelationPrintsSeriesContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationPrintsSeries controller listBooksByCollectionEditor action.
+func NewListBooksByCollectionEditorRelationPrintsSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksByCollectionEditorRelationPrintsSeriesContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksByCollectionEditorRelationPrintsSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksByCollectionEditorRelationPrintsSeriesContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksByCollectionEditorRelationPrintsSeriesContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksByCollectionEditorRelationPrintsSeriesContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksByCollectionEditorRelationPrintsSeriesContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksByCollectionEditorRelationPrintsSeriesContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksByEditorRelationPrintsSeriesContext provides the relationPrintsSeries listBooksByEditor action context.
+type ListBooksByEditorRelationPrintsSeriesContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	EditorID int
+	PrintID  int
+	SeriesID int
+}
+
+// NewListBooksByEditorRelationPrintsSeriesContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationPrintsSeries controller listBooksByEditor action.
+func NewListBooksByEditorRelationPrintsSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksByEditorRelationPrintsSeriesContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksByEditorRelationPrintsSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksByEditorRelationPrintsSeriesContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksByEditorRelationPrintsSeriesContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksByEditorRelationPrintsSeriesContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksByEditorRelationPrintsSeriesContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksByEditorRelationPrintsSeriesContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksByEditorCollectionRelationPrintsSeriesContext provides the relationPrintsSeries listBooksByEditorCollection action context.
+type ListBooksByEditorCollectionRelationPrintsSeriesContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	EditorID     int
+	PrintID      int
+	SeriesID     int
+}
+
+// NewListBooksByEditorCollectionRelationPrintsSeriesContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationPrintsSeries controller listBooksByEditorCollection action.
+func NewListBooksByEditorCollectionRelationPrintsSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksByEditorCollectionRelationPrintsSeriesContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksByEditorCollectionRelationPrintsSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksByEditorCollectionRelationPrintsSeriesContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksByEditorCollectionRelationPrintsSeriesContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksByEditorCollectionRelationPrintsSeriesContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksByEditorCollectionRelationPrintsSeriesContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksByEditorCollectionRelationPrintsSeriesContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListCollectionsRelationPrintsSeriesContext provides the relationPrintsSeries listCollections action context.
+type ListCollectionsRelationPrintsSeriesContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	PrintID  int
+	SeriesID int
+}
+
+// NewListCollectionsRelationPrintsSeriesContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationPrintsSeries controller listCollections action.
+func NewListCollectionsRelationPrintsSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListCollectionsRelationPrintsSeriesContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListCollectionsRelationPrintsSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListCollectionsRelationPrintsSeriesContext) OK(r CollectionCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.collection+json; type=collection")
+	}
+	if r == nil {
+		r = CollectionCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListCollectionsRelationPrintsSeriesContext) OKLink(r CollectionLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.collection+json; type=collection")
+	}
+	if r == nil {
+		r = CollectionLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListCollectionsRelationPrintsSeriesContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListCollectionsRelationPrintsSeriesContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListCollectionsRelationPrintsSeriesContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListCollectionsByEditorRelationPrintsSeriesContext provides the relationPrintsSeries listCollectionsByEditor action context.
+type ListCollectionsByEditorRelationPrintsSeriesContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	EditorID int
+	PrintID  int
+	SeriesID int
+}
+
+// NewListCollectionsByEditorRelationPrintsSeriesContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationPrintsSeries controller listCollectionsByEditor action.
+func NewListCollectionsByEditorRelationPrintsSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListCollectionsByEditorRelationPrintsSeriesContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListCollectionsByEditorRelationPrintsSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListCollectionsByEditorRelationPrintsSeriesContext) OK(r CollectionCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.collection+json; type=collection")
+	}
+	if r == nil {
+		r = CollectionCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListCollectionsByEditorRelationPrintsSeriesContext) OKLink(r CollectionLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.collection+json; type=collection")
+	}
+	if r == nil {
+		r = CollectionLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListCollectionsByEditorRelationPrintsSeriesContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListCollectionsByEditorRelationPrintsSeriesContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListCollectionsByEditorRelationPrintsSeriesContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListEditorsRelationPrintsSeriesContext provides the relationPrintsSeries listEditors action context.
+type ListEditorsRelationPrintsSeriesContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	PrintID  int
+	SeriesID int
+}
+
+// NewListEditorsRelationPrintsSeriesContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationPrintsSeries controller listEditors action.
+func NewListEditorsRelationPrintsSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListEditorsRelationPrintsSeriesContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListEditorsRelationPrintsSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListEditorsRelationPrintsSeriesContext) OK(r EditorCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.editor+json; type=collection")
+	}
+	if r == nil {
+		r = EditorCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListEditorsRelationPrintsSeriesContext) OKLink(r EditorLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.editor+json; type=collection")
+	}
+	if r == nil {
+		r = EditorLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListEditorsRelationPrintsSeriesContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListEditorsRelationPrintsSeriesContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListEditorsRelationPrintsSeriesContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListEditorsByCollectionRelationPrintsSeriesContext provides the relationPrintsSeries listEditorsByCollection action context.
+type ListEditorsByCollectionRelationPrintsSeriesContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	PrintID      int
+	SeriesID     int
+}
+
+// NewListEditorsByCollectionRelationPrintsSeriesContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationPrintsSeries controller listEditorsByCollection action.
+func NewListEditorsByCollectionRelationPrintsSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListEditorsByCollectionRelationPrintsSeriesContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListEditorsByCollectionRelationPrintsSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListEditorsByCollectionRelationPrintsSeriesContext) OK(r EditorCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.editor+json; type=collection")
+	}
+	if r == nil {
+		r = EditorCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListEditorsByCollectionRelationPrintsSeriesContext) OKLink(r EditorLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.editor+json; type=collection")
+	}
+	if r == nil {
+		r = EditorLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListEditorsByCollectionRelationPrintsSeriesContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListEditorsByCollectionRelationPrintsSeriesContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListEditorsByCollectionRelationPrintsSeriesContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksRelationSeriesContext provides the relationSeries listBooks action context.
+type ListBooksRelationSeriesContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	SeriesID int
+}
+
+// NewListBooksRelationSeriesContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationSeries controller listBooks action.
+func NewListBooksRelationSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksRelationSeriesContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksRelationSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksRelationSeriesContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksRelationSeriesContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksRelationSeriesContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksRelationSeriesContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksRelationSeriesContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListCollectionsRelationSeriesContext provides the relationSeries listCollections action context.
+type ListCollectionsRelationSeriesContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	SeriesID int
+}
+
+// NewListCollectionsRelationSeriesContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationSeries controller listCollections action.
+func NewListCollectionsRelationSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListCollectionsRelationSeriesContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListCollectionsRelationSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListCollectionsRelationSeriesContext) OK(r CollectionCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.collection+json; type=collection")
+	}
+	if r == nil {
+		r = CollectionCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListCollectionsRelationSeriesContext) OKLink(r CollectionLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.collection+json; type=collection")
+	}
+	if r == nil {
+		r = CollectionLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListCollectionsRelationSeriesContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListCollectionsRelationSeriesContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListCollectionsRelationSeriesContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListEditorsRelationSeriesContext provides the relationSeries listEditors action context.
+type ListEditorsRelationSeriesContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	SeriesID int
+}
+
+// NewListEditorsRelationSeriesContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationSeries controller listEditors action.
+func NewListEditorsRelationSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListEditorsRelationSeriesContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListEditorsRelationSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListEditorsRelationSeriesContext) OK(r EditorCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.editor+json; type=collection")
+	}
+	if r == nil {
+		r = EditorCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListEditorsRelationSeriesContext) OKLink(r EditorLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.editor+json; type=collection")
+	}
+	if r == nil {
+		r = EditorLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListEditorsRelationSeriesContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListEditorsRelationSeriesContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListEditorsRelationSeriesContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListPrintsRelationSeriesContext provides the relationSeries listPrints action context.
+type ListPrintsRelationSeriesContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	SeriesID int
+}
+
+// NewListPrintsRelationSeriesContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationSeries controller listPrints action.
+func NewListPrintsRelationSeriesContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListPrintsRelationSeriesContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListPrintsRelationSeriesContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListPrintsRelationSeriesContext) OK(r PrintCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.print+json; type=collection")
+	}
+	if r == nil {
+		r = PrintCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListPrintsRelationSeriesContext) OKLink(r PrintLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.print+json; type=collection")
+	}
+	if r == nil {
+		r = PrintLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListPrintsRelationSeriesContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListPrintsRelationSeriesContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListPrintsRelationSeriesContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksRelationSeriesCollectionsContext provides the relationSeriesCollections listBooks action context.
+type ListBooksRelationSeriesCollectionsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	SeriesID     int
+}
+
+// NewListBooksRelationSeriesCollectionsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationSeriesCollections controller listBooks action.
+func NewListBooksRelationSeriesCollectionsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksRelationSeriesCollectionsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksRelationSeriesCollectionsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksRelationSeriesCollectionsContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksRelationSeriesCollectionsContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksRelationSeriesCollectionsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksRelationSeriesCollectionsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksRelationSeriesCollectionsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksByPrintRelationSeriesCollectionsContext provides the relationSeriesCollections listBooksByPrint action context.
+type ListBooksByPrintRelationSeriesCollectionsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	PrintID      int
+	SeriesID     int
+}
+
+// NewListBooksByPrintRelationSeriesCollectionsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationSeriesCollections controller listBooksByPrint action.
+func NewListBooksByPrintRelationSeriesCollectionsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksByPrintRelationSeriesCollectionsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksByPrintRelationSeriesCollectionsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksByPrintRelationSeriesCollectionsContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksByPrintRelationSeriesCollectionsContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksByPrintRelationSeriesCollectionsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksByPrintRelationSeriesCollectionsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksByPrintRelationSeriesCollectionsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListPrintsRelationSeriesCollectionsContext provides the relationSeriesCollections listPrints action context.
+type ListPrintsRelationSeriesCollectionsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	SeriesID     int
+}
+
+// NewListPrintsRelationSeriesCollectionsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationSeriesCollections controller listPrints action.
+func NewListPrintsRelationSeriesCollectionsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListPrintsRelationSeriesCollectionsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListPrintsRelationSeriesCollectionsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListPrintsRelationSeriesCollectionsContext) OK(r PrintCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.print+json; type=collection")
+	}
+	if r == nil {
+		r = PrintCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListPrintsRelationSeriesCollectionsContext) OKLink(r PrintLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.print+json; type=collection")
+	}
+	if r == nil {
+		r = PrintLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListPrintsRelationSeriesCollectionsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListPrintsRelationSeriesCollectionsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListPrintsRelationSeriesCollectionsContext) ServiceUnavailable() error {
 	ctx.ResponseData.WriteHeader(503)
 	return nil
 }
@@ -7073,14 +12990,6 @@ func (ctx *ListAuthorsRelationRoleContext) OKLink(r AuthorLinkCollection) error 
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
 
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ListAuthorsRelationRoleContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
 // NotFound sends a HTTP response with status code 404.
 func (ctx *ListAuthorsRelationRoleContext) NotFound() error {
 	ctx.ResponseData.WriteHeader(404)
@@ -7166,14 +13075,6 @@ func (ctx *ListSeriesByAuthorRelationRoleContext) OKLink(r SeriesLinkCollection)
 	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
 }
 
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ListSeriesByAuthorRelationRoleContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
 // NotFound sends a HTTP response with status code 404.
 func (ctx *ListSeriesByAuthorRelationRoleContext) NotFound() error {
 	ctx.ResponseData.WriteHeader(404)
@@ -7188,6 +13089,1437 @@ func (ctx *ListSeriesByAuthorRelationRoleContext) InternalServerError() error {
 
 // ServiceUnavailable sends a HTTP response with status code 503.
 func (ctx *ListSeriesByAuthorRelationRoleContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksRelationSeriesEditorsContext provides the relationSeriesEditors listBooks action context.
+type ListBooksRelationSeriesEditorsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	EditorID int
+	SeriesID int
+}
+
+// NewListBooksRelationSeriesEditorsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationSeriesEditors controller listBooks action.
+func NewListBooksRelationSeriesEditorsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksRelationSeriesEditorsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksRelationSeriesEditorsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksRelationSeriesEditorsContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksRelationSeriesEditorsContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksRelationSeriesEditorsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksRelationSeriesEditorsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksRelationSeriesEditorsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksByCollectionRelationSeriesEditorsContext provides the relationSeriesEditors listBooksByCollection action context.
+type ListBooksByCollectionRelationSeriesEditorsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	EditorID     int
+	SeriesID     int
+}
+
+// NewListBooksByCollectionRelationSeriesEditorsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationSeriesEditors controller listBooksByCollection action.
+func NewListBooksByCollectionRelationSeriesEditorsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksByCollectionRelationSeriesEditorsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksByCollectionRelationSeriesEditorsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksByCollectionRelationSeriesEditorsContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksByCollectionRelationSeriesEditorsContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksByCollectionRelationSeriesEditorsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksByCollectionRelationSeriesEditorsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksByCollectionRelationSeriesEditorsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksByCollectionPrintRelationSeriesEditorsContext provides the relationSeriesEditors listBooksByCollectionPrint action context.
+type ListBooksByCollectionPrintRelationSeriesEditorsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	EditorID     int
+	PrintID      int
+	SeriesID     int
+}
+
+// NewListBooksByCollectionPrintRelationSeriesEditorsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationSeriesEditors controller listBooksByCollectionPrint action.
+func NewListBooksByCollectionPrintRelationSeriesEditorsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksByCollectionPrintRelationSeriesEditorsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksByCollectionPrintRelationSeriesEditorsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksByCollectionPrintRelationSeriesEditorsContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksByCollectionPrintRelationSeriesEditorsContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksByCollectionPrintRelationSeriesEditorsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksByCollectionPrintRelationSeriesEditorsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksByCollectionPrintRelationSeriesEditorsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksByPrintRelationSeriesEditorsContext provides the relationSeriesEditors listBooksByPrint action context.
+type ListBooksByPrintRelationSeriesEditorsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	EditorID int
+	PrintID  int
+	SeriesID int
+}
+
+// NewListBooksByPrintRelationSeriesEditorsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationSeriesEditors controller listBooksByPrint action.
+func NewListBooksByPrintRelationSeriesEditorsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksByPrintRelationSeriesEditorsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksByPrintRelationSeriesEditorsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksByPrintRelationSeriesEditorsContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksByPrintRelationSeriesEditorsContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksByPrintRelationSeriesEditorsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksByPrintRelationSeriesEditorsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksByPrintRelationSeriesEditorsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksByPrintCollectionRelationSeriesEditorsContext provides the relationSeriesEditors listBooksByPrintCollection action context.
+type ListBooksByPrintCollectionRelationSeriesEditorsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	EditorID     int
+	PrintID      int
+	SeriesID     int
+}
+
+// NewListBooksByPrintCollectionRelationSeriesEditorsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationSeriesEditors controller listBooksByPrintCollection action.
+func NewListBooksByPrintCollectionRelationSeriesEditorsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksByPrintCollectionRelationSeriesEditorsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksByPrintCollectionRelationSeriesEditorsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksByPrintCollectionRelationSeriesEditorsContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksByPrintCollectionRelationSeriesEditorsContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksByPrintCollectionRelationSeriesEditorsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksByPrintCollectionRelationSeriesEditorsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksByPrintCollectionRelationSeriesEditorsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListCollectionsRelationSeriesEditorsContext provides the relationSeriesEditors listCollections action context.
+type ListCollectionsRelationSeriesEditorsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	EditorID int
+	SeriesID int
+}
+
+// NewListCollectionsRelationSeriesEditorsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationSeriesEditors controller listCollections action.
+func NewListCollectionsRelationSeriesEditorsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListCollectionsRelationSeriesEditorsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListCollectionsRelationSeriesEditorsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListCollectionsRelationSeriesEditorsContext) OK(r CollectionCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.collection+json; type=collection")
+	}
+	if r == nil {
+		r = CollectionCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListCollectionsRelationSeriesEditorsContext) OKLink(r CollectionLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.collection+json; type=collection")
+	}
+	if r == nil {
+		r = CollectionLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListCollectionsRelationSeriesEditorsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListCollectionsRelationSeriesEditorsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListCollectionsRelationSeriesEditorsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListCollectionsByPrintRelationSeriesEditorsContext provides the relationSeriesEditors listCollectionsByPrint action context.
+type ListCollectionsByPrintRelationSeriesEditorsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	EditorID int
+	PrintID  int
+	SeriesID int
+}
+
+// NewListCollectionsByPrintRelationSeriesEditorsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationSeriesEditors controller listCollectionsByPrint action.
+func NewListCollectionsByPrintRelationSeriesEditorsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListCollectionsByPrintRelationSeriesEditorsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListCollectionsByPrintRelationSeriesEditorsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListCollectionsByPrintRelationSeriesEditorsContext) OK(r CollectionCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.collection+json; type=collection")
+	}
+	if r == nil {
+		r = CollectionCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListCollectionsByPrintRelationSeriesEditorsContext) OKLink(r CollectionLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.collection+json; type=collection")
+	}
+	if r == nil {
+		r = CollectionLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListCollectionsByPrintRelationSeriesEditorsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListCollectionsByPrintRelationSeriesEditorsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListCollectionsByPrintRelationSeriesEditorsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListPrintsRelationSeriesEditorsContext provides the relationSeriesEditors listPrints action context.
+type ListPrintsRelationSeriesEditorsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	EditorID int
+	SeriesID int
+}
+
+// NewListPrintsRelationSeriesEditorsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationSeriesEditors controller listPrints action.
+func NewListPrintsRelationSeriesEditorsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListPrintsRelationSeriesEditorsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListPrintsRelationSeriesEditorsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListPrintsRelationSeriesEditorsContext) OK(r PrintCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.print+json; type=collection")
+	}
+	if r == nil {
+		r = PrintCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListPrintsRelationSeriesEditorsContext) OKLink(r PrintLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.print+json; type=collection")
+	}
+	if r == nil {
+		r = PrintLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListPrintsRelationSeriesEditorsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListPrintsRelationSeriesEditorsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListPrintsRelationSeriesEditorsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListPrintsByCollectionRelationSeriesEditorsContext provides the relationSeriesEditors listPrintsByCollection action context.
+type ListPrintsByCollectionRelationSeriesEditorsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	EditorID     int
+	SeriesID     int
+}
+
+// NewListPrintsByCollectionRelationSeriesEditorsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationSeriesEditors controller listPrintsByCollection action.
+func NewListPrintsByCollectionRelationSeriesEditorsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListPrintsByCollectionRelationSeriesEditorsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListPrintsByCollectionRelationSeriesEditorsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListPrintsByCollectionRelationSeriesEditorsContext) OK(r PrintCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.print+json; type=collection")
+	}
+	if r == nil {
+		r = PrintCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListPrintsByCollectionRelationSeriesEditorsContext) OKLink(r PrintLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.print+json; type=collection")
+	}
+	if r == nil {
+		r = PrintLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListPrintsByCollectionRelationSeriesEditorsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListPrintsByCollectionRelationSeriesEditorsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListPrintsByCollectionRelationSeriesEditorsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksRelationSeriesPrintsContext provides the relationSeriesPrints listBooks action context.
+type ListBooksRelationSeriesPrintsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	PrintID  int
+	SeriesID int
+}
+
+// NewListBooksRelationSeriesPrintsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationSeriesPrints controller listBooks action.
+func NewListBooksRelationSeriesPrintsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksRelationSeriesPrintsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksRelationSeriesPrintsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksRelationSeriesPrintsContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksRelationSeriesPrintsContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksRelationSeriesPrintsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksRelationSeriesPrintsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksRelationSeriesPrintsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksByEditorRelationSeriesPrintsContext provides the relationSeriesPrints listBooksByEditor action context.
+type ListBooksByEditorRelationSeriesPrintsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	EditorID int
+	PrintID  int
+	SeriesID int
+}
+
+// NewListBooksByEditorRelationSeriesPrintsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationSeriesPrints controller listBooksByEditor action.
+func NewListBooksByEditorRelationSeriesPrintsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksByEditorRelationSeriesPrintsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksByEditorRelationSeriesPrintsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksByEditorRelationSeriesPrintsContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksByEditorRelationSeriesPrintsContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksByEditorRelationSeriesPrintsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksByEditorRelationSeriesPrintsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksByEditorRelationSeriesPrintsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListBooksByEditorCollectionRelationSeriesPrintsContext provides the relationSeriesPrints listBooksByEditorCollection action context.
+type ListBooksByEditorCollectionRelationSeriesPrintsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	CollectionID int
+	EditorID     int
+	PrintID      int
+	SeriesID     int
+}
+
+// NewListBooksByEditorCollectionRelationSeriesPrintsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationSeriesPrints controller listBooksByEditorCollection action.
+func NewListBooksByEditorCollectionRelationSeriesPrintsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListBooksByEditorCollectionRelationSeriesPrintsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListBooksByEditorCollectionRelationSeriesPrintsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramCollectionID := req.Params["collection_id"]
+	if len(paramCollectionID) > 0 {
+		rawCollectionID := paramCollectionID[0]
+		if collectionID, err2 := strconv.Atoi(rawCollectionID); err2 == nil {
+			rctx.CollectionID = collectionID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("collection_id", rawCollectionID, "integer"))
+		}
+		if rctx.CollectionID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`collection_id`, rctx.CollectionID, 1, true))
+		}
+	}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListBooksByEditorCollectionRelationSeriesPrintsContext) OK(r BookCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListBooksByEditorCollectionRelationSeriesPrintsContext) OKLink(r BookLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.book+json; type=collection")
+	}
+	if r == nil {
+		r = BookLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListBooksByEditorCollectionRelationSeriesPrintsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListBooksByEditorCollectionRelationSeriesPrintsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListBooksByEditorCollectionRelationSeriesPrintsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListCollectionsRelationSeriesPrintsContext provides the relationSeriesPrints listCollections action context.
+type ListCollectionsRelationSeriesPrintsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	PrintID  int
+	SeriesID int
+}
+
+// NewListCollectionsRelationSeriesPrintsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationSeriesPrints controller listCollections action.
+func NewListCollectionsRelationSeriesPrintsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListCollectionsRelationSeriesPrintsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListCollectionsRelationSeriesPrintsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListCollectionsRelationSeriesPrintsContext) OK(r CollectionCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.collection+json; type=collection")
+	}
+	if r == nil {
+		r = CollectionCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListCollectionsRelationSeriesPrintsContext) OKLink(r CollectionLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.collection+json; type=collection")
+	}
+	if r == nil {
+		r = CollectionLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListCollectionsRelationSeriesPrintsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListCollectionsRelationSeriesPrintsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListCollectionsRelationSeriesPrintsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListCollectionsByEditorRelationSeriesPrintsContext provides the relationSeriesPrints listCollectionsByEditor action context.
+type ListCollectionsByEditorRelationSeriesPrintsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	EditorID int
+	PrintID  int
+	SeriesID int
+}
+
+// NewListCollectionsByEditorRelationSeriesPrintsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationSeriesPrints controller listCollectionsByEditor action.
+func NewListCollectionsByEditorRelationSeriesPrintsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListCollectionsByEditorRelationSeriesPrintsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListCollectionsByEditorRelationSeriesPrintsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramEditorID := req.Params["editor_id"]
+	if len(paramEditorID) > 0 {
+		rawEditorID := paramEditorID[0]
+		if editorID, err2 := strconv.Atoi(rawEditorID); err2 == nil {
+			rctx.EditorID = editorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("editor_id", rawEditorID, "integer"))
+		}
+		if rctx.EditorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`editor_id`, rctx.EditorID, 1, true))
+		}
+	}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListCollectionsByEditorRelationSeriesPrintsContext) OK(r CollectionCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.collection+json; type=collection")
+	}
+	if r == nil {
+		r = CollectionCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListCollectionsByEditorRelationSeriesPrintsContext) OKLink(r CollectionLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.collection+json; type=collection")
+	}
+	if r == nil {
+		r = CollectionLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListCollectionsByEditorRelationSeriesPrintsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListCollectionsByEditorRelationSeriesPrintsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListCollectionsByEditorRelationSeriesPrintsContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListEditorsRelationSeriesPrintsContext provides the relationSeriesPrints listEditors action context.
+type ListEditorsRelationSeriesPrintsContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	PrintID  int
+	SeriesID int
+}
+
+// NewListEditorsRelationSeriesPrintsContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationSeriesPrints controller listEditors action.
+func NewListEditorsRelationSeriesPrintsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListEditorsRelationSeriesPrintsContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListEditorsRelationSeriesPrintsContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramPrintID := req.Params["print_id"]
+	if len(paramPrintID) > 0 {
+		rawPrintID := paramPrintID[0]
+		if printID, err2 := strconv.Atoi(rawPrintID); err2 == nil {
+			rctx.PrintID = printID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("print_id", rawPrintID, "integer"))
+		}
+		if rctx.PrintID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`print_id`, rctx.PrintID, 1, true))
+		}
+	}
+	paramSeriesID := req.Params["series_id"]
+	if len(paramSeriesID) > 0 {
+		rawSeriesID := paramSeriesID[0]
+		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
+			rctx.SeriesID = seriesID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
+		}
+		if rctx.SeriesID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListEditorsRelationSeriesPrintsContext) OK(r EditorCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.editor+json; type=collection")
+	}
+	if r == nil {
+		r = EditorCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListEditorsRelationSeriesPrintsContext) OKLink(r EditorLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.editor+json; type=collection")
+	}
+	if r == nil {
+		r = EditorLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListEditorsRelationSeriesPrintsContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListEditorsRelationSeriesPrintsContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListEditorsRelationSeriesPrintsContext) ServiceUnavailable() error {
 	ctx.ResponseData.WriteHeader(503)
 	return nil
 }
@@ -7660,368 +14992,6 @@ func (ctx *UpdateSeriesContext) InternalServerError() error {
 
 // ServiceUnavailable sends a HTTP response with status code 503.
 func (ctx *UpdateSeriesContext) ServiceUnavailable() error {
-	ctx.ResponseData.WriteHeader(503)
-	return nil
-}
-
-// CreateClassificationsContext provides the classifications create action context.
-type CreateClassificationsContext struct {
-	context.Context
-	*goa.ResponseData
-	*goa.RequestData
-	SeriesID int
-	Payload  *CreateClassificationsPayload
-}
-
-// NewCreateClassificationsContext parses the incoming request URL and body, performs validations and creates the
-// context used by the classifications controller create action.
-func NewCreateClassificationsContext(ctx context.Context, r *http.Request, service *goa.Service) (*CreateClassificationsContext, error) {
-	var err error
-	resp := goa.ContextResponse(ctx)
-	resp.Service = service
-	req := goa.ContextRequest(ctx)
-	req.Request = r
-	rctx := CreateClassificationsContext{Context: ctx, ResponseData: resp, RequestData: req}
-	paramSeriesID := req.Params["series_id"]
-	if len(paramSeriesID) > 0 {
-		rawSeriesID := paramSeriesID[0]
-		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
-			rctx.SeriesID = seriesID
-		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
-		}
-		if rctx.SeriesID < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
-		}
-	}
-	return &rctx, err
-}
-
-// createClassificationsPayload is the classifications create action payload.
-type createClassificationsPayload struct {
-	// Unique Class ID
-	ClassID *int `form:"class_id,omitempty" json:"class_id,omitempty" yaml:"class_id,omitempty" xml:"class_id,omitempty"`
-}
-
-// Validate runs the validation rules defined in the design.
-func (payload *createClassificationsPayload) Validate() (err error) {
-	if payload.ClassID == nil {
-		err = goa.MergeErrors(err, goa.MissingAttributeError(`raw`, "class_id"))
-	}
-	if payload.ClassID != nil {
-		if *payload.ClassID < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`raw.class_id`, *payload.ClassID, 1, true))
-		}
-	}
-	return
-}
-
-// Publicize creates CreateClassificationsPayload from createClassificationsPayload
-func (payload *createClassificationsPayload) Publicize() *CreateClassificationsPayload {
-	var pub CreateClassificationsPayload
-	if payload.ClassID != nil {
-		pub.ClassID = *payload.ClassID
-	}
-	return &pub
-}
-
-// CreateClassificationsPayload is the classifications create action payload.
-type CreateClassificationsPayload struct {
-	// Unique Class ID
-	ClassID int `form:"class_id" json:"class_id" yaml:"class_id" xml:"class_id"`
-}
-
-// Validate runs the validation rules defined in the design.
-func (payload *CreateClassificationsPayload) Validate() (err error) {
-	if payload.ClassID < 1 {
-		err = goa.MergeErrors(err, goa.InvalidRangeError(`raw.class_id`, payload.ClassID, 1, true))
-	}
-	return
-}
-
-// Created sends a HTTP response with status code 201.
-func (ctx *CreateClassificationsContext) Created() error {
-	ctx.ResponseData.WriteHeader(201)
-	return nil
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *CreateClassificationsContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
-// Unauthorized sends a HTTP response with status code 401.
-func (ctx *CreateClassificationsContext) Unauthorized() error {
-	ctx.ResponseData.WriteHeader(401)
-	return nil
-}
-
-// NotFound sends a HTTP response with status code 404.
-func (ctx *CreateClassificationsContext) NotFound() error {
-	ctx.ResponseData.WriteHeader(404)
-	return nil
-}
-
-// UnprocessableEntity sends a HTTP response with status code 422.
-func (ctx *CreateClassificationsContext) UnprocessableEntity() error {
-	ctx.ResponseData.WriteHeader(422)
-	return nil
-}
-
-// InternalServerError sends a HTTP response with status code 500.
-func (ctx *CreateClassificationsContext) InternalServerError() error {
-	ctx.ResponseData.WriteHeader(500)
-	return nil
-}
-
-// ServiceUnavailable sends a HTTP response with status code 503.
-func (ctx *CreateClassificationsContext) ServiceUnavailable() error {
-	ctx.ResponseData.WriteHeader(503)
-	return nil
-}
-
-// DeleteClassificationsContext provides the classifications delete action context.
-type DeleteClassificationsContext struct {
-	context.Context
-	*goa.ResponseData
-	*goa.RequestData
-	ClassID  int
-	SeriesID int
-}
-
-// NewDeleteClassificationsContext parses the incoming request URL and body, performs validations and creates the
-// context used by the classifications controller delete action.
-func NewDeleteClassificationsContext(ctx context.Context, r *http.Request, service *goa.Service) (*DeleteClassificationsContext, error) {
-	var err error
-	resp := goa.ContextResponse(ctx)
-	resp.Service = service
-	req := goa.ContextRequest(ctx)
-	req.Request = r
-	rctx := DeleteClassificationsContext{Context: ctx, ResponseData: resp, RequestData: req}
-	paramClassID := req.Params["class_id"]
-	if len(paramClassID) > 0 {
-		rawClassID := paramClassID[0]
-		if classID, err2 := strconv.Atoi(rawClassID); err2 == nil {
-			rctx.ClassID = classID
-		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("class_id", rawClassID, "integer"))
-		}
-		if rctx.ClassID < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`class_id`, rctx.ClassID, 1, true))
-		}
-	}
-	paramSeriesID := req.Params["series_id"]
-	if len(paramSeriesID) > 0 {
-		rawSeriesID := paramSeriesID[0]
-		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
-			rctx.SeriesID = seriesID
-		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
-		}
-		if rctx.SeriesID < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
-		}
-	}
-	return &rctx, err
-}
-
-// NoContent sends a HTTP response with status code 204.
-func (ctx *DeleteClassificationsContext) NoContent() error {
-	ctx.ResponseData.WriteHeader(204)
-	return nil
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *DeleteClassificationsContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
-// Unauthorized sends a HTTP response with status code 401.
-func (ctx *DeleteClassificationsContext) Unauthorized() error {
-	ctx.ResponseData.WriteHeader(401)
-	return nil
-}
-
-// NotFound sends a HTTP response with status code 404.
-func (ctx *DeleteClassificationsContext) NotFound() error {
-	ctx.ResponseData.WriteHeader(404)
-	return nil
-}
-
-// InternalServerError sends a HTTP response with status code 500.
-func (ctx *DeleteClassificationsContext) InternalServerError() error {
-	ctx.ResponseData.WriteHeader(500)
-	return nil
-}
-
-// ServiceUnavailable sends a HTTP response with status code 503.
-func (ctx *DeleteClassificationsContext) ServiceUnavailable() error {
-	ctx.ResponseData.WriteHeader(503)
-	return nil
-}
-
-// ListClassificationsContext provides the classifications list action context.
-type ListClassificationsContext struct {
-	context.Context
-	*goa.ResponseData
-	*goa.RequestData
-	SeriesID int
-}
-
-// NewListClassificationsContext parses the incoming request URL and body, performs validations and creates the
-// context used by the classifications controller list action.
-func NewListClassificationsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListClassificationsContext, error) {
-	var err error
-	resp := goa.ContextResponse(ctx)
-	resp.Service = service
-	req := goa.ContextRequest(ctx)
-	req.Request = r
-	rctx := ListClassificationsContext{Context: ctx, ResponseData: resp, RequestData: req}
-	paramSeriesID := req.Params["series_id"]
-	if len(paramSeriesID) > 0 {
-		rawSeriesID := paramSeriesID[0]
-		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
-			rctx.SeriesID = seriesID
-		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
-		}
-		if rctx.SeriesID < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
-		}
-	}
-	return &rctx, err
-}
-
-// OK sends a HTTP response with status code 200.
-func (ctx *ListClassificationsContext) OK(r ClassificationCollection) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.classification+json; type=collection")
-	}
-	if r == nil {
-		r = ClassificationCollection{}
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ListClassificationsContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
-// Unauthorized sends a HTTP response with status code 401.
-func (ctx *ListClassificationsContext) Unauthorized() error {
-	ctx.ResponseData.WriteHeader(401)
-	return nil
-}
-
-// NotFound sends a HTTP response with status code 404.
-func (ctx *ListClassificationsContext) NotFound() error {
-	ctx.ResponseData.WriteHeader(404)
-	return nil
-}
-
-// InternalServerError sends a HTTP response with status code 500.
-func (ctx *ListClassificationsContext) InternalServerError() error {
-	ctx.ResponseData.WriteHeader(500)
-	return nil
-}
-
-// ServiceUnavailable sends a HTTP response with status code 503.
-func (ctx *ListClassificationsContext) ServiceUnavailable() error {
-	ctx.ResponseData.WriteHeader(503)
-	return nil
-}
-
-// ShowClassificationsContext provides the classifications show action context.
-type ShowClassificationsContext struct {
-	context.Context
-	*goa.ResponseData
-	*goa.RequestData
-	ClassID  int
-	SeriesID int
-}
-
-// NewShowClassificationsContext parses the incoming request URL and body, performs validations and creates the
-// context used by the classifications controller show action.
-func NewShowClassificationsContext(ctx context.Context, r *http.Request, service *goa.Service) (*ShowClassificationsContext, error) {
-	var err error
-	resp := goa.ContextResponse(ctx)
-	resp.Service = service
-	req := goa.ContextRequest(ctx)
-	req.Request = r
-	rctx := ShowClassificationsContext{Context: ctx, ResponseData: resp, RequestData: req}
-	paramClassID := req.Params["class_id"]
-	if len(paramClassID) > 0 {
-		rawClassID := paramClassID[0]
-		if classID, err2 := strconv.Atoi(rawClassID); err2 == nil {
-			rctx.ClassID = classID
-		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("class_id", rawClassID, "integer"))
-		}
-		if rctx.ClassID < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`class_id`, rctx.ClassID, 1, true))
-		}
-	}
-	paramSeriesID := req.Params["series_id"]
-	if len(paramSeriesID) > 0 {
-		rawSeriesID := paramSeriesID[0]
-		if seriesID, err2 := strconv.Atoi(rawSeriesID); err2 == nil {
-			rctx.SeriesID = seriesID
-		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("series_id", rawSeriesID, "integer"))
-		}
-		if rctx.SeriesID < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`series_id`, rctx.SeriesID, 1, true))
-		}
-	}
-	return &rctx, err
-}
-
-// OK sends a HTTP response with status code 200.
-func (ctx *ShowClassificationsContext) OK(r *Classification) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.classification+json")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// BadRequest sends a HTTP response with status code 400.
-func (ctx *ShowClassificationsContext) BadRequest(r error) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
-}
-
-// Unauthorized sends a HTTP response with status code 401.
-func (ctx *ShowClassificationsContext) Unauthorized() error {
-	ctx.ResponseData.WriteHeader(401)
-	return nil
-}
-
-// NotFound sends a HTTP response with status code 404.
-func (ctx *ShowClassificationsContext) NotFound() error {
-	ctx.ResponseData.WriteHeader(404)
-	return nil
-}
-
-// InternalServerError sends a HTTP response with status code 500.
-func (ctx *ShowClassificationsContext) InternalServerError() error {
-	ctx.ResponseData.WriteHeader(500)
-	return nil
-}
-
-// ServiceUnavailable sends a HTTP response with status code 503.
-func (ctx *ShowClassificationsContext) ServiceUnavailable() error {
 	ctx.ResponseData.WriteHeader(503)
 	return nil
 }

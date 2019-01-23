@@ -64,15 +64,39 @@ func main() {
 	// Mount "prints" controller
 	app.MountPrintsController(service, controllers.NewPrintsController(service, conf.fmod))
 	// Mount "relationAuthor" controller
-	app.MountRelationAuthorController(service, controllers.NewRelationAuthorController(service, conf.fmod))
+	app.MountRelationAuthorController(service, controllers.NewRelationAuthorController(service, conf.fmod, conf.li))
 	// Mount "relationCategory" controller
-	app.MountRelationCategoryController(service, controllers.NewRelationCategoryController(service, conf.fmod))
+	app.MountRelationCategoryController(service, controllers.NewRelationCategoryController(service, conf.fmod, conf.li))
 	// Mount "relationClass" controller
-	app.MountRelationClassController(service, controllers.NewRelationClassController(service, conf.fmod))
+	app.MountRelationClassController(service, controllers.NewRelationClassController(service, conf.fmod, conf.li))
 	// Mount "relationCollection" controller
-	app.MountRelationCollectionController(service, controllers.NewRelationCollectionController(service, conf.fmod))
+	app.MountRelationCollectionController(service, controllers.NewRelationCollectionController(service, conf.fmod, conf.li))
+	// Mount "relationEditors" controller
+	app.MountRelationEditorsController(service, controllers.NewRelationEditorsController(service, conf.fmod, conf.li))
+	// Mount "relationEditorsCollections" controller
+	app.MountRelationEditorsCollectionsController(service, controllers.NewRelationEditorsCollectionsController(service, conf.fmod, conf.li))
+	// Mount "relationEditorsPrints" controller
+	app.MountRelationEditorsPrintsController(service, controllers.NewRelationEditorsPrintsController(service, conf.fmod, conf.li))
+	// Mount "relationEditorsSeries" controller
+	app.MountRelationEditorsSeriesController(service, controllers.NewRelationEditorsSeriesController(service, conf.fmod, conf.li))
+	// Mount "relationPrints" controller
+	app.MountRelationPrintsController(service, controllers.NewRelationPrintsController(service, conf.fmod, conf.li))
+	// Mount "relationPrintsCollections" controller
+	app.MountRelationPrintsCollectionsController(service, controllers.NewRelationPrintsCollectionsController(service, conf.fmod, conf.li))
+	// Mount "relationPrintsEditors" controller
+	app.MountRelationPrintsEditorsController(service, controllers.NewRelationPrintsEditorsController(service, conf.fmod, conf.li))
+	// Mount "relationPrintsSeries" controller
+	app.MountRelationPrintsSeriesController(service, controllers.NewRelationPrintsSeriesController(service, conf.fmod, conf.li))
 	// Mount "relationRole" controller
-	app.MountRelationRoleController(service, controllers.NewRelationRoleController(service, conf.fmod))
+	app.MountRelationRoleController(service, controllers.NewRelationRoleController(service, conf.fmod, conf.li))
+	// Mount "relationSeries" controller
+	app.MountRelationSeriesController(service, controllers.NewRelationSeriesController(service, conf.fmod, conf.li))
+	// Mount "relationSeriesCollections" controller
+	app.MountRelationSeriesCollectionsController(service, controllers.NewRelationSeriesCollectionsController(service, conf.fmod, conf.li))
+	// Mount "relationSeriesEditors" controller
+	app.MountRelationSeriesEditorsController(service, controllers.NewRelationSeriesEditorsController(service, conf.fmod, conf.li))
+	// Mount "relationSeriesPrints" controller
+	app.MountRelationSeriesPrintsController(service, controllers.NewRelationSeriesPrintsController(service, conf.fmod, conf.li))
 	// Mount "roles" controller
 	app.MountRolesController(service, controllers.NewRolesController(service, conf.fmod))
 	// Mount "series" controller

@@ -2,28 +2,15 @@ package sql
 
 import (
 	"database/sql"
+	"strings"
 
 	"github.com/NBR41/go-testgoa/internal/model"
 )
 
 const (
-	qryGetCategoryByID          = `SELECT id, name FROM category WHERE id = ?`
-	qryGetCategoryByName        = `SELECT id, name FROM category WHERE name = ?`
-	qryListCategories           = `SELECT id, name FROM category`
-	qryListCategoriesByAuthorID = `
-SELECT distinct c.id, c.name
-FROM category c
-JOIN series s ON (s.category_id = c.id)
-JOIN book b ON (b.series_id = s.id)
-JOIN authorship a ON (a.book_id = b.id)
-WHERE a.author_id = ?`
-	qryListCategoriesByClassID = `
-SELECT distinct c.id, c.name
-FROM category c
-JOIN series s ON (s.category_id = c.id)
-JOIN classification cl ON (cl.series_id = s.id)
-WHERE cl.class_id = ?`
-	qryInsertCategory = `
+	qryGetCategoryByID   = `SELECT id, name FROM category WHERE id = ?`
+	qryGetCategoryByName = `SELECT id, name FROM category WHERE name = ?`
+	qryInsertCategory    = `
 INSERT INTO category (id, name, create_ts, update_ts)
 VALUES (null, ?, NOW(), NOW())
 ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`
@@ -75,19 +62,25 @@ func (m *Model) GetCategoryByName(name string) (*model.Category, error) {
 	return m.getCategory(qryGetCategoryByName, name)
 }
 
-// ListCategories list categories
-func (m *Model) ListCategories() ([]*model.Category, error) {
-	return m.listCategories(qryListCategories)
-}
-
-// ListCategoriesByAuthorID list categories by author id
-func (m *Model) ListCategoriesByAuthorID(authorID int) ([]*model.Category, error) {
-	return m.listCategories(qryListCategoriesByAuthorID, authorID)
-}
-
-// ListCategoriesByClassID list categories by class id
-func (m *Model) ListCategoriesByClassID(classID int) ([]*model.Category, error) {
-	return m.listCategories(qryListCategoriesByClassID, classID)
+//ListCategoriesByIDs list categories by class id or author id
+func (m *Model) ListCategoriesByIDs(authorID, classID *int) ([]*model.Category, error) {
+	qry := `SELECT DISTINCT category.id, category.name FROM category`
+	where := []string{"1"}
+	vals := []interface{}{}
+	if authorID != nil || classID != nil {
+		qry += ` JOIN series ON (series.category_id = category.id)`
+		if authorID != nil {
+			qry += ` JOIN book ON (book.series_id = series.id) JOIN authorship ON (authorship.book_id = book.id)`
+			where = append(where, `authorship.author_id = ?`)
+			vals = append(vals, *authorID)
+		}
+		if classID != nil {
+			qry += ` JOIN classification ON (classification.series_id = series.id)`
+			where = append(where, `classification.class_id = ?`)
+			vals = append(vals, *classID)
+		}
+	}
+	return m.listCategories(qry+` WHERE `+strings.Join(where, " AND "), vals...)
 }
 
 // InsertCategory inserts category

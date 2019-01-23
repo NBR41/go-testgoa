@@ -8,18 +8,18 @@ import (
 
 const (
 	qryGetAuthorshipByID = `
-SELECT au.id, a.id, a.name, r.id, r.name, b.id, b.name
+SELECT authorship.id, author.id, author.name, role.id, role.name, book.id, book.name
 FROM authorship au
-JOIN author a ON (au.author_id = a.id)
-JOIN role r ON (au.role_id = r.id)
-JOIN book b ON (au.book_id = b.id)
-WHERE au.id = ?`
+JOIN author ON (authorship.author_id = author.id)
+JOIN role ON (authorship.role_id = role.id)
+JOIN book ON (authorship.book_id = book.id)
+WHERE authorship.id = ?`
 	qryListAuthorships = `
-SELECT au.id, a.id, a.name, r.id, r.name, b.id, b.name
-FROM authorship au
-JOIN author a ON (au.author_id = a.id)
-JOIN role r ON (au.role_id = r.id)
-JOIN book b ON (au.book_id = b.id)`
+SELECT authorship.id, author.id, author.name, role.id, role.name, book.id, book.name
+FROM authorship
+JOIN author ON (authorship.author_id = author.id)
+JOIN role ON (authorship.role_id = role.id)
+JOIN book ON (authorship.book_id = book.id)`
 	qryInsertAuthorship = `
 INSERT INTO authorship (id, author_id, book_id, role_id, create_ts, update_ts)
 VALUES (null, ?, ?, ?, NOW(), NOW())

@@ -10,7 +10,6 @@ import (
 const (
 	qryGetPrintByID   = `SELECT id, name FROM print WHERE id = ?`
 	qryGetPrintByName = `SELECT id, name FROM print WHERE name = ?`
-	qryListPrints     = `SELECT id, name FROM print`
 	qryInsertPrint    = `
 INSERT INTO print (id, name, create_ts, update_ts)
 VALUES (null, ?, NOW(), NOW())
@@ -64,27 +63,28 @@ func (m *Model) GetPrintByName(name string) (*model.Print, error) {
 	return m.getPrint(qryGetPrintByName, name)
 }
 
-// ListPrints list prints
-func (m *Model) ListPrints() ([]*model.Print, error) {
-	return m.listPrints(qryListPrints)
-}
-
-// ListPrintsByIDs list prints by collection id or series id
-func (m *Model) ListPrintsByIDs(collectionID, seriesID *int) ([]*model.Print, error) {
-	if collectionID == nil && seriesID == nil {
-		return m.ListPrints()
-	}
-	qry := `SELECT distinct p.id, p.name FROM print p JOIN edition e ON (e.print_id = p.id)`
-	where := []string{}
+// ListPrintsByIDs list prints by collection id or editor id or series id
+func (m *Model) ListPrintsByIDs(collectionID, editorID, seriesID *int) ([]*model.Print, error) {
+	qry := `SELECT DISTINCT print.id, print.name FROM print`
+	where := []string{"1"}
 	vals := []interface{}{}
-	if collectionID != nil {
-		where = append(where, `e.collection_id = ?`)
-		vals = append(vals, *collectionID)
-	}
-	if seriesID != nil {
-		qry += ` JOIN book b ON (e.book_id = b.id)`
-		where = append(where, `b.series_id = ?`)
-		vals = append(vals, *seriesID)
+	if collectionID != nil || editorID != nil || seriesID != nil {
+		qry += ` JOIN edition ON (edition.print_id = print.id)`
+
+		if collectionID != nil {
+			where = append(where, `edition.collection_id = ?`)
+			vals = append(vals, *collectionID)
+		}
+		if editorID != nil {
+			qry += ` JOIN collection ON (edition.collection_id = collection.id)`
+			where = append(where, `collection.editor_id = ?`)
+			vals = append(vals, *editorID)
+		}
+		if seriesID != nil {
+			qry += ` JOIN book ON (edition.book_id = book.id)`
+			where = append(where, `book.series_id = ?`)
+			vals = append(vals, *seriesID)
+		}
 	}
 	return m.listPrints(qry+` WHERE `+strings.Join(where, " AND "), vals...)
 }

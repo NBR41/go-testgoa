@@ -8,10 +8,10 @@ import (
 
 const (
 	qryGetClassification = `
-SELECT c.id, c.name
-FROM class c
-JOIN classification cl ON (cl.class_id = c.id)
-WHERE cl.series_id = ? AND cl.class_id = ?`
+SELECT class.id, class.name
+FROM class
+JOIN classification ON (classification.class_id = class.id)
+WHERE classification.series_id = ? AND classification.class_id = ?`
 	qryInsertClassification = `
 INSERT INTO classification (id, series_id, class_id, create_ts, update_ts)
 VALUES (null, ?, ?, NOW(), NOW())

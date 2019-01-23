@@ -159,83 +159,39 @@ func TestGetRoleByName(t *testing.T) {
 	}
 }
 
-func TestListRoles(t *testing.T) {
+func TestListRolesByIDs(t *testing.T) {
+	var authorID int = 1
 	db, mock, err := sqlmock.New()
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := escapeQuery(qryListRoles)
+	qry := escapeQuery("SELECT DISTINCT role.id, role.name FROM role WHERE 1")
 	mock.ExpectQuery(qry).WillReturnError(errors.New("query error"))
 	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow("foo", "bar"))
 	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "foo").RowError(0, errors.New("scan error")))
 	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "foo"))
+	qry = escapeQuery("SELECT DISTINCT role.id, role.name FROM role JOIN authorship ON (authorship.role_id = role.id) WHERE 1 AND authorship.author_id = ?")
+	mock.ExpectQuery(qry).WithArgs(authorID).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "foo"))
 
 	m, _ := New(ConnGetter(func() (*sql.DB, error) {
 		return db, nil
 	}), nil)
 
 	tests := []struct {
-		desc string
-		exp  []model.Role
-		err  error
+		desc   string
+		params *int
+		exp    []model.Role
+		err    error
 	}{
-		{"query error", nil, errors.New("query error")},
-		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
-		{"scan error", nil, errors.New("scan error")},
-		{"valid", []model.Role{model.Role{ID: 1, Name: "foo"}}, nil},
+		{"query error", nil, nil, errors.New("query error")},
+		{"scan conversion error", nil, nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
+		{"scan error", nil, nil, errors.New("scan error")},
+		{"valid", nil, []model.Role{model.Role{ID: 1, Name: "foo"}}, nil},
+		{"valid with filter", &authorID, []model.Role{model.Role{ID: 1, Name: "foo"}}, nil},
 	}
 
 	for i := range tests {
-		v, err := m.ListRoles()
-		if err != nil {
-			if tests[i].err == nil {
-				t.Errorf("unexpected error for [%s], [%v]", tests[i].desc, err)
-				continue
-			}
-			if tests[i].err.Error() != err.Error() {
-				t.Errorf("unexpected error for [%s], exp [%v] got [%v]", tests[i].desc, tests[i].err, err)
-				continue
-			}
-			continue
-		}
-
-		if tests[i].err != nil {
-			t.Errorf("expecting error for [%s]", tests[i].desc)
-		}
-		if diff := pretty.Compare(v, tests[i].exp); diff != "" {
-			t.Errorf("unexpected value for [%s]\n%s", tests[i].desc, diff)
-		}
-	}
-}
-
-func TestListRolesByAuthorID(t *testing.T) {
-	db, mock, err := sqlmock.New()
-	if err != nil {
-		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
-	}
-	qry := escapeQuery(qryListRolesByAuthorID)
-	mock.ExpectQuery(qry).WillReturnError(errors.New("query error"))
-	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow("foo", "bar"))
-	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "foo").RowError(0, errors.New("scan error")))
-	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "foo"))
-
-	m, _ := New(ConnGetter(func() (*sql.DB, error) {
-		return db, nil
-	}), nil)
-
-	tests := []struct {
-		desc string
-		exp  []model.Role
-		err  error
-	}{
-		{"query error", nil, errors.New("query error")},
-		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
-		{"scan error", nil, errors.New("scan error")},
-		{"valid", []model.Role{model.Role{ID: 1, Name: "foo"}}, nil},
-	}
-
-	for i := range tests {
-		v, err := m.ListRolesByAuthorID(1)
+		v, err := m.ListRolesByIDs(tests[i].params)
 		if err != nil {
 			if tests[i].err == nil {
 				t.Errorf("unexpected error for [%s], [%v]", tests[i].desc, err)

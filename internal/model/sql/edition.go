@@ -8,18 +8,18 @@ import (
 
 const (
 	qryGetEditionByID = `
-SELECT e.id, b.id, b.name, c.id, c.name, p.id, p.name
-FROM edition e
-JOIN book b ON (au.book_id = e.id)
-JOIN collection c ON (e.collection_id = c.id)
-JOIN print p ON (e.print_id = e.id)
-WHERE e.id = ?`
+SELECT edition.id, book.id, book.name, collection.id, collection.name, print.id, print.name
+FROM edition
+JOIN book ON (edition.book_id = book.id)
+JOIN collection ON (edition.collection_id = collection.id)
+JOIN print ON (edition.print_id = print.id)
+WHERE edition.id = ?`
 	qryListEditions = `
-SELECT e.id, b.id, b.name, c.id, c.name, p.id, p.name
-FROM edition e
-JOIN book b ON (au.book_id = e.id)
-JOIN collection c ON (e.collection_id = c.id)
-JOIN print p ON (e.print_id = e.id)`
+SELECT edition.id, book.id, book.name, collection.id, collection.name, print.id, print.name
+FROM edition
+JOIN book ON (edition.book_id = book.id)
+JOIN collection ON (edition.collection_id = collection.id)
+JOIN print ON (edition.print_id = print.id)`
 	qryInsertEdition = `
 INSERT INTO edition (id, book_id, collection_id, print_id, create_ts, update_ts)
 VALUES (null, ?, ?, ?, NOW(), NOW())

@@ -66,26 +66,11 @@ func TestGetBookByID(t *testing.T) {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
 	qry := escapeQuery(qryGetBookByID)
-	mock.
-		ExpectQuery(qry).
-		WithArgs(123).
-		WillReturnError(errors.New("query error"))
-	mock.
-		ExpectQuery(qry).
-		WithArgs(123).
-		WillReturnRows(sqlmock.NewRows([]string{"id", "isbn", "name", "series_id"}))
-	mock.
-		ExpectQuery(qry).
-		WithArgs(123).
-		WillReturnRows(sqlmock.NewRows([]string{"id", "isbn", "name", "series_id"}).AddRow("foo", "bar", "baz", "quux"))
-	mock.
-		ExpectQuery(qry).
-		WithArgs(123).
-		WillReturnRows(sqlmock.NewRows([]string{"id", "isbn", "name", "series_id"}).AddRow(1, "foo", "bar", 2).RowError(0, errors.New("scan error")))
-	mock.
-		ExpectQuery(qry).
-		WithArgs(123).
-		WillReturnRows(sqlmock.NewRows([]string{"id", "isbn", "name", "series_id"}).AddRow(1, "foo", "bar", 2))
+	mock.ExpectQuery(qry).WithArgs(123).WillReturnError(errors.New("query error"))
+	mock.ExpectQuery(qry).WithArgs(123).WillReturnRows(sqlmock.NewRows([]string{"id", "isbn", "name", "series_id"}))
+	mock.ExpectQuery(qry).WithArgs(123).WillReturnRows(sqlmock.NewRows([]string{"id", "isbn", "name", "series_id"}).AddRow("foo", "bar", "baz", "quux"))
+	mock.ExpectQuery(qry).WithArgs(123).WillReturnRows(sqlmock.NewRows([]string{"id", "isbn", "name", "series_id"}).AddRow(1, "foo", "bar", 2).RowError(0, errors.New("scan error")))
+	mock.ExpectQuery(qry).WithArgs(123).WillReturnRows(sqlmock.NewRows([]string{"id", "isbn", "name", "series_id"}).AddRow(1, "foo", "bar", 2))
 
 	m, _ := New(ConnGetter(func() (*sql.DB, error) {
 		return db, nil
@@ -131,26 +116,11 @@ func TestGetBookByISBN(t *testing.T) {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
 	qry := escapeQuery(qryGetBookByISBN)
-	mock.
-		ExpectQuery(qry).
-		WithArgs("foo").
-		WillReturnError(errors.New("query error"))
-	mock.
-		ExpectQuery(qry).
-		WithArgs("foo").
-		WillReturnRows(sqlmock.NewRows([]string{"id", "isbn", "name", "series_id"}))
-	mock.
-		ExpectQuery(qry).
-		WithArgs("foo").
-		WillReturnRows(sqlmock.NewRows([]string{"id", "isbn", "name", "series_id"}).AddRow("foo", "bar", "baz", "qux"))
-	mock.
-		ExpectQuery(qry).
-		WithArgs("foo").
-		WillReturnRows(sqlmock.NewRows([]string{"id", "isbn", "name", "series_id"}).AddRow(1, "foo", "bar", 2).RowError(0, errors.New("scan error")))
-	mock.
-		ExpectQuery(qry).
-		WithArgs("foo").
-		WillReturnRows(sqlmock.NewRows([]string{"id", "isbn", "name", "series_id"}).AddRow(1, "foo", "bar", 2))
+	mock.ExpectQuery(qry).WithArgs("foo").WillReturnError(errors.New("query error"))
+	mock.ExpectQuery(qry).WithArgs("foo").WillReturnRows(sqlmock.NewRows([]string{"id", "isbn", "name", "series_id"}))
+	mock.ExpectQuery(qry).WithArgs("foo").WillReturnRows(sqlmock.NewRows([]string{"id", "isbn", "name", "series_id"}).AddRow("foo", "bar", "baz", "qux"))
+	mock.ExpectQuery(qry).WithArgs("foo").WillReturnRows(sqlmock.NewRows([]string{"id", "isbn", "name", "series_id"}).AddRow(1, "foo", "bar", 2).RowError(0, errors.New("scan error")))
+	mock.ExpectQuery(qry).WithArgs("foo").WillReturnRows(sqlmock.NewRows([]string{"id", "isbn", "name", "series_id"}).AddRow(1, "foo", "bar", 2))
 
 	m, _ := New(ConnGetter(func() (*sql.DB, error) {
 		return db, nil
@@ -255,133 +225,39 @@ func TestGetBookByName(t *testing.T) {
 	}
 }
 
-func TestListBooks(t *testing.T) {
+func TestListBooksByIDs(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := escapeQuery(qryListBooks)
+	var collectionID, editorID, printID, seriesID int = 1, 2, 3, 4
+	qry := escapeQuery(`SELECT DISTINCT book.id, book.isbn, book.name, book.series_id FROM book WHERE 1`)
 	mock.ExpectQuery(qry).WillReturnError(errors.New("query error"))
 	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "isbn", "name", "series_id"}).AddRow("foo", "bar", "baz", "qux"))
 	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "isbn", "name", "series_id"}).AddRow(1, "foo", "bar", 2).RowError(0, errors.New("scan error")))
 	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "isbn", "name", "series_id"}).AddRow(1, "foo", "bar", 2))
+	qry = escapeQuery(`SELECT DISTINCT book.id, book.isbn, book.name, book.series_id FROM book JOIN edition ON (edition.book_id = book.id) JOIN collection ON (edition.collection_id = collection.id) WHERE 1 AND edition.collection_id = ? AND collection.editor_id = ? AND edition.print_id = ? AND book.series_id = ?`)
+	mock.ExpectQuery(qry).WithArgs(collectionID, editorID, printID, seriesID).WillReturnRows(sqlmock.NewRows([]string{"id", "isbn", "name", "series_id"}).AddRow(1, "foo", "bar", 2))
 
 	m, _ := New(ConnGetter(func() (*sql.DB, error) {
 		return db, nil
 	}), nil)
 
 	tests := []struct {
-		desc string
-		exp  []model.Book
-		err  error
+		desc   string
+		params []*int
+		exp    []model.Book
+		err    error
 	}{
-		{"query error", nil, errors.New("query error")},
-		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
-		{"scan error", nil, errors.New("scan error")},
-		{"valid", []model.Book{model.Book{ID: 1, ISBN: "foo", Name: "bar", SeriesID: 2}}, nil},
+		{"query error", []*int{nil, nil, nil, nil}, nil, errors.New("query error")},
+		{"scan conversion error", []*int{nil, nil, nil, nil}, nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
+		{"scan error", []*int{nil, nil, nil, nil}, nil, errors.New("scan error")},
+		{"valid", []*int{nil, nil, nil, nil}, []model.Book{model.Book{ID: 1, ISBN: "foo", Name: "bar", SeriesID: 2}}, nil},
+		{"valid with filter", []*int{&collectionID, &editorID, &printID, &seriesID}, []model.Book{model.Book{ID: 1, ISBN: "foo", Name: "bar", SeriesID: 2}}, nil},
 	}
 
 	for i := range tests {
-		v, err := m.ListBooks()
-		if err != nil {
-			if tests[i].err == nil {
-				t.Errorf("unexpected error for [%s], [%v]", tests[i].desc, err)
-				continue
-			}
-			if tests[i].err.Error() != err.Error() {
-				t.Errorf("unexpected error for [%s], exp [%v] got [%v]", tests[i].desc, tests[i].err, err)
-				continue
-			}
-			continue
-		}
-
-		if tests[i].err != nil {
-			t.Errorf("expecting error for [%s]", tests[i].desc)
-		}
-		if diff := pretty.Compare(v, tests[i].exp); diff != "" {
-			t.Errorf("unexpected value for [%s]\n%s", tests[i].desc, diff)
-		}
-	}
-}
-
-func TestListBooksByIDs1(t *testing.T) {
-	db, mock, err := sqlmock.New()
-	if err != nil {
-		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
-	}
-	qry := escapeQuery(qryListBooks)
-	mock.ExpectQuery(qry).WillReturnError(errors.New("query error"))
-	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "isbn", "name", "series_id"}).AddRow("foo", "bar", "baz", "qux"))
-	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "isbn", "name", "series_id"}).AddRow(1, "foo", "bar", 2).RowError(0, errors.New("scan error")))
-	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "isbn", "name", "series_id"}).AddRow(1, "foo", "bar", 2))
-
-	m, _ := New(ConnGetter(func() (*sql.DB, error) {
-		return db, nil
-	}), nil)
-
-	tests := []struct {
-		desc string
-		exp  []model.Book
-		err  error
-	}{
-		{"query error", nil, errors.New("query error")},
-		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
-		{"scan error", nil, errors.New("scan error")},
-		{"valid", []model.Book{model.Book{ID: 1, ISBN: "foo", Name: "bar", SeriesID: 2}}, nil},
-	}
-
-	for i := range tests {
-		v, err := m.ListBooksByIDs(nil, nil, nil)
-		if err != nil {
-			if tests[i].err == nil {
-				t.Errorf("unexpected error for [%s], [%v]", tests[i].desc, err)
-				continue
-			}
-			if tests[i].err.Error() != err.Error() {
-				t.Errorf("unexpected error for [%s], exp [%v] got [%v]", tests[i].desc, tests[i].err, err)
-				continue
-			}
-			continue
-		}
-
-		if tests[i].err != nil {
-			t.Errorf("expecting error for [%s]", tests[i].desc)
-		}
-		if diff := pretty.Compare(v, tests[i].exp); diff != "" {
-			t.Errorf("unexpected value for [%s]\n%s", tests[i].desc, diff)
-		}
-	}
-}
-
-func TestListBooksByIDs2(t *testing.T) {
-	db, mock, err := sqlmock.New()
-	if err != nil {
-		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
-	}
-	var collectionID, printID, seriesID int = 1, 2, 3
-	qry := escapeQuery(`SELECT DISTINCT b.id, b.isbn, b.name, b.series_id FROM book b JOIN edition e on (e.book_id = b.id) WHERE b.series_id = ? AND e.collection_id = ? AND e.print_id = ?`)
-	mock.ExpectQuery(qry).WithArgs(3, 1, 2).WillReturnError(errors.New("query error"))
-	mock.ExpectQuery(qry).WithArgs(3, 1, 2).WillReturnRows(sqlmock.NewRows([]string{"id", "isbn", "name", "series_id"}).AddRow("foo", "bar", "baz", "qux"))
-	mock.ExpectQuery(qry).WithArgs(3, 1, 2).WillReturnRows(sqlmock.NewRows([]string{"id", "isbn", "name", "series_id"}).AddRow(1, "foo", "bar", 2).RowError(0, errors.New("scan error")))
-	mock.ExpectQuery(qry).WithArgs(3, 1, 2).WillReturnRows(sqlmock.NewRows([]string{"id", "isbn", "name", "series_id"}).AddRow(1, "foo", "bar", 2))
-
-	m, _ := New(ConnGetter(func() (*sql.DB, error) {
-		return db, nil
-	}), nil)
-
-	tests := []struct {
-		desc string
-		exp  []model.Book
-		err  error
-	}{
-		{"query error", nil, errors.New("query error")},
-		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
-		{"scan error", nil, errors.New("scan error")},
-		{"valid", []model.Book{model.Book{ID: 1, ISBN: "foo", Name: "bar", SeriesID: 2}}, nil},
-	}
-
-	for i := range tests {
-		v, err := m.ListBooksByIDs(&collectionID, &printID, &seriesID)
+		v, err := m.ListBooksByIDs(tests[i].params[0], tests[i].params[1], tests[i].params[2], tests[i].params[3])
 		if err != nil {
 			if tests[i].err == nil {
 				t.Errorf("unexpected error for [%s], [%v]", tests[i].desc, err)

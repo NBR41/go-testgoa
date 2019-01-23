@@ -9,30 +9,15 @@ import (
 
 const (
 	qryGetSeriesByID = `
-	SELECT s.id, s.name, c.id, c.name
-	FROM series s
-	JOIN category c ON (c.id = s.category_id)
-	WHERE s.id = ?`
+SELECT series.id, series.name, category.id, category.name
+FROM series
+JOIN category ON (series.category_id = category.id)
+WHERE series.id = ?`
 	qryGetSeriesByName = `
-SELECT s.id, s.name, c.id, c.name
-FROM series s
-JOIN category c ON (c.id = s.category_id)
-WHERE s.name = ?`
-	qryListSeries               = `SELECT s.id, s.name, c.id, c.name FROM series s JOIN category c ON (c.id = s.series_id)`
-	qryListSeriesByCollectionID = `
-SELECT DISTINCT s.id, s.name, c.id, c.name
-FROM series s
-JOIN category c ON (c.id = s.series_id)
-JOIN book b ON (b.seried_id = s.id)
-JOIN edition e ON (e.book_id = b.id)
-WHERE e.collection_id = ?`
-	qryListSeriesByCollectionIDPrintID = `
-SELECT DISTINCT s.id, s.name, c.id, c.name
-FROM series s
-JOIN category c ON (c.id = s.series_id)
-JOIN book b ON (b.seried_id = s.id)
-JOIN edition e ON (e.book_id = b.id)
-WHERE e.collection_id = ? AND e.print_id = ?`
+SELECT series.id, series.name, category.id, category.name
+FROM series
+JOIN category ON (series.category_id = category.id)
+WHERE series.name = ?`
 	qryInsertSeries = `
 INSERT INTO series (id, name, category_id, create_ts, update_ts)
 VALUES (null, ?, ?, NOW(), NOW())
@@ -86,50 +71,56 @@ func (m *Model) GetSeriesByName(name string) (*model.Series, error) {
 	return m.getSeries(qryGetSeriesByName, name)
 }
 
-//ListSeries list all series
-func (m *Model) ListSeries() ([]*model.Series, error) {
-	return m.listSeries(qryListSeries)
-}
-
 //ListSeriesByIDs list series by filter author ID, role ID, category ID, class ID
-func (m *Model) ListSeriesByIDs(authorID, roleID, categoryID, classID *int) ([]*model.Series, error) {
-	if authorID == nil && roleID == nil && categoryID == nil && classID == nil {
-		return m.ListSeries()
-	}
-	qry := `SELECT DISTINCT s.id, s.name, c.id, c.name FROM series s JOIN category c ON (c.id = s.series_id)`
-	where := []string{}
+func (m *Model) ListSeriesByIDs(authorID, categoryID, classID, roleID *int) ([]*model.Series, error) {
+	qry := `SELECT DISTINCT series.id, series.name, category.id, category.name FROM series JOIN category ON (series.category_id = category.id)`
+	where := []string{"1"}
 	vals := []interface{}{}
 	if authorID != nil || roleID != nil {
-		qry += ` JOIN book b ON (b.series_id = s.id) JOIN authorship a ON (a.book_id = b.id)`
+		qry += ` JOIN book ON (book.series_id = series.id) JOIN authorship ON (authorship.book_id = book.id)`
 		if authorID != nil {
-			where = append(where, `a.author_id = ?`)
+			where = append(where, `authorship.author_id = ?`)
 			vals = append(vals, *authorID)
 		}
 		if roleID != nil {
-			where = append(where, `a.role_id = ?`)
+			where = append(where, `authorship.role_id = ?`)
 			vals = append(vals, *roleID)
 		}
 	}
 	if classID != nil {
-		qry += ` JOIN classification cl ON (cl.series_id = s.id)`
-		where = append(where, `cl.class_id = ?`)
+		qry += ` JOIN classification ON (classification.series_id = series.id)`
+		where = append(where, `classification.class_id = ?`)
 		vals = append(vals, *classID)
 	}
 	if categoryID != nil {
-		where = append(where, `c.id = ?`)
+		where = append(where, `category.id = ?`)
 		vals = append(vals, *categoryID)
 	}
 	return m.listSeries(qry+` WHERE `+strings.Join(where, " AND "), vals...)
 }
 
-//ListSeriesByCollectionID list series by collection id
-func (m *Model) ListSeriesByCollectionID(collectionID int) ([]*model.Series, error) {
-	return m.listSeries(qryListSeriesByCollectionID, collectionID)
-}
-
-//ListSeriesByCollectionIDPrintID list series by couple collection id print id
-func (m *Model) ListSeriesByCollectionIDPrintID(collectionID, printID int) ([]*model.Series, error) {
-	return m.listSeries(qryListSeriesByCollectionIDPrintID, collectionID, printID)
+// ListSeriesByEditionIDs list series by filter collection ID, editor ID, print ID
+func (m *Model) ListSeriesByEditionIDs(collectionID, editorID, printID *int) ([]*model.Series, error) {
+	qry := `SELECT DISTINCT series.id, series.name, category.id, category.name FROM series JOIN category ON (series.category_id = category.id)`
+	where := []string{"1"}
+	vals := []interface{}{}
+	if collectionID != nil || editorID != nil || printID != nil {
+		qry += ` JOIN book ON (book.series_id = series.id) JOIN edition ON (edition.book_id = book.id)`
+		if collectionID != nil {
+			where = append(where, `edition.collection_id = ?`)
+			vals = append(vals, *collectionID)
+		}
+		if editorID != nil {
+			qry += ` JOIN collection ON (edition.collection_id = collection.id)`
+			where = append(where, `collection.editor_id = ?`)
+			vals = append(vals, *editorID)
+		}
+		if printID != nil {
+			where = append(where, `edition.print_id = ?`)
+			vals = append(vals, *printID)
+		}
+	}
+	return m.listSeries(qry+` WHERE `+strings.Join(where, " AND "), vals...)
 }
 
 //InsertSeries insert a series and return it

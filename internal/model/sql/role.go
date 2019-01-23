@@ -2,16 +2,15 @@ package sql
 
 import (
 	"database/sql"
+	"strings"
 
 	"github.com/NBR41/go-testgoa/internal/model"
 )
 
 const (
-	qryGetRoleByID         = `SELECT id, name FROM role WHERE id = ?`
-	qryGetRoleByName       = `SELECT id, name FROM role WHERE name = ?`
-	qryListRoles           = `SELECT id, name FROM role`
-	qryListRolesByAuthorID = `SELECT r.id, r.name FROM role r JOIN authorship a ON (a.role_id = r.id) WHERE a.author_id = ?`
-	qryInsertRole          = `
+	qryGetRoleByID   = `SELECT id, name FROM role WHERE id = ?`
+	qryGetRoleByName = `SELECT id, name FROM role WHERE name = ?`
+	qryInsertRole    = `
 INSERT INTO role (id, name, create_ts, update_ts)
 VALUES (null, ?, NOW(), NOW())
 ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`
@@ -63,14 +62,17 @@ func (m *Model) GetRoleByName(name string) (*model.Role, error) {
 	return m.getRole(qryGetRoleByName, name)
 }
 
-// ListRoles list roles
-func (m *Model) ListRoles() ([]*model.Role, error) {
-	return m.listRoles(qryListRoles)
-}
-
-// ListRolesByAuthorID list roles by author id
-func (m *Model) ListRolesByAuthorID(authorID int) ([]*model.Role, error) {
-	return m.listRoles(qryListRolesByAuthorID, authorID)
+// ListRolesByIDs list roles by author id
+func (m *Model) ListRolesByIDs(authorID *int) ([]*model.Role, error) {
+	qry := `SELECT DISTINCT role.id, role.name FROM role`
+	where := []string{"1"}
+	vals := []interface{}{}
+	if authorID != nil {
+		qry += ` JOIN authorship ON (authorship.role_id = role.id)`
+		where = append(where, `authorship.author_id = ?`)
+		vals = append(vals, *authorID)
+	}
+	return m.listRoles(qry+` WHERE `+strings.Join(where, " AND "), vals...)
 }
 
 // InsertRole inserts role

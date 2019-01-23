@@ -68,33 +68,30 @@ func (m *Model) GetBookByName(name string) (*model.Book, error) {
 	return m.getBook(qryGetBookByName, name)
 }
 
-// ListBooks returns book list
-func (m *Model) ListBooks() ([]*model.Book, error) {
-	return m.listBooks(qryListBooks)
-}
-
-// ListBooksByIDs returns book list filtered by collection or print or series
-func (m *Model) ListBooksByIDs(collectionID, printID, seriesID *int) ([]*model.Book, error) {
-	if collectionID == nil && printID == nil && seriesID == nil {
-		return m.ListBooks()
-	}
-	qry := `SELECT DISTINCT b.id, b.isbn, b.name, b.series_id FROM book b`
-	where := []string{}
+// ListBooksByIDs returns book list filtered by collection or editor or print or series
+func (m *Model) ListBooksByIDs(collectionID, editorID, printID, seriesID *int) ([]*model.Book, error) {
+	qry := `SELECT DISTINCT book.id, book.isbn, book.name, book.series_id FROM book`
+	where := []string{"1"}
 	vals := []interface{}{}
-	if seriesID != nil {
-		where = append(where, `b.series_id = ?`)
-		vals = append(vals, *seriesID)
-	}
-	if collectionID != nil || printID != nil {
-		qry += ` JOIN edition e on (e.book_id = b.id)`
+	if collectionID != nil || editorID != nil || printID != nil {
+		qry += ` JOIN edition ON (edition.book_id = book.id)`
 		if collectionID != nil {
-			where = append(where, `e.collection_id = ?`)
+			where = append(where, `edition.collection_id = ?`)
 			vals = append(vals, *collectionID)
 		}
+		if editorID != nil {
+			qry += ` JOIN collection ON (edition.collection_id = collection.id)`
+			where = append(where, `collection.editor_id = ?`)
+			vals = append(vals, *editorID)
+		}
 		if printID != nil {
-			where = append(where, `e.print_id = ?`)
+			where = append(where, `edition.print_id = ?`)
 			vals = append(vals, *printID)
 		}
+	}
+	if seriesID != nil {
+		where = append(where, `book.series_id = ?`)
+		vals = append(vals, *seriesID)
 	}
 	return m.listBooks(qry+` WHERE `+strings.Join(where, " AND "), vals...)
 }

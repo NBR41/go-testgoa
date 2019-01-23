@@ -159,34 +159,40 @@ func TestGetEditorByName(t *testing.T) {
 	}
 }
 
-func TestListEditors(t *testing.T) {
+func TestListEditorsByIDs(t *testing.T) {
+	var printID, seriesID int = 1, 2
 	db, mock, err := sqlmock.New()
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := escapeQuery(qryListEditors)
+
+	qry := escapeQuery(`SELECT DISTINCT editor.id, editor.name FROM editor WHERE 1`)
 	mock.ExpectQuery(qry).WillReturnError(errors.New("query error"))
 	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow("foo", "bar"))
 	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "foo").RowError(0, errors.New("scan error")))
 	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "foo"))
+	qry = escapeQuery(`SELECT DISTINCT editor.id, editor.name FROM editor JOIN collection ON (collection.editor_id = editor.id) JOIN edition ON (edition.collection_id = collection.id) JOIN book ON (edition.book_id = book.id) WHERE 1 AND edition.print_id = ? AND book.series_id = ?`)
+	mock.ExpectQuery(qry).WithArgs(printID, seriesID).WillReturnRows(sqlmock.NewRows([]string{"id", "name"}).AddRow(1, "foo"))
 
 	m, _ := New(ConnGetter(func() (*sql.DB, error) {
 		return db, nil
 	}), nil)
 
 	tests := []struct {
-		desc string
-		exp  []model.Editor
-		err  error
+		desc   string
+		params []*int
+		exp    []model.Editor
+		err    error
 	}{
-		{"query error", nil, errors.New("query error")},
-		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
-		{"scan error", nil, errors.New("scan error")},
-		{"valid", []model.Editor{model.Editor{ID: 1, Name: "foo"}}, nil},
+		{"query error", []*int{nil, nil}, nil, errors.New("query error")},
+		{"scan conversion error", []*int{nil, nil}, nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
+		{"scan error", []*int{nil, nil}, nil, errors.New("scan error")},
+		{"valid", []*int{nil, nil}, []model.Editor{model.Editor{ID: 1, Name: "foo"}}, nil},
+		{"valid with filter", []*int{&printID, &seriesID}, []model.Editor{model.Editor{ID: 1, Name: "foo"}}, nil},
 	}
 
 	for i := range tests {
-		v, err := m.ListEditors()
+		v, err := m.ListEditorsByIDs(tests[i].params[0], tests[i].params[1])
 		if err != nil {
 			if tests[i].err == nil {
 				t.Errorf("unexpected error for [%s], [%v]", tests[i].desc, err)

@@ -2,34 +2,15 @@ package sql
 
 import (
 	"database/sql"
+	"strings"
 
 	"github.com/NBR41/go-testgoa/internal/model"
 )
 
 const (
-	qryGetClassByID          = `SELECT id, name FROM class WHERE id = ?`
-	qryGetClassByName        = `SELECT id, name FROM class WHERE name = ?`
-	qryListClasses           = `SELECT id, name FROM class`
-	qryListClassesBySeriesID = `
-SELECT distinct cl.id, cl.name
-FROM class cl
-JOIN classification c ON (c.class_id = cl.id)
-WHERE c.series_id = ?`
-	qryListClassesByAuthorID = `
-SELECT distinct cl.id, cl.name
-FROM class cl
-JOIN classification c ON (c.class_id = cl.id)
-JOIN series s ON (s.series_id = s.id)
-JOIN book b ON (b.series_id = s.id)
-JOIN authorship a (a.book_id = b.id)
-WHERE a.author_id = ?`
-	qryListClassesByCategoryID = `
-SELECT distinct cl.id, cl.name
-FROM class cl
-JOIN classification c ON (c.class_id = cl.id)
-JOIN series s ON (s.series_id = s.id)
-WHERE s.category_id = ?`
-	qryInsertClass = `
+	qryGetClassByID   = `SELECT id, name FROM class WHERE id = ?`
+	qryGetClassByName = `SELECT id, name FROM class WHERE name = ?`
+	qryInsertClass    = `
 INSERT INTO class (id, name, create_ts, update_ts)
 VALUES (null, ?, NOW(), NOW())
 ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`
@@ -81,24 +62,32 @@ func (m *Model) GetClassByName(name string) (*model.Class, error) {
 	return m.getClass(qryGetClassByName, name)
 }
 
-// ListClasses list classes
-func (m *Model) ListClasses() ([]*model.Class, error) {
-	return m.listClasses(qryListClasses)
-}
+//ListClassesByIDs list classes by author id or category id or series id
+func (m *Model) ListClassesByIDs(authorID, categoryID, seriesID *int) ([]*model.Class, error) {
+	qry := `SELECT DISTINCT class.id, class.name from class`
+	where := []string{"1"}
+	vals := []interface{}{}
 
-// ListClassesBySeriesID list classes by series ID
-func (m *Model) ListClassesBySeriesID(seriesID int) ([]*model.Class, error) {
-	return m.listClasses(qryListClassesBySeriesID, seriesID)
-}
-
-// ListClassesByAuthorID list classes by author ID
-func (m *Model) ListClassesByAuthorID(authorID int) ([]*model.Class, error) {
-	return m.listClasses(qryListClassesByAuthorID, authorID)
-}
-
-// ListClassesByCategoryID list classes by category ID
-func (m *Model) ListClassesByCategoryID(categoryID int) ([]*model.Class, error) {
-	return m.listClasses(qryListClassesByCategoryID, categoryID)
+	if authorID != nil || categoryID != nil || seriesID != nil {
+		qry += ` JOIN classification ON (classification.class_id = class.id)`
+		if authorID != nil || categoryID != nil {
+			qry += ` JOIN series ON (classification.series_id = series.id)`
+			if authorID != nil {
+				qry += ` JOIN book ON (book.series_id = series.id) JOIN authorship ON (authorship.book_id = book.id)`
+				where = append(where, `authorship.author_id = ?`)
+				vals = append(vals, *authorID)
+			}
+			if categoryID != nil {
+				where = append(where, `series.category_id = ?`)
+				vals = append(vals, *categoryID)
+			}
+		}
+		if seriesID != nil {
+			where = append(where, `classification.series_id = ?`)
+			vals = append(vals, *seriesID)
+		}
+	}
+	return m.listClasses(qry+` WHERE `+strings.Join(where, " AND "), vals...)
 }
 
 // InsertClass inserts class

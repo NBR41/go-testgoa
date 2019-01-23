@@ -2,29 +2,15 @@ package sql
 
 import (
 	"database/sql"
+	"strings"
 
 	"github.com/NBR41/go-testgoa/internal/model"
 )
 
 const (
-	qryGetAuthorByID           = `SELECT id, name FROM author WHERE id = ?`
-	qryGetAuthorByName         = `SELECT id, name FROM author WHERE name = ?`
-	qryListAuthors             = `SELECT id, name FROM author`
-	qryListAuthorsByCategoryID = `
-SELECT distinct a.id, a.name
-FROM author a
-JOIN authorship au ON (a.id = au.author_id)
-JOIN book b ON (au.book_id = b.id)
-JOIN series s ON (b.series_id = s.id)
-JOIN category c ON (s.category_id = c.id)
-WHERE c.id = ?`
-	qryListAuthorsByRoleID = `
-SELECT distinct a.id, a.name
-FROM author a
-JOIN authorship au ON (a.id = au.author_id)
-JOIN role r ON (au.role_id = r.id)
-WHERE r.id = ?`
-	qryInsertAuthor = `
+	qryGetAuthorByID   = `SELECT id, name FROM author WHERE id = ?`
+	qryGetAuthorByName = `SELECT id, name FROM author WHERE name = ?`
+	qryInsertAuthor    = `
 INSERT INTO author (id, name, create_ts, update_ts)
 VALUES (null, ?, NOW(), NOW())
 ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`
@@ -76,19 +62,24 @@ func (m *Model) GetAuthorByName(name string) (*model.Author, error) {
 	return m.getAuthor(qryGetAuthorByName, name)
 }
 
-// ListAuthors returns author list
-func (m *Model) ListAuthors() ([]*model.Author, error) {
-	return m.listAuthors(qryListAuthors)
-}
-
-// ListAuthorsByCategoryID returns author list by category id
-func (m *Model) ListAuthorsByCategoryID(categoryID int) ([]*model.Author, error) {
-	return m.listAuthors(qryListAuthorsByCategoryID, categoryID)
-}
-
-// ListAuthorsByRoleID returns author list by role id
-func (m *Model) ListAuthorsByRoleID(roleID int) ([]*model.Author, error) {
-	return m.listAuthors(qryListAuthorsByRoleID, roleID)
+//ListAuthorsByIDs returns filtered author list
+func (m *Model) ListAuthorsByIDs(categoryID, roleID *int) ([]*model.Author, error) {
+	qry := `SELECT DISTINCT author.id, author.name FROM author`
+	where := []string{"1"}
+	vals := []interface{}{}
+	if categoryID != nil || roleID != nil {
+		qry += ` JOIN authorship ON (authorship.author_id = author.id)`
+		if categoryID != nil {
+			qry += ` JOIN book ON (authorship.book_id = book.id) JOIN series ON (book.series_id = series.id)`
+			where = append(where, `series.category_id = ?`)
+			vals = append(vals, *categoryID)
+		}
+		if roleID != nil {
+			where = append(where, `authorship.role_id = ?`)
+			vals = append(vals, *roleID)
+		}
+	}
+	return m.listAuthors(qry+` WHERE `+strings.Join(where, " AND "), vals...)
 }
 
 // InsertAuthor inserts author

@@ -2,6 +2,7 @@ package sql
 
 import (
 	"database/sql"
+	"strings"
 
 	"github.com/NBR41/go-testgoa/internal/model"
 )
@@ -9,7 +10,6 @@ import (
 const (
 	qryGetEditorByID   = `SELECT id, name FROM editor WHERE id = ?`
 	qryGetEditorByName = `SELECT id, name FROM editor WHERE name = ?`
-	qryListEditors     = `SELECT id, name FROM editor`
 	qryInsertEditor    = `
 INSERT INTO editor (id, name, create_ts, update_ts)
 VALUES (null, ?, NOW(), NOW())
@@ -62,9 +62,25 @@ func (m *Model) GetEditorByName(name string) (*model.Editor, error) {
 	return m.getEditor(qryGetEditorByName, name)
 }
 
-// ListEditors list editors
-func (m *Model) ListEditors() ([]*model.Editor, error) {
-	return m.listEditors(qryListEditors)
+//ListEditorsByIDs list editors by print id or series id
+func (m *Model) ListEditorsByIDs(printID, seriesID *int) ([]*model.Editor, error) {
+	qry := `SELECT DISTINCT editor.id, editor.name FROM editor`
+	where := []string{"1"}
+	vals := []interface{}{}
+
+	if printID != nil || seriesID != nil {
+		qry += ` JOIN collection ON (collection.editor_id = editor.id) JOIN edition ON (edition.collection_id = collection.id)`
+		if printID != nil {
+			where = append(where, `edition.print_id = ?`)
+			vals = append(vals, *printID)
+		}
+		if seriesID != nil {
+			qry += ` JOIN book ON (edition.book_id = book.id)`
+			where = append(where, `book.series_id = ?`)
+			vals = append(vals, *seriesID)
+		}
+	}
+	return m.listEditors(qry+` WHERE `+strings.Join(where, " AND "), vals...)
 }
 
 // InsertEditor inserts editor

@@ -6,15 +6,15 @@ import (
 
 const (
 	qryListOwnershipsByUserID = `
-SELECT b.id, b.isbn, b.name
-FROM ownership u
-JOIN books b ON (u.book_id = b.id)
-WHERE user_id = ?`
+SELECT books.id, books.isbn, books.name
+FROM ownership
+JOIN book ON (ownership.book_id = book.id)
+WHERE ownership.user_id = ?`
 	qryGetOwnership = `
-SELECT b.id, b.isbn, b.name, b.series_id
-FROM ownership u
-JOIN books b ON (u.book_id = b.id)
-WHERE u.user_id = ? AND b.id = ?`
+SELECT book.id, book.isbn, book.name, book.series_id
+FROM ownership
+JOIN book ON (ownership.book_id = book.id)
+WHERE ownership.user_id = ? AND book.id = ?`
 	qryInsertOwnership = `
 INSERT INTO ownership (user_id, book_id, create_ts, update_ts)
 VALUES (?, ?, NOW(), NOW())

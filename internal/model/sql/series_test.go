@@ -109,114 +109,19 @@ func TestGetSeriesByName(t *testing.T) {
 		}
 	}
 }
-func TestListSeries(t *testing.T) {
+
+func TestListSeriesByIDs(t *testing.T) {
+	var authorID, categoryID, classID, roleID int = 1, 2, 3, 4
 	db, mock, err := sqlmock.New()
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := escapeQuery(qryListSeries)
+	qry := escapeQuery(`SELECT DISTINCT series.id, series.name, category.id, category.name FROM series JOIN category ON (series.category_id = category.id) WHERE 1`)
 	mock.ExpectQuery(qry).WillReturnError(errors.New("query error"))
-	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "eid", "ename"}).AddRow("foo", "bar", "baz", "qux"))
-	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "eid", "ename"}).AddRow(1, "foo", 2, "bar").RowError(0, errors.New("scan error")))
-	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "eid", "ename"}).AddRow(1, "foo", 2, "bar"))
-
-	m, _ := New(ConnGetter(func() (*sql.DB, error) {
-		return db, nil
-	}), nil)
-
-	tests := []struct {
-		desc string
-		exp  []*model.Series
-		err  error
-	}{
-		{"query error", nil, errors.New("query error")},
-		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
-		{"scan error", nil, errors.New("scan error")},
-		{"valid", []*model.Series{&model.Series{ID: 1, Name: "foo", CategoryID: 2, Category: &model.Category{ID: 2, Name: "bar"}}}, nil},
-	}
-
-	for i := range tests {
-		v, err := m.ListSeries()
-		if err != nil {
-			if tests[i].err == nil {
-				t.Errorf("unexpected error for [%s], [%v]", tests[i].desc, err)
-				continue
-			}
-			if tests[i].err.Error() != err.Error() {
-				t.Errorf("unexpected error for [%s], exp [%v] got [%v]", tests[i].desc, tests[i].err, err)
-				continue
-			}
-			continue
-		}
-
-		if tests[i].err != nil {
-			t.Errorf("expecting error for [%s]", tests[i].desc)
-		}
-		if diff := pretty.Compare(v, tests[i].exp); diff != "" {
-			t.Errorf("unexpected value for [%s]\n%s", tests[i].desc, diff)
-		}
-	}
-}
-
-func TestListSeriesByIDs1(t *testing.T) {
-	db, mock, err := sqlmock.New()
-	if err != nil {
-		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
-	}
-	qry := escapeQuery(qryListSeries)
-	mock.ExpectQuery(qry).WillReturnError(errors.New("query error"))
-	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "eid", "ename"}).AddRow("foo", "bar", "baz", "qux"))
-	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "eid", "ename"}).AddRow(1, "foo", 2, "bar").RowError(0, errors.New("scan error")))
-	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "eid", "ename"}).AddRow(1, "foo", 2, "bar"))
-
-	m, _ := New(ConnGetter(func() (*sql.DB, error) {
-		return db, nil
-	}), nil)
-
-	tests := []struct {
-		desc string
-		exp  []*model.Series
-		err  error
-	}{
-		{"query error", nil, errors.New("query error")},
-		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
-		{"scan error", nil, errors.New("scan error")},
-		{"valid", []*model.Series{&model.Series{ID: 1, Name: "foo", CategoryID: 2, Category: &model.Category{ID: 2, Name: "bar"}}}, nil},
-	}
-
-	for i := range tests {
-		v, err := m.ListSeriesByIDs(nil, nil, nil, nil)
-		if err != nil {
-			if tests[i].err == nil {
-				t.Errorf("unexpected error for [%s], [%v]", tests[i].desc, err)
-				continue
-			}
-			if tests[i].err.Error() != err.Error() {
-				t.Errorf("unexpected error for [%s], exp [%v] got [%v]", tests[i].desc, tests[i].err, err)
-				continue
-			}
-			continue
-		}
-
-		if tests[i].err != nil {
-			t.Errorf("expecting error for [%s]", tests[i].desc)
-		}
-		if diff := pretty.Compare(v, tests[i].exp); diff != "" {
-			t.Errorf("unexpected value for [%s]\n%s", tests[i].desc, diff)
-		}
-	}
-}
-
-func TestListSeriesByIDs2(t *testing.T) {
-	db, mock, err := sqlmock.New()
-	if err != nil {
-		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
-	}
-	var authorID, roleID, categoryID, classID int = 1, 2, 3, 4
-	qry := escapeQuery(`SELECT DISTINCT s.id, s.name, c.id, c.name FROM series s JOIN category c ON (c.id = s.series_id) JOIN book b ON (b.series_id = s.id) JOIN authorship a ON (a.book_id = b.id) JOIN classification cl ON (cl.series_id = s.id) WHERE a.author_id = ? AND a.role_id = ? AND cl.class_id = ? AND c.id = ?`)
-	mock.ExpectQuery(qry).WithArgs(authorID, roleID, classID, categoryID).WillReturnError(errors.New("query error"))
-	mock.ExpectQuery(qry).WithArgs(authorID, roleID, classID, categoryID).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "sid", "sname"}).AddRow("foo", "bar", "baz", "qux"))
-	mock.ExpectQuery(qry).WithArgs(authorID, roleID, classID, categoryID).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "sid", "sname"}).AddRow(1, "foo", 2, "bar").RowError(0, errors.New("scan error")))
+	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "sid", "sname"}).AddRow("foo", "bar", "baz", "qux"))
+	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "sid", "sname"}).AddRow(1, "foo", 2, "bar").RowError(0, errors.New("scan error")))
+	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "sid", "sname"}).AddRow(1, "foo", 2, "bar"))
+	qry = escapeQuery(`SELECT DISTINCT series.id, series.name, category.id, category.name FROM series JOIN category ON (series.category_id = category.id) JOIN book ON (book.series_id = series.id) JOIN authorship ON (authorship.book_id = book.id) JOIN classification ON (classification.series_id = series.id) WHERE 1 AND authorship.author_id = ? AND authorship.role_id = ? AND classification.class_id = ? AND category.id = ?`)
 	mock.ExpectQuery(qry).WithArgs(authorID, roleID, classID, categoryID).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "sid", "sname"}).AddRow(1, "foo", 2, "bar"))
 
 	m, _ := New(ConnGetter(func() (*sql.DB, error) {
@@ -224,18 +129,20 @@ func TestListSeriesByIDs2(t *testing.T) {
 	}), nil)
 
 	tests := []struct {
-		desc string
-		exp  []model.Series
-		err  error
+		desc   string
+		params []*int
+		exp    []model.Series
+		err    error
 	}{
-		{"query error", nil, errors.New("query error")},
-		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
-		{"scan error", nil, errors.New("scan error")},
-		{"valid", []model.Series{model.Series{ID: 1, Name: "foo", CategoryID: 2, Category: &model.Category{ID: 2, Name: "bar"}}}, nil},
+		{"query error", []*int{nil, nil, nil, nil}, nil, errors.New("query error")},
+		{"scan conversion error", []*int{nil, nil, nil, nil}, nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
+		{"scan error", []*int{nil, nil, nil, nil}, nil, errors.New("scan error")},
+		{"valid", []*int{nil, nil, nil, nil}, []model.Series{model.Series{ID: 1, Name: "foo", CategoryID: 2, Category: &model.Category{ID: 2, Name: "bar"}}}, nil},
+		{"valid with filters", []*int{&authorID, &categoryID, &classID, &roleID}, []model.Series{model.Series{ID: 1, Name: "foo", CategoryID: 2, Category: &model.Category{ID: 2, Name: "bar"}}}, nil},
 	}
 
 	for i := range tests {
-		v, err := m.ListSeriesByIDs(&authorID, &roleID, &categoryID, &classID)
+		v, err := m.ListSeriesByIDs(tests[i].params[0], tests[i].params[1], tests[i].params[2], tests[i].params[3])
 		if err != nil {
 			if tests[i].err == nil {
 				t.Errorf("unexpected error for [%s], [%v]", tests[i].desc, err)
@@ -257,83 +164,39 @@ func TestListSeriesByIDs2(t *testing.T) {
 	}
 }
 
-func TestListSeriesByCollectionID(t *testing.T) {
+func TestListSeriesByEditionIDs(t *testing.T) {
+	var collectionID, editorID, printID int = 1, 2, 3
 	db, mock, err := sqlmock.New()
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
-	qry := escapeQuery(qryListSeriesByCollectionID)
-	mock.ExpectQuery(qry).WithArgs(2).WillReturnError(errors.New("query error"))
-	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "cid", "cname"}).AddRow("foo", "bar", "baz", "qux"))
-	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "cid", "ename"}).AddRow(1, "foo", 2, "bar").RowError(0, errors.New("scan error")))
-	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "cid", "cname"}).AddRow(1, "foo", 2, "bar"))
+	qry := escapeQuery(`SELECT DISTINCT series.id, series.name, category.id, category.name FROM series JOIN category ON (series.category_id = category.id) WHERE 1`)
+	mock.ExpectQuery(qry).WillReturnError(errors.New("query error"))
+	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "sid", "sname"}).AddRow("foo", "bar", "baz", "qux"))
+	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "sid", "sname"}).AddRow(1, "foo", 2, "bar").RowError(0, errors.New("scan error")))
+	mock.ExpectQuery(qry).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "sid", "sname"}).AddRow(1, "foo", 2, "bar"))
+	qry = escapeQuery(`SELECT DISTINCT series.id, series.name, category.id, category.name FROM series JOIN category ON (series.category_id = category.id) JOIN book ON (book.series_id = series.id) JOIN edition ON (edition.book_id = book.id) JOIN collection ON (edition.collection_id = collection.id) WHERE 1 AND edition.collection_id = ? AND collection.editor_id = ? AND edition.print_id = ?`)
+	mock.ExpectQuery(qry).WithArgs(collectionID, editorID, printID).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "sid", "sname"}).AddRow(1, "foo", 2, "bar"))
 
 	m, _ := New(ConnGetter(func() (*sql.DB, error) {
 		return db, nil
 	}), nil)
 
 	tests := []struct {
-		desc string
-		exp  []*model.Series
-		err  error
+		desc   string
+		params []*int
+		exp    []model.Series
+		err    error
 	}{
-		{"query error", nil, errors.New("query error")},
-		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
-		{"scan error", nil, errors.New("scan error")},
-		{"valid", []*model.Series{&model.Series{ID: 1, Name: "foo", CategoryID: 2, Category: &model.Category{ID: 2, Name: "bar"}}}, nil},
+		{"query error", []*int{nil, nil, nil}, nil, errors.New("query error")},
+		{"scan conversion error", []*int{nil, nil, nil}, nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
+		{"scan error", []*int{nil, nil, nil}, nil, errors.New("scan error")},
+		{"valid", []*int{nil, nil, nil}, []model.Series{model.Series{ID: 1, Name: "foo", CategoryID: 2, Category: &model.Category{ID: 2, Name: "bar"}}}, nil},
+		{"valid with filters", []*int{&collectionID, &editorID, &printID}, []model.Series{model.Series{ID: 1, Name: "foo", CategoryID: 2, Category: &model.Category{ID: 2, Name: "bar"}}}, nil},
 	}
 
 	for i := range tests {
-		v, err := m.ListSeriesByCollectionID(2)
-		if err != nil {
-			if tests[i].err == nil {
-				t.Errorf("unexpected error for [%s], [%v]", tests[i].desc, err)
-				continue
-			}
-			if tests[i].err.Error() != err.Error() {
-				t.Errorf("unexpected error for [%s], exp [%v] got [%v]", tests[i].desc, tests[i].err, err)
-				continue
-			}
-			continue
-		}
-
-		if tests[i].err != nil {
-			t.Errorf("expecting error for [%s]", tests[i].desc)
-		}
-		if diff := pretty.Compare(v, tests[i].exp); diff != "" {
-			t.Errorf("unexpected value for [%s]\n%s", tests[i].desc, diff)
-		}
-	}
-}
-
-func TestListSeriesByCollectionIDPrintID(t *testing.T) {
-	db, mock, err := sqlmock.New()
-	if err != nil {
-		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
-	}
-	qry := escapeQuery(qryListSeriesByCollectionID)
-	mock.ExpectQuery(qry).WithArgs(2, 3).WillReturnError(errors.New("query error"))
-	mock.ExpectQuery(qry).WithArgs(2, 3).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "cid", "cname"}).AddRow("foo", "bar", "baz", "qux"))
-	mock.ExpectQuery(qry).WithArgs(2, 3).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "cid", "ename"}).AddRow(1, "foo", 2, "bar").RowError(0, errors.New("scan error")))
-	mock.ExpectQuery(qry).WithArgs(2, 3).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "cid", "cname"}).AddRow(1, "foo", 2, "bar"))
-
-	m, _ := New(ConnGetter(func() (*sql.DB, error) {
-		return db, nil
-	}), nil)
-
-	tests := []struct {
-		desc string
-		exp  []*model.Series
-		err  error
-	}{
-		{"query error", nil, errors.New("query error")},
-		{"scan conversion error", nil, errors.New(`sql: Scan error on column index 0, name "id": converting driver.Value type string ("foo") to a int64: invalid syntax`)},
-		{"scan error", nil, errors.New("scan error")},
-		{"valid", []*model.Series{&model.Series{ID: 1, Name: "foo", CategoryID: 2, Category: &model.Category{ID: 2, Name: "bar"}}}, nil},
-	}
-
-	for i := range tests {
-		v, err := m.ListSeriesByCollectionIDPrintID(2, 3)
+		v, err := m.ListSeriesByEditionIDs(tests[i].params[0], tests[i].params[1], tests[i].params[2])
 		if err != nil {
 			if tests[i].err == nil {
 				t.Errorf("unexpected error for [%s], [%v]", tests[i].desc, err)

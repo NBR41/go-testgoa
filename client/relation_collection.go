@@ -79,8 +79,8 @@ func (c *Client) NewListBooksByPrintRelationCollectionRequest(ctx context.Contex
 	return req, nil
 }
 
-// ListBooksByPrintsSeriesRelationCollectionPath computes a request path to the listBooksByPrintsSeries action of relationCollection.
-func ListBooksByPrintsSeriesRelationCollectionPath(collectionID int, printID int, seriesID int) string {
+// ListBooksByPrintSeriesRelationCollectionPath computes a request path to the listBooksByPrintSeries action of relationCollection.
+func ListBooksByPrintSeriesRelationCollectionPath(collectionID int, printID int, seriesID int) string {
 	param0 := strconv.Itoa(collectionID)
 	param1 := strconv.Itoa(printID)
 	param2 := strconv.Itoa(seriesID)
@@ -89,16 +89,16 @@ func ListBooksByPrintsSeriesRelationCollectionPath(collectionID int, printID int
 }
 
 // List books by collection, prints and series
-func (c *Client) ListBooksByPrintsSeriesRelationCollection(ctx context.Context, path string) (*http.Response, error) {
-	req, err := c.NewListBooksByPrintsSeriesRelationCollectionRequest(ctx, path)
+func (c *Client) ListBooksByPrintSeriesRelationCollection(ctx context.Context, path string) (*http.Response, error) {
+	req, err := c.NewListBooksByPrintSeriesRelationCollectionRequest(ctx, path)
 	if err != nil {
 		return nil, err
 	}
 	return c.Client.Do(ctx, req)
 }
 
-// NewListBooksByPrintsSeriesRelationCollectionRequest create the request corresponding to the listBooksByPrintsSeries action endpoint of the relationCollection resource.
-func (c *Client) NewListBooksByPrintsSeriesRelationCollectionRequest(ctx context.Context, path string) (*http.Request, error) {
+// NewListBooksByPrintSeriesRelationCollectionRequest create the request corresponding to the listBooksByPrintSeries action endpoint of the relationCollection resource.
+func (c *Client) NewListBooksByPrintSeriesRelationCollectionRequest(ctx context.Context, path string) (*http.Request, error) {
 	scheme := c.Scheme
 	if scheme == "" {
 		scheme = "http"

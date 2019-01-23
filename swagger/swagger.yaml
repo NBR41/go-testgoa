@@ -6,11 +6,11 @@ consumes:
 definitions:
   AddOwnershipsPayload:
     example:
-      book_isbn: "4"
+      book_isbn: ekjw
     properties:
       book_isbn:
         description: Book ISBN
-        example: "4"
+        example: ekjw
         maxLength: 128
         minLength: 1
         type: string
@@ -20,17 +20,17 @@ definitions:
     type: object
   AuthenticatePayload:
     example:
-      login: vesdk
-      password: atgb05ip23
+      login: apetnx1
+      password: 2j4z5wm
     properties:
       login:
         description: email or nickname
-        example: vesdk
+        example: apetnx1
         minLength: 5
         type: string
       password:
         description: user password
-        example: atgb05ip23
+        example: 2j4z5wm
         maxLength: 32
         minLength: 1
         type: string
@@ -426,6 +426,11 @@ definitions:
         class_name: 5x6o2
         href: Nostrum rerum adipisci.
       href: Aut libero aut libero.
+    - class:
+        class_id: 1
+        class_name: 5x6o2
+        href: Nostrum rerum adipisci.
+      href: Aut libero aut libero.
     items:
       $ref: '#/definitions/Classification'
     title: 'Mediatype identifier: application/vnd.classification+json; type=collection;
@@ -484,6 +489,14 @@ definitions:
         href: Animi ut atque.
       editor_id: 1
       href: Voluptatem eaque maxime voluptatum.
+    - collection_id: 1
+      collection_name: m194r3n
+      editor:
+        editor_id: 1
+        editor_name: x3py7was
+        href: Animi ut atque.
+      editor_id: 1
+      href: Voluptatem eaque maxime voluptatum.
     items:
       $ref: '#/definitions/Collection'
     title: 'Mediatype identifier: application/vnd.collection+json; type=collection;
@@ -532,19 +545,19 @@ definitions:
     type: object
   CreateBooksPayload:
     example:
-      book_isbn: q00qlg5o2w
-      book_name: petnx10
+      book_isbn: 859xjhdbe
+      book_name: kgwh0vj
       series_id: 1
     properties:
       book_isbn:
         description: Book ISBN
-        example: q00qlg5o2w
+        example: 859xjhdbe
         maxLength: 128
         minLength: 1
         type: string
       book_name:
         description: Book Name
-        example: petnx10
+        example: kgwh0vj
         maxLength: 128
         minLength: 1
         type: string
@@ -561,11 +574,11 @@ definitions:
     type: object
   CreateCategoriesPayload:
     example:
-      category_name: mg3pur1
+      category_name: 3pur1t3p3
     properties:
       category_name:
         description: Category Name (Shonen/Shojo/Seinen)
-        example: mg3pur1
+        example: 3pur1t3p3
         maxLength: 128
         minLength: 1
         type: string
@@ -575,11 +588,11 @@ definitions:
     type: object
   CreateClassesPayload:
     example:
-      class_name: yc5y2n0j5
+      class_name: 66yc5y2n0j
     properties:
       class_name:
         description: Class Name (Thriller/Romance/...)
-        example: yc5y2n0j5
+        example: 66yc5y2n0j
         maxLength: 128
         minLength: 1
         type: string
@@ -602,12 +615,12 @@ definitions:
     type: object
   CreateCollectionsPayload:
     example:
-      collection_name: n84arf
+      collection_name: 4arft37
       editor_id: 1
     properties:
       collection_name:
         description: Collection Name (Découverte/Shonen)
-        example: n84arf
+        example: 4arft37
         maxLength: 128
         minLength: 1
         type: string
@@ -650,11 +663,11 @@ definitions:
     type: object
   CreateEditorsPayload:
     example:
-      editor_name: 6r3ox
+      editor_name: t6
     properties:
       editor_name:
         description: Editor Name (Glénat/Delcourt)
-        example: 6r3ox
+        example: t6
         maxLength: 128
         minLength: 1
         type: string
@@ -691,11 +704,11 @@ definitions:
     type: object
   CreateRolesPayload:
     example:
-      role_name: 859xjhdbe
+      role_name: i7lxy5
     properties:
       role_name:
         description: Role Name (Author/Scenarist/Cartoonist)
-        example: 859xjhdbe
+        example: i7lxy5
         maxLength: 128
         minLength: 1
         type: string
@@ -706,7 +719,7 @@ definitions:
   CreateSeriesPayload:
     example:
       category_id: 1
-      series_name: n1l
+      series_name: pdq00qlg
     properties:
       category_id:
         description: Unique Category ID
@@ -715,7 +728,7 @@ definitions:
         type: integer
       series_name:
         description: Series Name (Akira/Dragon ball)
-        example: n1l
+        example: pdq00qlg
         maxLength: 128
         minLength: 1
         type: string
@@ -803,72 +816,6 @@ definitions:
     description: EditionCollection is the media type for an array of Edition (default
       view)
     example:
-    - book:
-        book_id: 1
-        book_isbn: 8y
-        book_name: gerdmc
-        href: Quia recusandae.
-        series:
-          category:
-            category_id: 1
-            category_name: j6033t41m5
-            href: Inventore error.
-          category_id: 1
-          href: Eligendi omnis voluptas.
-          series_id: 1
-          series_name: psp0
-        series_id: 1
-      book_id: 1
-      collection:
-        collection_id: 1
-        collection_name: m194r3n
-        editor:
-          editor_id: 1
-          editor_name: x3py7was
-          href: Animi ut atque.
-        editor_id: 1
-        href: Voluptatem eaque maxime voluptatum.
-      collection_id: 1
-      edition_id: 1
-      href: Impedit vero corporis quas.
-      print:
-        href: Esse voluptatem laudantium vel.
-        print_id: 1
-        print_name: 94atz
-      print_id: 1
-    - book:
-        book_id: 1
-        book_isbn: 8y
-        book_name: gerdmc
-        href: Quia recusandae.
-        series:
-          category:
-            category_id: 1
-            category_name: j6033t41m5
-            href: Inventore error.
-          category_id: 1
-          href: Eligendi omnis voluptas.
-          series_id: 1
-          series_name: psp0
-        series_id: 1
-      book_id: 1
-      collection:
-        collection_id: 1
-        collection_name: m194r3n
-        editor:
-          editor_id: 1
-          editor_name: x3py7was
-          href: Animi ut atque.
-        editor_id: 1
-        href: Voluptatem eaque maxime voluptatum.
-      collection_id: 1
-      edition_id: 1
-      href: Impedit vero corporis quas.
-      print:
-        href: Esse voluptatem laudantium vel.
-        print_id: 1
-        print_name: 94atz
-      print_id: 1
     - book:
         book_id: 1
         book_isbn: 8y
@@ -1035,6 +982,24 @@ definitions:
       book_id: 1
       href: In omnis reiciendis maxime quia dolorem nobis.
       user_id: 1
+    - book:
+        book_id: 1
+        book_isbn: 8y
+        book_name: gerdmc
+        href: Quia recusandae.
+        series:
+          category:
+            category_id: 1
+            category_name: j6033t41m5
+            href: Inventore error.
+          category_id: 1
+          href: Eligendi omnis voluptas.
+          series_id: 1
+          series_name: psp0
+        series_id: 1
+      book_id: 1
+      href: In omnis reiciendis maxime quia dolorem nobis.
+      user_id: 1
     items:
       $ref: '#/definitions/Ownership'
     title: 'Mediatype identifier: application/vnd.ownership+json; type=collection;
@@ -1042,18 +1007,18 @@ definitions:
     type: array
   PasswordChangePayload:
     example:
-      password: kjwr4nt
-      token: mp
+      password: "n"
+      token: vmp
     properties:
       password:
         description: user password
-        example: kjwr4nt
+        example: "n"
         maxLength: 32
         minLength: 1
         type: string
       token:
         description: token
-        example: mp
+        example: vmp
         minLength: 1
         type: string
     required:
@@ -1134,9 +1099,6 @@ definitions:
   RoleCollection:
     description: RoleCollection is the media type for an array of Role (default view)
     example:
-    - href: Dicta molestias doloribus exercitationem molestiae sed.
-      role_id: 1
-      role_name: ol5djbut
     - href: Dicta molestias doloribus exercitationem molestiae sed.
       role_id: 1
       role_name: ol5djbut
@@ -1250,12 +1212,12 @@ definitions:
     type: object
   UpdateBooksPayload:
     example:
-      book_name: 4z
+      book_name: n1l
       series_id: 1
     properties:
       book_name:
         description: Book Name
-        example: 4z
+        example: n1l
         maxLength: 128
         minLength: 1
         type: string
@@ -1268,11 +1230,11 @@ definitions:
     type: object
   UpdateCategoriesPayload:
     example:
-      category_name: 3p3flyhi16
+      category_name: lyhi
     properties:
       category_name:
         description: Category Name (Shonen/Shojo/Seinen)
-        example: 3p3flyhi16
+        example: lyhi
         maxLength: 128
         minLength: 1
         type: string
@@ -1282,11 +1244,11 @@ definitions:
     type: object
   UpdateClassesPayload:
     example:
-      class_name: q6ak74
+      class_name: 5q6ak74z
     properties:
       class_name:
         description: Class Name (Thriller/Romance/...)
-        example: q6ak74
+        example: 5q6ak74z
         maxLength: 128
         minLength: 1
         type: string
@@ -1296,12 +1258,12 @@ definitions:
     type: object
   UpdateCollectionsPayload:
     example:
-      collection_name: 7e1a9v
+      collection_name: a9vhroe4
       editor_id: 1
     properties:
       collection_name:
         description: Collection Name (Découverte/Shonen)
-        example: 7e1a9v
+        example: a9vhroe4
         maxLength: 128
         minLength: 1
         type: string
@@ -1314,11 +1276,11 @@ definitions:
     type: object
   UpdateEditorsPayload:
     example:
-      editor_name: 6vyz
+      editor_name: yzo4
     properties:
       editor_name:
         description: Editor Name (Glénat/Delcourt)
-        example: 6vyz
+        example: yzo4
         maxLength: 128
         minLength: 1
         type: string
@@ -1342,11 +1304,11 @@ definitions:
     type: object
   UpdateRolesPayload:
     example:
-      role_name: kgwh0vj
+      role_name: ho2v7wul
     properties:
       role_name:
         description: Role Name (Author/Scenarist/Cartoonist)
-        example: kgwh0vj
+        example: ho2v7wul
         maxLength: 128
         minLength: 1
         type: string
@@ -1357,7 +1319,7 @@ definitions:
   UpdateSeriesPayload:
     example:
       category_id: 1
-      series_name: t
+      series_name: "2"
     properties:
       category_id:
         description: Unique Category ID
@@ -1366,7 +1328,7 @@ definitions:
         type: integer
       series_name:
         description: Series Name (Akira/Dragon ball)
-        example: t
+        example: "2"
         maxLength: 128
         minLength: 1
         type: string
@@ -1374,11 +1336,11 @@ definitions:
     type: object
   UpdateUsersPayload:
     example:
-      nickname: 0j8927
+      nickname: b05ip23
     properties:
       nickname:
         description: user nickname
-        example: 0j8927
+        example: b05ip23
         maxLength: 32
         minLength: 1
         type: string
@@ -1447,8 +1409,8 @@ definitions:
   UserCreatePayload:
     example:
       email: me@foo.bar
-      nickname: i7lxy5
-      password: ho2v7wul
+      nickname: 0j8927
+      password: vesdkxat
     properties:
       email:
         description: user email
@@ -1457,13 +1419,13 @@ definitions:
         type: string
       nickname:
         description: user nickname
-        example: i7lxy5
+        example: 0j8927
         maxLength: 32
         minLength: 1
         type: string
       password:
         description: user password
-        example: ho2v7wul
+        example: vesdkxat
         maxLength: 32
         minLength: 1
         type: string
@@ -1767,16 +1729,11 @@ paths:
         type: integer
       produces:
       - application/vnd.category+json; type=collection
-      - application/vnd.goa.error
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/CategoryCollection'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/error'
         "404":
           description: Not Found
         "500":
@@ -1806,17 +1763,12 @@ paths:
         required: true
         type: integer
       produces:
-      - application/vnd.goa.error
       - application/vnd.series+json; type=collection
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/SeriesCollection'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/error'
         "404":
           description: Not Found
         "500":
@@ -1841,16 +1793,11 @@ paths:
         type: integer
       produces:
       - application/vnd.class+json; type=collection
-      - application/vnd.goa.error
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/ClassCollection'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/error'
         "404":
           description: Not Found
         "500":
@@ -1880,17 +1827,12 @@ paths:
         required: true
         type: integer
       produces:
-      - application/vnd.goa.error
       - application/vnd.series+json; type=collection
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/SeriesCollection'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/error'
         "404":
           description: Not Found
         "500":
@@ -1914,17 +1856,12 @@ paths:
         required: true
         type: integer
       produces:
-      - application/vnd.goa.error
       - application/vnd.role+json; type=collection
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/RoleCollection'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/error'
         "404":
           description: Not Found
         "500":
@@ -1954,17 +1891,12 @@ paths:
         required: true
         type: integer
       produces:
-      - application/vnd.goa.error
       - application/vnd.series+json; type=collection
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/SeriesCollection'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/error'
         "404":
           description: Not Found
         "500":
@@ -1988,17 +1920,12 @@ paths:
         required: true
         type: integer
       produces:
-      - application/vnd.goa.error
       - application/vnd.series+json; type=collection
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/SeriesCollection'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/error'
         "404":
           description: Not Found
         "500":
@@ -2066,8 +1993,6 @@ paths:
             $ref: '#/definitions/error'
         "401":
           description: Unauthorized
-        "404":
-          description: Not Found
         "422":
           description: Unprocessable Entity
         "500":
@@ -2500,16 +2425,11 @@ paths:
         type: integer
       produces:
       - application/vnd.author+json; type=collection
-      - application/vnd.goa.error
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/AuthorCollection'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/error'
         "404":
           description: Not Found
         "500":
@@ -2534,16 +2454,11 @@ paths:
         type: integer
       produces:
       - application/vnd.class+json; type=collection
-      - application/vnd.goa.error
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/ClassCollection'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/error'
         "404":
           description: Not Found
         "500":
@@ -2573,17 +2488,12 @@ paths:
         required: true
         type: integer
       produces:
-      - application/vnd.goa.error
       - application/vnd.series+json; type=collection
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/SeriesCollection'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/error'
         "404":
           description: Not Found
         "500":
@@ -2607,17 +2517,12 @@ paths:
         required: true
         type: integer
       produces:
-      - application/vnd.goa.error
       - application/vnd.series+json; type=collection
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/SeriesCollection'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/error'
         "404":
           description: Not Found
         "500":
@@ -2809,16 +2714,11 @@ paths:
         type: integer
       produces:
       - application/vnd.category+json; type=collection
-      - application/vnd.goa.error
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/CategoryCollection'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/error'
         "404":
           description: Not Found
         "500":
@@ -2848,17 +2748,12 @@ paths:
         required: true
         type: integer
       produces:
-      - application/vnd.goa.error
       - application/vnd.series+json; type=collection
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/SeriesCollection'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/error'
         "404":
           description: Not Found
         "500":
@@ -2882,17 +2777,12 @@ paths:
         required: true
         type: integer
       produces:
-      - application/vnd.goa.error
       - application/vnd.series+json; type=collection
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/SeriesCollection'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/error'
         "404":
           description: Not Found
         "500":
@@ -3084,16 +2974,11 @@ paths:
         type: integer
       produces:
       - application/vnd.book+json; type=collection
-      - application/vnd.goa.error
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/BookCollection'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/error'
         "404":
           description: Not Found
         "500":
@@ -3117,17 +3002,12 @@ paths:
         required: true
         type: integer
       produces:
-      - application/vnd.goa.error
       - application/vnd.print+json; type=collection
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/PrintCollection'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/error'
         "404":
           description: Not Found
         "500":
@@ -3158,16 +3038,11 @@ paths:
         type: integer
       produces:
       - application/vnd.book+json; type=collection
-      - application/vnd.goa.error
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/BookCollection'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/error'
         "404":
           description: Not Found
         "500":
@@ -3197,17 +3072,12 @@ paths:
         required: true
         type: integer
       produces:
-      - application/vnd.goa.error
       - application/vnd.series+json; type=collection
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/SeriesCollection'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/error'
         "404":
           description: Not Found
         "500":
@@ -3222,7 +3092,7 @@ paths:
   /collections/{collection_id}/prints/{print_id}/series/{series_id}/books:
     get:
       description: List books by collection, prints and series
-      operationId: relationCollection#listBooksByPrintsSeries
+      operationId: relationCollection#listBooksByPrintSeries
       parameters:
       - description: Unique Collection ID
         in: path
@@ -3244,16 +3114,11 @@ paths:
         type: integer
       produces:
       - application/vnd.book+json; type=collection
-      - application/vnd.goa.error
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/BookCollection'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/error'
         "404":
           description: Not Found
         "500":
@@ -3262,7 +3127,7 @@ paths:
           description: Service Unavailable
       schemes:
       - http
-      summary: listBooksByPrintsSeries relationCollection
+      summary: listBooksByPrintSeries relationCollection
       tags:
       - relationCollection
   /collections/{collection_id}/series:
@@ -3277,17 +3142,12 @@ paths:
         required: true
         type: integer
       produces:
-      - application/vnd.goa.error
       - application/vnd.series+json; type=collection
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/SeriesCollection'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/error'
         "404":
           description: Not Found
         "500":
@@ -3318,16 +3178,11 @@ paths:
         type: integer
       produces:
       - application/vnd.book+json; type=collection
-      - application/vnd.goa.error
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/BookCollection'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/error'
         "404":
           description: Not Found
         "500":
@@ -3357,17 +3212,12 @@ paths:
         required: true
         type: integer
       produces:
-      - application/vnd.goa.error
       - application/vnd.print+json; type=collection
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/PrintCollection'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/error'
         "404":
           description: Not Found
         "500":
@@ -3404,16 +3254,11 @@ paths:
         type: integer
       produces:
       - application/vnd.book+json; type=collection
-      - application/vnd.goa.error
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/BookCollection'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/error'
         "404":
           description: Not Found
         "500":
@@ -3735,6 +3580,1211 @@ paths:
       summary: update editors
       tags:
       - editors
+  /editors/{editor_id}/books:
+    get:
+      description: List books by editor
+      operationId: relationEditors#listBooks
+      parameters:
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooks relationEditors
+      tags:
+      - relationEditors
+  /editors/{editor_id}/collections:
+    get:
+      description: List collections by editor
+      operationId: relationEditors#listCollections
+      parameters:
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.collection+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/CollectionCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listCollections relationEditors
+      tags:
+      - relationEditors
+  /editors/{editor_id}/collections/{collection_id}/books:
+    get:
+      description: List books by editor-collection
+      operationId: relationEditorsCollections#listBooks
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooks relationEditorsCollections
+      tags:
+      - relationEditorsCollections
+  /editors/{editor_id}/collections/{collection_id}/collections:
+    get:
+      description: List prints by editor-collection
+      operationId: relationEditorsCollections#listPrints
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.print+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/PrintCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listPrints relationEditorsCollections
+      tags:
+      - relationEditorsCollections
+  /editors/{editor_id}/collections/{collection_id}/prints/{print_id}/books:
+    get:
+      description: List books by editor-collection-print
+      operationId: relationEditorsCollections#listBooksByPrint
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksByPrint relationEditorsCollections
+      tags:
+      - relationEditorsCollections
+  /editors/{editor_id}/collections/{collection_id}/prints/{print_id}/series:
+    get:
+      description: List series by editor-collection-print
+      operationId: relationEditorsCollections#listSeriesByPrint
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.series+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SeriesCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listSeriesByPrint relationEditorsCollections
+      tags:
+      - relationEditorsCollections
+  /editors/{editor_id}/collections/{collection_id}/prints/{print_id}/series/{series_id}/books:
+    get:
+      description: List books by editor-collection-print-series
+      operationId: relationEditorsCollections#listBooksByPrintSeries
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksByPrintSeries relationEditorsCollections
+      tags:
+      - relationEditorsCollections
+  /editors/{editor_id}/collections/{collection_id}/series:
+    get:
+      description: List series by editor-collection
+      operationId: relationEditorsCollections#listSeries
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.series+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SeriesCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listSeries relationEditorsCollections
+      tags:
+      - relationEditorsCollections
+  /editors/{editor_id}/collections/{collection_id}/series/{series_id}/books:
+    get:
+      description: List books by editor-collection-series
+      operationId: relationEditorsCollections#listBooksBySeries
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksBySeries relationEditorsCollections
+      tags:
+      - relationEditorsCollections
+  /editors/{editor_id}/collections/{collection_id}/series/{series_id}/prints:
+    get:
+      description: List prints by editor-collection-series
+      operationId: relationEditorsCollections#listPrintsBySeries
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.print+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/PrintCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listPrintsBySeries relationEditorsCollections
+      tags:
+      - relationEditorsCollections
+  /editors/{editor_id}/collections/{collection_id}/series/{series_id}/prints/{print_id}/books:
+    get:
+      description: List books by editor-collection-series-print
+      operationId: relationEditorsCollections#listBooksBySeriesPrint
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksBySeriesPrint relationEditorsCollections
+      tags:
+      - relationEditorsCollections
+  /editors/{editor_id}/prints:
+    get:
+      description: List prints by editor
+      operationId: relationEditors#listPrints
+      parameters:
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.print+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/PrintCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listPrints relationEditors
+      tags:
+      - relationEditors
+  /editors/{editor_id}/prints/{print_id}/books:
+    get:
+      description: List books by editor-print
+      operationId: relationEditorsPrints#listBooks
+      parameters:
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooks relationEditorsPrints
+      tags:
+      - relationEditorsPrints
+  /editors/{editor_id}/prints/{print_id}/collections:
+    get:
+      description: List collections by editor-print
+      operationId: relationEditorsPrints#listCollections
+      parameters:
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.collection+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/CollectionCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listCollections relationEditorsPrints
+      tags:
+      - relationEditorsPrints
+  /editors/{editor_id}/prints/{print_id}/collections/{collection_id}/books:
+    get:
+      description: List books by editor-print-collection
+      operationId: relationEditorsPrints#listBooksByCollection
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksByCollection relationEditorsPrints
+      tags:
+      - relationEditorsPrints
+  /editors/{editor_id}/prints/{print_id}/collections/{collection_id}/series:
+    get:
+      description: List series by editor-print-collection
+      operationId: relationEditorsPrints#listSeriesByCollection
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.series+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SeriesCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listSeriesByCollection relationEditorsPrints
+      tags:
+      - relationEditorsPrints
+  /editors/{editor_id}/prints/{print_id}/collections/{collection_id}/series/{series_id}/books:
+    get:
+      description: List books by editor-print-collection-series
+      operationId: relationEditorsPrints#listBooksByCollectionSeries
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksByCollectionSeries relationEditorsPrints
+      tags:
+      - relationEditorsPrints
+  /editors/{editor_id}/prints/{print_id}/series:
+    get:
+      description: List series by editor-print
+      operationId: relationEditorsPrints#listSeries
+      parameters:
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.series+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SeriesCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listSeries relationEditorsPrints
+      tags:
+      - relationEditorsPrints
+  /editors/{editor_id}/prints/{print_id}/series/{series_id}/books:
+    get:
+      description: List books by editor-print-series
+      operationId: relationEditorsPrints#listBooksBySeries
+      parameters:
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksBySeries relationEditorsPrints
+      tags:
+      - relationEditorsPrints
+  /editors/{editor_id}/prints/{print_id}/series/{series_id}/collections:
+    get:
+      description: List collections by editor-print-series
+      operationId: relationEditorsPrints#listCollectionsBySeries
+      parameters:
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.collection+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/CollectionCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listCollectionsBySeries relationEditorsPrints
+      tags:
+      - relationEditorsPrints
+  /editors/{editor_id}/prints/{print_id}/series/{series_id}/collections/{collection_id}/books:
+    get:
+      description: List books by editor-print-series-collection
+      operationId: relationEditorsPrints#listBooksBySeriesCollection
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksBySeriesCollection relationEditorsPrints
+      tags:
+      - relationEditorsPrints
+  /editors/{editor_id}/series:
+    get:
+      description: List series by editor
+      operationId: relationEditors#listSeries
+      parameters:
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.series+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SeriesCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listSeries relationEditors
+      tags:
+      - relationEditors
+  /editors/{editor_id}/series/{series_id}/books:
+    get:
+      description: List books by editor-series
+      operationId: relationEditorsSeries#listBooks
+      parameters:
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooks relationEditorsSeries
+      tags:
+      - relationEditorsSeries
+  /editors/{editor_id}/series/{series_id}/collections:
+    get:
+      description: List collections by editor-series
+      operationId: relationEditorsSeries#listCollections
+      parameters:
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.collection+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/CollectionCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listCollections relationEditorsSeries
+      tags:
+      - relationEditorsSeries
+  /editors/{editor_id}/series/{series_id}/collections/{collection_id}/books:
+    get:
+      description: List books by editor-series-collection
+      operationId: relationEditorsSeries#listBooksByCollection
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksByCollection relationEditorsSeries
+      tags:
+      - relationEditorsSeries
+  /editors/{editor_id}/series/{series_id}/collections/{collection_id}/prints:
+    get:
+      description: List prints by editor-series-collection
+      operationId: relationEditorsSeries#listPrintsByCollection
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.print+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/PrintCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listPrintsByCollection relationEditorsSeries
+      tags:
+      - relationEditorsSeries
+  /editors/{editor_id}/series/{series_id}/collections/{collection_id}/prints/{print_id}/books:
+    get:
+      description: List books by editor-series-collection-print
+      operationId: relationEditorsSeries#listBooksByCollectionPrint
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksByCollectionPrint relationEditorsSeries
+      tags:
+      - relationEditorsSeries
+  /editors/{editor_id}/series/{series_id}/prints:
+    get:
+      description: List prints by editor-series
+      operationId: relationEditorsSeries#listPrints
+      parameters:
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.print+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/PrintCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listPrints relationEditorsSeries
+      tags:
+      - relationEditorsSeries
+  /editors/{editor_id}/series/{series_id}/prints/{print_id}/books:
+    get:
+      description: List books by editor-series-print
+      operationId: relationEditorsSeries#listBooksByPrint
+      parameters:
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksByPrint relationEditorsSeries
+      tags:
+      - relationEditorsSeries
+  /editors/{editor_id}/series/{series_id}/prints/{print_id}/collections:
+    get:
+      description: List collections by editor-series-print
+      operationId: relationEditorsSeries#listCollectionsByPrint
+      parameters:
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.collection+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/CollectionCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listCollectionsByPrint relationEditorsSeries
+      tags:
+      - relationEditorsSeries
+  /editors/{editor_id}/series/{series_id}/prints/{print_id}/collections/{collection_id}/books:
+    get:
+      description: List books by editor-series-print-collection
+      operationId: relationEditorsSeries#listBooksByPrintCollection
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksByPrintCollection relationEditorsSeries
+      tags:
+      - relationEditorsSeries
   /password:
     get:
       description: Get password reset
@@ -3962,6 +5012,959 @@ paths:
       summary: update prints
       tags:
       - prints
+  /prints/{print_id}/books:
+    get:
+      description: List books by print
+      operationId: relationPrints#listBooks
+      parameters:
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooks relationPrints
+      tags:
+      - relationPrints
+  /prints/{print_id}/collections:
+    get:
+      description: List collections by print
+      operationId: relationPrints#listCollections
+      parameters:
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.collection+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/CollectionCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listCollections relationPrints
+      tags:
+      - relationPrints
+  /prints/{print_id}/collections/{collection_id}/books:
+    get:
+      description: List books by print-collection
+      operationId: relationPrintsCollections#listBooks
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooks relationPrintsCollections
+      tags:
+      - relationPrintsCollections
+  /prints/{print_id}/collections/{collection_id}/series:
+    get:
+      description: List series by print-collection
+      operationId: relationPrintsCollections#listSeries
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.series+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SeriesCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listSeries relationPrintsCollections
+      tags:
+      - relationPrintsCollections
+  /prints/{print_id}/collections/{collection_id}/series/{series_id}/books:
+    get:
+      description: List books by print-collection-series
+      operationId: relationPrintsCollections#listBooksBySeries
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksBySeries relationPrintsCollections
+      tags:
+      - relationPrintsCollections
+  /prints/{print_id}/editors:
+    get:
+      description: List editors by print
+      operationId: relationPrints#listEditors
+      parameters:
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.editor+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/EditorCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listEditors relationPrints
+      tags:
+      - relationPrints
+  /prints/{print_id}/editors/{editor_id}/books:
+    get:
+      description: List books by print-editor
+      operationId: relationPrintsEditors#listBooks
+      parameters:
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooks relationPrintsEditors
+      tags:
+      - relationPrintsEditors
+  /prints/{print_id}/editors/{editor_id}/collections:
+    get:
+      description: List collections by print-editor
+      operationId: relationPrintsEditors#listCollections
+      parameters:
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.collection+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/CollectionCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listCollections relationPrintsEditors
+      tags:
+      - relationPrintsEditors
+  /prints/{print_id}/editors/{editor_id}/collections/{collection_id}/books:
+    get:
+      description: List books by print-editor-collection
+      operationId: relationPrintsEditors#listBooksByCollection
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksByCollection relationPrintsEditors
+      tags:
+      - relationPrintsEditors
+  /prints/{print_id}/editors/{editor_id}/collections/{collection_id}/series:
+    get:
+      description: List series by print-editor-collection
+      operationId: relationPrintsEditors#listSeriesByCollection
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.series+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SeriesCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listSeriesByCollection relationPrintsEditors
+      tags:
+      - relationPrintsEditors
+  /prints/{print_id}/editors/{editor_id}/collections/{collection_id}/series/{series_id}/books:
+    get:
+      description: List books by print-editor-collection-series
+      operationId: relationPrintsEditors#listBooksByCollectionSeries
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksByCollectionSeries relationPrintsEditors
+      tags:
+      - relationPrintsEditors
+  /prints/{print_id}/editors/{editor_id}/series:
+    get:
+      description: List series by print-editor
+      operationId: relationPrintsEditors#listSeries
+      parameters:
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.series+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SeriesCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listSeries relationPrintsEditors
+      tags:
+      - relationPrintsEditors
+  /prints/{print_id}/editors/{editor_id}/series/{series_id}/books:
+    get:
+      description: List books by print-editor-series
+      operationId: relationPrintsEditors#listBooksBySeries
+      parameters:
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksBySeries relationPrintsEditors
+      tags:
+      - relationPrintsEditors
+  /prints/{print_id}/editors/{editor_id}/series/{series_id}/collections:
+    get:
+      description: List collections by print-editor-series
+      operationId: relationPrintsEditors#listCollectionsBySeries
+      parameters:
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.collection+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/CollectionCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listCollectionsBySeries relationPrintsEditors
+      tags:
+      - relationPrintsEditors
+  /prints/{print_id}/editors/{editor_id}/series/{series_id}/collections/{collection_id}/books:
+    get:
+      description: List books by print-editor-series-collection
+      operationId: relationPrintsEditors#listBooksBySeriesCollection
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksBySeriesCollection relationPrintsEditors
+      tags:
+      - relationPrintsEditors
+  /prints/{print_id}/series:
+    get:
+      description: List series by print
+      operationId: relationPrints#listSeries
+      parameters:
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.series+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/SeriesCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listSeries relationPrints
+      tags:
+      - relationPrints
+  /prints/{print_id}/series/{series_id}/books:
+    get:
+      description: List books by print-series
+      operationId: relationPrintsSeries#listBooks
+      parameters:
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooks relationPrintsSeries
+      tags:
+      - relationPrintsSeries
+  /prints/{print_id}/series/{series_id}/collections:
+    get:
+      description: List collections by print-series
+      operationId: relationPrintsSeries#listCollections
+      parameters:
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.collection+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/CollectionCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listCollections relationPrintsSeries
+      tags:
+      - relationPrintsSeries
+  /prints/{print_id}/series/{series_id}/collections/{collection_id}/books:
+    get:
+      description: List books by print-series-collection
+      operationId: relationPrintsSeries#listBooksByCollection
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksByCollection relationPrintsSeries
+      tags:
+      - relationPrintsSeries
+  /prints/{print_id}/series/{series_id}/collections/{collection_id}/editors:
+    get:
+      description: List editors by print-series-collection
+      operationId: relationPrintsSeries#listEditorsByCollection
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.editor+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/EditorCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listEditorsByCollection relationPrintsSeries
+      tags:
+      - relationPrintsSeries
+  /prints/{print_id}/series/{series_id}/collections/{collection_id}/editors/{editor_id}/books:
+    get:
+      description: List books by print-series-collection-editor
+      operationId: relationPrintsSeries#listBooksByCollectionEditor
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksByCollectionEditor relationPrintsSeries
+      tags:
+      - relationPrintsSeries
+  /prints/{print_id}/series/{series_id}/editors:
+    get:
+      description: List editors by print-series
+      operationId: relationPrintsSeries#listEditors
+      parameters:
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.editor+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/EditorCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listEditors relationPrintsSeries
+      tags:
+      - relationPrintsSeries
+  /prints/{print_id}/series/{series_id}/editors/{editor_id}/books:
+    get:
+      description: List books by print-series-editor
+      operationId: relationPrintsSeries#listBooksByEditor
+      parameters:
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksByEditor relationPrintsSeries
+      tags:
+      - relationPrintsSeries
+  /prints/{print_id}/series/{series_id}/editors/{editor_id}/collections:
+    get:
+      description: List collections by print-series-editor
+      operationId: relationPrintsSeries#listCollectionsByEditor
+      parameters:
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.collection+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/CollectionCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listCollectionsByEditor relationPrintsSeries
+      tags:
+      - relationPrintsSeries
+  /prints/{print_id}/series/{series_id}/editors/{editor_id}/collections/{collection_id}/books:
+    get:
+      description: List books by print-series-editor-collection
+      operationId: relationPrintsSeries#listBooksByEditorCollection
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksByEditorCollection relationPrintsSeries
+      tags:
+      - relationPrintsSeries
   /roles:
     get:
       description: List roles
@@ -4142,16 +6145,11 @@ paths:
         type: integer
       produces:
       - application/vnd.author+json; type=collection
-      - application/vnd.goa.error
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/AuthorCollection'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/error'
         "404":
           description: Not Found
         "500":
@@ -4181,17 +6179,12 @@ paths:
         required: true
         type: integer
       produces:
-      - application/vnd.goa.error
       - application/vnd.series+json; type=collection
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/SeriesCollection'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/error'
         "404":
           description: Not Found
         "500":
@@ -4370,6 +6363,35 @@ paths:
       summary: update series
       tags:
       - series
+  /series/{series_id}/books:
+    get:
+      description: List books by series
+      operationId: relationSeries#listBooks
+      parameters:
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooks relationSeries
+      tags:
+      - relationSeries
   /series/{series_id}/classifications:
     get:
       description: List series classes
@@ -4538,6 +6560,801 @@ paths:
       summary: show classifications
       tags:
       - classifications
+  /series/{series_id}/collections:
+    get:
+      description: List collections by series
+      operationId: relationSeries#listCollections
+      parameters:
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.collection+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/CollectionCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listCollections relationSeries
+      tags:
+      - relationSeries
+  /series/{series_id}/collections/{collection_id}/books:
+    get:
+      description: List books by series-collection
+      operationId: relationSeriesCollections#listBooks
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooks relationSeriesCollections
+      tags:
+      - relationSeriesCollections
+  /series/{series_id}/collections/{collection_id}/prints:
+    get:
+      description: List prints by series-collection
+      operationId: relationSeriesCollections#listPrints
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.print+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/PrintCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listPrints relationSeriesCollections
+      tags:
+      - relationSeriesCollections
+  /series/{series_id}/collections/{collection_id}/prints/{print_id}/books:
+    get:
+      description: List books by series-collection-print
+      operationId: relationSeriesCollections#listBooksByPrint
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksByPrint relationSeriesCollections
+      tags:
+      - relationSeriesCollections
+  /series/{series_id}/editors:
+    get:
+      description: List editors by series
+      operationId: relationSeries#listEditors
+      parameters:
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.editor+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/EditorCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listEditors relationSeries
+      tags:
+      - relationSeries
+  /series/{series_id}/editors/{editor_id}/books:
+    get:
+      description: List books by series-editor
+      operationId: relationSeriesEditors#listBooks
+      parameters:
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooks relationSeriesEditors
+      tags:
+      - relationSeriesEditors
+  /series/{series_id}/editors/{editor_id}/collections:
+    get:
+      description: List collections by series-editor
+      operationId: relationSeriesEditors#listCollections
+      parameters:
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.collection+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/CollectionCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listCollections relationSeriesEditors
+      tags:
+      - relationSeriesEditors
+  /series/{series_id}/editors/{editor_id}/collections/{collection_id}/books:
+    get:
+      description: List books by series-editor-collection
+      operationId: relationSeriesEditors#listBooksByCollection
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksByCollection relationSeriesEditors
+      tags:
+      - relationSeriesEditors
+  /series/{series_id}/editors/{editor_id}/collections/{collection_id}/prints:
+    get:
+      description: List prints by series-editor-collection
+      operationId: relationSeriesEditors#listPrintsByCollection
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.print+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/PrintCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listPrintsByCollection relationSeriesEditors
+      tags:
+      - relationSeriesEditors
+  /series/{series_id}/editors/{editor_id}/collections/{collection_id}/prints/{print_id}/books:
+    get:
+      description: List books by series-editor-collection-print
+      operationId: relationSeriesEditors#listBooksByCollectionPrint
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksByCollectionPrint relationSeriesEditors
+      tags:
+      - relationSeriesEditors
+  /series/{series_id}/editors/{editor_id}/prints:
+    get:
+      description: List prints by series-editor
+      operationId: relationSeriesEditors#listPrints
+      parameters:
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.print+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/PrintCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listPrints relationSeriesEditors
+      tags:
+      - relationSeriesEditors
+  /series/{series_id}/editors/{editor_id}/prints/{print_id}/books:
+    get:
+      description: List books by series-editor-print
+      operationId: relationSeriesEditors#listBooksByPrint
+      parameters:
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksByPrint relationSeriesEditors
+      tags:
+      - relationSeriesEditors
+  /series/{series_id}/editors/{editor_id}/prints/{print_id}/collections:
+    get:
+      description: List collections by series-editor-print
+      operationId: relationSeriesEditors#listCollectionsByPrint
+      parameters:
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.collection+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/CollectionCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listCollectionsByPrint relationSeriesEditors
+      tags:
+      - relationSeriesEditors
+  /series/{series_id}/editors/{editor_id}/prints/{print_id}/collections/{collection_id}/books:
+    get:
+      description: List books by series-editor-print-collection
+      operationId: relationSeriesEditors#listBooksByPrintCollection
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksByPrintCollection relationSeriesEditors
+      tags:
+      - relationSeriesEditors
+  /series/{series_id}/prints:
+    get:
+      description: List prints by series
+      operationId: relationSeries#listPrints
+      parameters:
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.print+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/PrintCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listPrints relationSeries
+      tags:
+      - relationSeries
+  /series/{series_id}/prints/{print_id}/books:
+    get:
+      description: List books by series-print
+      operationId: relationSeriesPrints#listBooks
+      parameters:
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooks relationSeriesPrints
+      tags:
+      - relationSeriesPrints
+  /series/{series_id}/prints/{print_id}/collections:
+    get:
+      description: List collections by series-print
+      operationId: relationSeriesPrints#listCollections
+      parameters:
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.collection+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/CollectionCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listCollections relationSeriesPrints
+      tags:
+      - relationSeriesPrints
+  /series/{series_id}/prints/{print_id}/editors:
+    get:
+      description: List editors by series-print
+      operationId: relationSeriesPrints#listEditors
+      parameters:
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.editor+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/EditorCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listEditors relationSeriesPrints
+      tags:
+      - relationSeriesPrints
+  /series/{series_id}/prints/{print_id}/editors/{editor_id}/books:
+    get:
+      description: List books by series-print-editor
+      operationId: relationSeriesPrints#listBooksByEditor
+      parameters:
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksByEditor relationSeriesPrints
+      tags:
+      - relationSeriesPrints
+  /series/{series_id}/prints/{print_id}/editors/{editor_id}/collections:
+    get:
+      description: List collections by series-print-editor
+      operationId: relationSeriesPrints#listCollectionsByEditor
+      parameters:
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.collection+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/CollectionCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listCollectionsByEditor relationSeriesPrints
+      tags:
+      - relationSeriesPrints
+  /series/{series_id}/prints/{print_id}/editors/{editor_id}/collections/{collection_id}/books:
+    get:
+      description: List books by series-print-editor-collection
+      operationId: relationSeriesPrints#listBooksByEditorCollection
+      parameters:
+      - description: Unique Collection ID
+        in: path
+        minimum: 1
+        name: collection_id
+        required: true
+        type: integer
+      - description: Unique Editor ID
+        in: path
+        minimum: 1
+        name: editor_id
+        required: true
+        type: integer
+      - description: Unique Print ID
+        in: path
+        minimum: 1
+        name: print_id
+        required: true
+        type: integer
+      - description: Unique Series ID
+        in: path
+        minimum: 1
+        name: series_id
+        required: true
+        type: integer
+      produces:
+      - application/vnd.book+json; type=collection
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/BookCollection'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: listBooksByEditorCollection relationSeriesPrints
+      tags:
+      - relationSeriesPrints
   /swagger.json:
     get:
       operationId: swagger#/swagger.json

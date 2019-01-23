@@ -551,8 +551,8 @@ type (
 		PrettyPrint bool
 	}
 
-	// ListBooksByPrintsSeriesRelationCollectionCommand is the command line data structure for the listBooksByPrintsSeries action of relationCollection
-	ListBooksByPrintsSeriesRelationCollectionCommand struct {
+	// ListBooksByPrintSeriesRelationCollectionCommand is the command line data structure for the listBooksByPrintSeries action of relationCollection
+	ListBooksByPrintSeriesRelationCollectionCommand struct {
 		// Unique Collection ID
 		CollectionID int
 		// Unique Print ID
@@ -614,6 +614,605 @@ type (
 		PrettyPrint bool
 	}
 
+	// ListBooksRelationEditorsCommand is the command line data structure for the listBooks action of relationEditors
+	ListBooksRelationEditorsCommand struct {
+		// Unique Editor ID
+		EditorID    int
+		PrettyPrint bool
+	}
+
+	// ListCollectionsRelationEditorsCommand is the command line data structure for the listCollections action of relationEditors
+	ListCollectionsRelationEditorsCommand struct {
+		// Unique Editor ID
+		EditorID    int
+		PrettyPrint bool
+	}
+
+	// ListPrintsRelationEditorsCommand is the command line data structure for the listPrints action of relationEditors
+	ListPrintsRelationEditorsCommand struct {
+		// Unique Editor ID
+		EditorID    int
+		PrettyPrint bool
+	}
+
+	// ListSeriesRelationEditorsCommand is the command line data structure for the listSeries action of relationEditors
+	ListSeriesRelationEditorsCommand struct {
+		// Unique Editor ID
+		EditorID    int
+		PrettyPrint bool
+	}
+
+	// ListBooksRelationEditorsCollectionsCommand is the command line data structure for the listBooks action of relationEditorsCollections
+	ListBooksRelationEditorsCollectionsCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Editor ID
+		EditorID    int
+		PrettyPrint bool
+	}
+
+	// ListBooksByPrintRelationEditorsCollectionsCommand is the command line data structure for the listBooksByPrint action of relationEditorsCollections
+	ListBooksByPrintRelationEditorsCollectionsCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID     int
+		PrettyPrint bool
+	}
+
+	// ListBooksByPrintSeriesRelationEditorsCollectionsCommand is the command line data structure for the listBooksByPrintSeries action of relationEditorsCollections
+	ListBooksByPrintSeriesRelationEditorsCollectionsCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListBooksBySeriesRelationEditorsCollectionsCommand is the command line data structure for the listBooksBySeries action of relationEditorsCollections
+	ListBooksBySeriesRelationEditorsCollectionsCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Editor ID
+		EditorID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListBooksBySeriesPrintRelationEditorsCollectionsCommand is the command line data structure for the listBooksBySeriesPrint action of relationEditorsCollections
+	ListBooksBySeriesPrintRelationEditorsCollectionsCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListPrintsRelationEditorsCollectionsCommand is the command line data structure for the listPrints action of relationEditorsCollections
+	ListPrintsRelationEditorsCollectionsCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Editor ID
+		EditorID    int
+		PrettyPrint bool
+	}
+
+	// ListPrintsBySeriesRelationEditorsCollectionsCommand is the command line data structure for the listPrintsBySeries action of relationEditorsCollections
+	ListPrintsBySeriesRelationEditorsCollectionsCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Editor ID
+		EditorID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListSeriesRelationEditorsCollectionsCommand is the command line data structure for the listSeries action of relationEditorsCollections
+	ListSeriesRelationEditorsCollectionsCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Editor ID
+		EditorID    int
+		PrettyPrint bool
+	}
+
+	// ListSeriesByPrintRelationEditorsCollectionsCommand is the command line data structure for the listSeriesByPrint action of relationEditorsCollections
+	ListSeriesByPrintRelationEditorsCollectionsCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID     int
+		PrettyPrint bool
+	}
+
+	// ListBooksRelationEditorsPrintsCommand is the command line data structure for the listBooks action of relationEditorsPrints
+	ListBooksRelationEditorsPrintsCommand struct {
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID     int
+		PrettyPrint bool
+	}
+
+	// ListBooksByCollectionRelationEditorsPrintsCommand is the command line data structure for the listBooksByCollection action of relationEditorsPrints
+	ListBooksByCollectionRelationEditorsPrintsCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID     int
+		PrettyPrint bool
+	}
+
+	// ListBooksByCollectionSeriesRelationEditorsPrintsCommand is the command line data structure for the listBooksByCollectionSeries action of relationEditorsPrints
+	ListBooksByCollectionSeriesRelationEditorsPrintsCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListBooksBySeriesRelationEditorsPrintsCommand is the command line data structure for the listBooksBySeries action of relationEditorsPrints
+	ListBooksBySeriesRelationEditorsPrintsCommand struct {
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListBooksBySeriesCollectionRelationEditorsPrintsCommand is the command line data structure for the listBooksBySeriesCollection action of relationEditorsPrints
+	ListBooksBySeriesCollectionRelationEditorsPrintsCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListCollectionsRelationEditorsPrintsCommand is the command line data structure for the listCollections action of relationEditorsPrints
+	ListCollectionsRelationEditorsPrintsCommand struct {
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID     int
+		PrettyPrint bool
+	}
+
+	// ListCollectionsBySeriesRelationEditorsPrintsCommand is the command line data structure for the listCollectionsBySeries action of relationEditorsPrints
+	ListCollectionsBySeriesRelationEditorsPrintsCommand struct {
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListSeriesRelationEditorsPrintsCommand is the command line data structure for the listSeries action of relationEditorsPrints
+	ListSeriesRelationEditorsPrintsCommand struct {
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID     int
+		PrettyPrint bool
+	}
+
+	// ListSeriesByCollectionRelationEditorsPrintsCommand is the command line data structure for the listSeriesByCollection action of relationEditorsPrints
+	ListSeriesByCollectionRelationEditorsPrintsCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID     int
+		PrettyPrint bool
+	}
+
+	// ListBooksRelationEditorsSeriesCommand is the command line data structure for the listBooks action of relationEditorsSeries
+	ListBooksRelationEditorsSeriesCommand struct {
+		// Unique Editor ID
+		EditorID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListBooksByCollectionRelationEditorsSeriesCommand is the command line data structure for the listBooksByCollection action of relationEditorsSeries
+	ListBooksByCollectionRelationEditorsSeriesCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Editor ID
+		EditorID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListBooksByCollectionPrintRelationEditorsSeriesCommand is the command line data structure for the listBooksByCollectionPrint action of relationEditorsSeries
+	ListBooksByCollectionPrintRelationEditorsSeriesCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListBooksByPrintRelationEditorsSeriesCommand is the command line data structure for the listBooksByPrint action of relationEditorsSeries
+	ListBooksByPrintRelationEditorsSeriesCommand struct {
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListBooksByPrintCollectionRelationEditorsSeriesCommand is the command line data structure for the listBooksByPrintCollection action of relationEditorsSeries
+	ListBooksByPrintCollectionRelationEditorsSeriesCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListCollectionsRelationEditorsSeriesCommand is the command line data structure for the listCollections action of relationEditorsSeries
+	ListCollectionsRelationEditorsSeriesCommand struct {
+		// Unique Editor ID
+		EditorID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListCollectionsByPrintRelationEditorsSeriesCommand is the command line data structure for the listCollectionsByPrint action of relationEditorsSeries
+	ListCollectionsByPrintRelationEditorsSeriesCommand struct {
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListPrintsRelationEditorsSeriesCommand is the command line data structure for the listPrints action of relationEditorsSeries
+	ListPrintsRelationEditorsSeriesCommand struct {
+		// Unique Editor ID
+		EditorID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListPrintsByCollectionRelationEditorsSeriesCommand is the command line data structure for the listPrintsByCollection action of relationEditorsSeries
+	ListPrintsByCollectionRelationEditorsSeriesCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Editor ID
+		EditorID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListBooksRelationPrintsCommand is the command line data structure for the listBooks action of relationPrints
+	ListBooksRelationPrintsCommand struct {
+		// Unique Print ID
+		PrintID     int
+		PrettyPrint bool
+	}
+
+	// ListCollectionsRelationPrintsCommand is the command line data structure for the listCollections action of relationPrints
+	ListCollectionsRelationPrintsCommand struct {
+		// Unique Print ID
+		PrintID     int
+		PrettyPrint bool
+	}
+
+	// ListEditorsRelationPrintsCommand is the command line data structure for the listEditors action of relationPrints
+	ListEditorsRelationPrintsCommand struct {
+		// Unique Print ID
+		PrintID     int
+		PrettyPrint bool
+	}
+
+	// ListSeriesRelationPrintsCommand is the command line data structure for the listSeries action of relationPrints
+	ListSeriesRelationPrintsCommand struct {
+		// Unique Print ID
+		PrintID     int
+		PrettyPrint bool
+	}
+
+	// ListBooksRelationPrintsCollectionsCommand is the command line data structure for the listBooks action of relationPrintsCollections
+	ListBooksRelationPrintsCollectionsCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Print ID
+		PrintID     int
+		PrettyPrint bool
+	}
+
+	// ListBooksBySeriesRelationPrintsCollectionsCommand is the command line data structure for the listBooksBySeries action of relationPrintsCollections
+	ListBooksBySeriesRelationPrintsCollectionsCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListSeriesRelationPrintsCollectionsCommand is the command line data structure for the listSeries action of relationPrintsCollections
+	ListSeriesRelationPrintsCollectionsCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Print ID
+		PrintID     int
+		PrettyPrint bool
+	}
+
+	// ListBooksRelationPrintsEditorsCommand is the command line data structure for the listBooks action of relationPrintsEditors
+	ListBooksRelationPrintsEditorsCommand struct {
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID     int
+		PrettyPrint bool
+	}
+
+	// ListBooksByCollectionRelationPrintsEditorsCommand is the command line data structure for the listBooksByCollection action of relationPrintsEditors
+	ListBooksByCollectionRelationPrintsEditorsCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID     int
+		PrettyPrint bool
+	}
+
+	// ListBooksByCollectionSeriesRelationPrintsEditorsCommand is the command line data structure for the listBooksByCollectionSeries action of relationPrintsEditors
+	ListBooksByCollectionSeriesRelationPrintsEditorsCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListBooksBySeriesRelationPrintsEditorsCommand is the command line data structure for the listBooksBySeries action of relationPrintsEditors
+	ListBooksBySeriesRelationPrintsEditorsCommand struct {
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListBooksBySeriesCollectionRelationPrintsEditorsCommand is the command line data structure for the listBooksBySeriesCollection action of relationPrintsEditors
+	ListBooksBySeriesCollectionRelationPrintsEditorsCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListCollectionsRelationPrintsEditorsCommand is the command line data structure for the listCollections action of relationPrintsEditors
+	ListCollectionsRelationPrintsEditorsCommand struct {
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID     int
+		PrettyPrint bool
+	}
+
+	// ListCollectionsBySeriesRelationPrintsEditorsCommand is the command line data structure for the listCollectionsBySeries action of relationPrintsEditors
+	ListCollectionsBySeriesRelationPrintsEditorsCommand struct {
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListSeriesRelationPrintsEditorsCommand is the command line data structure for the listSeries action of relationPrintsEditors
+	ListSeriesRelationPrintsEditorsCommand struct {
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID     int
+		PrettyPrint bool
+	}
+
+	// ListSeriesByCollectionRelationPrintsEditorsCommand is the command line data structure for the listSeriesByCollection action of relationPrintsEditors
+	ListSeriesByCollectionRelationPrintsEditorsCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID     int
+		PrettyPrint bool
+	}
+
+	// ListBooksRelationPrintsSeriesCommand is the command line data structure for the listBooks action of relationPrintsSeries
+	ListBooksRelationPrintsSeriesCommand struct {
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListBooksByCollectionRelationPrintsSeriesCommand is the command line data structure for the listBooksByCollection action of relationPrintsSeries
+	ListBooksByCollectionRelationPrintsSeriesCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListBooksByCollectionEditorRelationPrintsSeriesCommand is the command line data structure for the listBooksByCollectionEditor action of relationPrintsSeries
+	ListBooksByCollectionEditorRelationPrintsSeriesCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListBooksByEditorRelationPrintsSeriesCommand is the command line data structure for the listBooksByEditor action of relationPrintsSeries
+	ListBooksByEditorRelationPrintsSeriesCommand struct {
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListBooksByEditorCollectionRelationPrintsSeriesCommand is the command line data structure for the listBooksByEditorCollection action of relationPrintsSeries
+	ListBooksByEditorCollectionRelationPrintsSeriesCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListCollectionsRelationPrintsSeriesCommand is the command line data structure for the listCollections action of relationPrintsSeries
+	ListCollectionsRelationPrintsSeriesCommand struct {
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListCollectionsByEditorRelationPrintsSeriesCommand is the command line data structure for the listCollectionsByEditor action of relationPrintsSeries
+	ListCollectionsByEditorRelationPrintsSeriesCommand struct {
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListEditorsRelationPrintsSeriesCommand is the command line data structure for the listEditors action of relationPrintsSeries
+	ListEditorsRelationPrintsSeriesCommand struct {
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListEditorsByCollectionRelationPrintsSeriesCommand is the command line data structure for the listEditorsByCollection action of relationPrintsSeries
+	ListEditorsByCollectionRelationPrintsSeriesCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListBooksRelationSeriesCollectionsCommand is the command line data structure for the listBooks action of relationSeriesCollections
+	ListBooksRelationSeriesCollectionsCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListBooksByPrintRelationSeriesCollectionsCommand is the command line data structure for the listBooksByPrint action of relationSeriesCollections
+	ListBooksByPrintRelationSeriesCollectionsCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListPrintsRelationSeriesCollectionsCommand is the command line data structure for the listPrints action of relationSeriesCollections
+	ListPrintsRelationSeriesCollectionsCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
 	// CreateRolesCommand is the command line data structure for the create action of roles
 	CreateRolesCommand struct {
 		Payload     string
@@ -662,6 +1261,193 @@ type (
 		AuthorID int
 		// Unique Role ID
 		RoleID      int
+		PrettyPrint bool
+	}
+
+	// ListBooksRelationSeriesCommand is the command line data structure for the listBooks action of relationSeries
+	ListBooksRelationSeriesCommand struct {
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListCollectionsRelationSeriesCommand is the command line data structure for the listCollections action of relationSeries
+	ListCollectionsRelationSeriesCommand struct {
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListEditorsRelationSeriesCommand is the command line data structure for the listEditors action of relationSeries
+	ListEditorsRelationSeriesCommand struct {
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListPrintsRelationSeriesCommand is the command line data structure for the listPrints action of relationSeries
+	ListPrintsRelationSeriesCommand struct {
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListBooksRelationSeriesEditorsCommand is the command line data structure for the listBooks action of relationSeriesEditors
+	ListBooksRelationSeriesEditorsCommand struct {
+		// Unique Editor ID
+		EditorID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListBooksByCollectionRelationSeriesEditorsCommand is the command line data structure for the listBooksByCollection action of relationSeriesEditors
+	ListBooksByCollectionRelationSeriesEditorsCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Editor ID
+		EditorID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListBooksByCollectionPrintRelationSeriesEditorsCommand is the command line data structure for the listBooksByCollectionPrint action of relationSeriesEditors
+	ListBooksByCollectionPrintRelationSeriesEditorsCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListBooksByPrintRelationSeriesEditorsCommand is the command line data structure for the listBooksByPrint action of relationSeriesEditors
+	ListBooksByPrintRelationSeriesEditorsCommand struct {
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListBooksByPrintCollectionRelationSeriesEditorsCommand is the command line data structure for the listBooksByPrintCollection action of relationSeriesEditors
+	ListBooksByPrintCollectionRelationSeriesEditorsCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListCollectionsRelationSeriesEditorsCommand is the command line data structure for the listCollections action of relationSeriesEditors
+	ListCollectionsRelationSeriesEditorsCommand struct {
+		// Unique Editor ID
+		EditorID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListCollectionsByPrintRelationSeriesEditorsCommand is the command line data structure for the listCollectionsByPrint action of relationSeriesEditors
+	ListCollectionsByPrintRelationSeriesEditorsCommand struct {
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListPrintsRelationSeriesEditorsCommand is the command line data structure for the listPrints action of relationSeriesEditors
+	ListPrintsRelationSeriesEditorsCommand struct {
+		// Unique Editor ID
+		EditorID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListPrintsByCollectionRelationSeriesEditorsCommand is the command line data structure for the listPrintsByCollection action of relationSeriesEditors
+	ListPrintsByCollectionRelationSeriesEditorsCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Editor ID
+		EditorID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListBooksRelationSeriesPrintsCommand is the command line data structure for the listBooks action of relationSeriesPrints
+	ListBooksRelationSeriesPrintsCommand struct {
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListBooksByEditorRelationSeriesPrintsCommand is the command line data structure for the listBooksByEditor action of relationSeriesPrints
+	ListBooksByEditorRelationSeriesPrintsCommand struct {
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListBooksByEditorCollectionRelationSeriesPrintsCommand is the command line data structure for the listBooksByEditorCollection action of relationSeriesPrints
+	ListBooksByEditorCollectionRelationSeriesPrintsCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListCollectionsRelationSeriesPrintsCommand is the command line data structure for the listCollections action of relationSeriesPrints
+	ListCollectionsRelationSeriesPrintsCommand struct {
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListCollectionsByEditorRelationSeriesPrintsCommand is the command line data structure for the listCollectionsByEditor action of relationSeriesPrints
+	ListCollectionsByEditorRelationSeriesPrintsCommand struct {
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListEditorsRelationSeriesPrintsCommand is the command line data structure for the listEditors action of relationSeriesPrints
+	ListEditorsRelationSeriesPrintsCommand struct {
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
 		PrettyPrint bool
 	}
 
@@ -800,7 +1586,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 Payload example:
 
 {
-   "book_isbn": "4"
+   "book_isbn": "oe46r3"
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp2.Run(c, args) },
 	}
@@ -821,8 +1607,8 @@ Payload example:
 Payload example:
 
 {
-   "login": "sdkxatg",
-   "password": "05"
+   "login": "dq00ql",
+   "password": "5o2wa"
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp3.Run(c, args) },
 	}
@@ -852,7 +1638,7 @@ Payload example:
 Payload example:
 
 {
-   "author_name": "lq8tesfn9w"
+   "author_name": "0"
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp5.Run(c, args) },
 	}
@@ -886,8 +1672,8 @@ Payload example:
 Payload example:
 
 {
-   "book_isbn": "p237tpd",
-   "book_name": "00qlg5o",
+   "book_isbn": "4ntv",
+   "book_name": "p0f",
    "series_id": 1
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp7.Run(c, args) },
@@ -904,7 +1690,7 @@ Payload example:
 Payload example:
 
 {
-   "category_name": "x102j4z5wm"
+   "category_name": "etnx10"
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp8.Run(c, args) },
 	}
@@ -920,7 +1706,7 @@ Payload example:
 Payload example:
 
 {
-   "class_name": "lyhi"
+   "class_name": "z5wmg"
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp9.Run(c, args) },
 	}
@@ -952,7 +1738,7 @@ Payload example:
 Payload example:
 
 {
-   "collection_name": "q6ak74",
+   "collection_name": "i166yc5y2n",
    "editor_id": 1
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp11.Run(c, args) },
@@ -987,7 +1773,7 @@ Payload example:
 Payload example:
 
 {
-   "editor_name": "hroe46r3ox"
+   "editor_name": "n84arf"
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp13.Run(c, args) },
 	}
@@ -1019,7 +1805,7 @@ Payload example:
 Payload example:
 
 {
-   "print_name": "fsq"
+   "print_name": "4"
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp15.Run(c, args) },
 	}
@@ -1035,7 +1821,7 @@ Payload example:
 Payload example:
 
 {
-   "role_name": "859xjhdbe"
+   "role_name": "sdkxa"
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp16.Run(c, args) },
 	}
@@ -1402,7 +2188,7 @@ Payload example:
 	app.AddCommand(command)
 	command = &cobra.Command{
 		Use:   "list-books",
-		Short: `List books by collection`,
+		Short: `listBooks action`,
 	}
 	tmp52 := new(ListBooksRelationCollectionCommand)
 	sub = &cobra.Command{
@@ -1413,222 +2199,172 @@ Payload example:
 	tmp52.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp52.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	app.AddCommand(command)
-	command = &cobra.Command{
-		Use:   "list-books-by-print",
-		Short: `List books by collection and print`,
-	}
-	tmp53 := new(ListBooksByPrintRelationCollectionCommand)
+	tmp53 := new(ListBooksRelationEditorsCommand)
 	sub = &cobra.Command{
-		Use:   `relation-collection ["/collections/COLLECTION_ID/prints/PRINT_ID/books"]`,
+		Use:   `relation-editors ["/editors/EDITOR_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp53.Run(c, args) },
 	}
 	tmp53.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp53.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	app.AddCommand(command)
-	command = &cobra.Command{
-		Use:   "list-books-by-prints-series",
-		Short: `List books by collection, prints and series`,
-	}
-	tmp54 := new(ListBooksByPrintsSeriesRelationCollectionCommand)
+	tmp54 := new(ListBooksRelationEditorsCollectionsCommand)
 	sub = &cobra.Command{
-		Use:   `relation-collection ["/collections/COLLECTION_ID/prints/PRINT_ID/series/SERIES_ID/books"]`,
+		Use:   `relation-editors-collections ["/editors/EDITOR_ID/collections/COLLECTION_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp54.Run(c, args) },
 	}
 	tmp54.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp54.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	app.AddCommand(command)
-	command = &cobra.Command{
-		Use:   "list-books-by-series",
-		Short: `List books by collection and series`,
-	}
-	tmp55 := new(ListBooksBySeriesRelationCollectionCommand)
+	tmp55 := new(ListBooksRelationEditorsPrintsCommand)
 	sub = &cobra.Command{
-		Use:   `relation-collection ["/collections/COLLECTION_ID/series/SERIES_ID/books"]`,
+		Use:   `relation-editors-prints ["/editors/EDITOR_ID/prints/PRINT_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp55.Run(c, args) },
 	}
 	tmp55.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp55.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	app.AddCommand(command)
-	command = &cobra.Command{
-		Use:   "list-books-by-series-print",
-		Short: `List books by collection, series and print`,
-	}
-	tmp56 := new(ListBooksBySeriesPrintRelationCollectionCommand)
+	tmp56 := new(ListBooksRelationEditorsSeriesCommand)
 	sub = &cobra.Command{
-		Use:   `relation-collection ["/collections/COLLECTION_ID/series/SERIES_ID/prints/PRINT_ID/books"]`,
+		Use:   `relation-editors-series ["/editors/EDITOR_ID/series/SERIES_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp56.Run(c, args) },
 	}
 	tmp56.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp56.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	app.AddCommand(command)
-	command = &cobra.Command{
-		Use:   "list-categories",
-		Short: `listCategories action`,
-	}
-	tmp57 := new(ListCategoriesRelationAuthorCommand)
+	tmp57 := new(ListBooksRelationPrintsCommand)
 	sub = &cobra.Command{
-		Use:   `relation-author ["/authors/AUTHOR_ID/categories"]`,
+		Use:   `relation-prints ["/prints/PRINT_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp57.Run(c, args) },
 	}
 	tmp57.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp57.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp58 := new(ListCategoriesRelationClassCommand)
+	tmp58 := new(ListBooksRelationPrintsCollectionsCommand)
 	sub = &cobra.Command{
-		Use:   `relation-class ["/classes/CLASS_ID/categories"]`,
+		Use:   `relation-prints-collections ["/prints/PRINT_ID/collections/COLLECTION_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp58.Run(c, args) },
 	}
 	tmp58.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp58.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	app.AddCommand(command)
-	command = &cobra.Command{
-		Use:   "list-classes",
-		Short: `listClasses action`,
-	}
-	tmp59 := new(ListClassesRelationAuthorCommand)
+	tmp59 := new(ListBooksRelationPrintsEditorsCommand)
 	sub = &cobra.Command{
-		Use:   `relation-author ["/authors/AUTHOR_ID/classes"]`,
+		Use:   `relation-prints-editors ["/prints/PRINT_ID/editors/EDITOR_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp59.Run(c, args) },
 	}
 	tmp59.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp59.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp60 := new(ListClassesRelationCategoryCommand)
+	tmp60 := new(ListBooksRelationPrintsSeriesCommand)
 	sub = &cobra.Command{
-		Use:   `relation-category ["/categories/CATEGORY_ID/classes"]`,
+		Use:   `relation-prints-series ["/prints/PRINT_ID/series/SERIES_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp60.Run(c, args) },
 	}
 	tmp60.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp60.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	app.AddCommand(command)
-	command = &cobra.Command{
-		Use:   "list-prints",
-		Short: `List prints by collection`,
-	}
-	tmp61 := new(ListPrintsRelationCollectionCommand)
+	tmp61 := new(ListBooksRelationSeriesCollectionsCommand)
 	sub = &cobra.Command{
-		Use:   `relation-collection ["/collections/COLLECTION_ID/prints"]`,
+		Use:   `relation-series-collections ["/series/SERIES_ID/collections/COLLECTION_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp61.Run(c, args) },
 	}
 	tmp61.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp61.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	app.AddCommand(command)
-	command = &cobra.Command{
-		Use:   "list-prints-by-series",
-		Short: `List prints by collection and series`,
-	}
-	tmp62 := new(ListPrintsBySeriesRelationCollectionCommand)
+	tmp62 := new(ListBooksRelationSeriesPrintsCommand)
 	sub = &cobra.Command{
-		Use:   `relation-collection ["/collections/COLLECTION_ID/series/SERIES_ID/prints"]`,
+		Use:   `relation-series-prints ["/series/SERIES_ID/prints/PRINT_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp62.Run(c, args) },
 	}
 	tmp62.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp62.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	app.AddCommand(command)
-	command = &cobra.Command{
-		Use:   "list-roles",
-		Short: `List roles by author`,
-	}
-	tmp63 := new(ListRolesRelationAuthorCommand)
+	tmp63 := new(ListBooksRelationSeriesCommand)
 	sub = &cobra.Command{
-		Use:   `relation-author ["/authors/AUTHOR_ID/roles"]`,
+		Use:   `relation-series ["/series/SERIES_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp63.Run(c, args) },
 	}
 	tmp63.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp63.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	app.AddCommand(command)
-	command = &cobra.Command{
-		Use:   "list-series",
-		Short: `listSeries action`,
-	}
-	tmp64 := new(ListSeriesRelationAuthorCommand)
+	tmp64 := new(ListBooksRelationSeriesEditorsCommand)
 	sub = &cobra.Command{
-		Use:   `relation-author ["/authors/AUTHOR_ID/series"]`,
+		Use:   `relation-series-editors ["/series/SERIES_ID/editors/EDITOR_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp64.Run(c, args) },
 	}
 	tmp64.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp64.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp65 := new(ListSeriesRelationCategoryCommand)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "list-books-by-collection",
+		Short: `listBooksByCollection action`,
+	}
+	tmp65 := new(ListBooksByCollectionRelationEditorsPrintsCommand)
 	sub = &cobra.Command{
-		Use:   `relation-category ["/categories/CATEGORY_ID/series"]`,
+		Use:   `relation-editors-prints ["/editors/EDITOR_ID/prints/PRINT_ID/collections/COLLECTION_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp65.Run(c, args) },
 	}
 	tmp65.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp65.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp66 := new(ListSeriesRelationClassCommand)
+	tmp66 := new(ListBooksByCollectionRelationEditorsSeriesCommand)
 	sub = &cobra.Command{
-		Use:   `relation-class ["/classes/CLASS_ID/series"]`,
+		Use:   `relation-editors-series ["/editors/EDITOR_ID/series/SERIES_ID/collections/COLLECTION_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp66.Run(c, args) },
 	}
 	tmp66.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp66.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp67 := new(ListSeriesRelationCollectionCommand)
+	tmp67 := new(ListBooksByCollectionRelationPrintsEditorsCommand)
 	sub = &cobra.Command{
-		Use:   `relation-collection ["/collections/COLLECTION_ID/series"]`,
+		Use:   `relation-prints-editors ["/prints/PRINT_ID/editors/EDITOR_ID/collections/COLLECTION_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp67.Run(c, args) },
 	}
 	tmp67.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp67.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	app.AddCommand(command)
-	command = &cobra.Command{
-		Use:   "list-series-by-author",
-		Short: `List series by role and author`,
-	}
-	tmp68 := new(ListSeriesByAuthorRelationRoleCommand)
+	tmp68 := new(ListBooksByCollectionRelationPrintsSeriesCommand)
 	sub = &cobra.Command{
-		Use:   `relation-role ["/roles/ROLE_ID/authors/AUTHOR_ID/series"]`,
+		Use:   `relation-prints-series ["/prints/PRINT_ID/series/SERIES_ID/collections/COLLECTION_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp68.Run(c, args) },
 	}
 	tmp68.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp68.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	app.AddCommand(command)
-	command = &cobra.Command{
-		Use:   "list-series-by-category",
-		Short: `listSeriesByCategory action`,
-	}
-	tmp69 := new(ListSeriesByCategoryRelationAuthorCommand)
+	tmp69 := new(ListBooksByCollectionRelationSeriesEditorsCommand)
 	sub = &cobra.Command{
-		Use:   `relation-author ["/authors/AUTHOR_ID/categories/CATEGORY_ID/series"]`,
+		Use:   `relation-series-editors ["/series/SERIES_ID/editors/EDITOR_ID/collections/COLLECTION_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp69.Run(c, args) },
 	}
 	tmp69.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp69.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp70 := new(ListSeriesByCategoryRelationClassCommand)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "list-books-by-collection-editor",
+		Short: `List books by print-series-collection-editor`,
+	}
+	tmp70 := new(ListBooksByCollectionEditorRelationPrintsSeriesCommand)
 	sub = &cobra.Command{
-		Use:   `relation-class ["/classes/CLASS_ID/categories/CATEGORY_ID/series"]`,
+		Use:   `relation-prints-series ["/prints/PRINT_ID/series/SERIES_ID/collections/COLLECTION_ID/editors/EDITOR_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp70.Run(c, args) },
 	}
@@ -1637,21 +2373,21 @@ Payload example:
 	command.AddCommand(sub)
 	app.AddCommand(command)
 	command = &cobra.Command{
-		Use:   "list-series-by-class",
-		Short: `listSeriesByClass action`,
+		Use:   "list-books-by-collection-print",
+		Short: `listBooksByCollectionPrint action`,
 	}
-	tmp71 := new(ListSeriesByClassRelationAuthorCommand)
+	tmp71 := new(ListBooksByCollectionPrintRelationEditorsSeriesCommand)
 	sub = &cobra.Command{
-		Use:   `relation-author ["/authors/AUTHOR_ID/classes/CLASS_ID/series"]`,
+		Use:   `relation-editors-series ["/editors/EDITOR_ID/series/SERIES_ID/collections/COLLECTION_ID/prints/PRINT_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp71.Run(c, args) },
 	}
 	tmp71.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp71.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp72 := new(ListSeriesByClassRelationCategoryCommand)
+	tmp72 := new(ListBooksByCollectionPrintRelationSeriesEditorsCommand)
 	sub = &cobra.Command{
-		Use:   `relation-category ["/categories/CATEGORY_ID/classes/CLASS_ID/series"]`,
+		Use:   `relation-series-editors ["/series/SERIES_ID/editors/EDITOR_ID/collections/COLLECTION_ID/prints/PRINT_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp72.Run(c, args) },
 	}
@@ -1660,26 +2396,21 @@ Payload example:
 	command.AddCommand(sub)
 	app.AddCommand(command)
 	command = &cobra.Command{
-		Use:   "list-series-by-print",
-		Short: `List series by collection and print`,
+		Use:   "list-books-by-collection-series",
+		Short: `listBooksByCollectionSeries action`,
 	}
-	tmp73 := new(ListSeriesByPrintRelationCollectionCommand)
+	tmp73 := new(ListBooksByCollectionSeriesRelationEditorsPrintsCommand)
 	sub = &cobra.Command{
-		Use:   `relation-collection ["/collections/COLLECTION_ID/prints/PRINT_ID/series"]`,
+		Use:   `relation-editors-prints ["/editors/EDITOR_ID/prints/PRINT_ID/collections/COLLECTION_ID/series/SERIES_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp73.Run(c, args) },
 	}
 	tmp73.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp73.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	app.AddCommand(command)
-	command = &cobra.Command{
-		Use:   "list-series-by-role",
-		Short: `List series by author and role`,
-	}
-	tmp74 := new(ListSeriesByRoleRelationAuthorCommand)
+	tmp74 := new(ListBooksByCollectionSeriesRelationPrintsEditorsCommand)
 	sub = &cobra.Command{
-		Use:   `relation-author ["/authors/AUTHOR_ID/roles/ROLE_ID/series"]`,
+		Use:   `relation-prints-editors ["/prints/PRINT_ID/editors/EDITOR_ID/collections/COLLECTION_ID/series/SERIES_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp74.Run(c, args) },
 	}
@@ -1688,141 +2419,978 @@ Payload example:
 	command.AddCommand(sub)
 	app.AddCommand(command)
 	command = &cobra.Command{
-		Use:   "show",
-		Short: `show action`,
+		Use:   "list-books-by-editor",
+		Short: `listBooksByEditor action`,
 	}
-	tmp75 := new(ShowAuthorsCommand)
+	tmp75 := new(ListBooksByEditorRelationPrintsSeriesCommand)
 	sub = &cobra.Command{
-		Use:   `authors ["/authors/AUTHOR_ID"]`,
+		Use:   `relation-prints-series ["/prints/PRINT_ID/series/SERIES_ID/editors/EDITOR_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp75.Run(c, args) },
 	}
 	tmp75.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp75.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp76 := new(ShowAuthorshipsCommand)
+	tmp76 := new(ListBooksByEditorRelationSeriesPrintsCommand)
 	sub = &cobra.Command{
-		Use:   `authorships ["/authorships/AUTHORSHIP_ID"]`,
+		Use:   `relation-series-prints ["/series/SERIES_ID/prints/PRINT_ID/editors/EDITOR_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp76.Run(c, args) },
 	}
 	tmp76.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp76.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp77 := new(ShowBooksCommand)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "list-books-by-editor-collection",
+		Short: `listBooksByEditorCollection action`,
+	}
+	tmp77 := new(ListBooksByEditorCollectionRelationPrintsSeriesCommand)
 	sub = &cobra.Command{
-		Use:   `books ["/books/BOOK_ID"]`,
+		Use:   `relation-prints-series ["/prints/PRINT_ID/series/SERIES_ID/editors/EDITOR_ID/collections/COLLECTION_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp77.Run(c, args) },
 	}
 	tmp77.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp77.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp78 := new(ShowCategoriesCommand)
+	tmp78 := new(ListBooksByEditorCollectionRelationSeriesPrintsCommand)
 	sub = &cobra.Command{
-		Use:   `categories ["/categories/CATEGORY_ID"]`,
+		Use:   `relation-series-prints ["/series/SERIES_ID/prints/PRINT_ID/editors/EDITOR_ID/collections/COLLECTION_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp78.Run(c, args) },
 	}
 	tmp78.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp78.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp79 := new(ShowClassesCommand)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "list-books-by-print",
+		Short: `listBooksByPrint action`,
+	}
+	tmp79 := new(ListBooksByPrintRelationCollectionCommand)
 	sub = &cobra.Command{
-		Use:   `classes ["/classes/CLASS_ID"]`,
+		Use:   `relation-collection ["/collections/COLLECTION_ID/prints/PRINT_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp79.Run(c, args) },
 	}
 	tmp79.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp79.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp80 := new(ShowClassificationsCommand)
+	tmp80 := new(ListBooksByPrintRelationEditorsCollectionsCommand)
 	sub = &cobra.Command{
-		Use:   `classifications ["/series/SERIES_ID/classifications/CLASS_ID"]`,
+		Use:   `relation-editors-collections ["/editors/EDITOR_ID/collections/COLLECTION_ID/prints/PRINT_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp80.Run(c, args) },
 	}
 	tmp80.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp80.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp81 := new(ShowCollectionsCommand)
+	tmp81 := new(ListBooksByPrintRelationEditorsSeriesCommand)
 	sub = &cobra.Command{
-		Use:   `collections ["/collections/COLLECTION_ID"]`,
+		Use:   `relation-editors-series ["/editors/EDITOR_ID/series/SERIES_ID/prints/PRINT_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp81.Run(c, args) },
 	}
 	tmp81.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp81.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp82 := new(ShowEditionsCommand)
+	tmp82 := new(ListBooksByPrintRelationSeriesCollectionsCommand)
 	sub = &cobra.Command{
-		Use:   `editions ["/editions/EDITION_ID"]`,
+		Use:   `relation-series-collections ["/series/SERIES_ID/collections/COLLECTION_ID/prints/PRINT_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp82.Run(c, args) },
 	}
 	tmp82.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp82.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp83 := new(ShowEditorsCommand)
+	tmp83 := new(ListBooksByPrintRelationSeriesEditorsCommand)
 	sub = &cobra.Command{
-		Use:   `editors ["/editors/EDITOR_ID"]`,
+		Use:   `relation-series-editors ["/series/SERIES_ID/editors/EDITOR_ID/prints/PRINT_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp83.Run(c, args) },
 	}
 	tmp83.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp83.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp84 := new(ShowOwnershipsCommand)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "list-books-by-print-collection",
+		Short: `listBooksByPrintCollection action`,
+	}
+	tmp84 := new(ListBooksByPrintCollectionRelationEditorsSeriesCommand)
 	sub = &cobra.Command{
-		Use:   `ownerships ["/users/USER_ID/ownerships/BOOK_ID"]`,
+		Use:   `relation-editors-series ["/editors/EDITOR_ID/series/SERIES_ID/prints/PRINT_ID/collections/COLLECTION_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp84.Run(c, args) },
 	}
 	tmp84.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp84.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp85 := new(ShowPrintsCommand)
+	tmp85 := new(ListBooksByPrintCollectionRelationSeriesEditorsCommand)
 	sub = &cobra.Command{
-		Use:   `prints ["/prints/PRINT_ID"]`,
+		Use:   `relation-series-editors ["/series/SERIES_ID/editors/EDITOR_ID/prints/PRINT_ID/collections/COLLECTION_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp85.Run(c, args) },
 	}
 	tmp85.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp85.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp86 := new(ShowRolesCommand)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "list-books-by-print-series",
+		Short: `listBooksByPrintSeries action`,
+	}
+	tmp86 := new(ListBooksByPrintSeriesRelationCollectionCommand)
 	sub = &cobra.Command{
-		Use:   `roles ["/roles/ROLE_ID"]`,
+		Use:   `relation-collection ["/collections/COLLECTION_ID/prints/PRINT_ID/series/SERIES_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp86.Run(c, args) },
 	}
 	tmp86.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp86.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp87 := new(ShowSeriesCommand)
+	tmp87 := new(ListBooksByPrintSeriesRelationEditorsCollectionsCommand)
 	sub = &cobra.Command{
-		Use:   `series ["/series/SERIES_ID"]`,
+		Use:   `relation-editors-collections ["/editors/EDITOR_ID/collections/COLLECTION_ID/prints/PRINT_ID/series/SERIES_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp87.Run(c, args) },
 	}
 	tmp87.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp87.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp88 := new(ShowUsersCommand)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "list-books-by-series",
+		Short: `listBooksBySeries action`,
+	}
+	tmp88 := new(ListBooksBySeriesRelationCollectionCommand)
 	sub = &cobra.Command{
-		Use:   `users ["/users/USER_ID"]`,
+		Use:   `relation-collection ["/collections/COLLECTION_ID/series/SERIES_ID/books"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp88.Run(c, args) },
 	}
 	tmp88.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp88.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
+	tmp89 := new(ListBooksBySeriesRelationEditorsCollectionsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-editors-collections ["/editors/EDITOR_ID/collections/COLLECTION_ID/series/SERIES_ID/books"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp89.Run(c, args) },
+	}
+	tmp89.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp89.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp90 := new(ListBooksBySeriesRelationEditorsPrintsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-editors-prints ["/editors/EDITOR_ID/prints/PRINT_ID/series/SERIES_ID/books"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp90.Run(c, args) },
+	}
+	tmp90.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp90.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp91 := new(ListBooksBySeriesRelationPrintsCollectionsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-prints-collections ["/prints/PRINT_ID/collections/COLLECTION_ID/series/SERIES_ID/books"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp91.Run(c, args) },
+	}
+	tmp91.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp91.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp92 := new(ListBooksBySeriesRelationPrintsEditorsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-prints-editors ["/prints/PRINT_ID/editors/EDITOR_ID/series/SERIES_ID/books"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp92.Run(c, args) },
+	}
+	tmp92.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp92.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "list-books-by-series-collection",
+		Short: `listBooksBySeriesCollection action`,
+	}
+	tmp93 := new(ListBooksBySeriesCollectionRelationEditorsPrintsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-editors-prints ["/editors/EDITOR_ID/prints/PRINT_ID/series/SERIES_ID/collections/COLLECTION_ID/books"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp93.Run(c, args) },
+	}
+	tmp93.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp93.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp94 := new(ListBooksBySeriesCollectionRelationPrintsEditorsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-prints-editors ["/prints/PRINT_ID/editors/EDITOR_ID/series/SERIES_ID/collections/COLLECTION_ID/books"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp94.Run(c, args) },
+	}
+	tmp94.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp94.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "list-books-by-series-print",
+		Short: `listBooksBySeriesPrint action`,
+	}
+	tmp95 := new(ListBooksBySeriesPrintRelationCollectionCommand)
+	sub = &cobra.Command{
+		Use:   `relation-collection ["/collections/COLLECTION_ID/series/SERIES_ID/prints/PRINT_ID/books"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp95.Run(c, args) },
+	}
+	tmp95.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp95.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp96 := new(ListBooksBySeriesPrintRelationEditorsCollectionsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-editors-collections ["/editors/EDITOR_ID/collections/COLLECTION_ID/series/SERIES_ID/prints/PRINT_ID/books"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp96.Run(c, args) },
+	}
+	tmp96.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp96.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "list-categories",
+		Short: `listCategories action`,
+	}
+	tmp97 := new(ListCategoriesRelationAuthorCommand)
+	sub = &cobra.Command{
+		Use:   `relation-author ["/authors/AUTHOR_ID/categories"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp97.Run(c, args) },
+	}
+	tmp97.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp97.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp98 := new(ListCategoriesRelationClassCommand)
+	sub = &cobra.Command{
+		Use:   `relation-class ["/classes/CLASS_ID/categories"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp98.Run(c, args) },
+	}
+	tmp98.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp98.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "list-classes",
+		Short: `listClasses action`,
+	}
+	tmp99 := new(ListClassesRelationAuthorCommand)
+	sub = &cobra.Command{
+		Use:   `relation-author ["/authors/AUTHOR_ID/classes"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp99.Run(c, args) },
+	}
+	tmp99.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp99.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp100 := new(ListClassesRelationCategoryCommand)
+	sub = &cobra.Command{
+		Use:   `relation-category ["/categories/CATEGORY_ID/classes"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp100.Run(c, args) },
+	}
+	tmp100.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp100.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "list-collections",
+		Short: `listCollections action`,
+	}
+	tmp101 := new(ListCollectionsRelationEditorsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-editors ["/editors/EDITOR_ID/collections"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp101.Run(c, args) },
+	}
+	tmp101.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp101.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp102 := new(ListCollectionsRelationEditorsPrintsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-editors-prints ["/editors/EDITOR_ID/prints/PRINT_ID/collections"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp102.Run(c, args) },
+	}
+	tmp102.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp102.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp103 := new(ListCollectionsRelationEditorsSeriesCommand)
+	sub = &cobra.Command{
+		Use:   `relation-editors-series ["/editors/EDITOR_ID/series/SERIES_ID/collections"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp103.Run(c, args) },
+	}
+	tmp103.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp103.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp104 := new(ListCollectionsRelationPrintsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-prints ["/prints/PRINT_ID/collections"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp104.Run(c, args) },
+	}
+	tmp104.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp104.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp105 := new(ListCollectionsRelationPrintsEditorsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-prints-editors ["/prints/PRINT_ID/editors/EDITOR_ID/collections"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp105.Run(c, args) },
+	}
+	tmp105.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp105.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp106 := new(ListCollectionsRelationPrintsSeriesCommand)
+	sub = &cobra.Command{
+		Use:   `relation-prints-series ["/prints/PRINT_ID/series/SERIES_ID/collections"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp106.Run(c, args) },
+	}
+	tmp106.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp106.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp107 := new(ListCollectionsRelationSeriesPrintsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-series-prints ["/series/SERIES_ID/prints/PRINT_ID/collections"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp107.Run(c, args) },
+	}
+	tmp107.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp107.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp108 := new(ListCollectionsRelationSeriesCommand)
+	sub = &cobra.Command{
+		Use:   `relation-series ["/series/SERIES_ID/collections"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp108.Run(c, args) },
+	}
+	tmp108.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp108.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp109 := new(ListCollectionsRelationSeriesEditorsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-series-editors ["/series/SERIES_ID/editors/EDITOR_ID/collections"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp109.Run(c, args) },
+	}
+	tmp109.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp109.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "list-collections-by-editor",
+		Short: `listCollectionsByEditor action`,
+	}
+	tmp110 := new(ListCollectionsByEditorRelationPrintsSeriesCommand)
+	sub = &cobra.Command{
+		Use:   `relation-prints-series ["/prints/PRINT_ID/series/SERIES_ID/editors/EDITOR_ID/collections"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp110.Run(c, args) },
+	}
+	tmp110.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp110.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp111 := new(ListCollectionsByEditorRelationSeriesPrintsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-series-prints ["/series/SERIES_ID/prints/PRINT_ID/editors/EDITOR_ID/collections"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp111.Run(c, args) },
+	}
+	tmp111.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp111.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "list-collections-by-print",
+		Short: `listCollectionsByPrint action`,
+	}
+	tmp112 := new(ListCollectionsByPrintRelationEditorsSeriesCommand)
+	sub = &cobra.Command{
+		Use:   `relation-editors-series ["/editors/EDITOR_ID/series/SERIES_ID/prints/PRINT_ID/collections"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp112.Run(c, args) },
+	}
+	tmp112.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp112.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp113 := new(ListCollectionsByPrintRelationSeriesEditorsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-series-editors ["/series/SERIES_ID/editors/EDITOR_ID/prints/PRINT_ID/collections"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp113.Run(c, args) },
+	}
+	tmp113.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp113.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "list-collections-by-series",
+		Short: `listCollectionsBySeries action`,
+	}
+	tmp114 := new(ListCollectionsBySeriesRelationEditorsPrintsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-editors-prints ["/editors/EDITOR_ID/prints/PRINT_ID/series/SERIES_ID/collections"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp114.Run(c, args) },
+	}
+	tmp114.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp114.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp115 := new(ListCollectionsBySeriesRelationPrintsEditorsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-prints-editors ["/prints/PRINT_ID/editors/EDITOR_ID/series/SERIES_ID/collections"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp115.Run(c, args) },
+	}
+	tmp115.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp115.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "list-editors",
+		Short: `listEditors action`,
+	}
+	tmp116 := new(ListEditorsRelationPrintsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-prints ["/prints/PRINT_ID/editors"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp116.Run(c, args) },
+	}
+	tmp116.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp116.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp117 := new(ListEditorsRelationPrintsSeriesCommand)
+	sub = &cobra.Command{
+		Use:   `relation-prints-series ["/prints/PRINT_ID/series/SERIES_ID/editors"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp117.Run(c, args) },
+	}
+	tmp117.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp117.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp118 := new(ListEditorsRelationSeriesPrintsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-series-prints ["/series/SERIES_ID/prints/PRINT_ID/editors"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp118.Run(c, args) },
+	}
+	tmp118.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp118.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp119 := new(ListEditorsRelationSeriesCommand)
+	sub = &cobra.Command{
+		Use:   `relation-series ["/series/SERIES_ID/editors"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp119.Run(c, args) },
+	}
+	tmp119.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp119.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "list-editors-by-collection",
+		Short: `List editors by print-series-collection`,
+	}
+	tmp120 := new(ListEditorsByCollectionRelationPrintsSeriesCommand)
+	sub = &cobra.Command{
+		Use:   `relation-prints-series ["/prints/PRINT_ID/series/SERIES_ID/collections/COLLECTION_ID/editors"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp120.Run(c, args) },
+	}
+	tmp120.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp120.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "list-prints",
+		Short: `listPrints action`,
+	}
+	tmp121 := new(ListPrintsRelationCollectionCommand)
+	sub = &cobra.Command{
+		Use:   `relation-collection ["/collections/COLLECTION_ID/prints"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp121.Run(c, args) },
+	}
+	tmp121.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp121.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp122 := new(ListPrintsRelationEditorsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-editors ["/editors/EDITOR_ID/prints"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp122.Run(c, args) },
+	}
+	tmp122.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp122.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp123 := new(ListPrintsRelationEditorsCollectionsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-editors-collections ["/editors/EDITOR_ID/collections/COLLECTION_ID/collections"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp123.Run(c, args) },
+	}
+	tmp123.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp123.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp124 := new(ListPrintsRelationEditorsSeriesCommand)
+	sub = &cobra.Command{
+		Use:   `relation-editors-series ["/editors/EDITOR_ID/series/SERIES_ID/prints"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp124.Run(c, args) },
+	}
+	tmp124.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp124.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp125 := new(ListPrintsRelationSeriesCollectionsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-series-collections ["/series/SERIES_ID/collections/COLLECTION_ID/prints"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp125.Run(c, args) },
+	}
+	tmp125.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp125.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp126 := new(ListPrintsRelationSeriesCommand)
+	sub = &cobra.Command{
+		Use:   `relation-series ["/series/SERIES_ID/prints"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp126.Run(c, args) },
+	}
+	tmp126.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp126.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp127 := new(ListPrintsRelationSeriesEditorsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-series-editors ["/series/SERIES_ID/editors/EDITOR_ID/prints"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp127.Run(c, args) },
+	}
+	tmp127.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp127.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "list-prints-by-collection",
+		Short: `listPrintsByCollection action`,
+	}
+	tmp128 := new(ListPrintsByCollectionRelationEditorsSeriesCommand)
+	sub = &cobra.Command{
+		Use:   `relation-editors-series ["/editors/EDITOR_ID/series/SERIES_ID/collections/COLLECTION_ID/prints"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp128.Run(c, args) },
+	}
+	tmp128.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp128.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp129 := new(ListPrintsByCollectionRelationSeriesEditorsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-series-editors ["/series/SERIES_ID/editors/EDITOR_ID/collections/COLLECTION_ID/prints"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp129.Run(c, args) },
+	}
+	tmp129.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp129.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "list-prints-by-series",
+		Short: `listPrintsBySeries action`,
+	}
+	tmp130 := new(ListPrintsBySeriesRelationCollectionCommand)
+	sub = &cobra.Command{
+		Use:   `relation-collection ["/collections/COLLECTION_ID/series/SERIES_ID/prints"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp130.Run(c, args) },
+	}
+	tmp130.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp130.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp131 := new(ListPrintsBySeriesRelationEditorsCollectionsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-editors-collections ["/editors/EDITOR_ID/collections/COLLECTION_ID/series/SERIES_ID/prints"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp131.Run(c, args) },
+	}
+	tmp131.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp131.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "list-roles",
+		Short: `List roles by author`,
+	}
+	tmp132 := new(ListRolesRelationAuthorCommand)
+	sub = &cobra.Command{
+		Use:   `relation-author ["/authors/AUTHOR_ID/roles"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp132.Run(c, args) },
+	}
+	tmp132.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp132.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "list-series",
+		Short: `listSeries action`,
+	}
+	tmp133 := new(ListSeriesRelationAuthorCommand)
+	sub = &cobra.Command{
+		Use:   `relation-author ["/authors/AUTHOR_ID/series"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp133.Run(c, args) },
+	}
+	tmp133.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp133.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp134 := new(ListSeriesRelationCategoryCommand)
+	sub = &cobra.Command{
+		Use:   `relation-category ["/categories/CATEGORY_ID/series"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp134.Run(c, args) },
+	}
+	tmp134.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp134.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp135 := new(ListSeriesRelationClassCommand)
+	sub = &cobra.Command{
+		Use:   `relation-class ["/classes/CLASS_ID/series"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp135.Run(c, args) },
+	}
+	tmp135.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp135.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp136 := new(ListSeriesRelationCollectionCommand)
+	sub = &cobra.Command{
+		Use:   `relation-collection ["/collections/COLLECTION_ID/series"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp136.Run(c, args) },
+	}
+	tmp136.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp136.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp137 := new(ListSeriesRelationEditorsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-editors ["/editors/EDITOR_ID/series"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp137.Run(c, args) },
+	}
+	tmp137.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp137.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp138 := new(ListSeriesRelationEditorsCollectionsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-editors-collections ["/editors/EDITOR_ID/collections/COLLECTION_ID/series"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp138.Run(c, args) },
+	}
+	tmp138.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp138.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp139 := new(ListSeriesRelationEditorsPrintsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-editors-prints ["/editors/EDITOR_ID/prints/PRINT_ID/series"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp139.Run(c, args) },
+	}
+	tmp139.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp139.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp140 := new(ListSeriesRelationPrintsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-prints ["/prints/PRINT_ID/series"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp140.Run(c, args) },
+	}
+	tmp140.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp140.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp141 := new(ListSeriesRelationPrintsCollectionsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-prints-collections ["/prints/PRINT_ID/collections/COLLECTION_ID/series"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp141.Run(c, args) },
+	}
+	tmp141.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp141.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp142 := new(ListSeriesRelationPrintsEditorsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-prints-editors ["/prints/PRINT_ID/editors/EDITOR_ID/series"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp142.Run(c, args) },
+	}
+	tmp142.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp142.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "list-series-by-author",
+		Short: `List series by role and author`,
+	}
+	tmp143 := new(ListSeriesByAuthorRelationRoleCommand)
+	sub = &cobra.Command{
+		Use:   `relation-role ["/roles/ROLE_ID/authors/AUTHOR_ID/series"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp143.Run(c, args) },
+	}
+	tmp143.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp143.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "list-series-by-category",
+		Short: `listSeriesByCategory action`,
+	}
+	tmp144 := new(ListSeriesByCategoryRelationAuthorCommand)
+	sub = &cobra.Command{
+		Use:   `relation-author ["/authors/AUTHOR_ID/categories/CATEGORY_ID/series"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp144.Run(c, args) },
+	}
+	tmp144.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp144.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp145 := new(ListSeriesByCategoryRelationClassCommand)
+	sub = &cobra.Command{
+		Use:   `relation-class ["/classes/CLASS_ID/categories/CATEGORY_ID/series"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp145.Run(c, args) },
+	}
+	tmp145.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp145.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "list-series-by-class",
+		Short: `listSeriesByClass action`,
+	}
+	tmp146 := new(ListSeriesByClassRelationAuthorCommand)
+	sub = &cobra.Command{
+		Use:   `relation-author ["/authors/AUTHOR_ID/classes/CLASS_ID/series"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp146.Run(c, args) },
+	}
+	tmp146.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp146.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp147 := new(ListSeriesByClassRelationCategoryCommand)
+	sub = &cobra.Command{
+		Use:   `relation-category ["/categories/CATEGORY_ID/classes/CLASS_ID/series"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp147.Run(c, args) },
+	}
+	tmp147.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp147.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "list-series-by-collection",
+		Short: `listSeriesByCollection action`,
+	}
+	tmp148 := new(ListSeriesByCollectionRelationEditorsPrintsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-editors-prints ["/editors/EDITOR_ID/prints/PRINT_ID/collections/COLLECTION_ID/series"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp148.Run(c, args) },
+	}
+	tmp148.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp148.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp149 := new(ListSeriesByCollectionRelationPrintsEditorsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-prints-editors ["/prints/PRINT_ID/editors/EDITOR_ID/collections/COLLECTION_ID/series"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp149.Run(c, args) },
+	}
+	tmp149.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp149.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "list-series-by-print",
+		Short: `listSeriesByPrint action`,
+	}
+	tmp150 := new(ListSeriesByPrintRelationCollectionCommand)
+	sub = &cobra.Command{
+		Use:   `relation-collection ["/collections/COLLECTION_ID/prints/PRINT_ID/series"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp150.Run(c, args) },
+	}
+	tmp150.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp150.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp151 := new(ListSeriesByPrintRelationEditorsCollectionsCommand)
+	sub = &cobra.Command{
+		Use:   `relation-editors-collections ["/editors/EDITOR_ID/collections/COLLECTION_ID/prints/PRINT_ID/series"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp151.Run(c, args) },
+	}
+	tmp151.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp151.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "list-series-by-role",
+		Short: `List series by author and role`,
+	}
+	tmp152 := new(ListSeriesByRoleRelationAuthorCommand)
+	sub = &cobra.Command{
+		Use:   `relation-author ["/authors/AUTHOR_ID/roles/ROLE_ID/series"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp152.Run(c, args) },
+	}
+	tmp152.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp152.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "show",
+		Short: `show action`,
+	}
+	tmp153 := new(ShowAuthorsCommand)
+	sub = &cobra.Command{
+		Use:   `authors ["/authors/AUTHOR_ID"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp153.Run(c, args) },
+	}
+	tmp153.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp153.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp154 := new(ShowAuthorshipsCommand)
+	sub = &cobra.Command{
+		Use:   `authorships ["/authorships/AUTHORSHIP_ID"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp154.Run(c, args) },
+	}
+	tmp154.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp154.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp155 := new(ShowBooksCommand)
+	sub = &cobra.Command{
+		Use:   `books ["/books/BOOK_ID"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp155.Run(c, args) },
+	}
+	tmp155.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp155.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp156 := new(ShowCategoriesCommand)
+	sub = &cobra.Command{
+		Use:   `categories ["/categories/CATEGORY_ID"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp156.Run(c, args) },
+	}
+	tmp156.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp156.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp157 := new(ShowClassesCommand)
+	sub = &cobra.Command{
+		Use:   `classes ["/classes/CLASS_ID"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp157.Run(c, args) },
+	}
+	tmp157.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp157.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp158 := new(ShowClassificationsCommand)
+	sub = &cobra.Command{
+		Use:   `classifications ["/series/SERIES_ID/classifications/CLASS_ID"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp158.Run(c, args) },
+	}
+	tmp158.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp158.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp159 := new(ShowCollectionsCommand)
+	sub = &cobra.Command{
+		Use:   `collections ["/collections/COLLECTION_ID"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp159.Run(c, args) },
+	}
+	tmp159.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp159.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp160 := new(ShowEditionsCommand)
+	sub = &cobra.Command{
+		Use:   `editions ["/editions/EDITION_ID"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp160.Run(c, args) },
+	}
+	tmp160.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp160.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp161 := new(ShowEditorsCommand)
+	sub = &cobra.Command{
+		Use:   `editors ["/editors/EDITOR_ID"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp161.Run(c, args) },
+	}
+	tmp161.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp161.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp162 := new(ShowOwnershipsCommand)
+	sub = &cobra.Command{
+		Use:   `ownerships ["/users/USER_ID/ownerships/BOOK_ID"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp162.Run(c, args) },
+	}
+	tmp162.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp162.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp163 := new(ShowPrintsCommand)
+	sub = &cobra.Command{
+		Use:   `prints ["/prints/PRINT_ID"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp163.Run(c, args) },
+	}
+	tmp163.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp163.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp164 := new(ShowRolesCommand)
+	sub = &cobra.Command{
+		Use:   `roles ["/roles/ROLE_ID"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp164.Run(c, args) },
+	}
+	tmp164.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp164.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp165 := new(ShowSeriesCommand)
+	sub = &cobra.Command{
+		Use:   `series ["/series/SERIES_ID"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp165.Run(c, args) },
+	}
+	tmp165.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp165.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp166 := new(ShowUsersCommand)
+	sub = &cobra.Command{
+		Use:   `users ["/users/USER_ID"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp166.Run(c, args) },
+	}
+	tmp166.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp166.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
 	app.AddCommand(command)
 	command = &cobra.Command{
 		Use:   "update",
 		Short: `update action`,
 	}
-	tmp89 := new(UpdateAuthorsCommand)
+	tmp167 := new(UpdateAuthorsCommand)
 	sub = &cobra.Command{
 		Use:   `authors ["/authors/AUTHOR_ID"]`,
 		Short: ``,
@@ -1831,14 +3399,14 @@ Payload example:
 Payload example:
 
 {
-   "author_name": "wq"
+   "author_name": "y4"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp89.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp167.Run(c, args) },
 	}
-	tmp89.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp89.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp167.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp167.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp90 := new(UpdateBooksCommand)
+	tmp168 := new(UpdateBooksCommand)
 	sub = &cobra.Command{
 		Use:   `books ["/books/BOOK_ID"]`,
 		Short: ``,
@@ -1847,15 +3415,15 @@ Payload example:
 Payload example:
 
 {
-   "book_name": "ape",
+   "book_name": "b",
    "series_id": 1
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp90.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp168.Run(c, args) },
 	}
-	tmp90.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp90.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp168.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp168.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp91 := new(UpdateCategoriesCommand)
+	tmp169 := new(UpdateCategoriesCommand)
 	sub = &cobra.Command{
 		Use:   `categories ["/categories/CATEGORY_ID"]`,
 		Short: ``,
@@ -1864,14 +3432,14 @@ Payload example:
 Payload example:
 
 {
-   "category_name": "3pur1t3p3"
+   "category_name": "j"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp91.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp169.Run(c, args) },
 	}
-	tmp91.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp91.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp169.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp169.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp92 := new(UpdateClassesCommand)
+	tmp170 := new(UpdateClassesCommand)
 	sub = &cobra.Command{
 		Use:   `classes ["/classes/CLASS_ID"]`,
 		Short: ``,
@@ -1880,14 +3448,14 @@ Payload example:
 Payload example:
 
 {
-   "class_name": "66yc5y2n0j"
+   "class_name": "pur1t3p3fl"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp92.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp170.Run(c, args) },
 	}
-	tmp92.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp92.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp170.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp170.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp93 := new(UpdateCollectionsCommand)
+	tmp171 := new(UpdateCollectionsCommand)
 	sub = &cobra.Command{
 		Use:   `collections ["/collections/COLLECTION_ID"]`,
 		Short: ``,
@@ -1896,15 +3464,15 @@ Payload example:
 Payload example:
 
 {
-   "collection_name": "84arft37",
+   "collection_name": "55q6",
    "editor_id": 1
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp93.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp171.Run(c, args) },
 	}
-	tmp93.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp93.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp171.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp171.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp94 := new(UpdateEditorsCommand)
+	tmp172 := new(UpdateEditorsCommand)
 	sub = &cobra.Command{
 		Use:   `editors ["/editors/EDITOR_ID"]`,
 		Short: ``,
@@ -1913,14 +3481,14 @@ Payload example:
 Payload example:
 
 {
-   "editor_name": "6vyz"
+   "editor_name": "37e1a9vh"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp94.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp172.Run(c, args) },
 	}
-	tmp94.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp94.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp172.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp172.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp95 := new(UpdatePasswordCommand)
+	tmp173 := new(UpdatePasswordCommand)
 	sub = &cobra.Command{
 		Use:   `password ["/password"]`,
 		Short: ``,
@@ -1929,15 +3497,15 @@ Payload example:
 Payload example:
 
 {
-   "password": "kjwr4nt",
-   "token": "mp"
+   "password": "t6",
+   "token": "yz"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp95.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp173.Run(c, args) },
 	}
-	tmp95.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp95.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp173.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp173.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp96 := new(UpdatePrintsCommand)
+	tmp174 := new(UpdatePrintsCommand)
 	sub = &cobra.Command{
 		Use:   `prints ["/prints/PRINT_ID"]`,
 		Short: ``,
@@ -1946,14 +3514,14 @@ Payload example:
 Payload example:
 
 {
-   "print_name": "xbvma0ty4p"
+   "print_name": "ekjw"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp96.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp174.Run(c, args) },
 	}
-	tmp96.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp96.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp174.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp174.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp97 := new(UpdateRolesCommand)
+	tmp175 := new(UpdateRolesCommand)
 	sub = &cobra.Command{
 		Use:   `roles ["/roles/ROLE_ID"]`,
 		Short: ``,
@@ -1962,14 +3530,14 @@ Payload example:
 Payload example:
 
 {
-   "role_name": "kgwh0vj"
+   "role_name": "gb05ip237t"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp97.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp175.Run(c, args) },
 	}
-	tmp97.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp97.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp175.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp175.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp98 := new(UpdateSeriesCommand)
+	tmp176 := new(UpdateSeriesCommand)
 	sub = &cobra.Command{
 		Use:   `series ["/series/SERIES_ID"]`,
 		Short: ``,
@@ -1981,12 +3549,12 @@ Payload example:
    "category_id": 1,
    "series_name": "7ho2v7wulz"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp98.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp176.Run(c, args) },
 	}
-	tmp98.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp98.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp176.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp176.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp99 := new(UpdateUsersCommand)
+	tmp177 := new(UpdateUsersCommand)
 	sub = &cobra.Command{
 		Use:   `users ["/users/USER_ID"]`,
 		Short: ``,
@@ -1997,17 +3565,17 @@ Payload example:
 {
    "nickname": "7lv"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp99.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp177.Run(c, args) },
 	}
-	tmp99.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp99.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp177.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp177.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
 	app.AddCommand(command)
 	command = &cobra.Command{
 		Use:   "validate",
 		Short: `Validate user`,
 	}
-	tmp100 := new(ValidateValidationCommand)
+	tmp178 := new(ValidateValidationCommand)
 	sub = &cobra.Command{
 		Use:   `validation ["/validation"]`,
 		Short: ``,
@@ -2016,12 +3584,12 @@ Payload example:
 Payload example:
 
 {
-   "token": "3rm"
+   "token": "e8"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp100.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp178.Run(c, args) },
 	}
-	tmp100.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp100.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp178.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp178.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
 	app.AddCommand(command)
 
@@ -2945,150 +4513,6 @@ func (cmd *UpdateClassesCommand) RegisterFlags(cc *cobra.Command, c *client.Clie
 	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
 	var classID int
 	cc.Flags().IntVar(&cmd.ClassID, "class_id", classID, `Unique Class ID`)
-}
-
-// Run makes the HTTP request corresponding to the CreateSeriesCommand command.
-func (cmd *CreateSeriesCommand) Run(c *client.Client, args []string) error {
-	var path string
-	if len(args) > 0 {
-		path = args[0]
-	} else {
-		path = "/series"
-	}
-	var payload client.CreateSeriesPayload
-	if cmd.Payload != "" {
-		err := json.Unmarshal([]byte(cmd.Payload), &payload)
-		if err != nil {
-			return fmt.Errorf("failed to deserialize payload: %s", err)
-		}
-	}
-	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.CreateSeries(ctx, path, &payload, cmd.ContentType)
-	if err != nil {
-		goa.LogError(ctx, "failed", "err", err)
-		return err
-	}
-
-	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
-	return nil
-}
-
-// RegisterFlags registers the command flags with the command line.
-func (cmd *CreateSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
-	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
-}
-
-// Run makes the HTTP request corresponding to the DeleteSeriesCommand command.
-func (cmd *DeleteSeriesCommand) Run(c *client.Client, args []string) error {
-	var path string
-	if len(args) > 0 {
-		path = args[0]
-	} else {
-		path = fmt.Sprintf("/series/%v", cmd.SeriesID)
-	}
-	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.DeleteSeries(ctx, path)
-	if err != nil {
-		goa.LogError(ctx, "failed", "err", err)
-		return err
-	}
-
-	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
-	return nil
-}
-
-// RegisterFlags registers the command flags with the command line.
-func (cmd *DeleteSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	var seriesID int
-	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
-}
-
-// Run makes the HTTP request corresponding to the ListSeriesCommand command.
-func (cmd *ListSeriesCommand) Run(c *client.Client, args []string) error {
-	var path string
-	if len(args) > 0 {
-		path = args[0]
-	} else {
-		path = "/series"
-	}
-	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.ListSeries(ctx, path)
-	if err != nil {
-		goa.LogError(ctx, "failed", "err", err)
-		return err
-	}
-
-	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
-	return nil
-}
-
-// RegisterFlags registers the command flags with the command line.
-func (cmd *ListSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-}
-
-// Run makes the HTTP request corresponding to the ShowSeriesCommand command.
-func (cmd *ShowSeriesCommand) Run(c *client.Client, args []string) error {
-	var path string
-	if len(args) > 0 {
-		path = args[0]
-	} else {
-		path = fmt.Sprintf("/series/%v", cmd.SeriesID)
-	}
-	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.ShowSeries(ctx, path)
-	if err != nil {
-		goa.LogError(ctx, "failed", "err", err)
-		return err
-	}
-
-	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
-	return nil
-}
-
-// RegisterFlags registers the command flags with the command line.
-func (cmd *ShowSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	var seriesID int
-	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
-}
-
-// Run makes the HTTP request corresponding to the UpdateSeriesCommand command.
-func (cmd *UpdateSeriesCommand) Run(c *client.Client, args []string) error {
-	var path string
-	if len(args) > 0 {
-		path = args[0]
-	} else {
-		path = fmt.Sprintf("/series/%v", cmd.SeriesID)
-	}
-	var payload client.UpdateSeriesPayload
-	if cmd.Payload != "" {
-		err := json.Unmarshal([]byte(cmd.Payload), &payload)
-		if err != nil {
-			return fmt.Errorf("failed to deserialize payload: %s", err)
-		}
-	}
-	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.UpdateSeries(ctx, path, &payload, cmd.ContentType)
-	if err != nil {
-		goa.LogError(ctx, "failed", "err", err)
-		return err
-	}
-
-	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
-	return nil
-}
-
-// RegisterFlags registers the command flags with the command line.
-func (cmd *UpdateSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
-	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
-	var seriesID int
-	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
 }
 
 // Run makes the HTTP request corresponding to the CreateClassificationsCommand command.
@@ -4412,8 +5836,8 @@ func (cmd *ListBooksByPrintRelationCollectionCommand) RegisterFlags(cc *cobra.Co
 	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
 }
 
-// Run makes the HTTP request corresponding to the ListBooksByPrintsSeriesRelationCollectionCommand command.
-func (cmd *ListBooksByPrintsSeriesRelationCollectionCommand) Run(c *client.Client, args []string) error {
+// Run makes the HTTP request corresponding to the ListBooksByPrintSeriesRelationCollectionCommand command.
+func (cmd *ListBooksByPrintSeriesRelationCollectionCommand) Run(c *client.Client, args []string) error {
 	var path string
 	if len(args) > 0 {
 		path = args[0]
@@ -4422,7 +5846,7 @@ func (cmd *ListBooksByPrintsSeriesRelationCollectionCommand) Run(c *client.Clien
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.ListBooksByPrintsSeriesRelationCollection(ctx, path)
+	resp, err := c.ListBooksByPrintSeriesRelationCollection(ctx, path)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -4433,7 +5857,7 @@ func (cmd *ListBooksByPrintsSeriesRelationCollectionCommand) Run(c *client.Clien
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *ListBooksByPrintsSeriesRelationCollectionCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+func (cmd *ListBooksByPrintSeriesRelationCollectionCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	var collectionID int
 	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
 	var printID int
@@ -4608,6 +6032,1962 @@ func (cmd *ListSeriesByPrintRelationCollectionCommand) RegisterFlags(cc *cobra.C
 	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
 }
 
+// Run makes the HTTP request corresponding to the ListBooksRelationEditorsCommand command.
+func (cmd *ListBooksRelationEditorsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/editors/%v/books", cmd.EditorID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksRelationEditors(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksRelationEditorsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListCollectionsRelationEditorsCommand command.
+func (cmd *ListCollectionsRelationEditorsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/editors/%v/collections", cmd.EditorID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListCollectionsRelationEditors(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListCollectionsRelationEditorsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListPrintsRelationEditorsCommand command.
+func (cmd *ListPrintsRelationEditorsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/editors/%v/prints", cmd.EditorID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListPrintsRelationEditors(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListPrintsRelationEditorsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListSeriesRelationEditorsCommand command.
+func (cmd *ListSeriesRelationEditorsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/editors/%v/series", cmd.EditorID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListSeriesRelationEditors(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListSeriesRelationEditorsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksRelationEditorsCollectionsCommand command.
+func (cmd *ListBooksRelationEditorsCollectionsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/editors/%v/collections/%v/books", cmd.EditorID, cmd.CollectionID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksRelationEditorsCollections(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksRelationEditorsCollectionsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksByPrintRelationEditorsCollectionsCommand command.
+func (cmd *ListBooksByPrintRelationEditorsCollectionsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/editors/%v/collections/%v/prints/%v/books", cmd.EditorID, cmd.CollectionID, cmd.PrintID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksByPrintRelationEditorsCollections(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksByPrintRelationEditorsCollectionsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksByPrintSeriesRelationEditorsCollectionsCommand command.
+func (cmd *ListBooksByPrintSeriesRelationEditorsCollectionsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/editors/%v/collections/%v/prints/%v/series/%v/books", cmd.EditorID, cmd.CollectionID, cmd.PrintID, cmd.SeriesID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksByPrintSeriesRelationEditorsCollections(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksByPrintSeriesRelationEditorsCollectionsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksBySeriesRelationEditorsCollectionsCommand command.
+func (cmd *ListBooksBySeriesRelationEditorsCollectionsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/editors/%v/collections/%v/series/%v/books", cmd.EditorID, cmd.CollectionID, cmd.SeriesID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksBySeriesRelationEditorsCollections(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksBySeriesRelationEditorsCollectionsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksBySeriesPrintRelationEditorsCollectionsCommand command.
+func (cmd *ListBooksBySeriesPrintRelationEditorsCollectionsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/editors/%v/collections/%v/series/%v/prints/%v/books", cmd.EditorID, cmd.CollectionID, cmd.SeriesID, cmd.PrintID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksBySeriesPrintRelationEditorsCollections(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksBySeriesPrintRelationEditorsCollectionsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListPrintsRelationEditorsCollectionsCommand command.
+func (cmd *ListPrintsRelationEditorsCollectionsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/editors/%v/collections/%v/collections", cmd.EditorID, cmd.CollectionID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListPrintsRelationEditorsCollections(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListPrintsRelationEditorsCollectionsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListPrintsBySeriesRelationEditorsCollectionsCommand command.
+func (cmd *ListPrintsBySeriesRelationEditorsCollectionsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/editors/%v/collections/%v/series/%v/prints", cmd.EditorID, cmd.CollectionID, cmd.SeriesID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListPrintsBySeriesRelationEditorsCollections(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListPrintsBySeriesRelationEditorsCollectionsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListSeriesRelationEditorsCollectionsCommand command.
+func (cmd *ListSeriesRelationEditorsCollectionsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/editors/%v/collections/%v/series", cmd.EditorID, cmd.CollectionID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListSeriesRelationEditorsCollections(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListSeriesRelationEditorsCollectionsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListSeriesByPrintRelationEditorsCollectionsCommand command.
+func (cmd *ListSeriesByPrintRelationEditorsCollectionsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/editors/%v/collections/%v/prints/%v/series", cmd.EditorID, cmd.CollectionID, cmd.PrintID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListSeriesByPrintRelationEditorsCollections(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListSeriesByPrintRelationEditorsCollectionsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksRelationEditorsPrintsCommand command.
+func (cmd *ListBooksRelationEditorsPrintsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/editors/%v/prints/%v/books", cmd.EditorID, cmd.PrintID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksRelationEditorsPrints(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksRelationEditorsPrintsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksByCollectionRelationEditorsPrintsCommand command.
+func (cmd *ListBooksByCollectionRelationEditorsPrintsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/editors/%v/prints/%v/collections/%v/books", cmd.EditorID, cmd.PrintID, cmd.CollectionID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksByCollectionRelationEditorsPrints(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksByCollectionRelationEditorsPrintsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksByCollectionSeriesRelationEditorsPrintsCommand command.
+func (cmd *ListBooksByCollectionSeriesRelationEditorsPrintsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/editors/%v/prints/%v/collections/%v/series/%v/books", cmd.EditorID, cmd.PrintID, cmd.CollectionID, cmd.SeriesID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksByCollectionSeriesRelationEditorsPrints(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksByCollectionSeriesRelationEditorsPrintsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksBySeriesRelationEditorsPrintsCommand command.
+func (cmd *ListBooksBySeriesRelationEditorsPrintsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/editors/%v/prints/%v/series/%v/books", cmd.EditorID, cmd.PrintID, cmd.SeriesID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksBySeriesRelationEditorsPrints(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksBySeriesRelationEditorsPrintsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksBySeriesCollectionRelationEditorsPrintsCommand command.
+func (cmd *ListBooksBySeriesCollectionRelationEditorsPrintsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/editors/%v/prints/%v/series/%v/collections/%v/books", cmd.EditorID, cmd.PrintID, cmd.SeriesID, cmd.CollectionID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksBySeriesCollectionRelationEditorsPrints(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksBySeriesCollectionRelationEditorsPrintsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListCollectionsRelationEditorsPrintsCommand command.
+func (cmd *ListCollectionsRelationEditorsPrintsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/editors/%v/prints/%v/collections", cmd.EditorID, cmd.PrintID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListCollectionsRelationEditorsPrints(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListCollectionsRelationEditorsPrintsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListCollectionsBySeriesRelationEditorsPrintsCommand command.
+func (cmd *ListCollectionsBySeriesRelationEditorsPrintsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/editors/%v/prints/%v/series/%v/collections", cmd.EditorID, cmd.PrintID, cmd.SeriesID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListCollectionsBySeriesRelationEditorsPrints(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListCollectionsBySeriesRelationEditorsPrintsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListSeriesRelationEditorsPrintsCommand command.
+func (cmd *ListSeriesRelationEditorsPrintsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/editors/%v/prints/%v/series", cmd.EditorID, cmd.PrintID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListSeriesRelationEditorsPrints(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListSeriesRelationEditorsPrintsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListSeriesByCollectionRelationEditorsPrintsCommand command.
+func (cmd *ListSeriesByCollectionRelationEditorsPrintsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/editors/%v/prints/%v/collections/%v/series", cmd.EditorID, cmd.PrintID, cmd.CollectionID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListSeriesByCollectionRelationEditorsPrints(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListSeriesByCollectionRelationEditorsPrintsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksRelationEditorsSeriesCommand command.
+func (cmd *ListBooksRelationEditorsSeriesCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/editors/%v/series/%v/books", cmd.EditorID, cmd.SeriesID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksRelationEditorsSeries(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksRelationEditorsSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksByCollectionRelationEditorsSeriesCommand command.
+func (cmd *ListBooksByCollectionRelationEditorsSeriesCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/editors/%v/series/%v/collections/%v/books", cmd.EditorID, cmd.SeriesID, cmd.CollectionID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksByCollectionRelationEditorsSeries(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksByCollectionRelationEditorsSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksByCollectionPrintRelationEditorsSeriesCommand command.
+func (cmd *ListBooksByCollectionPrintRelationEditorsSeriesCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/editors/%v/series/%v/collections/%v/prints/%v/books", cmd.EditorID, cmd.SeriesID, cmd.CollectionID, cmd.PrintID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksByCollectionPrintRelationEditorsSeries(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksByCollectionPrintRelationEditorsSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksByPrintRelationEditorsSeriesCommand command.
+func (cmd *ListBooksByPrintRelationEditorsSeriesCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/editors/%v/series/%v/prints/%v/books", cmd.EditorID, cmd.SeriesID, cmd.PrintID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksByPrintRelationEditorsSeries(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksByPrintRelationEditorsSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksByPrintCollectionRelationEditorsSeriesCommand command.
+func (cmd *ListBooksByPrintCollectionRelationEditorsSeriesCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/editors/%v/series/%v/prints/%v/collections/%v/books", cmd.EditorID, cmd.SeriesID, cmd.PrintID, cmd.CollectionID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksByPrintCollectionRelationEditorsSeries(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksByPrintCollectionRelationEditorsSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListCollectionsRelationEditorsSeriesCommand command.
+func (cmd *ListCollectionsRelationEditorsSeriesCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/editors/%v/series/%v/collections", cmd.EditorID, cmd.SeriesID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListCollectionsRelationEditorsSeries(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListCollectionsRelationEditorsSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListCollectionsByPrintRelationEditorsSeriesCommand command.
+func (cmd *ListCollectionsByPrintRelationEditorsSeriesCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/editors/%v/series/%v/prints/%v/collections", cmd.EditorID, cmd.SeriesID, cmd.PrintID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListCollectionsByPrintRelationEditorsSeries(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListCollectionsByPrintRelationEditorsSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListPrintsRelationEditorsSeriesCommand command.
+func (cmd *ListPrintsRelationEditorsSeriesCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/editors/%v/series/%v/prints", cmd.EditorID, cmd.SeriesID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListPrintsRelationEditorsSeries(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListPrintsRelationEditorsSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListPrintsByCollectionRelationEditorsSeriesCommand command.
+func (cmd *ListPrintsByCollectionRelationEditorsSeriesCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/editors/%v/series/%v/collections/%v/prints", cmd.EditorID, cmd.SeriesID, cmd.CollectionID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListPrintsByCollectionRelationEditorsSeries(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListPrintsByCollectionRelationEditorsSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksRelationPrintsCommand command.
+func (cmd *ListBooksRelationPrintsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/prints/%v/books", cmd.PrintID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksRelationPrints(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksRelationPrintsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListCollectionsRelationPrintsCommand command.
+func (cmd *ListCollectionsRelationPrintsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/prints/%v/collections", cmd.PrintID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListCollectionsRelationPrints(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListCollectionsRelationPrintsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListEditorsRelationPrintsCommand command.
+func (cmd *ListEditorsRelationPrintsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/prints/%v/editors", cmd.PrintID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListEditorsRelationPrints(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListEditorsRelationPrintsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListSeriesRelationPrintsCommand command.
+func (cmd *ListSeriesRelationPrintsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/prints/%v/series", cmd.PrintID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListSeriesRelationPrints(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListSeriesRelationPrintsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksRelationPrintsCollectionsCommand command.
+func (cmd *ListBooksRelationPrintsCollectionsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/prints/%v/collections/%v/books", cmd.PrintID, cmd.CollectionID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksRelationPrintsCollections(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksRelationPrintsCollectionsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksBySeriesRelationPrintsCollectionsCommand command.
+func (cmd *ListBooksBySeriesRelationPrintsCollectionsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/prints/%v/collections/%v/series/%v/books", cmd.PrintID, cmd.CollectionID, cmd.SeriesID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksBySeriesRelationPrintsCollections(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksBySeriesRelationPrintsCollectionsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListSeriesRelationPrintsCollectionsCommand command.
+func (cmd *ListSeriesRelationPrintsCollectionsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/prints/%v/collections/%v/series", cmd.PrintID, cmd.CollectionID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListSeriesRelationPrintsCollections(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListSeriesRelationPrintsCollectionsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksRelationPrintsEditorsCommand command.
+func (cmd *ListBooksRelationPrintsEditorsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/prints/%v/editors/%v/books", cmd.PrintID, cmd.EditorID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksRelationPrintsEditors(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksRelationPrintsEditorsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksByCollectionRelationPrintsEditorsCommand command.
+func (cmd *ListBooksByCollectionRelationPrintsEditorsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/prints/%v/editors/%v/collections/%v/books", cmd.PrintID, cmd.EditorID, cmd.CollectionID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksByCollectionRelationPrintsEditors(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksByCollectionRelationPrintsEditorsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksByCollectionSeriesRelationPrintsEditorsCommand command.
+func (cmd *ListBooksByCollectionSeriesRelationPrintsEditorsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/prints/%v/editors/%v/collections/%v/series/%v/books", cmd.PrintID, cmd.EditorID, cmd.CollectionID, cmd.SeriesID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksByCollectionSeriesRelationPrintsEditors(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksByCollectionSeriesRelationPrintsEditorsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksBySeriesRelationPrintsEditorsCommand command.
+func (cmd *ListBooksBySeriesRelationPrintsEditorsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/prints/%v/editors/%v/series/%v/books", cmd.PrintID, cmd.EditorID, cmd.SeriesID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksBySeriesRelationPrintsEditors(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksBySeriesRelationPrintsEditorsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksBySeriesCollectionRelationPrintsEditorsCommand command.
+func (cmd *ListBooksBySeriesCollectionRelationPrintsEditorsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/prints/%v/editors/%v/series/%v/collections/%v/books", cmd.PrintID, cmd.EditorID, cmd.SeriesID, cmd.CollectionID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksBySeriesCollectionRelationPrintsEditors(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksBySeriesCollectionRelationPrintsEditorsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListCollectionsRelationPrintsEditorsCommand command.
+func (cmd *ListCollectionsRelationPrintsEditorsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/prints/%v/editors/%v/collections", cmd.PrintID, cmd.EditorID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListCollectionsRelationPrintsEditors(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListCollectionsRelationPrintsEditorsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListCollectionsBySeriesRelationPrintsEditorsCommand command.
+func (cmd *ListCollectionsBySeriesRelationPrintsEditorsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/prints/%v/editors/%v/series/%v/collections", cmd.PrintID, cmd.EditorID, cmd.SeriesID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListCollectionsBySeriesRelationPrintsEditors(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListCollectionsBySeriesRelationPrintsEditorsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListSeriesRelationPrintsEditorsCommand command.
+func (cmd *ListSeriesRelationPrintsEditorsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/prints/%v/editors/%v/series", cmd.PrintID, cmd.EditorID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListSeriesRelationPrintsEditors(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListSeriesRelationPrintsEditorsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListSeriesByCollectionRelationPrintsEditorsCommand command.
+func (cmd *ListSeriesByCollectionRelationPrintsEditorsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/prints/%v/editors/%v/collections/%v/series", cmd.PrintID, cmd.EditorID, cmd.CollectionID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListSeriesByCollectionRelationPrintsEditors(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListSeriesByCollectionRelationPrintsEditorsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksRelationPrintsSeriesCommand command.
+func (cmd *ListBooksRelationPrintsSeriesCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/prints/%v/series/%v/books", cmd.PrintID, cmd.SeriesID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksRelationPrintsSeries(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksRelationPrintsSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksByCollectionRelationPrintsSeriesCommand command.
+func (cmd *ListBooksByCollectionRelationPrintsSeriesCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/prints/%v/series/%v/collections/%v/books", cmd.PrintID, cmd.SeriesID, cmd.CollectionID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksByCollectionRelationPrintsSeries(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksByCollectionRelationPrintsSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksByCollectionEditorRelationPrintsSeriesCommand command.
+func (cmd *ListBooksByCollectionEditorRelationPrintsSeriesCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/prints/%v/series/%v/collections/%v/editors/%v/books", cmd.PrintID, cmd.SeriesID, cmd.CollectionID, cmd.EditorID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksByCollectionEditorRelationPrintsSeries(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksByCollectionEditorRelationPrintsSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksByEditorRelationPrintsSeriesCommand command.
+func (cmd *ListBooksByEditorRelationPrintsSeriesCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/prints/%v/series/%v/editors/%v/books", cmd.PrintID, cmd.SeriesID, cmd.EditorID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksByEditorRelationPrintsSeries(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksByEditorRelationPrintsSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksByEditorCollectionRelationPrintsSeriesCommand command.
+func (cmd *ListBooksByEditorCollectionRelationPrintsSeriesCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/prints/%v/series/%v/editors/%v/collections/%v/books", cmd.PrintID, cmd.SeriesID, cmd.EditorID, cmd.CollectionID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksByEditorCollectionRelationPrintsSeries(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksByEditorCollectionRelationPrintsSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListCollectionsRelationPrintsSeriesCommand command.
+func (cmd *ListCollectionsRelationPrintsSeriesCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/prints/%v/series/%v/collections", cmd.PrintID, cmd.SeriesID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListCollectionsRelationPrintsSeries(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListCollectionsRelationPrintsSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListCollectionsByEditorRelationPrintsSeriesCommand command.
+func (cmd *ListCollectionsByEditorRelationPrintsSeriesCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/prints/%v/series/%v/editors/%v/collections", cmd.PrintID, cmd.SeriesID, cmd.EditorID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListCollectionsByEditorRelationPrintsSeries(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListCollectionsByEditorRelationPrintsSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListEditorsRelationPrintsSeriesCommand command.
+func (cmd *ListEditorsRelationPrintsSeriesCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/prints/%v/series/%v/editors", cmd.PrintID, cmd.SeriesID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListEditorsRelationPrintsSeries(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListEditorsRelationPrintsSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListEditorsByCollectionRelationPrintsSeriesCommand command.
+func (cmd *ListEditorsByCollectionRelationPrintsSeriesCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/prints/%v/series/%v/collections/%v/editors", cmd.PrintID, cmd.SeriesID, cmd.CollectionID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListEditorsByCollectionRelationPrintsSeries(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListEditorsByCollectionRelationPrintsSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListAuthorsRelationRoleCommand command.
+func (cmd *ListAuthorsRelationRoleCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/roles/%v/authors", cmd.RoleID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListAuthorsRelationRole(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListAuthorsRelationRoleCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var roleID int
+	cc.Flags().IntVar(&cmd.RoleID, "role_id", roleID, `Unique Role ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListSeriesByAuthorRelationRoleCommand command.
+func (cmd *ListSeriesByAuthorRelationRoleCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/roles/%v/authors/%v/series", cmd.RoleID, cmd.AuthorID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListSeriesByAuthorRelationRole(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListSeriesByAuthorRelationRoleCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var authorID int
+	cc.Flags().IntVar(&cmd.AuthorID, "author_id", authorID, `Unique Author ID`)
+	var roleID int
+	cc.Flags().IntVar(&cmd.RoleID, "role_id", roleID, `Unique Role ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksRelationSeriesEditorsCommand command.
+func (cmd *ListBooksRelationSeriesEditorsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/series/%v/editors/%v/books", cmd.SeriesID, cmd.EditorID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksRelationSeriesEditors(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksRelationSeriesEditorsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksByCollectionRelationSeriesEditorsCommand command.
+func (cmd *ListBooksByCollectionRelationSeriesEditorsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/series/%v/editors/%v/collections/%v/books", cmd.SeriesID, cmd.EditorID, cmd.CollectionID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksByCollectionRelationSeriesEditors(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksByCollectionRelationSeriesEditorsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksByCollectionPrintRelationSeriesEditorsCommand command.
+func (cmd *ListBooksByCollectionPrintRelationSeriesEditorsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/series/%v/editors/%v/collections/%v/prints/%v/books", cmd.SeriesID, cmd.EditorID, cmd.CollectionID, cmd.PrintID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksByCollectionPrintRelationSeriesEditors(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksByCollectionPrintRelationSeriesEditorsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksByPrintRelationSeriesEditorsCommand command.
+func (cmd *ListBooksByPrintRelationSeriesEditorsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/series/%v/editors/%v/prints/%v/books", cmd.SeriesID, cmd.EditorID, cmd.PrintID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksByPrintRelationSeriesEditors(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksByPrintRelationSeriesEditorsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksByPrintCollectionRelationSeriesEditorsCommand command.
+func (cmd *ListBooksByPrintCollectionRelationSeriesEditorsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/series/%v/editors/%v/prints/%v/collections/%v/books", cmd.SeriesID, cmd.EditorID, cmd.PrintID, cmd.CollectionID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksByPrintCollectionRelationSeriesEditors(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksByPrintCollectionRelationSeriesEditorsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListCollectionsRelationSeriesEditorsCommand command.
+func (cmd *ListCollectionsRelationSeriesEditorsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/series/%v/editors/%v/collections", cmd.SeriesID, cmd.EditorID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListCollectionsRelationSeriesEditors(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListCollectionsRelationSeriesEditorsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListCollectionsByPrintRelationSeriesEditorsCommand command.
+func (cmd *ListCollectionsByPrintRelationSeriesEditorsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/series/%v/editors/%v/prints/%v/collections", cmd.SeriesID, cmd.EditorID, cmd.PrintID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListCollectionsByPrintRelationSeriesEditors(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListCollectionsByPrintRelationSeriesEditorsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListPrintsRelationSeriesEditorsCommand command.
+func (cmd *ListPrintsRelationSeriesEditorsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/series/%v/editors/%v/prints", cmd.SeriesID, cmd.EditorID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListPrintsRelationSeriesEditors(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListPrintsRelationSeriesEditorsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListPrintsByCollectionRelationSeriesEditorsCommand command.
+func (cmd *ListPrintsByCollectionRelationSeriesEditorsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/series/%v/editors/%v/collections/%v/prints", cmd.SeriesID, cmd.EditorID, cmd.CollectionID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListPrintsByCollectionRelationSeriesEditors(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListPrintsByCollectionRelationSeriesEditorsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
 // Run makes the HTTP request corresponding to the CreateRolesCommand command.
 func (cmd *CreateRolesCommand) Run(c *client.Client, args []string) error {
 	var path string
@@ -4752,17 +8132,24 @@ func (cmd *UpdateRolesCommand) RegisterFlags(cc *cobra.Command, c *client.Client
 	cc.Flags().IntVar(&cmd.RoleID, "role_id", roleID, `Unique Role ID`)
 }
 
-// Run makes the HTTP request corresponding to the ListAuthorsRelationRoleCommand command.
-func (cmd *ListAuthorsRelationRoleCommand) Run(c *client.Client, args []string) error {
+// Run makes the HTTP request corresponding to the CreateSeriesCommand command.
+func (cmd *CreateSeriesCommand) Run(c *client.Client, args []string) error {
 	var path string
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = fmt.Sprintf("/roles/%v/authors", cmd.RoleID)
+		path = "/series"
+	}
+	var payload client.CreateSeriesPayload
+	if cmd.Payload != "" {
+		err := json.Unmarshal([]byte(cmd.Payload), &payload)
+		if err != nil {
+			return fmt.Errorf("failed to deserialize payload: %s", err)
+		}
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.ListAuthorsRelationRole(ctx, path)
+	resp, err := c.CreateSeries(ctx, path, &payload, cmd.ContentType)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -4773,22 +8160,22 @@ func (cmd *ListAuthorsRelationRoleCommand) Run(c *client.Client, args []string) 
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *ListAuthorsRelationRoleCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	var roleID int
-	cc.Flags().IntVar(&cmd.RoleID, "role_id", roleID, `Unique Role ID`)
+func (cmd *CreateSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
+	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
 }
 
-// Run makes the HTTP request corresponding to the ListSeriesByAuthorRelationRoleCommand command.
-func (cmd *ListSeriesByAuthorRelationRoleCommand) Run(c *client.Client, args []string) error {
+// Run makes the HTTP request corresponding to the DeleteSeriesCommand command.
+func (cmd *DeleteSeriesCommand) Run(c *client.Client, args []string) error {
 	var path string
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = fmt.Sprintf("/roles/%v/authors/%v/series", cmd.RoleID, cmd.AuthorID)
+		path = fmt.Sprintf("/series/%v", cmd.SeriesID)
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.ListSeriesByAuthorRelationRole(ctx, path)
+	resp, err := c.DeleteSeries(ctx, path)
 	if err != nil {
 		goa.LogError(ctx, "failed", "err", err)
 		return err
@@ -4799,11 +8186,460 @@ func (cmd *ListSeriesByAuthorRelationRoleCommand) Run(c *client.Client, args []s
 }
 
 // RegisterFlags registers the command flags with the command line.
-func (cmd *ListSeriesByAuthorRelationRoleCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	var authorID int
-	cc.Flags().IntVar(&cmd.AuthorID, "author_id", authorID, `Unique Author ID`)
-	var roleID int
-	cc.Flags().IntVar(&cmd.RoleID, "role_id", roleID, `Unique Role ID`)
+func (cmd *DeleteSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListSeriesCommand command.
+func (cmd *ListSeriesCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = "/series"
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListSeries(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+}
+
+// Run makes the HTTP request corresponding to the ShowSeriesCommand command.
+func (cmd *ShowSeriesCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/series/%v", cmd.SeriesID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ShowSeries(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ShowSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the UpdateSeriesCommand command.
+func (cmd *UpdateSeriesCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/series/%v", cmd.SeriesID)
+	}
+	var payload client.UpdateSeriesPayload
+	if cmd.Payload != "" {
+		err := json.Unmarshal([]byte(cmd.Payload), &payload)
+		if err != nil {
+			return fmt.Errorf("failed to deserialize payload: %s", err)
+		}
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.UpdateSeries(ctx, path, &payload, cmd.ContentType)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *UpdateSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
+	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksRelationSeriesCommand command.
+func (cmd *ListBooksRelationSeriesCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/series/%v/books", cmd.SeriesID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksRelationSeries(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksRelationSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListCollectionsRelationSeriesCommand command.
+func (cmd *ListCollectionsRelationSeriesCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/series/%v/collections", cmd.SeriesID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListCollectionsRelationSeries(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListCollectionsRelationSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListEditorsRelationSeriesCommand command.
+func (cmd *ListEditorsRelationSeriesCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/series/%v/editors", cmd.SeriesID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListEditorsRelationSeries(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListEditorsRelationSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListPrintsRelationSeriesCommand command.
+func (cmd *ListPrintsRelationSeriesCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/series/%v/prints", cmd.SeriesID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListPrintsRelationSeries(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListPrintsRelationSeriesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksRelationSeriesCollectionsCommand command.
+func (cmd *ListBooksRelationSeriesCollectionsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/series/%v/collections/%v/books", cmd.SeriesID, cmd.CollectionID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksRelationSeriesCollections(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksRelationSeriesCollectionsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksByPrintRelationSeriesCollectionsCommand command.
+func (cmd *ListBooksByPrintRelationSeriesCollectionsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/series/%v/collections/%v/prints/%v/books", cmd.SeriesID, cmd.CollectionID, cmd.PrintID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksByPrintRelationSeriesCollections(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksByPrintRelationSeriesCollectionsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListPrintsRelationSeriesCollectionsCommand command.
+func (cmd *ListPrintsRelationSeriesCollectionsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/series/%v/collections/%v/prints", cmd.SeriesID, cmd.CollectionID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListPrintsRelationSeriesCollections(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListPrintsRelationSeriesCollectionsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksRelationSeriesPrintsCommand command.
+func (cmd *ListBooksRelationSeriesPrintsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/series/%v/prints/%v/books", cmd.SeriesID, cmd.PrintID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksRelationSeriesPrints(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksRelationSeriesPrintsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksByEditorRelationSeriesPrintsCommand command.
+func (cmd *ListBooksByEditorRelationSeriesPrintsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/series/%v/prints/%v/editors/%v/books", cmd.SeriesID, cmd.PrintID, cmd.EditorID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksByEditorRelationSeriesPrints(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksByEditorRelationSeriesPrintsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListBooksByEditorCollectionRelationSeriesPrintsCommand command.
+func (cmd *ListBooksByEditorCollectionRelationSeriesPrintsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/series/%v/prints/%v/editors/%v/collections/%v/books", cmd.SeriesID, cmd.PrintID, cmd.EditorID, cmd.CollectionID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListBooksByEditorCollectionRelationSeriesPrints(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListBooksByEditorCollectionRelationSeriesPrintsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var collectionID int
+	cc.Flags().IntVar(&cmd.CollectionID, "collection_id", collectionID, `Unique Collection ID`)
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListCollectionsRelationSeriesPrintsCommand command.
+func (cmd *ListCollectionsRelationSeriesPrintsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/series/%v/prints/%v/collections", cmd.SeriesID, cmd.PrintID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListCollectionsRelationSeriesPrints(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListCollectionsRelationSeriesPrintsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListCollectionsByEditorRelationSeriesPrintsCommand command.
+func (cmd *ListCollectionsByEditorRelationSeriesPrintsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/series/%v/prints/%v/editors/%v/collections", cmd.SeriesID, cmd.PrintID, cmd.EditorID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListCollectionsByEditorRelationSeriesPrints(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListCollectionsByEditorRelationSeriesPrintsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var editorID int
+	cc.Flags().IntVar(&cmd.EditorID, "editor_id", editorID, `Unique Editor ID`)
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListEditorsRelationSeriesPrintsCommand command.
+func (cmd *ListEditorsRelationSeriesPrintsCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/series/%v/prints/%v/editors", cmd.SeriesID, cmd.PrintID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListEditorsRelationSeriesPrints(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListEditorsRelationSeriesPrintsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var printID int
+	cc.Flags().IntVar(&cmd.PrintID, "print_id", printID, `Unique Print ID`)
+	var seriesID int
+	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
 }
 
 // Run makes the HTTP request corresponding to the AccessTokenCommand command.

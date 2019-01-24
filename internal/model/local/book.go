@@ -1,8 +1,6 @@
 package local
 
 import (
-	"sort"
-
 	"github.com/NBR41/go-testgoa/internal/model"
 )
 
@@ -74,24 +72,6 @@ func (db *Local) getBookByISBN(isbn string) (*model.Book, error) {
 	return nil, model.ErrNotFound
 }
 
-// ListBooks returns book list
-func (db *Local) ListBooks() ([]*model.Book, error) {
-	db.Lock()
-	defer db.Unlock()
-	ids := make([]int, len(db.books))
-	i := 0
-	for id := range db.books {
-		ids[i] = id
-		i++
-	}
-	sort.Ints(ids)
-	list := make([]*model.Book, len(ids))
-	for i, id := range ids {
-		list[i] = db.books[id]
-	}
-	return list, nil
-}
-
 // UpdateBook update book infos
 func (db *Local) UpdateBook(id int, name *string, seriesID *int) error {
 	db.Lock()
@@ -130,7 +110,7 @@ func (db *Local) DeleteBook(id int) error {
 }
 
 //ListBooksByIDs list books by ids
-func (db *Local) ListBooksByIDs(collectionID, printID, seriesID *int) ([]*model.Book, error) {
+func (db *Local) ListBooksByIDs(collectionID, editorID, printID, seriesID *int) ([]*model.Book, error) {
 	db.Lock()
 	defer db.Unlock()
 	bookIDs := make(map[int]struct{})
@@ -138,6 +118,13 @@ func (db *Local) ListBooksByIDs(collectionID, printID, seriesID *int) ([]*model.
 	for i := range db.editions {
 		if (collectionID == nil || db.editions[i].CollectionID == int64(*collectionID)) &&
 			(printID == nil || db.editions[i].PrintID == int64(*printID)) {
+			if editorID != nil {
+				if _, ok := db.collections[int(db.editions[i].CollectionID)]; ok {
+					if db.collections[int(db.editions[i].CollectionID)].EditorID != int64(*editorID) {
+						continue
+					}
+				}
+			}
 			bookIDs[int(db.editions[i].BookID)] = struct{}{}
 		}
 	}

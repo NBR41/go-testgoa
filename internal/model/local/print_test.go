@@ -37,21 +37,6 @@ func TestGetPrintByName(t *testing.T) {
 	}
 }
 
-func TestListPrints(t *testing.T) {
-	l := New(nil)
-
-	bs, err := l.ListPrints()
-	if err != nil {
-		t.Fatal("unexpected error", err)
-	}
-
-	for i := range bs {
-		if int64(i)+1 != bs[i].ID {
-			t.Fatal("unexpected ID , list must be sorted")
-		}
-	}
-}
-
 func TestInsertPrint(t *testing.T) {
 	l := New(nil)
 
@@ -125,49 +110,45 @@ func TestDeletePrint(t *testing.T) {
 }
 
 func TestListPrintsByIDs(t *testing.T) {
+	var nf, id int = 999, 1
 	l := New(nil)
-	collection1, collection2, series1, series2 := 999, 1, 999, 1
-	li, err := l.ListPrintsByIDs(&collection1, &series1)
-	if err != nil {
-		t.Fatal("unexpected error", err)
-	}
-	if len(li) != 0 {
-		t.Errorf("unexpected length, exp 0 got %d", len(li))
+
+	tests := []struct {
+		desc   string
+		params []*int
+		exp    int
+	}{
+		{"not founds", []*int{&nf, &nf, &nf}, 0},
+		{"collection not found", []*int{&nf, nil, nil}, 0},
+		{"editor not found", []*int{nil, &nf, nil}, 0},
+		{"series not found", []*int{nil, nil, &nf}, 0},
+		{"collection id editor not found series not found", []*int{&id, &nf, &nf}, 0},
+		{"collection not found editor id series not found", []*int{&nf, &id, &nf}, 0},
+		{"collection not found editor not found series id", []*int{&nf, &nf, &id}, 0},
+		{"no ids", []*int{nil, nil, nil}, 1},
+		{"only collection", []*int{&id, nil, nil}, 1},
+		{"only editor", []*int{nil, &id, nil}, 1},
+		{"only series", []*int{nil, nil, &id}, 1},
+		{"all", []*int{&id, &id, &id}, 1},
 	}
 
-	li, err = l.ListPrintsByIDs(&collection2, &series2)
-	if err != nil {
-		t.Fatal("unexpected error", err)
-	}
-	if len(li) != 1 {
-		t.Errorf("unexpected length, exp 1 got %d", len(li))
-	} else {
-		if li[0] != l.prints[1] {
-			t.Fatal("unexpected value")
+	for i := range tests {
+		bs, err := l.ListPrintsByIDs(tests[i].params[0], tests[i].params[1], tests[i].params[2])
+		if err != nil {
+			t.Fatalf("unexpected error for [%s], [%v]", tests[i].desc, err)
 		}
-	}
 
-	li, err = l.ListPrintsByIDs(&collection2, nil)
-	if err != nil {
-		t.Fatal("unexpected error", err)
-	}
-	if len(li) != 1 {
-		t.Errorf("unexpected length, exp 1 got %d", len(li))
-	} else {
-		if li[0] != l.prints[1] {
-			t.Fatal("unexpected value")
-		}
-	}
-
-	li, err = l.ListPrintsByIDs(nil, &series2)
-	if err != nil {
-		t.Fatal("unexpected error", err)
-	}
-	if len(li) != 1 {
-		t.Errorf("unexpected length, exp 1 got %d", len(li))
-	} else {
-		if li[0] != l.prints[1] {
-			t.Fatal("unexpected value")
+		if tests[i].exp == 0 {
+			if len(bs) != 0 {
+				t.Errorf("unexpected length for [%s], exp 0 got %d", tests[i].desc, len(bs))
+			}
+		} else {
+			if len(bs) != 1 {
+				t.Fatalf("unexpected length for [%s], exp 1 got %d", tests[i].desc, len(bs))
+			}
+			if !reflect.DeepEqual(bs[0], l.prints[1]) {
+				t.Fatalf("unexpected print value for [%s]", tests[i].desc)
+			}
 		}
 	}
 }

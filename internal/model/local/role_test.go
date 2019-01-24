@@ -37,21 +37,6 @@ func TestGetRoleByName(t *testing.T) {
 	}
 }
 
-func TestListRoles(t *testing.T) {
-	l := New(nil)
-
-	bs, err := l.ListRoles()
-	if err != nil {
-		t.Fatal("unexpected error", err)
-	}
-
-	for i := range bs {
-		if int64(i)+1 != bs[i].ID {
-			t.Fatal("unexpected ID , list must be sorted")
-		}
-	}
-}
-
 func TestInsertRole(t *testing.T) {
 	l := New(nil)
 
@@ -124,29 +109,37 @@ func TestDeleteRole(t *testing.T) {
 	expectingError(t, err, model.ErrNotFound)
 }
 
-func TestListRolesByAuthorID(t *testing.T) {
+func TestListRolesByIDs(t *testing.T) {
+	var nf, id int = 999, 1
 	l := New(nil)
 
-	//empty list
-	li, err := l.ListRolesByAuthorID(999)
-	if err != nil {
-		t.Fatalf("unexpected error [%v]", err)
-	} else {
-		if len(li) != 0 {
-			t.Fatal("unexpected value")
-		}
+	tests := []struct {
+		desc   string
+		params []*int
+		exp    int
+	}{
+		{"author not found", []*int{&nf}, 0},
+		{"no ids", []*int{nil}, 1},
+		{"only author", []*int{&id}, 1},
 	}
 
-	//valid list
-	li, err = l.ListRolesByAuthorID(1)
-	if err != nil {
-		t.Fatalf("unexpected error [%v]", err)
-	} else {
-		if len(li) != 1 {
-			t.Fatal("unexpected value")
+	for i := range tests {
+		bs, err := l.ListRolesByIDs(tests[i].params[0])
+		if err != nil {
+			t.Fatalf("unexpected error for [%s], [%v]", tests[i].desc, err)
 		}
-		if li[0] != l.roles[1] {
-			t.Fatal("unexpected value")
+
+		if tests[i].exp == 0 {
+			if len(bs) != 0 {
+				t.Errorf("unexpected length for [%s], exp 0 got %d", tests[i].desc, len(bs))
+			}
+		} else {
+			if len(bs) != 1 {
+				t.Fatalf("unexpected length for [%s], exp 1 got %d", tests[i].desc, len(bs))
+			}
+			if !reflect.DeepEqual(bs[0], l.roles[1]) {
+				t.Fatalf("unexpected role value for [%s]", tests[i].desc)
+			}
 		}
 	}
 }

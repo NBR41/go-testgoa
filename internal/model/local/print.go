@@ -1,8 +1,6 @@
 package local
 
 import (
-	"sort"
-
 	"github.com/NBR41/go-testgoa/internal/model"
 )
 
@@ -34,24 +32,6 @@ func (db *Local) GetPrintByName(name string) (*model.Print, error) {
 	db.Lock()
 	defer db.Unlock()
 	return db.getPrintByName(name)
-}
-
-//ListPrints list prints
-func (db *Local) ListPrints() ([]*model.Print, error) {
-	db.Lock()
-	defer db.Unlock()
-	ids := make([]int, len(db.prints))
-	i := 0
-	for id := range db.prints {
-		ids[i] = id
-		i++
-	}
-	sort.Ints(ids)
-	list := make([]*model.Print, len(ids))
-	for i, id := range ids {
-		list[i] = db.prints[id]
-	}
-	return list, nil
 }
 
 //InsertPrint insert author
@@ -97,43 +77,55 @@ func (db *Local) DeletePrint(id int) error {
 }
 
 //ListPrintsByIDs list prints by ids
-func (db *Local) ListPrintsByIDs(collectionID, seriesID *int) ([]*model.Print, error) {
+func (db *Local) ListPrintsByIDs(collectionID, editorID, seriesID *int) ([]*model.Print, error) {
 	db.Lock()
 	defer db.Unlock()
-	printIDs := make(map[int]struct{})
-	switch {
-	case collectionID != nil && seriesID != nil:
-		bookIDs := make(map[int64]struct{})
-		for i := range db.books {
-			if db.books[i].SeriesID == int64(*seriesID) {
-				bookIDs[db.books[i].ID] = struct{}{}
-			}
-		}
-		for j := range db.editions {
-			if _, ok := bookIDs[db.editions[j].BookID]; ok && int64(*collectionID) == db.editions[j].CollectionID {
-				printIDs[int(db.editions[j].PrintID)] = struct{}{}
-			}
-		}
 
-	case collectionID != nil && seriesID == nil:
-		for j := range db.editions {
-			if int64(*collectionID) == db.editions[j].CollectionID {
-				printIDs[int(db.editions[j].PrintID)] = struct{}{}
-			}
+	if collectionID == nil && editorID == nil && seriesID == nil {
+		ret := []*model.Print{}
+		for k := range db.prints {
+			ret = append(ret, db.prints[k])
 		}
-	case collectionID == nil && seriesID != nil:
-		bookIDs := make(map[int64]struct{})
+		return ret, nil
+	}
+
+	var bookIDs map[int]struct{}
+	if seriesID != nil {
+		bookIDs = make(map[int]struct{})
 		for i := range db.books {
 			if db.books[i].SeriesID == int64(*seriesID) {
-				bookIDs[db.books[i].ID] = struct{}{}
-			}
-		}
-		for j := range db.editions {
-			if _, ok := bookIDs[db.editions[j].BookID]; ok {
-				printIDs[int(db.editions[j].PrintID)] = struct{}{}
+				bookIDs[i] = struct{}{}
 			}
 		}
 	}
+
+	var collectionIDs map[int]struct{}
+	if editorID != nil {
+		collectionIDs = make(map[int]struct{})
+		for i := range db.collections {
+			if db.collections[i].EditorID == int64(*editorID) {
+				collectionIDs[i] = struct{}{}
+			}
+		}
+	}
+
+	printIDs := make(map[int]struct{})
+	for i := range db.editions {
+		if bookIDs != nil {
+			if _, ok := bookIDs[int(db.editions[i].BookID)]; !ok {
+				continue
+			}
+		}
+		if collectionIDs != nil {
+			if _, ok := collectionIDs[int(db.editions[i].CollectionID)]; !ok {
+				continue
+			}
+		}
+		if collectionID == nil || db.editions[i].CollectionID == int64(*collectionID) {
+			printIDs[int(db.editions[i].PrintID)] = struct{}{}
+		}
+	}
+
 	ret := []*model.Print{}
 	for k := range printIDs {
 		if _, ok := db.prints[k]; ok {

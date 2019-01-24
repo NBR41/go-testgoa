@@ -124,56 +124,43 @@ func TestDeleteAuthor(t *testing.T) {
 	expectingError(t, err, model.ErrNotFound)
 }
 
-func TestListAuthorsByCategoryID(t *testing.T) {
+func TestListAuthorsByIDs(t *testing.T) {
 	l := New(nil)
+	var nf, id int = 999, 1
 
-	//empty list
-	li, err := l.ListAuthorsByCategoryID(999)
-	if err != nil {
-		t.Fatalf("unexpected error [%v]", err)
-	} else {
-		if len(li) != 0 {
-			t.Fatal("unexpected value")
-		}
+	tests := []struct {
+		desc   string
+		params []*int
+		exp    int
+	}{
+		{"not founds", []*int{&nf, &nf}, 0},
+		{"category not found", []*int{&nf, nil}, 0},
+		{"role not found", []*int{nil, &nf}, 0},
+		{"category id role not found", []*int{&id, &nf}, 0},
+		{"category not found role id", []*int{&nf, &id}, 0},
+		{"no ids", []*int{nil, nil}, 1},
+		{"only category", []*int{&id, nil}, 1},
+		{"only role", []*int{nil, &id}, 1},
+		{"category and role", []*int{&id, &id}, 1},
 	}
 
-	//valid list
-	li, err = l.ListAuthorsByCategoryID(1)
-	if err != nil {
-		t.Fatalf("unexpected error [%v]", err)
-	} else {
-		if len(li) != 1 {
-			t.Fatal("unexpected value")
+	for i := range tests {
+		bs, err := l.ListAuthorsByIDs(tests[i].params[0], tests[i].params[1])
+		if err != nil {
+			t.Fatalf("unexpected error for [%s], [%v]", tests[i].desc, err)
 		}
-		if li[0] != l.authors[1] {
-			t.Fatal("unexpected value")
-		}
-	}
-}
 
-func TestListAuthorsByRoleID(t *testing.T) {
-	l := New(nil)
-
-	//empty list
-	li, err := l.ListAuthorsByRoleID(999)
-	if err != nil {
-		t.Fatalf("unexpected error [%v]", err)
-	} else {
-		if len(li) != 0 {
-			t.Fatal("unexpected value")
-		}
-	}
-
-	//valid list
-	li, err = l.ListAuthorsByRoleID(1)
-	if err != nil {
-		t.Fatalf("unexpected error [%v]", err)
-	} else {
-		if len(li) != 1 {
-			t.Fatal("unexpected value")
-		}
-		if li[0] != l.authors[1] {
-			t.Fatal("unexpected value")
+		if tests[i].exp == 0 {
+			if len(bs) != 0 {
+				t.Errorf("unexpected length for [%s], exp 0 got %d", tests[i].desc, len(bs))
+			}
+		} else {
+			if len(bs) != 1 {
+				t.Fatalf("unexpected length for [%s], exp 1 got %d", tests[i].desc, len(bs))
+			}
+			if !reflect.DeepEqual(bs[0], l.authors[1]) {
+				t.Fatalf("unexpected author value for [%s]", tests[i].desc)
+			}
 		}
 	}
 }

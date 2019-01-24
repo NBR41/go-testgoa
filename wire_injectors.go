@@ -12,6 +12,7 @@ func setupDev() (*config, func(), error) {
 		provideTokenHelper,
 		providePassworder,
 		provideDevModeler,
+		provideLister,
 		provideDevMailSender,
 		provideAPI,
 	)
@@ -24,6 +25,7 @@ func setupProd() (*config, func(), error) {
 		provideTokenHelper,
 		providePassworder,
 		provideProdModeler,
+		provideLister,
 		provideProdMailSender,
 		provideAPI,
 	)

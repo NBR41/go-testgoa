@@ -1,8 +1,6 @@
 package local
 
 import (
-	"sort"
-
 	"github.com/NBR41/go-testgoa/internal/model"
 )
 
@@ -34,24 +32,6 @@ func (db *Local) GetCategoryByName(name string) (*model.Category, error) {
 	db.Lock()
 	defer db.Unlock()
 	return db.getCategoryByName(name)
-}
-
-//ListCategories list categories
-func (db *Local) ListCategories() ([]*model.Category, error) {
-	db.Lock()
-	defer db.Unlock()
-	ids := make([]int, len(db.categories))
-	i := 0
-	for id := range db.categories {
-		ids[i] = id
-		i++
-	}
-	sort.Ints(ids)
-	list := make([]*model.Category, len(ids))
-	for i, id := range ids {
-		list[i] = db.categories[id]
-	}
-	return list, nil
 }
 
 //InsertCategory insert author
@@ -96,58 +76,67 @@ func (db *Local) DeleteCategory(id int) error {
 	return nil
 }
 
-//ListCategoriesByAuthorID list categories by author id
-func (db *Local) ListCategoriesByAuthorID(authorID int) ([]*model.Category, error) {
+//ListCategoriesByIDs list categories filtered by author id, class id
+func (db *Local) ListCategoriesByIDs(authorID, classID *int) ([]*model.Category, error) {
 	db.Lock()
 	defer db.Unlock()
 
-	bookIDs := make(map[int]struct{})
-	for i := range db.authorships {
-		if db.authorships[i].AuthorID == int64(authorID) {
-			bookIDs[int(db.authorships[i].BookID)] = struct{}{}
+	categoryIDs := make(map[int]struct{})
+	if authorID == nil && classID == nil {
+		ret := []*model.Category{}
+		for k := range db.categories {
+			ret = append(ret, db.categories[k])
 		}
+		return ret, nil
 	}
 
 	seriesIDs := make(map[int]struct{})
-	for i := range bookIDs {
-		if _, ok := db.books[i]; ok {
-			seriesIDs[int(db.books[i].SeriesID)] = struct{}{}
+	switch {
+	case authorID != nil && classID != nil:
+		bookIDs := make(map[int]struct{})
+		for i := range db.authorships {
+			if db.authorships[i].AuthorID == int64(*authorID) {
+				bookIDs[int(db.authorships[i].BookID)] = struct{}{}
+			}
+		}
+
+		for i := range bookIDs {
+			if _, ok := db.books[i]; ok {
+				for j := range db.classifications {
+					if int(db.books[i].SeriesID) == db.classifications[j].SeriesID &&
+						db.classifications[j].ClassID == *classID {
+						seriesIDs[int(db.classifications[i].SeriesID)] = struct{}{}
+					}
+				}
+			}
+		}
+	case authorID != nil:
+		bookIDs := make(map[int]struct{})
+		for i := range db.authorships {
+			if db.authorships[i].AuthorID == int64(*authorID) {
+				bookIDs[int(db.authorships[i].BookID)] = struct{}{}
+			}
+		}
+		for i := range bookIDs {
+			if _, ok := db.books[i]; ok {
+				seriesIDs[int(db.books[i].SeriesID)] = struct{}{}
+			}
+		}
+	case classID != nil:
+		for i := range db.classifications {
+			if db.classifications[i].ClassID == *classID {
+				seriesIDs[int(db.classifications[i].SeriesID)] = struct{}{}
+			}
 		}
 	}
-
-	categoryIDs := make(map[int]struct{})
 	for i := range seriesIDs {
 		if _, ok := db.series[i]; ok {
 			categoryIDs[int(db.series[i].CategoryID)] = struct{}{}
 		}
 	}
-	return db.buildCategoryList(categoryIDs)
-}
 
-//ListCategoriesByClassID list categories by class id
-func (db *Local) ListCategoriesByClassID(classID int) ([]*model.Category, error) {
-	db.Lock()
-	defer db.Unlock()
-	seriesIDs := make(map[int]struct{})
-	for i := range db.classifications {
-		if db.classifications[i].ClassID == classID {
-			seriesIDs[int(db.classifications[i].SeriesID)] = struct{}{}
-		}
-	}
-
-	categoryIDs := make(map[int]struct{})
-	for i := range seriesIDs {
-		if _, ok := db.series[i]; ok {
-			categoryIDs[int(db.series[i].CategoryID)] = struct{}{}
-		}
-	}
-
-	return db.buildCategoryList(categoryIDs)
-}
-
-func (db *Local) buildCategoryList(idsb map[int]struct{}) ([]*model.Category, error) {
 	ret := []*model.Category{}
-	for k := range idsb {
+	for k := range categoryIDs {
 		if _, ok := db.categories[k]; ok {
 			ret = append(ret, db.categories[k])
 		}

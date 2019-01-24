@@ -37,21 +37,6 @@ func TestGetClassByName(t *testing.T) {
 	}
 }
 
-func TestListClasses(t *testing.T) {
-	l := New(nil)
-
-	bs, err := l.ListClasses()
-	if err != nil {
-		t.Fatal("unexpected error", err)
-	}
-
-	for i := range bs {
-		if int64(i)+1 != bs[i].ID {
-			t.Fatal("unexpected ID , list must be sorted")
-		}
-	}
-}
-
 func TestInsertClass(t *testing.T) {
 	l := New(nil)
 
@@ -124,83 +109,46 @@ func TestDeleteClass(t *testing.T) {
 	expectingError(t, err, model.ErrNotFound)
 }
 
-func TestListClassesBySeriesID(t *testing.T) {
+func TestListClassesByIDs(t *testing.T) {
+	var nf, id int = 999, 1
 	l := New(nil)
 
-	//empty list
-	li, err := l.ListClassesBySeriesID(999)
-	if err != nil {
-		t.Fatalf("unexpected error [%v]", err)
-	} else {
-		if len(li) != 0 {
-			t.Fatal("unexpected value")
-		}
+	tests := []struct {
+		desc   string
+		params []*int
+		exp    int
+	}{
+		{"not founds", []*int{&nf, &nf, &nf}, 0},
+		{"author not found", []*int{&nf, nil, nil}, 0},
+		{"category not found", []*int{nil, &nf, nil}, 0},
+		{"series not found", []*int{nil, nil, &nf}, 0},
+		{"author id category not found series not found", []*int{&id, &nf, &nf}, 0},
+		{"author not found category id series not found", []*int{&nf, &id, &nf}, 0},
+		{"author not found category not found series id", []*int{&nf, &nf, &id}, 0},
+		{"no ids", []*int{nil, nil, nil}, 1},
+		{"only author", []*int{&id, nil, nil}, 1},
+		{"only class", []*int{nil, &id, nil}, 1},
+		{"only class", []*int{nil, nil, &id}, 1},
+		{"author and class", []*int{&id, &id, &id}, 1},
 	}
 
-	//valid list
-	li, err = l.ListClassesBySeriesID(1)
-	if err != nil {
-		t.Fatalf("unexpected error [%v]", err)
-	} else {
-		if len(li) != 1 {
-			t.Fatal("unexpected value")
+	for i := range tests {
+		bs, err := l.ListClassesByIDs(tests[i].params[0], tests[i].params[1], tests[i].params[2])
+		if err != nil {
+			t.Fatalf("unexpected error for [%s], [%v]", tests[i].desc, err)
 		}
-		if li[0] != l.classes[1] {
-			t.Fatal("unexpected value")
-		}
-	}
-}
 
-func TestListClassesByAuthorID(t *testing.T) {
-	l := New(nil)
-
-	//empty list
-	li, err := l.ListClassesByAuthorID(999)
-	if err != nil {
-		t.Fatalf("unexpected error [%v]", err)
-	} else {
-		if len(li) != 0 {
-			t.Fatal("unexpected value")
-		}
-	}
-
-	//valid list
-	li, err = l.ListClassesByAuthorID(1)
-	if err != nil {
-		t.Fatalf("unexpected error [%v]", err)
-	} else {
-		if len(li) != 1 {
-			t.Fatal("unexpected value")
-		}
-		if li[0] != l.classes[1] {
-			t.Fatal("unexpected value")
-		}
-	}
-}
-
-func TestListClassesByCategoryID(t *testing.T) {
-	l := New(nil)
-
-	//empty list
-	li, err := l.ListClassesByCategoryID(999)
-	if err != nil {
-		t.Fatalf("unexpected error [%v]", err)
-	} else {
-		if len(li) != 0 {
-			t.Fatal("unexpected value")
-		}
-	}
-
-	//valid list
-	li, err = l.ListClassesByCategoryID(1)
-	if err != nil {
-		t.Fatalf("unexpected error [%v]", err)
-	} else {
-		if len(li) != 1 {
-			t.Fatal("unexpected value")
-		}
-		if li[0] != l.classes[1] {
-			t.Fatal("unexpected value")
+		if tests[i].exp == 0 {
+			if len(bs) != 0 {
+				t.Errorf("unexpected length for [%s], exp 0 got %d", tests[i].desc, len(bs))
+			}
+		} else {
+			if len(bs) != 1 {
+				t.Fatalf("unexpected length for [%s], exp 1 got %d", tests[i].desc, len(bs))
+			}
+			if !reflect.DeepEqual(bs[0], l.classes[1]) {
+				t.Fatalf("unexpected class value for [%s]", tests[i].desc)
+			}
 		}
 	}
 }

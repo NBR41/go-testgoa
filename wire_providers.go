@@ -22,10 +22,15 @@ type config struct {
 	token controllers.TokenHelper
 	mail  controllers.MailSender
 	api   controllers.APIHelper
+	li    controllers.Lister
 }
 
-func newConfig(fmod controllers.Fmodeler, token controllers.TokenHelper, mail controllers.MailSender, api controllers.APIHelper) *config {
-	return &config{fmod: fmod, token: token, mail: mail, api: api}
+func newConfig(
+	fmod controllers.Fmodeler, token controllers.TokenHelper,
+	mail controllers.MailSender, api controllers.APIHelper,
+	li controllers.Lister,
+) *config {
+	return &config{fmod: fmod, token: token, mail: mail, api: api, li: li}
 }
 
 func initws() (*config, func(), error) {
@@ -33,6 +38,10 @@ func initws() (*config, func(), error) {
 		return setupProd()
 	}
 	return setupDev()
+}
+
+func provideLister() controllers.Lister {
+	return &controllers.ListBuilder{}
 }
 
 func provideTokenHelper() controllers.TokenHelper {

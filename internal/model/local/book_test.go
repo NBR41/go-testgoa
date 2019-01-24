@@ -82,21 +82,6 @@ func TestGetBookByISBN(t *testing.T) {
 	}
 }
 
-func TestListBooks(t *testing.T) {
-	l := New(nil)
-
-	bs, err := l.ListBooks()
-	if err != nil {
-		t.Fatal("unexpected error", err)
-	}
-
-	for i := range bs {
-		if int64(i)+1 != bs[i].ID {
-			t.Fatal("unexpected ID , list must be sorted")
-		}
-	}
-}
-
 func TestUpdateBook(t *testing.T) {
 	l := New(nil)
 	n1 := "test10"
@@ -145,41 +130,56 @@ func TestDeleteBook(t *testing.T) {
 
 func TestListBooksByIDs(t *testing.T) {
 	l := New(nil)
-	collection1, print1, series1 := 999, 999, 999
-	collection2, print2, series2 := 1, 1, 1
-	//empty list
-	li, err := l.ListBooksByIDs(&collection1, &print1, &series1)
-	if err != nil {
-		t.Fatalf("unexpected error [%v]", err)
-	} else {
-		if len(li) != 0 {
-			t.Fatal("unexpected value")
-		}
+
+	var nf, id int = 999, 1
+
+	tests := []struct {
+		desc   string
+		params []*int
+		exp    int
+	}{
+		{"not founds", []*int{&nf, &nf, &nf, &nf}, 0},
+		{"collection not found", []*int{&nf, nil, nil, nil}, 0},
+		{"editor not found", []*int{nil, &nf, nil, nil}, 0},
+		{"print not found", []*int{nil, nil, &nf, nil}, 0},
+		{"series not found", []*int{nil, nil, nil, &nf}, 0},
+		{"collection, with editor not found", []*int{&id, &nf, nil, nil}, 0},
+		{"collection, with print not found", []*int{&id, nil, &nf, nil}, 0},
+		{"collection, with series not found", []*int{&id, nil, nil, &nf}, 0},
+		{"editor, with collection not found", []*int{&nf, &id, nil, nil}, 0},
+		{"editor, with print not found", []*int{nil, &id, &nf, nil}, 0},
+		{"editor, with series not found", []*int{nil, &id, nil, &nf}, 0},
+		{"print, with collection not found", []*int{&nf, nil, &id, nil}, 0},
+		{"print, with editor not found", []*int{nil, &nf, &id, nil}, 0},
+		{"print, with series not found", []*int{nil, nil, &id, &nf}, 0},
+		{"series, with collection not found", []*int{&nf, nil, nil, &id}, 0},
+		{"series, with editor not found", []*int{nil, &nf, nil, &id}, 0},
+		{"series, with print not found", []*int{nil, nil, &nf, &id}, 0},
+		{"no ids", []*int{nil, nil, nil, nil}, 1},
+		{"collection", []*int{&id, nil, nil, nil}, 1},
+		{"editor", []*int{nil, &id, nil, nil}, 1},
+		{"print", []*int{nil, nil, &id, nil}, 1},
+		{"series", []*int{nil, nil, nil, &id}, 1},
+		{"all", []*int{&id, &id, &id, &id}, 1},
 	}
 
-	//valid list
-	li, err = l.ListBooksByIDs(&collection2, &print2, &series2)
-	if err != nil {
-		t.Fatalf("unexpected error [%v]", err)
-	} else {
-		if len(li) != 1 {
-			t.Fatal("unexpected value")
+	for i := range tests {
+		bs, err := l.ListBooksByIDs(tests[i].params[0], tests[i].params[1], tests[i].params[2], tests[i].params[3])
+		if err != nil {
+			t.Fatalf("unexpected error for [%s], [%v]", tests[i].desc, err)
 		}
-		if li[0] != l.books[1] {
-			t.Fatal("unexpected value")
-		}
-	}
 
-	//valid list
-	li, err = l.ListBooksByIDs(nil, nil, &series2)
-	if err != nil {
-		t.Fatalf("unexpected error [%v]", err)
-	} else {
-		if len(li) != 1 {
-			t.Fatal("unexpected value")
-		}
-		if li[0] != l.books[1] {
-			t.Fatal("unexpected value")
+		if tests[i].exp == 0 {
+			if len(bs) != 0 {
+				t.Errorf("unexpected length for [%s], exp 0 got %d", tests[i].desc, len(bs))
+			}
+		} else {
+			if len(bs) != 1 {
+				t.Fatalf("unexpected length for [%s], exp 1 got %d", tests[i].desc, len(bs))
+			}
+			if !reflect.DeepEqual(bs[0], l.books[1]) {
+				t.Fatalf("unexpected book value for [%s]", tests[i].desc)
+			}
 		}
 	}
 }

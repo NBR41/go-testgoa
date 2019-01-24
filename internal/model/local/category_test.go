@@ -37,21 +37,6 @@ func TestGetCategoryByName(t *testing.T) {
 	}
 }
 
-func TestListCategories(t *testing.T) {
-	l := New(nil)
-
-	bs, err := l.ListCategories()
-	if err != nil {
-		t.Fatal("unexpected error", err)
-	}
-
-	for i := range bs {
-		if int64(i)+1 != bs[i].ID {
-			t.Fatal("unexpected ID , list must be sorted")
-		}
-	}
-}
-
 func TestInsertCategory(t *testing.T) {
 	l := New(nil)
 
@@ -124,46 +109,43 @@ func TestDeleteCategory(t *testing.T) {
 	expectingError(t, err, model.ErrNotFound)
 }
 
-func TestListCategoriesByAuthorID(t *testing.T) {
+func TestListCategoriesByIDs(t *testing.T) {
+	var nf, id int = 999, 1
 	l := New(nil)
-	bs, err := l.ListCategoriesByAuthorID(999)
-	if err != nil {
-		t.Fatal("unexpected error", err)
-	}
-	if len(bs) != 0 {
-		t.Errorf("unexpected length, exp 0 got %d", len(bs))
+
+	tests := []struct {
+		desc   string
+		params []*int
+		exp    int
+	}{
+		{"not founds", []*int{&nf, &nf}, 0},
+		{"author not found", []*int{&nf, nil}, 0},
+		{"class not found", []*int{nil, &nf}, 0},
+		{"author id class not found", []*int{&id, &nf}, 0},
+		{"author not found class id", []*int{&nf, &id}, 0},
+		{"no ids", []*int{nil, nil}, 1},
+		{"only author", []*int{&id, nil}, 1},
+		{"only class", []*int{nil, &id}, 1},
+		{"author and class", []*int{&id, &id}, 1},
 	}
 
-	bs, err = l.ListCategoriesByAuthorID(1)
-	if err != nil {
-		t.Fatal("unexpected error", err)
-	}
-	if len(bs) != 1 {
-		t.Errorf("unexpected length, exp 1 got %d", len(bs))
-	}
-	if !reflect.DeepEqual(bs[0], l.categories[1]) {
-		t.Fatal("unexpected user value")
-	}
-}
+	for i := range tests {
+		bs, err := l.ListCategoriesByIDs(tests[i].params[0], tests[i].params[1])
+		if err != nil {
+			t.Fatalf("unexpected error for [%s], [%v]", tests[i].desc, err)
+		}
 
-func TestListCategoriesByClassID(t *testing.T) {
-	l := New(nil)
-	bs, err := l.ListCategoriesByClassID(999)
-	if err != nil {
-		t.Fatal("unexpected error", err)
-	}
-	if len(bs) != 0 {
-		t.Errorf("unexpected length, exp 0 got %d", len(bs))
-	}
-
-	bs, err = l.ListCategoriesByClassID(1)
-	if err != nil {
-		t.Fatal("unexpected error", err)
-	}
-	if len(bs) != 1 {
-		t.Errorf("unexpected length, exp 1 got %d", len(bs))
-	}
-	if !reflect.DeepEqual(bs[0], l.categories[1]) {
-		t.Fatal("unexpected user value")
+		if tests[i].exp == 0 {
+			if len(bs) != 0 {
+				t.Errorf("unexpected length for [%s], exp 0 got %d", tests[i].desc, len(bs))
+			}
+		} else {
+			if len(bs) != 1 {
+				t.Fatalf("unexpected length for [%s], exp 1 got %d", tests[i].desc, len(bs))
+			}
+			if !reflect.DeepEqual(bs[0], l.categories[1]) {
+				t.Fatalf("unexpected category value for [%s]", tests[i].desc)
+			}
+		}
 	}
 }

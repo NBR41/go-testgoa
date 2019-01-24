@@ -1,8 +1,6 @@
 package local
 
 import (
-	"sort"
-
 	"github.com/NBR41/go-testgoa/internal/model"
 )
 
@@ -34,24 +32,6 @@ func (db *Local) GetRoleByName(name string) (*model.Role, error) {
 	db.Lock()
 	defer db.Unlock()
 	return db.getRoleByName(name)
-}
-
-//ListRoles list roles
-func (db *Local) ListRoles() ([]*model.Role, error) {
-	db.Lock()
-	defer db.Unlock()
-	ids := make([]int, len(db.roles))
-	i := 0
-	for id := range db.roles {
-		ids[i] = id
-		i++
-	}
-	sort.Ints(ids)
-	list := make([]*model.Role, len(ids))
-	for i, id := range ids {
-		list[i] = db.roles[id]
-	}
-	return list, nil
 }
 
 //InsertRole insert author
@@ -96,13 +76,21 @@ func (db *Local) DeleteRole(id int) error {
 	return nil
 }
 
-//ListRolesByAuthorID list roles by author id
-func (db *Local) ListRolesByAuthorID(authorID int) ([]*model.Role, error) {
+//ListRolesByIDs returns a filtered role list
+func (db *Local) ListRolesByIDs(authorID *int) ([]*model.Role, error) {
 	db.Lock()
 	defer db.Unlock()
+	if authorID == nil {
+		ret := []*model.Role{}
+		for i := range db.roles {
+			ret = append(ret, db.roles[i])
+		}
+		return ret, nil
+	}
+
 	roleIDs := make(map[int]struct{})
 	for i := range db.authorships {
-		if db.authorships[i].AuthorID == int64(authorID) {
+		if db.authorships[i].AuthorID == int64(*authorID) {
 			roleIDs[int(db.authorships[i].RoleID)] = struct{}{}
 		}
 	}

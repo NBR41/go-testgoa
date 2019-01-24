@@ -122,36 +122,46 @@ func TestDeleteCollection(t *testing.T) {
 	expectingError(t, err, model.ErrNotFound)
 }
 
-func TestListCollections(t *testing.T) {
+func TestListCollectionsByIDs(t *testing.T) {
+	var nf, id int = 999, 1
 	l := New(nil)
 
-	bs, err := l.ListCollections()
-	if err != nil {
-		t.Fatal("unexpected error", err)
+	tests := []struct {
+		desc   string
+		params []*int
+		exp    int
+	}{
+		{"not founds", []*int{&nf, &nf, &nf}, 0},
+		{"editor not found", []*int{&nf, nil, nil}, 0},
+		{"print not found", []*int{nil, &nf, nil}, 0},
+		{"series not found", []*int{nil, nil, &nf}, 0},
+		{"editor id print not found series not found", []*int{&id, &nf, &nf}, 0},
+		{"editor not found print id series not found", []*int{&nf, &id, &nf}, 0},
+		{"editor not found print not found series id", []*int{&nf, &nf, &id}, 0},
+		{"no ids", []*int{nil, nil, nil}, 1},
+		{"only editor", []*int{&id, nil, nil}, 1},
+		{"only print", []*int{nil, &id, nil}, 1},
+		{"only series", []*int{nil, nil, &id}, 1},
+		{"all", []*int{&id, &id, &id}, 1},
 	}
 
-	for i := range bs {
-		if int64(i)+1 != bs[i].ID {
-			t.Fatal("unexpected ID , list must be sorted")
+	for i := range tests {
+		bs, err := l.ListCollectionsByIDs(tests[i].params[0], tests[i].params[1], tests[i].params[2])
+		if err != nil {
+			t.Fatalf("unexpected error for [%s], [%v]", tests[i].desc, err)
 		}
-	}
-}
 
-func TestListCollectionsByEditorID(t *testing.T) {
-	l := New(nil)
-	bs, err := l.ListCollectionsByEditorID(5)
-	if err != nil {
-		t.Fatal("unexpected error", err)
-	}
-	if len(bs) != 0 {
-		t.Errorf("unexpected length, exp 0 got %d", len(bs))
-	}
-
-	bs, err = l.ListCollectionsByEditorID(1)
-	if err != nil {
-		t.Fatal("unexpected error", err)
-	}
-	if len(bs) != 1 {
-		t.Errorf("unexpected length, exp 1 got %d", len(bs))
+		if tests[i].exp == 0 {
+			if len(bs) != 0 {
+				t.Errorf("unexpected length for [%s], exp 0 got %d", tests[i].desc, len(bs))
+			}
+		} else {
+			if len(bs) != 1 {
+				t.Fatalf("unexpected length for [%s], exp 1 got %d", tests[i].desc, len(bs))
+			}
+			if !reflect.DeepEqual(bs[0], l.collections[1]) {
+				t.Fatalf("unexpected collection value for [%s]", tests[i].desc)
+			}
+		}
 	}
 }

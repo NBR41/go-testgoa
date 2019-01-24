@@ -37,116 +37,6 @@ func TestGetSeriesByName(t *testing.T) {
 	}
 }
 
-func TestListSeries(t *testing.T) {
-	l := New(nil)
-
-	bs, err := l.ListSeries()
-	if err != nil {
-		t.Fatal("unexpected error", err)
-	}
-
-	for i := range bs {
-		if int64(i)+1 != bs[i].ID {
-			t.Fatal("unexpected ID , list must be sorted")
-		}
-	}
-}
-
-func TestListSeriesByIDs(t *testing.T) {
-	l := New(nil)
-	author1, role1, category1, class1 := 999, 999, 999, 999
-	author2, role2, category2, class2 := 1, 1, 1, 1
-	//empty list
-	li, err := l.ListSeriesByIDs(&author1, &role1, &category1, &class1)
-	if err != nil {
-		t.Fatalf("unexpected error [%v]", err)
-	} else {
-		if len(li) != 0 {
-			t.Fatal("unexpected value")
-		}
-	}
-
-	//valid list
-	li, err = l.ListSeriesByIDs(&author2, &role2, &category2, nil)
-	if err != nil {
-		t.Fatalf("unexpected error [%v]", err)
-	} else {
-		if len(li) != 1 {
-			t.Fatal("unexpected value")
-		}
-		if li[0] != l.series[1] {
-			t.Fatal("unexpected value")
-		}
-	}
-
-	//valid list
-	li, err = l.ListSeriesByIDs(&author2, &role2, &category2, &class2)
-	if err != nil {
-		t.Fatalf("unexpected error [%v]", err)
-	} else {
-		if len(li) != 1 {
-			t.Fatal("unexpected value")
-		}
-		if li[0] != l.series[1] {
-			t.Fatal("unexpected value")
-		}
-	}
-}
-
-func TestListSeriesByCollectionID(t *testing.T) {
-	l := New(nil)
-
-	//empty list
-	li, err := l.ListSeriesByCollectionID(999)
-	if err != nil {
-		t.Fatalf("unexpected error [%v]", err)
-	} else {
-		if len(li) != 0 {
-			t.Fatal("unexpected value")
-		}
-	}
-
-	//valid list
-	li, err = l.ListSeriesByCollectionID(1)
-	if err != nil {
-		t.Fatalf("unexpected error [%v]", err)
-	} else {
-		if len(li) != 1 {
-			t.Fatal("unexpected value")
-		}
-		if li[0] != l.series[1] {
-			t.Fatal("unexpected value")
-		}
-	}
-}
-
-func TestListSeriesByCollectionIDPrintID(t *testing.T) {
-	l := New(nil)
-
-	//empty list
-	li, err := l.ListSeriesByCollectionIDPrintID(999, 999)
-	if err != nil {
-		t.Fatalf("unexpected error [%v]", err)
-	} else {
-		if len(li) != 0 {
-			t.Fatal("unexpected value")
-		}
-	}
-
-	//valid list
-	li, err = l.ListSeriesByCollectionIDPrintID(1, 1)
-	if err != nil {
-		t.Fatalf("unexpected error [%v]", err)
-	} else {
-		if len(li) != 1 {
-			t.Fatal("unexpected value")
-		}
-		if li[0] != l.series[1] {
-			t.Fatal("unexpected value")
-		}
-	}
-}
-
 func TestInsertSeries(t *testing.T) {
 	l := New(nil)
 
@@ -230,4 +120,104 @@ func TestDeleteSeries(t *testing.T) {
 	}
 	_, err = l.GetSeriesByID(1)
 	expectingError(t, err, model.ErrNotFound)
+}
+
+func TestListSeriesByIDs(t *testing.T) {
+	l := New(nil)
+
+	var nf, id int = 999, 1
+
+	tests := []struct {
+		desc   string
+		params []*int
+		exp    int
+	}{
+		{"not founds", []*int{&nf, &nf, &nf, &nf}, 0},
+		{"author not found", []*int{&nf, nil, nil, nil}, 0},
+		{"category not found", []*int{nil, &nf, nil, nil}, 0},
+		{"class not found", []*int{nil, nil, &nf, nil}, 0},
+		{"role not found", []*int{nil, nil, nil, &nf}, 0},
+		{"author, with category not found", []*int{&id, &nf, nil, nil}, 0},
+		{"author, with class not found", []*int{&id, nil, &nf, nil}, 0},
+		{"author, with role not found", []*int{&id, nil, nil, &nf}, 0},
+		{"category, with author not found", []*int{&nf, &id, nil, nil}, 0},
+		{"category, with class not found", []*int{nil, &id, &nf, nil}, 0},
+		{"category, with role not found", []*int{nil, &id, nil, &nf}, 0},
+		{"class, with author not found", []*int{&nf, nil, &id, nil}, 0},
+		{"class, with category not found", []*int{nil, &nf, &id, nil}, 0},
+		{"class, with role not found", []*int{nil, nil, &id, &nf}, 0},
+		{"role, with author not found", []*int{&nf, nil, nil, &id}, 0},
+		{"role, with category not found", []*int{nil, &nf, nil, &id}, 0},
+		{"role, with class not found", []*int{nil, nil, &nf, &id}, 0},
+		{"no ids", []*int{nil, nil, nil, nil}, 1},
+		{"author", []*int{&id, nil, nil, nil}, 1},
+		{"category", []*int{nil, &id, nil, nil}, 1},
+		{"class", []*int{nil, nil, &id, nil}, 1},
+		{"role", []*int{nil, nil, nil, &id}, 1},
+		{"all", []*int{&id, &id, &id, &id}, 1},
+	}
+
+	for i := range tests {
+		bs, err := l.ListSeriesByIDs(tests[i].params[0], tests[i].params[1], tests[i].params[2], tests[i].params[3])
+		if err != nil {
+			t.Fatalf("unexpected error for [%s], [%v]", tests[i].desc, err)
+		}
+
+		if tests[i].exp == 0 {
+			if len(bs) != 0 {
+				t.Errorf("unexpected length for [%s], exp 0 got %d", tests[i].desc, len(bs))
+			}
+		} else {
+			if len(bs) != 1 {
+				t.Fatalf("unexpected length for [%s], exp 1 got %d", tests[i].desc, len(bs))
+			}
+			if !reflect.DeepEqual(bs[0], l.series[1]) {
+				t.Fatalf("unexpected series value for [%s]", tests[i].desc)
+			}
+		}
+	}
+}
+
+func TestListSeriesByEditionIDs(t *testing.T) {
+	var nf, id int = 999, 1
+	l := New(nil)
+
+	tests := []struct {
+		desc   string
+		params []*int
+		exp    int
+	}{
+		{"not founds", []*int{&nf, &nf, &nf}, 0},
+		{"collection not found", []*int{&nf, nil, nil}, 0},
+		{"editor not found", []*int{nil, &nf, nil}, 0},
+		{"print not found", []*int{nil, nil, &nf}, 0},
+		{"collection id editor not found print not found", []*int{&id, &nf, &nf}, 0},
+		{"collection not found editor id print not found", []*int{&nf, &id, &nf}, 0},
+		{"collection not found editor not found print id", []*int{&nf, &nf, &id}, 0},
+		{"no ids", []*int{nil, nil, nil}, 1},
+		{"only collection", []*int{&id, nil, nil}, 1},
+		{"only editor", []*int{nil, &id, nil}, 1},
+		{"only print", []*int{nil, nil, &id}, 1},
+		{"all", []*int{&id, &id, &id}, 1},
+	}
+
+	for i := range tests {
+		bs, err := l.ListSeriesByEditionIDs(tests[i].params[0], tests[i].params[1], tests[i].params[2])
+		if err != nil {
+			t.Fatalf("unexpected error for [%s], [%v]", tests[i].desc, err)
+		}
+
+		if tests[i].exp == 0 {
+			if len(bs) != 0 {
+				t.Errorf("unexpected length for [%s], exp 0 got %d", tests[i].desc, len(bs))
+			}
+		} else {
+			if len(bs) != 1 {
+				t.Fatalf("unexpected length for [%s], exp 1 got %d", tests[i].desc, len(bs))
+			}
+			if !reflect.DeepEqual(bs[0], l.series[1]) {
+				t.Fatalf("unexpected series value for [%s]", tests[i].desc)
+			}
+		}
+	}
 }

@@ -1,8 +1,6 @@
 package local
 
 import (
-	"sort"
-
 	"github.com/NBR41/go-testgoa/internal/model"
 )
 
@@ -90,38 +88,61 @@ func (db *Local) DeleteCollection(id int) error {
 	return nil
 }
 
-//ListCollections list all collections
-func (db *Local) ListCollections() ([]*model.Collection, error) {
+//ListCollectionsByIDs returns filtered collection list
+func (db *Local) ListCollectionsByIDs(editorID, printID, seriesID *int) ([]*model.Collection, error) {
 	db.Lock()
 	defer db.Unlock()
-	ids := make([]int, len(db.collections))
-	i := 0
-	for id := range db.collections {
-		ids[i] = id
-		i++
-	}
-	sort.Ints(ids)
-	list := make([]*model.Collection, len(ids))
-	for i, id := range ids {
-		list[i] = db.collections[id]
-	}
-	return list, nil
-}
 
-//ListCollectionsByEditorID list all collections for an editor id
-func (db *Local) ListCollectionsByEditorID(id int) ([]*model.Collection, error) {
-	db.Lock()
-	defer db.Unlock()
-	ids := []int{}
-	for i := range db.collections {
-		if db.collections[i].EditorID == int64(id) {
-			ids = append(ids, i)
+	if editorID == nil && printID == nil && seriesID == nil {
+		ret := []*model.Collection{}
+		for k := range db.collections {
+			ret = append(ret, db.collections[k])
+		}
+		return ret, nil
+	}
+
+	var bookIDs map[int]struct{}
+	if seriesID != nil {
+		bookIDs = make(map[int]struct{})
+		for i := range db.books {
+			if db.books[i].SeriesID == int64(*seriesID) {
+				bookIDs[i] = struct{}{}
+			}
 		}
 	}
-	sort.Ints(ids)
-	list := make([]*model.Collection, len(ids))
-	for i, id := range ids {
-		list[i] = db.collections[id]
+
+	var collectionIDs map[int]struct{}
+	if seriesID != nil || printID != nil {
+		collectionIDs = make(map[int]struct{})
+		for i := range db.editions {
+			if bookIDs != nil {
+				if _, ok := bookIDs[int(db.editions[i].BookID)]; !ok {
+					continue
+				}
+			}
+			if printID == nil || db.editions[i].PrintID == int64(*printID) {
+				collectionIDs[int(db.editions[i].CollectionID)] = struct{}{}
+			}
+		}
 	}
-	return list, nil
+
+	var finalCollectionIDs = make(map[int]struct{})
+	for i := range db.collections {
+		if collectionIDs != nil {
+			if _, ok := collectionIDs[i]; !ok {
+				continue
+			}
+		}
+		if editorID == nil || db.collections[i].EditorID == int64(*editorID) {
+			finalCollectionIDs[i] = struct{}{}
+		}
+	}
+
+	ret := []*model.Collection{}
+	for k := range finalCollectionIDs {
+		if _, ok := db.collections[k]; ok {
+			ret = append(ret, db.collections[k])
+		}
+	}
+	return ret, nil
 }

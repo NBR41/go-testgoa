@@ -97,59 +97,47 @@ func (db *Local) DeleteAuthor(id int) error {
 	return nil
 }
 
-//ListAuthorsByCategoryID list author by category id
-func (db *Local) ListAuthorsByCategoryID(categoryID int) ([]*model.Author, error) {
+//ListAuthorsByIDs returns filtered author list
+func (db *Local) ListAuthorsByIDs(categoryID, roleID *int) ([]*model.Author, error) {
 	db.Lock()
 	defer db.Unlock()
-	ret := []*model.Author{}
-	seriesIDs := []int{}
-	for i := range db.series {
-		if db.series[i].CategoryID == int64(categoryID) {
-			seriesIDs = append(seriesIDs, i)
-		}
-	}
+	var bookIDs map[int]struct{}
 
-	bookIDs := []int{}
-	for i := range seriesIDs {
-		for j := range db.books {
-			if db.books[j].SeriesID == int64(seriesIDs[i]) {
-				bookIDs = append(bookIDs, j)
+	if categoryID != nil {
+		seriesIDs := []int{}
+		for i := range db.series {
+			if db.series[i].CategoryID == int64(*categoryID) {
+				seriesIDs = append(seriesIDs, i)
 			}
 		}
-	}
 
-	authors := make(map[int64]*model.Author)
-	for i := range bookIDs {
-		for j := range db.authorships {
-			if db.authorships[j].BookID == int64(bookIDs[i]) {
-				if _, ok := db.authors[int(db.authorships[j].AuthorID)]; ok {
-					authors[db.authorships[j].AuthorID] = db.authors[int(db.authorships[j].AuthorID)]
+		bookIDs = make(map[int]struct{})
+		for i := range seriesIDs {
+			for j := range db.books {
+				if db.books[j].SeriesID == int64(seriesIDs[i]) {
+					bookIDs[j] = struct{}{}
 				}
 			}
 		}
 	}
 
-	for i := range authors {
-		ret = append(ret, authors[i])
-	}
-	return ret, nil
-}
-
-//ListAuthorsByRoleID list authors by role id
-func (db *Local) ListAuthorsByRoleID(roleID int) ([]*model.Author, error) {
-	db.Lock()
-	defer db.Unlock()
-	ret := []*model.Author{}
-	authors := make(map[int64]*model.Author)
+	authorIDs := make(map[int]struct{})
 	for i := range db.authorships {
-		if db.authorships[i].RoleID == int64(roleID) {
-			if _, ok := db.authors[int(db.authorships[i].AuthorID)]; ok {
-				authors[db.authorships[i].AuthorID] = db.authors[int(db.authorships[i].AuthorID)]
+		if bookIDs != nil {
+			if _, ok := bookIDs[int(db.authorships[i].BookID)]; !ok {
+				continue
 			}
 		}
+		if roleID == nil || db.authorships[i].RoleID == int64(*roleID) {
+			authorIDs[int(db.authorships[i].AuthorID)] = struct{}{}
+		}
 	}
-	for i := range authors {
-		ret = append(ret, authors[i])
+
+	ret := []*model.Author{}
+	for k := range authorIDs {
+		if _, ok := db.authors[k]; ok {
+			ret = append(ret, db.authors[k])
+		}
 	}
 	return ret, nil
 }

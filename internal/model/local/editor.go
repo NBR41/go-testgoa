@@ -95,3 +95,54 @@ func (db *Local) DeleteEditor(id int) error {
 	delete(db.editors, id)
 	return nil
 }
+
+//ListEditorsByIDs returns a filtered editor list
+func (db *Local) ListEditorsByIDs(printID, seriesID *int) ([]*model.Editor, error) {
+	db.Lock()
+	defer db.Unlock()
+
+	if printID == nil && seriesID == nil {
+		ret := []*model.Editor{}
+		for k := range db.editors {
+			ret = append(ret, db.editors[k])
+		}
+		return ret, nil
+	}
+
+	var bookIDs map[int]struct{}
+	if seriesID != nil {
+		bookIDs = make(map[int]struct{})
+		for i := range db.books {
+			if db.books[i].SeriesID == int64(*seriesID) {
+				bookIDs[i] = struct{}{}
+			}
+		}
+	}
+
+	var collectionIDs = make(map[int]struct{})
+	for i := range db.editions {
+		if bookIDs != nil {
+			if _, ok := bookIDs[int(db.editions[i].BookID)]; !ok {
+				continue
+			}
+		}
+		if printID == nil || int64(*printID) == db.editions[i].PrintID {
+			collectionIDs[int(db.editions[i].CollectionID)] = struct{}{}
+		}
+	}
+
+	var editorIDs = make(map[int]struct{})
+	for i := range db.collections {
+		if _, ok := collectionIDs[i]; ok {
+			editorIDs[int(db.collections[i].EditorID)] = struct{}{}
+		}
+	}
+
+	ret := []*model.Editor{}
+	for k := range editorIDs {
+		if _, ok := db.editors[k]; ok {
+			ret = append(ret, db.editors[k])
+		}
+	}
+	return ret, nil
+}

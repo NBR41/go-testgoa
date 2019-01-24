@@ -13,7 +13,8 @@ func setupDev() (*config, func(), error) {
 	tokenHelper := provideTokenHelper()
 	mailSender := provideDevMailSender()
 	apiHelper := provideAPI()
-	mainConfig := newConfig(fmodeler, tokenHelper, mailSender, apiHelper)
+	lister := provideLister()
+	mainConfig := newConfig(fmodeler, tokenHelper, mailSender, apiHelper, lister)
 	return mainConfig, func() {
 	}, nil
 }
@@ -27,7 +28,8 @@ func setupProd() (*config, func(), error) {
 	tokenHelper := provideTokenHelper()
 	mailSender := provideProdMailSender()
 	apiHelper := provideAPI()
-	mainConfig := newConfig(fmodeler, tokenHelper, mailSender, apiHelper)
+	lister := provideLister()
+	mainConfig := newConfig(fmodeler, tokenHelper, mailSender, apiHelper, lister)
 	return mainConfig, func() {
 	}, nil
 }

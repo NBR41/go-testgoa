@@ -83,16 +83,16 @@ func PrintsHref(printID interface{}) string {
 	return fmt.Sprintf("/prints/%v", paramprintID)
 }
 
-// RolesHref returns the resource href.
-func RolesHref(roleID interface{}) string {
-	paramroleID := strings.TrimLeftFunc(fmt.Sprintf("%v", roleID), func(r rune) bool { return r == '/' })
-	return fmt.Sprintf("/roles/%v", paramroleID)
-}
-
 // SeriesHref returns the resource href.
 func SeriesHref(seriesID interface{}) string {
 	paramseriesID := strings.TrimLeftFunc(fmt.Sprintf("%v", seriesID), func(r rune) bool { return r == '/' })
 	return fmt.Sprintf("/series/%v", paramseriesID)
+}
+
+// RolesHref returns the resource href.
+func RolesHref(roleID interface{}) string {
+	paramroleID := strings.TrimLeftFunc(fmt.Sprintf("%v", roleID), func(r rune) bool { return r == '/' })
+	return fmt.Sprintf("/roles/%v", paramroleID)
 }
 
 // UsersHref returns the resource href.

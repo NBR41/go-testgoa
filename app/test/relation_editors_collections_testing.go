@@ -1758,7 +1758,7 @@ func ListPrintsRelationEditorsCollectionsInternalServerError(t goatest.TInterfac
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections/%v/collections", editorID, collectionID),
+		Path: fmt.Sprintf("/editors/%v/collections/%v/prints", editorID, collectionID),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
@@ -1820,7 +1820,7 @@ func ListPrintsRelationEditorsCollectionsNotFound(t goatest.TInterface, ctx cont
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections/%v/collections", editorID, collectionID),
+		Path: fmt.Sprintf("/editors/%v/collections/%v/prints", editorID, collectionID),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
@@ -1883,7 +1883,7 @@ func ListPrintsRelationEditorsCollectionsOK(t goatest.TInterface, ctx context.Co
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections/%v/collections", editorID, collectionID),
+		Path: fmt.Sprintf("/editors/%v/collections/%v/prints", editorID, collectionID),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
@@ -1958,7 +1958,7 @@ func ListPrintsRelationEditorsCollectionsOKLink(t goatest.TInterface, ctx contex
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections/%v/collections", editorID, collectionID),
+		Path: fmt.Sprintf("/editors/%v/collections/%v/prints", editorID, collectionID),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
@@ -2032,7 +2032,7 @@ func ListPrintsRelationEditorsCollectionsServiceUnavailable(t goatest.TInterface
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/editors/%v/collections/%v/collections", editorID, collectionID),
+		Path: fmt.Sprintf("/editors/%v/collections/%v/prints", editorID, collectionID),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {

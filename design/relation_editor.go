@@ -125,7 +125,7 @@ var _ = Resource("relationEditorsCollections", func() {
 	// /editors/[0-9]+/collections/[0-9]+/prints
 	Action("listPrints", func() {
 		Description("List prints by editor-collection")
-		Routing(GET(collectionPath))
+		Routing(GET(printPath))
 		fPrintList()
 	})
 

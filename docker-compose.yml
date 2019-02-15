@@ -1,0 +1,31 @@
+version: "3"
+
+networks:
+    netmysql:
+
+services:
+
+    myinv-mysql:
+        image: mysql:8.0
+        volumes:
+            - ./design/design.sql:/docker-entrypoint-initdb.d/init.sql
+        environment:
+            - MYSQL_ROOT_PASSWORD=FLXD8OVDTJVLYN4
+            - MYSQL_DATABASE=myinventory
+            - MYSQL_USER=myinvuser
+            - MYSQL_PASSWORD=CJ9NYZ3OH4PIJ7O
+        networks:
+            - netmysql
+
+    myinv-ws:
+        build:
+            context: ./
+        environment:
+            - MYSQL_HOST=myinv-mysql
+            - MYSQL_USER=myinvuser
+            - MYSQL_PASSWORD=CJ9NYZ3OH4PIJ7O
+            - MYSQL_DBNAME=myinventory
+        ports:
+            - "8089:8089"
+        networks:
+            - netmysql

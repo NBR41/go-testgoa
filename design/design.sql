@@ -14,13 +14,13 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 -- -----------------------------------------------------
 -- Schema mydb
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
-USE `mydb` ;
+CREATE SCHEMA IF NOT EXISTS `myinventory` DEFAULT CHARACTER SET utf8 ;
+USE `myinventory` ;
 
 -- -----------------------------------------------------
--- Table `mydb`.`category`
+-- Table `myinventory`.`category`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`category` (
+CREATE TABLE IF NOT EXISTS `myinventory`.`category` (
   `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(128) CHARACTER SET 'utf8' NOT NULL DEFAULT '',
   `create_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -34,9 +34,9 @@ COLLATE = utf8_unicode_ci;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`class`
+-- Table `myinventory`.`class`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`class` (
+CREATE TABLE IF NOT EXISTS `myinventory`.`class` (
   `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(128) CHARACTER SET 'utf8' NOT NULL DEFAULT '',
   `create_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -50,9 +50,9 @@ COLLATE = utf8_unicode_ci;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`role`
+-- Table `myinventory`.`role`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`role` (
+CREATE TABLE IF NOT EXISTS `myinventory`.`role` (
   `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(128) CHARACTER SET 'utf8' NOT NULL DEFAULT '',
   `create_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -66,9 +66,9 @@ COLLATE = utf8_unicode_ci;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`author`
+-- Table `myinventory`.`author`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`author` (
+CREATE TABLE IF NOT EXISTS `myinventory`.`author` (
   `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(128) CHARACTER SET 'utf8' NOT NULL DEFAULT '',
   `create_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -82,9 +82,9 @@ COLLATE = utf8_unicode_ci;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`series`
+-- Table `myinventory`.`series`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`series` (
+CREATE TABLE IF NOT EXISTS `myinventory`.`series` (
   `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(128) CHARACTER SET 'utf8' NOT NULL DEFAULT '',
   `category_id` BIGINT(20) UNSIGNED NOT NULL,
@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`series` (
   INDEX (`category_id` ASC),
   CONSTRAINT `fk_series_1`
     FOREIGN KEY (`category_id`)
-    REFERENCES `mydb`.`category` (`id`)
+    REFERENCES `myinventory`.`category` (`id`)
     ON DELETE CASCADE
 )
 ENGINE = InnoDB
@@ -104,9 +104,9 @@ COLLATE = utf8_unicode_ci;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`book`
+-- Table `myinventory`.`book`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`book` (
+CREATE TABLE IF NOT EXISTS `myinventory`.`book` (
   `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `isbn` VARCHAR(45) NOT NULL,
   `name` VARCHAR(128) CHARACTER SET 'utf8' NOT NULL DEFAULT '',
@@ -119,7 +119,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`book` (
   UNIQUE INDEX `ISBN_UNIQUE` (`isbn` ASC),
   CONSTRAINT `fk_book_1`
     FOREIGN KEY (`series_id`)
-    REFERENCES `mydb`.`series` (`id`)
+    REFERENCES `myinventory`.`series` (`id`)
     ON DELETE CASCADE
     ON UPDATE RESTRICT
 )
@@ -129,9 +129,9 @@ COLLATE = utf8_unicode_ci;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`authorship`
+-- Table `myinventory`.`authorship`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`authorship` (
+CREATE TABLE IF NOT EXISTS `myinventory`.`authorship` (
   `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `author_id` BIGINT(20) UNSIGNED NOT NULL,
   `book_id` BIGINT(20) UNSIGNED NOT NULL,
@@ -144,16 +144,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`authorship` (
   INDEX (`role_id` ASC),
   CONSTRAINT `fk_authorship_1`
     FOREIGN KEY (`author_id`)
-    REFERENCES `mydb`.`author` (`id`)
+    REFERENCES `myinventory`.`author` (`id`)
     ON DELETE CASCADE
     ON UPDATE RESTRICT,
   CONSTRAINT `fk_authorship_2`
     FOREIGN KEY (`book_id`)
-    REFERENCES `mydb`.`book` (`id`)
+    REFERENCES `myinventory`.`book` (`id`)
     ON DELETE CASCADE,
   CONSTRAINT `fk_authorship_3`
     FOREIGN KEY (`role_id`)
-    REFERENCES `mydb`.`role` (`id`)
+    REFERENCES `myinventory`.`role` (`id`)
     ON DELETE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
@@ -161,9 +161,9 @@ COLLATE = utf8_unicode_ci;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`print`
+-- Table `myinventory`.`print`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`print` (
+CREATE TABLE IF NOT EXISTS `myinventory`.`print` (
   `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(128) CHARACTER SET 'utf8' NOT NULL DEFAULT '',
   `create_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -177,9 +177,9 @@ COLLATE = utf8_unicode_ci;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`editor`
+-- Table `myinventory`.`editor`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`editor` (
+CREATE TABLE IF NOT EXISTS `myinventory`.`editor` (
   `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(128) CHARACTER SET 'utf8' NOT NULL DEFAULT '',
   `create_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -193,9 +193,9 @@ COLLATE = utf8_unicode_ci;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`collection`
+-- Table `myinventory`.`collection`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`collection` (
+CREATE TABLE IF NOT EXISTS `myinventory`.`collection` (
   `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(128) CHARACTER SET 'utf8' NOT NULL DEFAULT '',
   `editor_id` BIGINT(20) UNSIGNED NOT NULL,
@@ -206,7 +206,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`collection` (
   INDEX (`editor_id` ASC),
   CONSTRAINT `fk_collection_1`
     FOREIGN KEY (`editor_id`)
-    REFERENCES `mydb`.`editor` (`id`)
+    REFERENCES `myinventory`.`editor` (`id`)
     ON DELETE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
@@ -214,9 +214,9 @@ COLLATE = utf8_unicode_ci;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`edition`
+-- Table `myinventory`.`edition`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`edition` (
+CREATE TABLE IF NOT EXISTS `myinventory`.`edition` (
   `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `book_id` BIGINT(20) UNSIGNED NOT NULL,
   `collection_id` BIGINT(20) UNSIGNED NOT NULL,
@@ -229,16 +229,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`edition` (
   INDEX (`print_id` ASC),
   CONSTRAINT `fk_edition_1`
     FOREIGN KEY (`book_id`)
-    REFERENCES `mydb`.`book` (`id`)
+    REFERENCES `myinventory`.`book` (`id`)
     ON DELETE CASCADE
     ON UPDATE RESTRICT,
   CONSTRAINT `fk_edition_2`
     FOREIGN KEY (`collection_id`)
-    REFERENCES `mydb`.`collection` (`id`)
+    REFERENCES `myinventory`.`collection` (`id`)
     ON DELETE CASCADE,
   CONSTRAINT `fk_edition_3`
     FOREIGN KEY (`print_id`)
-    REFERENCES `mydb`.`print` (`id`)
+    REFERENCES `myinventory`.`print` (`id`)
     ON DELETE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
@@ -246,9 +246,9 @@ COLLATE = utf8_unicode_ci;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`classification`
+-- Table `myinventory`.`classification`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`classification` (
+CREATE TABLE IF NOT EXISTS `myinventory`.`classification` (
   `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `series_id` BIGINT(20) UNSIGNED NOT NULL,
   `class_id` BIGINT(20) UNSIGNED NOT NULL,
@@ -259,12 +259,12 @@ CREATE TABLE IF NOT EXISTS `mydb`.`classification` (
   INDEX (`class_id` ASC),
   CONSTRAINT `fk_classification_1`
     FOREIGN KEY (`series_id`)
-    REFERENCES `mydb`.`series` (`id`)
+    REFERENCES `myinventory`.`series` (`id`)
     ON DELETE CASCADE
     ON UPDATE RESTRICT,
   CONSTRAINT `fk_classification_2`
     FOREIGN KEY (`class_id`)
-    REFERENCES `mydb`.`class` (`id`)
+    REFERENCES `myinventory`.`class` (`id`)
     ON DELETE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
@@ -272,9 +272,9 @@ COLLATE = utf8_unicode_ci;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`user`
+-- Table `myinventory`.`user`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`user` (
+CREATE TABLE IF NOT EXISTS `myinventory`.`user` (
   `id` BIGINT(20) UNSIGNED NOT NULL,
   `nickname` VARCHAR(45) NOT NULL,
   `email` VARCHAR(128) NOT NULL,
@@ -291,9 +291,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`ownership`
+-- Table `myinventory`.`ownership`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`ownership` (
+CREATE TABLE IF NOT EXISTS `myinventory`.`ownership` (
   `user_id` BIGINT(20) UNSIGNED NOT NULL,
   `book_id` BIGINT(20) UNSIGNED NOT NULL,
   `create_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -302,12 +302,12 @@ CREATE TABLE IF NOT EXISTS `mydb`.`ownership` (
   INDEX (`book_id` ASC),
   CONSTRAINT `fk_ownership_1`
     FOREIGN KEY (`user_id`)
-    REFERENCES `mydb`.`user` (`id`)
+    REFERENCES `myinventory`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_ownership_2`
     FOREIGN KEY (`book_id`)
-    REFERENCES `mydb`.`book` (`id`)
+    REFERENCES `myinventory`.`book` (`id`)
     ON DELETE CASCADE
     ON UPDATE RESTRICT)
 ENGINE = InnoDB;

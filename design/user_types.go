@@ -28,7 +28,6 @@ var (
 	UserCreatePayload = Type("UserCreatePayload", func() {
 		Reference(PasswordPayload)
 		attrUserEmail()
-		Required()
 		attrUserNickname()
 		Member("password")
 		Required("email", "nickname", "password")

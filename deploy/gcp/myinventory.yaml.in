@@ -1,0 +1,65 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: myinventory
+  labels:
+    app: myinventory
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myinventory
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: myinventory
+    spec:
+      volumes:
+      - name: google-cloud-key
+        secret:
+          secretName: myinventory-key
+      containers:
+      - name: myinventory
+        image: {{IMAGE}}
+        args:
+        - "-env=gcp"
+        - "-db_host={{database_instance}}"
+        - "-cloud_sql_region={{database_region}}"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8089
+          protocol: TCP
+        volumeMounts:
+        - name: google-cloud-key
+          mountPath: /var/secrets/google
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /var/secrets/google/key.json
+        livenessProbe:
+          httpGet:
+            path: /_ah/health
+            port: 8089
+        readinessProbe:
+          httpGet:
+            path: /_ah/health
+            port: 8089
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myinventory
+  labels:
+    app: myinventory
+spec:
+  type: LoadBalancer
+  selector:
+    app: myinventory
+  ports:
+  - port: 8089
+    protocol: TCP
+    targetPort: 8089

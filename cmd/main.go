@@ -3,6 +3,10 @@
 package main
 
 import (
+	"context"
+	"flag"
+	"log"
+
 	"github.com/NBR41/go-testgoa/app"
 	"github.com/NBR41/go-testgoa/controllers"
 	"github.com/NBR41/go-testgoa/internal/security"
@@ -12,12 +16,46 @@ import (
 	goajwt "github.com/goadesign/goa/middleware/security/jwt"
 )
 
+type cliFlags struct {
+	dbHost     string
+	dbName     string
+	dbUser     string
+	dbPassword string
+
+	cloudSQLRegion string
+}
+
+var envFlag string
+
 func main() {
-	conf, f, err := initws()
-	if err != nil {
-		panic(err)
+	cf := new(cliFlags)
+	flag.StringVar(&envFlag, "env", "local", "environment to run under")
+	addr := flag.String("listen", ":8089", "port to listen for HTTP on")
+	flag.StringVar(&cf.dbHost, "db_host", "", "database host or Cloud SQL instance name")
+	flag.StringVar(&cf.dbName, "db_name", "myinventory", "database name")
+	flag.StringVar(&cf.dbUser, "db_user", "myinventory", "database user")
+	flag.StringVar(&cf.dbPassword, "db_password", "", "database user password")
+	flag.StringVar(&cf.cloudSQLRegion, "cloud_sql_region", "", "region of the Cloud SQL instance (GCP only)")
+	flag.Parse()
+
+	ctx := context.Background()
+	var conf *config
+	var cleanup func()
+	var err error
+	switch envFlag {
+	case "gcp":
+		conf, cleanup, err = setupGCP(ctx, cf)
+	case "docker":
+		conf, cleanup, err = setupDocker(ctx, cf)
+	case "local":
+		conf, cleanup, err = setupLocal(ctx, cf)
+	default:
+		log.Fatalf("unknown -env=%s", envFlag)
 	}
-	defer f()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer cleanup()
 
 	// Create service
 	service := goa.New("my-inventory")
@@ -111,7 +149,7 @@ func main() {
 	app.MountValidationController(service, controllers.NewValidationController(service, conf.fmod, conf.token, conf.mail))
 
 	// Start service
-	if err := service.ListenAndServe(":8089"); err != nil {
+	if err := service.ListenAndServe(*addr); err != nil {
 		service.LogError("startup", "err", err)
 	}
 }

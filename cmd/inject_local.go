@@ -20,7 +20,8 @@ func setupLocal(ctx context.Context, flags *cliFlags) (*config, func(), error) {
 }
 
 func provideLocalModeler(pass model.Passworder) controllers.Fmodeler {
+	model := local.New(pass)
 	return controllers.Fmodeler(func() (controllers.Modeler, error) {
-		return local.New(pass), nil
+		return model, nil
 	})
 }

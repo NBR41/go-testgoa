@@ -32,6 +32,8 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_unicode_ci;
 
+INSERT INTO `myinventory`.`category` VALUES (1, "undefined", NOW(), NOW());
+
 
 -- -----------------------------------------------------
 -- Table `myinventory`.`class`
@@ -64,6 +66,8 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_unicode_ci;
 
+INSERT INTO `myinventory`.`role` VALUES (1, "undefined", NOW(), NOW());
+
 
 -- -----------------------------------------------------
 -- Table `myinventory`.`author`
@@ -79,6 +83,8 @@ CREATE TABLE IF NOT EXISTS `myinventory`.`author` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_unicode_ci;
+
+INSERT INTO `myinventory`.`author` VALUES (1, "undefined", NOW(), NOW());
 
 
 -- -----------------------------------------------------
@@ -175,6 +181,8 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_unicode_ci;
 
+INSERT INTO `myinventory`.`print` VALUES (1, "undefined", NOW(), NOW());
+
 
 -- -----------------------------------------------------
 -- Table `myinventory`.`editor`
@@ -190,6 +198,8 @@ CREATE TABLE IF NOT EXISTS `myinventory`.`editor` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_unicode_ci;
+
+INSERT INTO `myinventory`.`editor` VALUES (1, "undefined", NOW(), NOW());
 
 
 -- -----------------------------------------------------
@@ -211,6 +221,8 @@ CREATE TABLE IF NOT EXISTS `myinventory`.`collection` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_unicode_ci;
+
+INSERT INTO `myinventory`.`collection` VALUES (1, "undefined", 1, NOW(), NOW());
 
 
 -- -----------------------------------------------------

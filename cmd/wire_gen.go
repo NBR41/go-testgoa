@@ -122,7 +122,8 @@ func gcpSQLParams(id gcp.ProjectID, flags *cliFlags) *cloudmysql.Params {
 // inject_local.go:
 
 func provideLocalModeler(pass model.Passworder) controllers.Fmodeler {
+	model2 := local.New(pass)
 	return controllers.Fmodeler(func() (controllers.Modeler, error) {
-		return local.New(pass), nil
+		return model2, nil
 	})
 }

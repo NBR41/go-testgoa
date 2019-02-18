@@ -10,4 +10,4 @@ while [ 1 ]; do
     break
 done
 
-exec "/go/bin/myinventory" "env=docker" "db_host=${MYSQL_HOST}" "db_user=${MYSQL_USER}" "db_password=${MYSQL_PASSWORD}" "db_name=${MYSQL_DBNAME}"
+exec "/go/bin/myinventory" "-env=docker" "-db_host=${MYSQL_HOST}" "-db_user=${MYSQL_USER}" "-db_password=${MYSQL_PASSWORD}" "-db_name=${MYSQL_DBNAME}"

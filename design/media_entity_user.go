@@ -23,7 +23,7 @@ var (
 			MaxLength(32)
 		})
 	}
-	attrUserLogin    = func() { Attribute("login", String, "email or nickname", func() { MinLength(5) }) }
+	attrUserLogin    = func() { Attribute("login", String, "email or nickname", func() { MinLength(1) }) }
 	attrUserPassword = func() {
 		Attribute("password", String, "user password", func() {
 			MinLength(1)
@@ -75,6 +75,7 @@ var _ = Resource("users", func() {
 			Param("nickname")
 			Param("email")
 		})
+		Security(JWTAuth)
 		Response(OK, CollectionOf(UserMedia, func() {
 			View("default")
 			View("tiny")
@@ -88,6 +89,7 @@ var _ = Resource("users", func() {
 		Description("Get user by id")
 		Routing(GET(userIDPath))
 		Params(attrUserID)
+		Security(JWTAuth)
 		// OK
 		Response(OK)
 		// Not found
@@ -128,7 +130,7 @@ var _ = Resource("users", func() {
 		// user not found
 		Response(NotFound)
 		// App error
-		Response(UnprocessableEntity)
+		Response(UnprocessableEntity, ErrorMedia)
 		// Errors
 		Response(InternalServerError)
 		Response(ServiceUnavailable)

@@ -31,20 +31,21 @@ func jwtUserValiadtion(h goa.Handler) goa.Handler {
 			return goajwt.ErrJWTError("unauthorized")
 		}
 
+		// store values from claims
+		ctx = context.WithValue(ctx, controllers.CtxKey("is_admin"), claims["is_admin"])
+		ctx = context.WithValue(ctx, controllers.CtxKey("user_id"), int64(claims["user_id"].(float64)))
+
 		// check scopes
-		if req.URL != nil && (req.URL.Path == "/token/auth" || req.URL.Path == "/token/access") {
+		if req.URL != nil && (req.URL.Path == "/token/auth" || req.URL.Path == "/token/access_token") {
 			if claims["scope"] != security.ScopeRefresh {
 				return goajwt.ErrJWTError("unauthorized")
 			}
+			return h(ctx, rw, req)
 		} else {
 			if claims["scope"] != security.ScopeAccess {
 				return goajwt.ErrJWTError("unauthorized")
 			}
 		}
-
-		// store values from claims
-		ctx = context.WithValue(ctx, controllers.CtxKey("is_admin"), claims["is_admin"])
-		ctx = context.WithValue(ctx, controllers.CtxKey("user_id"), int64(claims["user_id"].(float64)))
 
 		if claims["is_admin"] == true {
 			return h(ctx, rw, req)

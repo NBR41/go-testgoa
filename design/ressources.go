@@ -25,7 +25,7 @@ var _ = Resource("authenticate", func() {
 	BasePath("/authenticate")
 
 	Action("auth", func() {
-		Description("Get users")
+		Description("auth the user")
 		Routing(POST(""))
 		Payload(AuthenticatePayload)
 		// OK

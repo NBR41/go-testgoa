@@ -1956,15 +1956,16 @@ func UpdateUsersUnauthorized(t goatest.TInterface, ctx context.Context, service 
 }
 
 // UpdateUsersUnprocessableEntity runs the method Update of the given controller with the given parameters and payload.
-// It returns the response writer so it's possible to inspect the response headers.
+// It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func UpdateUsersUnprocessableEntity(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.UsersController, userID int, payload *app.UpdateUsersPayload) http.ResponseWriter {
+func UpdateUsersUnprocessableEntity(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.UsersController, userID int, payload *app.UpdateUsersPayload) (http.ResponseWriter, error) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
+		resp   interface{}
 
-		respSetter goatest.ResponseSetterFunc = func(r interface{}) {}
+		respSetter goatest.ResponseSetterFunc = func(r interface{}) { resp = r }
 	)
 	if service == nil {
 		service = goatest.Service(&logBuf, respSetter)
@@ -1983,8 +1984,7 @@ func UpdateUsersUnprocessableEntity(t goatest.TInterface, ctx context.Context, s
 		if !ok {
 			panic(err) // bug
 		}
-		t.Errorf("unexpected payload validation error: %+v", e)
-		return nil
+		return nil, e
 	}
 
 	// Setup request context
@@ -2008,8 +2008,7 @@ func UpdateUsersUnprocessableEntity(t goatest.TInterface, ctx context.Context, s
 		if !_ok {
 			panic("invalid test data " + __err.Error()) // bug
 		}
-		t.Errorf("unexpected parameter validation error: %+v", _e)
-		return nil
+		return nil, _e
 	}
 	updateCtx.Payload = payload
 
@@ -2023,7 +2022,15 @@ func UpdateUsersUnprocessableEntity(t goatest.TInterface, ctx context.Context, s
 	if rw.Code != 422 {
 		t.Errorf("invalid response status code: got %+v, expected 422", rw.Code)
 	}
+	var mt error
+	if resp != nil {
+		var __ok bool
+		mt, __ok = resp.(error)
+		if !__ok {
+			t.Fatalf("invalid response media: got variable of type %T, value %+v, expected instance of error", resp, resp)
+		}
+	}
 
 	// Return results
-	return rw
+	return rw, mt
 }

@@ -184,7 +184,7 @@ func TestUpdateUserNickname(t *testing.T) {
 
 	// nickname exist
 	err := l.UpdateUserNickname(2, "admin")
-	expectingError(t, err, model.ErrDuplicateKey)
+	expectingError(t, err, model.ErrDuplicateNickname)
 	// user doesn't exist
 	err = l.UpdateUserNickname(10, "admin2")
 	expectingError(t, err, model.ErrNotFound)

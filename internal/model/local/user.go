@@ -145,7 +145,7 @@ func (db *Local) UpdateUserNickname(id int, nickname string) error {
 	}
 
 	if exU.ID != int64(id) {
-		return model.ErrDuplicateKey
+		return model.ErrDuplicateNickname
 	}
 	return nil
 }

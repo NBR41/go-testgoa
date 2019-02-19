@@ -6,11 +6,11 @@ consumes:
 definitions:
   AddOwnershipsPayload:
     example:
-      book_isbn: ekjw
+      book_isbn: o4
     properties:
       book_isbn:
         description: Book ISBN
-        example: ekjw
+        example: o4
         maxLength: 128
         minLength: 1
         type: string
@@ -20,17 +20,17 @@ definitions:
     type: object
   AuthenticatePayload:
     example:
-      login: apetnx1
-      password: 2j4z5wm
+      login: ape
+      password: nx102j4z5w
     properties:
       login:
         description: email or nickname
-        example: apetnx1
-        minLength: 5
+        example: ape
+        minLength: 1
         type: string
       password:
         description: user password
-        example: 2j4z5wm
+        example: nx102j4z5w
         maxLength: 32
         minLength: 1
         type: string
@@ -574,11 +574,11 @@ definitions:
     type: object
   CreateCategoriesPayload:
     example:
-      category_name: 3pur1t3p3
+      category_name: g3pur1t3p
     properties:
       category_name:
         description: Category Name (Shonen/Shojo/Seinen)
-        example: 3pur1t3p3
+        example: g3pur1t3p
         maxLength: 128
         minLength: 1
         type: string
@@ -588,11 +588,11 @@ definitions:
     type: object
   CreateClassesPayload:
     example:
-      class_name: 66yc5y2n0j
+      class_name: c
     properties:
       class_name:
         description: Class Name (Thriller/Romance/...)
-        example: 66yc5y2n0j
+        example: c
         maxLength: 128
         minLength: 1
         type: string
@@ -615,12 +615,12 @@ definitions:
     type: object
   CreateCollectionsPayload:
     example:
-      collection_name: 4arft37
+      collection_name: k74zn84ar
       editor_id: 1
     properties:
       collection_name:
         description: Collection Name (Découverte/Shonen)
-        example: 4arft37
+        example: k74zn84ar
         maxLength: 128
         minLength: 1
         type: string
@@ -663,11 +663,11 @@ definitions:
     type: object
   CreateEditorsPayload:
     example:
-      editor_name: t6
+      editor_name: r
     properties:
       editor_name:
         description: Editor Name (Glénat/Delcourt)
-        example: t6
+        example: r
         maxLength: 128
         minLength: 1
         type: string
@@ -1007,18 +1007,18 @@ definitions:
     type: array
   PasswordChangePayload:
     example:
-      password: "n"
-      token: vmp
+      password: kjwr4nt
+      token: mp
     properties:
       password:
         description: user password
-        example: "n"
+        example: kjwr4nt
         maxLength: 32
         minLength: 1
         type: string
       token:
         description: token
-        example: vmp
+        example: mp
         minLength: 1
         type: string
     required:
@@ -1230,11 +1230,11 @@ definitions:
     type: object
   UpdateCategoriesPayload:
     example:
-      category_name: lyhi
+      category_name: flyhi166
     properties:
       category_name:
         description: Category Name (Shonen/Shojo/Seinen)
-        example: lyhi
+        example: flyhi166
         maxLength: 128
         minLength: 1
         type: string
@@ -1244,11 +1244,11 @@ definitions:
     type: object
   UpdateClassesPayload:
     example:
-      class_name: 5q6ak74z
+      class_name: y2n0j55q
     properties:
       class_name:
         description: Class Name (Thriller/Romance/...)
-        example: 5q6ak74z
+        example: y2n0j55q
         maxLength: 128
         minLength: 1
         type: string
@@ -1258,12 +1258,12 @@ definitions:
     type: object
   UpdateCollectionsPayload:
     example:
-      collection_name: a9vhroe4
+      collection_name: 37e1a9vh
       editor_id: 1
     properties:
       collection_name:
         description: Collection Name (Découverte/Shonen)
-        example: a9vhroe4
+        example: 37e1a9vh
         maxLength: 128
         minLength: 1
         type: string
@@ -1276,11 +1276,11 @@ definitions:
     type: object
   UpdateEditorsPayload:
     example:
-      editor_name: yzo4
+      editor_name: oxt6vy
     properties:
       editor_name:
         description: Editor Name (Glénat/Delcourt)
-        example: yzo4
+        example: oxt6vy
         maxLength: 128
         minLength: 1
         type: string
@@ -1518,7 +1518,7 @@ paths:
       - health
   /authenticate:
     post:
-      description: Get users
+      description: auth the user
       operationId: authenticate#auth
       parameters:
       - in: body
@@ -3673,7 +3673,7 @@ paths:
       summary: listBooks relationEditorsCollections
       tags:
       - relationEditorsCollections
-  /editors/{editor_id}/collections/{collection_id}/collections:
+  /editors/{editor_id}/collections/{collection_id}/prints:
     get:
       description: List prints by editor-collection
       operationId: relationEditorsCollections#listPrints
@@ -7368,7 +7368,7 @@ paths:
       summary: Download public/swagger/swagger.json
   /token/access_token:
     get:
-      description: Get users
+      description: Get access
       operationId: token#access
       produces:
       - application/vnd.goa.error
@@ -7455,6 +7455,8 @@ paths:
           description: Service Unavailable
       schemes:
       - http
+      security:
+      - JWTSec: []
       summary: list users
       tags:
       - users
@@ -7559,6 +7561,8 @@ paths:
           description: Service Unavailable
       schemes:
       - http
+      security:
+      - JWTSec: []
       summary: show users
       tags:
       - users
@@ -7592,6 +7596,8 @@ paths:
           description: Not Found
         "422":
           description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/error'
         "500":
           description: Internal Server Error
         "503":

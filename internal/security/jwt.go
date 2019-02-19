@@ -69,8 +69,8 @@ func (j JWTHelper) ValidateValidationToken(token string) (int64, string, error) 
 	return j.validateUserToken(token, ScopeValidation, jwtValidationKey)
 }
 
-// GetAuthToken returns new auth token
-func (j JWTHelper) GetAuthToken(userID int64, isAdmin bool) (string, error) {
+// GetAccessToken returns new auth token
+func (j JWTHelper) GetAccessToken(userID int64, isAdmin bool) (string, error) {
 	return j.getAuthToken(userID, isAdmin, ScopeAccess, time.Now().Add(time.Hour*72).Unix())
 }
 

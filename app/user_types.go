@@ -32,8 +32,8 @@ func (ut *authenticatePayload) Validate() (err error) {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`request`, "password"))
 	}
 	if ut.Login != nil {
-		if utf8.RuneCountInString(*ut.Login) < 5 {
-			err = goa.MergeErrors(err, goa.InvalidLengthError(`request.login`, *ut.Login, utf8.RuneCountInString(*ut.Login), 5, true))
+		if utf8.RuneCountInString(*ut.Login) < 1 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`request.login`, *ut.Login, utf8.RuneCountInString(*ut.Login), 1, true))
 		}
 	}
 	if ut.Password != nil {
@@ -77,8 +77,8 @@ func (ut *AuthenticatePayload) Validate() (err error) {
 	if ut.Password == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`type`, "password"))
 	}
-	if utf8.RuneCountInString(ut.Login) < 5 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`type.login`, ut.Login, utf8.RuneCountInString(ut.Login), 5, true))
+	if utf8.RuneCountInString(ut.Login) < 1 {
+		err = goa.MergeErrors(err, goa.InvalidLengthError(`type.login`, ut.Login, utf8.RuneCountInString(ut.Login), 1, true))
 	}
 	if utf8.RuneCountInString(ut.Password) < 1 {
 		err = goa.MergeErrors(err, goa.InvalidLengthError(`type.password`, ut.Password, utf8.RuneCountInString(ut.Password), 1, true))

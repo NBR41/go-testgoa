@@ -11942,6 +11942,163 @@ func (ctx *ListEditorsByCollectionRelationPrintsSeriesContext) ServiceUnavailabl
 	return nil
 }
 
+// ListAuthorsRelationRoleContext provides the relationRole listAuthors action context.
+type ListAuthorsRelationRoleContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	RoleID int
+}
+
+// NewListAuthorsRelationRoleContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationRole controller listAuthors action.
+func NewListAuthorsRelationRoleContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListAuthorsRelationRoleContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListAuthorsRelationRoleContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramRoleID := req.Params["role_id"]
+	if len(paramRoleID) > 0 {
+		rawRoleID := paramRoleID[0]
+		if roleID, err2 := strconv.Atoi(rawRoleID); err2 == nil {
+			rctx.RoleID = roleID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("role_id", rawRoleID, "integer"))
+		}
+		if rctx.RoleID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`role_id`, rctx.RoleID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListAuthorsRelationRoleContext) OK(r AuthorCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.author+json; type=collection")
+	}
+	if r == nil {
+		r = AuthorCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListAuthorsRelationRoleContext) OKLink(r AuthorLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.author+json; type=collection")
+	}
+	if r == nil {
+		r = AuthorLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListAuthorsRelationRoleContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListAuthorsRelationRoleContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListAuthorsRelationRoleContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
+// ListSeriesByAuthorRelationRoleContext provides the relationRole listSeriesByAuthor action context.
+type ListSeriesByAuthorRelationRoleContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	AuthorID int
+	RoleID   int
+}
+
+// NewListSeriesByAuthorRelationRoleContext parses the incoming request URL and body, performs validations and creates the
+// context used by the relationRole controller listSeriesByAuthor action.
+func NewListSeriesByAuthorRelationRoleContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListSeriesByAuthorRelationRoleContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := ListSeriesByAuthorRelationRoleContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramAuthorID := req.Params["author_id"]
+	if len(paramAuthorID) > 0 {
+		rawAuthorID := paramAuthorID[0]
+		if authorID, err2 := strconv.Atoi(rawAuthorID); err2 == nil {
+			rctx.AuthorID = authorID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("author_id", rawAuthorID, "integer"))
+		}
+		if rctx.AuthorID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`author_id`, rctx.AuthorID, 1, true))
+		}
+	}
+	paramRoleID := req.Params["role_id"]
+	if len(paramRoleID) > 0 {
+		rawRoleID := paramRoleID[0]
+		if roleID, err2 := strconv.Atoi(rawRoleID); err2 == nil {
+			rctx.RoleID = roleID
+		} else {
+			err = goa.MergeErrors(err, goa.InvalidParamTypeError("role_id", rawRoleID, "integer"))
+		}
+		if rctx.RoleID < 1 {
+			err = goa.MergeErrors(err, goa.InvalidRangeError(`role_id`, rctx.RoleID, 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// OK sends a HTTP response with status code 200.
+func (ctx *ListSeriesByAuthorRelationRoleContext) OK(r SeriesCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json; type=collection")
+	}
+	if r == nil {
+		r = SeriesCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// OKLink sends a HTTP response with status code 200.
+func (ctx *ListSeriesByAuthorRelationRoleContext) OKLink(r SeriesLinkCollection) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json; type=collection")
+	}
+	if r == nil {
+		r = SeriesLinkCollection{}
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *ListSeriesByAuthorRelationRoleContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
+// InternalServerError sends a HTTP response with status code 500.
+func (ctx *ListSeriesByAuthorRelationRoleContext) InternalServerError() error {
+	ctx.ResponseData.WriteHeader(500)
+	return nil
+}
+
+// ServiceUnavailable sends a HTTP response with status code 503.
+func (ctx *ListSeriesByAuthorRelationRoleContext) ServiceUnavailable() error {
+	ctx.ResponseData.WriteHeader(503)
+	return nil
+}
+
 // ListBooksRelationSeriesContext provides the relationSeries listBooks action context.
 type ListBooksRelationSeriesContext struct {
 	context.Context
@@ -14367,163 +14524,6 @@ func (ctx *UpdateRolesContext) ServiceUnavailable() error {
 	return nil
 }
 
-// ListAuthorsRelationRoleContext provides the relationRole listAuthors action context.
-type ListAuthorsRelationRoleContext struct {
-	context.Context
-	*goa.ResponseData
-	*goa.RequestData
-	RoleID int
-}
-
-// NewListAuthorsRelationRoleContext parses the incoming request URL and body, performs validations and creates the
-// context used by the relationRole controller listAuthors action.
-func NewListAuthorsRelationRoleContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListAuthorsRelationRoleContext, error) {
-	var err error
-	resp := goa.ContextResponse(ctx)
-	resp.Service = service
-	req := goa.ContextRequest(ctx)
-	req.Request = r
-	rctx := ListAuthorsRelationRoleContext{Context: ctx, ResponseData: resp, RequestData: req}
-	paramRoleID := req.Params["role_id"]
-	if len(paramRoleID) > 0 {
-		rawRoleID := paramRoleID[0]
-		if roleID, err2 := strconv.Atoi(rawRoleID); err2 == nil {
-			rctx.RoleID = roleID
-		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("role_id", rawRoleID, "integer"))
-		}
-		if rctx.RoleID < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`role_id`, rctx.RoleID, 1, true))
-		}
-	}
-	return &rctx, err
-}
-
-// OK sends a HTTP response with status code 200.
-func (ctx *ListAuthorsRelationRoleContext) OK(r AuthorCollection) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.author+json; type=collection")
-	}
-	if r == nil {
-		r = AuthorCollection{}
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// OKLink sends a HTTP response with status code 200.
-func (ctx *ListAuthorsRelationRoleContext) OKLink(r AuthorLinkCollection) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.author+json; type=collection")
-	}
-	if r == nil {
-		r = AuthorLinkCollection{}
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// NotFound sends a HTTP response with status code 404.
-func (ctx *ListAuthorsRelationRoleContext) NotFound() error {
-	ctx.ResponseData.WriteHeader(404)
-	return nil
-}
-
-// InternalServerError sends a HTTP response with status code 500.
-func (ctx *ListAuthorsRelationRoleContext) InternalServerError() error {
-	ctx.ResponseData.WriteHeader(500)
-	return nil
-}
-
-// ServiceUnavailable sends a HTTP response with status code 503.
-func (ctx *ListAuthorsRelationRoleContext) ServiceUnavailable() error {
-	ctx.ResponseData.WriteHeader(503)
-	return nil
-}
-
-// ListSeriesByAuthorRelationRoleContext provides the relationRole listSeriesByAuthor action context.
-type ListSeriesByAuthorRelationRoleContext struct {
-	context.Context
-	*goa.ResponseData
-	*goa.RequestData
-	AuthorID int
-	RoleID   int
-}
-
-// NewListSeriesByAuthorRelationRoleContext parses the incoming request URL and body, performs validations and creates the
-// context used by the relationRole controller listSeriesByAuthor action.
-func NewListSeriesByAuthorRelationRoleContext(ctx context.Context, r *http.Request, service *goa.Service) (*ListSeriesByAuthorRelationRoleContext, error) {
-	var err error
-	resp := goa.ContextResponse(ctx)
-	resp.Service = service
-	req := goa.ContextRequest(ctx)
-	req.Request = r
-	rctx := ListSeriesByAuthorRelationRoleContext{Context: ctx, ResponseData: resp, RequestData: req}
-	paramAuthorID := req.Params["author_id"]
-	if len(paramAuthorID) > 0 {
-		rawAuthorID := paramAuthorID[0]
-		if authorID, err2 := strconv.Atoi(rawAuthorID); err2 == nil {
-			rctx.AuthorID = authorID
-		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("author_id", rawAuthorID, "integer"))
-		}
-		if rctx.AuthorID < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`author_id`, rctx.AuthorID, 1, true))
-		}
-	}
-	paramRoleID := req.Params["role_id"]
-	if len(paramRoleID) > 0 {
-		rawRoleID := paramRoleID[0]
-		if roleID, err2 := strconv.Atoi(rawRoleID); err2 == nil {
-			rctx.RoleID = roleID
-		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("role_id", rawRoleID, "integer"))
-		}
-		if rctx.RoleID < 1 {
-			err = goa.MergeErrors(err, goa.InvalidRangeError(`role_id`, rctx.RoleID, 1, true))
-		}
-	}
-	return &rctx, err
-}
-
-// OK sends a HTTP response with status code 200.
-func (ctx *ListSeriesByAuthorRelationRoleContext) OK(r SeriesCollection) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json; type=collection")
-	}
-	if r == nil {
-		r = SeriesCollection{}
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// OKLink sends a HTTP response with status code 200.
-func (ctx *ListSeriesByAuthorRelationRoleContext) OKLink(r SeriesLinkCollection) error {
-	if ctx.ResponseData.Header().Get("Content-Type") == "" {
-		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.series+json; type=collection")
-	}
-	if r == nil {
-		r = SeriesLinkCollection{}
-	}
-	return ctx.ResponseData.Service.Send(ctx.Context, 200, r)
-}
-
-// NotFound sends a HTTP response with status code 404.
-func (ctx *ListSeriesByAuthorRelationRoleContext) NotFound() error {
-	ctx.ResponseData.WriteHeader(404)
-	return nil
-}
-
-// InternalServerError sends a HTTP response with status code 500.
-func (ctx *ListSeriesByAuthorRelationRoleContext) InternalServerError() error {
-	ctx.ResponseData.WriteHeader(500)
-	return nil
-}
-
-// ServiceUnavailable sends a HTTP response with status code 503.
-func (ctx *ListSeriesByAuthorRelationRoleContext) ServiceUnavailable() error {
-	ctx.ResponseData.WriteHeader(503)
-	return nil
-}
-
 // CreateSeriesContext provides the series create action context.
 type CreateSeriesContext struct {
 	context.Context
@@ -15493,9 +15493,11 @@ func (ctx *UpdateUsersContext) NotFound() error {
 }
 
 // UnprocessableEntity sends a HTTP response with status code 422.
-func (ctx *UpdateUsersContext) UnprocessableEntity() error {
-	ctx.ResponseData.WriteHeader(422)
-	return nil
+func (ctx *UpdateUsersContext) UnprocessableEntity(r error) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 422, r)
 }
 
 // InternalServerError sends a HTTP response with status code 500.

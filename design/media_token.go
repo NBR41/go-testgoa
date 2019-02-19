@@ -48,7 +48,7 @@ var _ = Resource("token", func() {
 	BasePath("/token")
 
 	Action("access", func() {
-		Description("Get users")
+		Description("Get access")
 		Routing(GET("/access_token"))
 		Security(JWTAuth)
 		// OK

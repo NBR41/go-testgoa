@@ -131,6 +131,11 @@ func (c *Client) NewListUsersRequest(ctx context.Context, path string, email *st
 	if err != nil {
 		return nil, err
 	}
+	if c.JWTSecSigner != nil {
+		if err := c.JWTSecSigner.Sign(req); err != nil {
+			return nil, err
+		}
+	}
 	return req, nil
 }
 
@@ -160,6 +165,11 @@ func (c *Client) NewShowUsersRequest(ctx context.Context, path string) (*http.Re
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return nil, err
+	}
+	if c.JWTSecSigner != nil {
+		if err := c.JWTSecSigner.Sign(req); err != nil {
+			return nil, err
+		}
 	}
 	return req, nil
 }

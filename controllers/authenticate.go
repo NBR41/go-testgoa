@@ -42,7 +42,7 @@ func (c *AuthenticateController) Auth(ctx *app.AuthAuthenticateContext) error {
 		return ctx.InternalServerError()
 	}
 
-	accToken, err := c.tok.GetAuthToken(u.ID, u.IsAdmin)
+	accToken, err := c.tok.GetAccessToken(u.ID, u.IsAdmin)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to get access token`, `error`, err.Error())
 		return ctx.InternalServerError()

@@ -1175,17 +1175,17 @@ func (mr *MockTokenHelperMockRecorder) ValidateValidationToken(token interface{}
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ValidateValidationToken", reflect.TypeOf((*MockTokenHelper)(nil).ValidateValidationToken), token)
 }
 
-// GetAuthToken mocks base method
-func (m *MockTokenHelper) GetAuthToken(userID int64, isAdmin bool) (string, error) {
-	ret := m.ctrl.Call(m, "GetAuthToken", userID, isAdmin)
+// GetAccessToken mocks base method
+func (m *MockTokenHelper) GetAccessToken(userID int64, isAdmin bool) (string, error) {
+	ret := m.ctrl.Call(m, "GetAccessToken", userID, isAdmin)
 	ret0, _ := ret[0].(string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetAuthToken indicates an expected call of GetAuthToken
-func (mr *MockTokenHelperMockRecorder) GetAuthToken(userID, isAdmin interface{}) *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAuthToken", reflect.TypeOf((*MockTokenHelper)(nil).GetAuthToken), userID, isAdmin)
+// GetAccessToken indicates an expected call of GetAuthToken
+func (mr *MockTokenHelperMockRecorder) GetAccessToken(userID, isAdmin interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccessToken", reflect.TypeOf((*MockTokenHelper)(nil).GetAccessToken), userID, isAdmin)
 }
 
 // GetRefreshToken mocks base method

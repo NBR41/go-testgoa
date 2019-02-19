@@ -26,9 +26,9 @@ func NewTokenController(service *goa.Service, fm Fmodeler, tok TokenHelper) *Tok
 // Access runs the access action.
 func (c *TokenController) Access(ctx *app.AccessTokenContext) error {
 	// TokenController_Access: start_implement
-	authToken, err := c.tok.GetAuthToken(ctx.Value(CtxKey("user_id")).(int64), ctx.Value(CtxKey("is_admin")).(bool))
+	authToken, err := c.tok.GetAccessToken(ctx.Value(CtxKey("user_id")).(int64), ctx.Value(CtxKey("is_admin")).(bool))
 	if err != nil {
-		goa.ContextLogger(ctx).Error(`failed to get password token`, `error`, err.Error())
+		goa.ContextLogger(ctx).Error(`failed to get access token`, `error`, err.Error())
 		return ctx.InternalServerError()
 	}
 	return ctx.OK(&app.Token{Token: authToken})
@@ -54,7 +54,7 @@ func (c *TokenController) Auth(ctx *app.AuthTokenContext) error {
 		return ctx.InternalServerError()
 	}
 
-	accToken, err := c.tok.GetAuthToken(u.ID, u.IsAdmin)
+	accToken, err := c.tok.GetAccessToken(u.ID, u.IsAdmin)
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`failed to get access token`, `error`, err.Error())
 		return ctx.InternalServerError()

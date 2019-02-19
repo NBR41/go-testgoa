@@ -184,7 +184,7 @@ func ListPrintsRelationEditorsCollectionsPath(editorID int, collectionID int) st
 	param0 := strconv.Itoa(editorID)
 	param1 := strconv.Itoa(collectionID)
 
-	return fmt.Sprintf("/editors/%s/collections/%s/collections", param0, param1)
+	return fmt.Sprintf("/editors/%s/collections/%s/prints", param0, param1)
 }
 
 // List prints by editor-collection

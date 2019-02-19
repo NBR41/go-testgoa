@@ -120,7 +120,7 @@ func TestValidateValidationToken(t *testing.T) {
 }
 
 func TestGetAuthToken(t *testing.T) {
-	tokenString, err := JWTHelper{}.GetAuthToken(123, true)
+	tokenString, err := JWTHelper{}.GetAccessToken(123, true)
 	if err != nil {
 		t.Fatalf("unexpected error, %v", err)
 	}

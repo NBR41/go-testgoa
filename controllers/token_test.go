@@ -23,8 +23,8 @@ func TestTokenAccess(t *testing.T) {
 	tmock := NewMockTokenHelper(mctrl)
 
 	gomock.InOrder(
-		tmock.EXPECT().GetAuthToken(int64(123), true).Return("", errors.New("token error")),
-		tmock.EXPECT().GetAuthToken(int64(123), true).Return("auth token", nil),
+		tmock.EXPECT().GetAccessToken(int64(123), true).Return("", errors.New("token error")),
+		tmock.EXPECT().GetAccessToken(int64(123), true).Return("auth token", nil),
 	)
 
 	service := goa.New("my-inventory-test")
@@ -39,7 +39,7 @@ func TestTokenAccess(t *testing.T) {
 
 	logbuf.Reset()
 	test.AccessTokenInternalServerError(t, ctx, service, ctrl)
-	exp := "[EROR] failed to get password token error=token error\n"
+	exp := "[EROR] failed to get access token error=token error\n"
 	if exp != logbuf.String() {
 		t.Errorf("unexpected log\n exp [%s]\ngot [%s]", exp, logbuf.String())
 	}
@@ -69,14 +69,14 @@ func TestTokenAuth(t *testing.T) {
 		mmock.EXPECT().GetUserByID(123).Return(nil, model.ErrNotFound),
 		mmock.EXPECT().Close(),
 		mmock.EXPECT().GetUserByID(123).Return(u, nil),
-		tmock.EXPECT().GetAuthToken(u.ID, u.IsAdmin).Return("", errors.New("auth token error")),
+		tmock.EXPECT().GetAccessToken(u.ID, u.IsAdmin).Return("", errors.New("auth token error")),
 		mmock.EXPECT().Close(),
 		mmock.EXPECT().GetUserByID(123).Return(u, nil),
-		tmock.EXPECT().GetAuthToken(u.ID, u.IsAdmin).Return("auth token", nil),
+		tmock.EXPECT().GetAccessToken(u.ID, u.IsAdmin).Return("auth token", nil),
 		tmock.EXPECT().GetRefreshToken(u.ID, u.IsAdmin).Return("", errors.New("refresh token error")),
 		mmock.EXPECT().Close(),
 		mmock.EXPECT().GetUserByID(123).Return(u, nil),
-		tmock.EXPECT().GetAuthToken(u.ID, u.IsAdmin).Return("auth token", nil),
+		tmock.EXPECT().GetAccessToken(u.ID, u.IsAdmin).Return("auth token", nil),
 		tmock.EXPECT().GetRefreshToken(u.ID, u.IsAdmin).Return("refresh token", nil),
 		mmock.EXPECT().Close(),
 	)

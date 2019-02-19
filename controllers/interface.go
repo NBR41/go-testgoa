@@ -2,8 +2,13 @@ package controllers
 
 import (
 	"context"
+	"net/http"
+
 	"github.com/NBR41/go-testgoa/internal/model"
+	"github.com/goadesign/goa"
 )
+
+var ErrUnprocessableEntity = goa.NewErrorClass("unprocessable_entity", http.StatusUnprocessableEntity)
 
 //CtxKey type for the keys stored in context
 type CtxKey string
@@ -119,7 +124,7 @@ type TokenHelper interface {
 	ValidatePasswordToken(token string) (int64, string, error)
 	GetValidationToken(userID int64, email string) (string, error)
 	ValidateValidationToken(token string) (int64, string, error)
-	GetAuthToken(userID int64, isAdmin bool) (string, error)
+	GetAccessToken(userID int64, isAdmin bool) (string, error)
 	GetRefreshToken(userID int64, isAdmin bool) (string, error)
 	ValidateRefreshToken(token string) (int64, error)
 }

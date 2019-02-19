@@ -39,7 +39,7 @@ func (c *UsersController) Create(ctx *app.CreateUsersContext) error {
 	if err != nil {
 		goa.ContextLogger(ctx).Error(`unable to insert user`, `error`, err.Error())
 		if err == model.ErrDuplicateKey || err == model.ErrDuplicateEmail || err == model.ErrDuplicateNickname {
-			return ctx.UnprocessableEntity(err)
+			return ctx.UnprocessableEntity(ErrUnprocessableEntity(err))
 		}
 		return ctx.InternalServerError()
 	}
@@ -164,7 +164,7 @@ func (c *UsersController) Update(ctx *app.UpdateUsersContext) error {
 		goa.ContextLogger(ctx).Error(`unable to update user`, `error`, err.Error())
 		switch {
 		case err == model.ErrDuplicateNickname:
-			return ctx.UnprocessableEntity()
+			return ctx.UnprocessableEntity(ErrUnprocessableEntity(err))
 		case err == model.ErrNotFound:
 			return ctx.NotFound()
 		default:

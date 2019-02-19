@@ -23,7 +23,7 @@ func AccessTokenPath() string {
 	return fmt.Sprintf("/token/access_token")
 }
 
-// Get users
+// Get access
 func (c *Client) AccessToken(ctx context.Context, path string) (*http.Response, error) {
 	req, err := c.NewAccessTokenRequest(ctx, path)
 	if err != nil {

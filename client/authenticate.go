@@ -24,7 +24,7 @@ func AuthAuthenticatePath() string {
 	return fmt.Sprintf("/authenticate")
 }
 
-// Get users
+// auth the user
 func (c *Client) AuthAuthenticate(ctx context.Context, path string, payload *AuthenticatePayload, contentType string) (*http.Response, error) {
 	req, err := c.NewAuthAuthenticateRequest(ctx, path, payload, contentType)
 	if err != nil {

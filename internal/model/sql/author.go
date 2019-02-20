@@ -12,8 +12,7 @@ const (
 	qryGetAuthorByName = `SELECT id, name FROM author WHERE name = ?`
 	qryInsertAuthor    = `
 INSERT INTO author (id, name, create_ts, update_ts)
-VALUES (null, ?, NOW(), NOW())
-ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`
+VALUES (null, ?, NOW(), NOW())`
 	qryUpdateAuthor = `UPDATE author SET name = ?, update_ts = NOW() WHERE id = ?`
 	qryDeleteAuthor = `DELETE FROM author WHERE id = ?`
 )

@@ -9,6 +9,7 @@ services:
         image: mysql:8.0
         volumes:
             - ./design/design.sql:/docker-entrypoint-initdb.d/init.sql
+            - ./deploy/docker/user.sql:/docker-entrypoint-initdb.d/user.sql
         environment:
             - MYSQL_ROOT_PASSWORD=FLXD8OVDTJVLYN4
             - MYSQL_DATABASE=myinventory

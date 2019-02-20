@@ -3,9 +3,9 @@
 -- Model: New Model    Version: 1.0
 -- MySQL Workbench Forward Engineering
 
-SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
-SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+SET UNIQUE_CHECKS=1;
+SET FOREIGN_KEY_CHECKS=1;
+SET SQL_MODE='TRADITIONAL';
 
 -- -----------------------------------------------------
 -- Schema mydb
@@ -287,11 +287,11 @@ COLLATE = utf8_unicode_ci;
 -- Table `myinventory`.`user`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `myinventory`.`user` (
-  `id` BIGINT(20) UNSIGNED NOT NULL,
+  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   `nickname` VARCHAR(45) NOT NULL,
   `email` VARCHAR(128) NOT NULL,
-  `activated` BIT(1) NOT NULL,
-  `admin` BIT(1) NOT NULL,
+  `activated` TINYINT(1) NOT NULL,
+  `admin` TINYINT(1) NOT NULL,
   `salt` VARBINARY(32) NOT NULL,
   `password` VARBINARY(128) NOT NULL,
   `create_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -323,8 +323,3 @@ CREATE TABLE IF NOT EXISTS `myinventory`.`ownership` (
     ON DELETE CASCADE
     ON UPDATE RESTRICT)
 ENGINE = InnoDB;
-
-
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

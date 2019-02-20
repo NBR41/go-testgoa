@@ -20,8 +20,7 @@ JOIN category ON (series.category_id = category.id)
 WHERE series.name = ?`
 	qryInsertSeries = `
 INSERT INTO series (id, name, category_id, create_ts, update_ts)
-VALUES (null, ?, ?, NOW(), NOW())
-ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`
+VALUES (null, ?, ?, NOW(), NOW())`
 	qryDeleteSeries = `DELETE FROM series WHERE id = ?`
 )
 

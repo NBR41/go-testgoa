@@ -20,8 +20,7 @@ JOIN editor ON (editor.id = collection.editor_id)
 WHERE collection.name = ?`
 	qryInsertCollection = `
 INSERT INTO collection (id, name, editor_id, create_ts, update_ts)
-VALUES (null, ?, ?, NOW(), NOW())
-ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`
+VALUES (null, ?, ?, NOW(), NOW())`
 	qryDeleteCollection = `DELETE FROM collection WHERE id = ?`
 )
 

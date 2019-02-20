@@ -12,8 +12,7 @@ const (
 	qryGetCategoryByName = `SELECT id, name FROM category WHERE name = ?`
 	qryInsertCategory    = `
 INSERT INTO category (id, name, create_ts, update_ts)
-VALUES (null, ?, NOW(), NOW())
-ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`
+VALUES (null, ?, NOW(), NOW())`
 	qryUpdateCategory = `UPDATE category SET name = ?, update_ts = NOW() WHERE id = ?`
 	qryDeleteCategory = `DELETE FROM category WHERE id = ?`
 )

@@ -65,13 +65,20 @@ func (m *Model) exec(query string, params ...interface{}) error {
 }
 
 const (
-	duplicateErr = "ERROR 1062"
-	fkErr        = "ERROR 1452"
+	duplicateErr = "Error 1062"
+	fkErr        = "Error 1452"
 )
 
 func filterError(err error) error {
 	if strings.HasPrefix(err.Error(), duplicateErr) {
-		return model.ErrDuplicateKey
+		switch {
+		case strings.Contains(err.Error(), "email"):
+			return model.ErrDuplicateEmail
+		case strings.Contains(err.Error(), "nickname"):
+			return model.ErrDuplicateNickname
+		default:
+			return model.ErrDuplicateKey
+		}
 	}
 	if strings.HasPrefix(err.Error(), fkErr) {
 		return model.ErrInvalidID

@@ -12,8 +12,7 @@ const (
 	qryGetClassByName = `SELECT id, name FROM class WHERE name = ?`
 	qryInsertClass    = `
 INSERT INTO class (id, name, create_ts, update_ts)
-VALUES (null, ?, NOW(), NOW())
-ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`
+VALUES (null, ?, NOW(), NOW())`
 	qryUpdateClass = `UPDATE class SET name = ?, update_ts = NOW() WHERE id = ?`
 	qryDeleteClass = `DELETE FROM class WHERE id = ?`
 )

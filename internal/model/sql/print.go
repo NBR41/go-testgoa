@@ -12,8 +12,7 @@ const (
 	qryGetPrintByName = `SELECT id, name FROM print WHERE name = ?`
 	qryInsertPrint    = `
 INSERT INTO print (id, name, create_ts, update_ts)
-VALUES (null, ?, NOW(), NOW())
-ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`
+VALUES (null, ?, NOW(), NOW())`
 	qryUpdatePrint = `UPDATE print SET name = ?, update_ts = NOW() WHERE id = ?`
 	qryDeletePrint = `DELETE FROM print WHERE id = ?`
 )

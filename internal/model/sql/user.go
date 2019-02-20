@@ -18,8 +18,7 @@ FROM user
 WHERE email = ? OR nickname =?`
 	qryInsertUser = `
 INSERT INTO user (id, nickname, email, salt, password, activated, admin, create_ts, update_ts)
-VALUES (null, ?, ?, ?, ?, 0, 0, NOW(), NOW())
-ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`
+VALUES (null, ?, ?, ?, ?, 0, 0, NOW(), NOW())`
 	qryUpdateUserNickname   = `UPDATE user SET nickname = ?, update_ts = NOW() WHERE id = ?`
 	qryUpdateUserPassword   = `UPDATE user SET salt = ?, password = ?, update_ts = NOW() WHERE id = ?`
 	qryUpdateUserActivation = `UPDATE user SET activated = ?, update_ts = NOW() WHERE id = ?`

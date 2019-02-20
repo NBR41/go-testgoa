@@ -22,8 +22,7 @@ JOIN collection ON (edition.collection_id = collection.id)
 JOIN print ON (edition.print_id = print.id)`
 	qryInsertEdition = `
 INSERT INTO edition (id, book_id, collection_id, print_id, create_ts, update_ts)
-VALUES (null, ?, ?, ?, NOW(), NOW())
-ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`
+VALUES (null, ?, ?, ?, NOW(), NOW())`
 	qryDeleteEdition = `DELETE FROM edition WHERE id = ?`
 )
 

@@ -12,8 +12,7 @@ const (
 	qryGetRoleByName = `SELECT id, name FROM role WHERE name = ?`
 	qryInsertRole    = `
 INSERT INTO role (id, name, create_ts, update_ts)
-VALUES (null, ?, NOW(), NOW())
-ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`
+VALUES (null, ?, NOW(), NOW())`
 	qryUpdateRole = `UPDATE role SET name = ?, update_ts = NOW() WHERE id = ?`
 	qryDeleteRole = `DELETE FROM role WHERE id = ?`
 )

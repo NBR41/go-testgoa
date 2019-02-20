@@ -12,8 +12,7 @@ const (
 	qryGetEditorByName = `SELECT id, name FROM editor WHERE name = ?`
 	qryInsertEditor    = `
 INSERT INTO editor (id, name, create_ts, update_ts)
-VALUES (null, ?, NOW(), NOW())
-ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`
+VALUES (null, ?, NOW(), NOW())`
 	qryUpdateEditor = `UPDATE editor SET name = ?, update_ts = NOW() WHERE id = ?`
 	qryDeleteEditor = `DELETE FROM editor WHERE id = ?`
 )

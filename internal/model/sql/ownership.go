@@ -17,8 +17,7 @@ JOIN book ON (ownership.book_id = book.id)
 WHERE ownership.user_id = ? AND book.id = ?`
 	qryInsertOwnership = `
 INSERT INTO ownership (user_id, book_id, create_ts, update_ts)
-VALUES (?, ?, NOW(), NOW())
-ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`
+VALUES (?, ?, NOW(), NOW())`
 	qryUpdateOwnership = `UPDATE ownership set update_ts = NOW() WHERE user_id = ? AND book_id = ?`
 	qryDeleteOwnership = `DELETE FROM ownership WHERE user_id = ? AND book_id = ?`
 )

@@ -14,8 +14,7 @@ const (
 	qryListBooks     = `SELECT id, isbn, name, series_id FROM book`
 	qryInsertBook    = `
 INSERT INTO book (id, isbn, name, series_id, create_ts, update_ts)
-VALUES (null, ?, ?, ?, NOW(), NOW())
-ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`
+VALUES (null, ?, ?, ?, NOW(), NOW())`
 	qryDeleteBook = `DELETE FROM book WHERE id = ?`
 )
 

@@ -134,7 +134,6 @@ func test(method, token, path string, body io.Reader, expCode int, expBody, expL
 
 func main() {
 	jwtHelper := security.JWTHelper{}
-
 	adminToken, err := jwtHelper.GetAccessToken(1, true)
 	if err != nil {
 		log.Fatal(err)
@@ -202,6 +201,7 @@ func main() {
 			expCode: http.StatusUnprocessableEntity,
 			expBody: model.ErrDuplicateNickname.Error(),
 		},
+
 		{
 			label:   "updateUserAsUserUnauthorized",
 			method:  http.MethodPut,
@@ -306,36 +306,6 @@ func main() {
 			path:    "/users?email=foo@baz.com&nickname=baz",
 			expCode: http.StatusOK,
 			expBody: `[]` + "\n",
-		},
-		{
-			label:   "deleteUserUnauthorized",
-			method:  http.MethodDelete,
-			token:   userToken,
-			path:    "/users/4",
-			expCode: http.StatusUnauthorized,
-			expBody: `unauthorized`,
-		},
-		{
-			label:   "deleteUserNotFound",
-			method:  http.MethodDelete,
-			token:   adminToken,
-			path:    "/users/999",
-			expCode: http.StatusNotFound,
-		},
-		{
-			label:   "deleteUserOK",
-			method:  http.MethodDelete,
-			token:   adminToken,
-			path:    "/users/5",
-			expCode: http.StatusNoContent,
-		},
-		{
-			label:       "createUser2",
-			method:      http.MethodPost,
-			path:        "/users",
-			body:        strings.NewReader(`{"email": "foo@bar.com","nickname":"foo","password":"footest"}`),
-			expCode:     http.StatusCreated,
-			expLocation: "/users/5",
 		},
 		//auth
 		{
@@ -469,6 +439,28 @@ func main() {
 			token:   refreshToken,
 			expCode: http.StatusOK,
 			expBody: `user_id:5 is_admin:false$user_id:5 is_admin:false${"email":"foo@bar.com","href":"/users/5","is_admin":false,"is_validated":true,"nickname":"foo","user_id":5}`,
+		},
+		{
+			label:   "deleteUserUnauthorized",
+			method:  http.MethodDelete,
+			token:   userToken,
+			path:    "/users/4",
+			expCode: http.StatusUnauthorized,
+			expBody: `unauthorized`,
+		},
+		{
+			label:   "deleteUserNotFound",
+			method:  http.MethodDelete,
+			token:   adminToken,
+			path:    "/users/999",
+			expCode: http.StatusNotFound,
+		},
+		{
+			label:   "deleteUserOK",
+			method:  http.MethodDelete,
+			token:   adminToken,
+			path:    "/users/5",
+			expCode: http.StatusNoContent,
 		},
 	}
 

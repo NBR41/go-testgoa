@@ -170,7 +170,7 @@ func ToAuthorshipMedia(a *model.Authorship) *app.Authorship {
 	}
 }
 
-//ToAuthorshipMedia converts an authorship model into an authorship media type
+//ToEditionMedia converts an edition model into an edition media type
 func ToEditionMedia(a *model.Edition) *app.Edition {
 	if a == nil {
 		return nil
@@ -224,4 +224,26 @@ func ToSeriesMedia(a *model.Series) *app.Series {
 		Category:   ToCategoryMedia(a.Category),
 		Href:       app.SeriesHref(a.ID),
 	}
+}
+
+// ToBookDetailMedia converts a book detail model into a book detail media type
+func ToBookDetailMedia(a *model.BookDetail) *app.BookDetail {
+	if a == nil {
+		return nil
+	}
+	ret := &app.BookDetail{
+		Book:    ToBookMedia(a.Book),
+		Edition: ToEditionMedia(a.Edition),
+	}
+	if len(a.Authors) > 0 {
+		for i := range a.Authors {
+			ret.Authors = append(ret.Authors, ToAuthorshipMedia(a.Authors[i]))
+		}
+	}
+	if len(a.Classes) > 0 {
+		for i := range a.Classes {
+			ret.Classes = append(ret.Classes, ToClassificationMedia(int(a.Book.SeriesID), a.Classes[i]))
+		}
+	}
+	return ret
 }

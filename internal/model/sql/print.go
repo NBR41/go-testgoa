@@ -111,3 +111,14 @@ func (m *Model) UpdatePrint(id int, name string) error {
 func (m *Model) DeletePrint(id int) error {
 	return m.exec(qryDeletePrint, id)
 }
+
+func (m *Model) getOrInsertPrint(name string) (*model.Print, error) {
+	print, err := m.GetPrintByName(name)
+	if err == model.ErrNotFound {
+		print, err = m.InsertPrint(name)
+	}
+	if err != nil {
+		return nil, err
+	}
+	return print, nil
+}

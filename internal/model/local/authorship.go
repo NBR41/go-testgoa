@@ -38,6 +38,12 @@ func (db *Local) ListAuthorships() ([]*model.Authorship, error) {
 	return list, nil
 }
 
+//ListAuthorshipsByBookID list all authorships for a book
+func (db *Local) ListAuthorshipsByBookID(bookID int) ([]*model.Authorship, error) {
+	// TODO
+	return nil, nil
+}
+
 //InsertAuthorship insert an authorship
 func (db *Local) InsertAuthorship(authorID, bookID, roleID int) (*model.Authorship, error) {
 	db.Lock()

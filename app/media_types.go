@@ -348,6 +348,53 @@ func (mt BookLinkCollection) Validate() (err error) {
 	return
 }
 
+// A Book Detail (default view)
+//
+// Identifier: application/vnd.book_detail+json; view=default
+type BookDetail struct {
+	// authors struct
+	Authors AuthorshipCollection `form:"authors" json:"authors" yaml:"authors" xml:"authors"`
+	// book struct
+	Book *Book `form:"book" json:"book" yaml:"book" xml:"book"`
+	// classification struct
+	Classes ClassificationCollection `form:"classes" json:"classes" yaml:"classes" xml:"classes"`
+	// edition struct
+	Edition *Edition `form:"edition" json:"edition" yaml:"edition" xml:"edition"`
+}
+
+// Validate validates the BookDetail media type instance.
+func (mt *BookDetail) Validate() (err error) {
+	if mt.Book == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "book"))
+	}
+	if mt.Edition == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "edition"))
+	}
+	if mt.Authors == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "authors"))
+	}
+	if mt.Classes == nil {
+		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "classes"))
+	}
+	if err2 := mt.Authors.Validate(); err2 != nil {
+		err = goa.MergeErrors(err, err2)
+	}
+	if mt.Book != nil {
+		if err2 := mt.Book.Validate(); err2 != nil {
+			err = goa.MergeErrors(err, err2)
+		}
+	}
+	if err2 := mt.Classes.Validate(); err2 != nil {
+		err = goa.MergeErrors(err, err2)
+	}
+	if mt.Edition != nil {
+		if err2 := mt.Edition.Validate(); err2 != nil {
+			err = goa.MergeErrors(err, err2)
+		}
+	}
+	return
+}
+
 // A Category (default view)
 //
 // Identifier: application/vnd.category+json; view=default

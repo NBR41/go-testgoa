@@ -80,7 +80,7 @@ func main() {
 	// Mount "authorships" controller
 	app.MountAuthorshipsController(service, controllers.NewAuthorshipsController(service, conf.fmod))
 	// Mount "books" controller
-	app.MountBooksController(service, controllers.NewBooksController(service, conf.fmod))
+	app.MountBooksController(service, controllers.NewBooksController(service, conf.fmod, conf.api))
 	// Mount "categories" controller
 	app.MountCategoriesController(service, controllers.NewCategoriesController(service, conf.fmod))
 	// Mount "classes" controller
@@ -96,7 +96,7 @@ func main() {
 	// Mount "health" controller
 	app.MountHealthController(service, controllers.NewHealthController(service, conf.fmod))
 	// Mount "ownerships" controller
-	app.MountOwnershipsController(service, controllers.NewOwnershipsController(service, conf.fmod, conf.api))
+	app.MountOwnershipsController(service, controllers.NewOwnershipsController(service, conf.fmod))
 	// Mount "password" controller
 	app.MountPasswordController(service, controllers.NewPasswordController(service, conf.fmod, conf.token, conf.mail))
 	// Mount "prints" controller

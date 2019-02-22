@@ -53,7 +53,7 @@ func providePassworder() model.Passworder {
 }
 
 func provideAPI() controllers.APIHelper {
-	return google.New(&google.HttpCaller{})
+	return google.New(&google.HTTPCaller{})
 }
 
 func provideDevMailSender() controllers.MailSender {

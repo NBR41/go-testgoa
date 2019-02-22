@@ -25,10 +25,10 @@ func TestGetCollectionByID(t *testing.T) {
 func TestGetCollectionByName(t *testing.T) {
 	l := New(nil)
 
-	b, err := l.GetCollectionByName("test5")
+	b, err := l.GetCollectionByName("test5", 5)
 	expectingError(t, err, model.ErrNotFound)
 
-	b, err = l.GetCollectionByName("collection1")
+	b, err = l.GetCollectionByName("collection1",1)
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}
@@ -40,7 +40,7 @@ func TestGetCollectionByName(t *testing.T) {
 func TestInsertCollection(t *testing.T) {
 	l := New(nil)
 
-	_, err := l.InsertCollection("collection1", 3)
+	_, err := l.InsertCollection("collection1", 1)
 	expectingError(t, err, model.ErrDuplicateKey)
 	// editor not found
 	_, err = l.InsertCollection("collection2", 999)

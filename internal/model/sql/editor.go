@@ -105,3 +105,14 @@ func (m *Model) UpdateEditor(id int, name string) error {
 func (m *Model) DeleteEditor(id int) error {
 	return m.exec(qryDeleteEditor, id)
 }
+
+func (m *Model) getOrInsertEditor(name string) (*model.Editor, error) {
+	editor, err := m.GetEditorByName(name)
+	if err == model.ErrNotFound {
+		editor, err = m.InsertEditor(name)
+	}
+	if err != nil {
+		return nil, err
+	}
+	return editor, nil
+}

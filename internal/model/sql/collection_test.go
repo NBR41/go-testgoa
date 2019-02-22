@@ -66,11 +66,11 @@ func TestGetCollectionByName(t *testing.T) {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
 	qry := escapeQuery(qryGetCollectionByName)
-	mock.ExpectQuery(qry).WithArgs("foo").WillReturnError(errors.New("query error"))
-	mock.ExpectQuery(qry).WithArgs("foo").WillReturnRows(sqlmock.NewRows([]string{"id", "name", "eid", "ename"}))
-	mock.ExpectQuery(qry).WithArgs("foo").WillReturnRows(sqlmock.NewRows([]string{"id", "name", "eid", "ename"}).AddRow("foo", "bar", "baz", "qux"))
-	mock.ExpectQuery(qry).WithArgs("foo").WillReturnRows(sqlmock.NewRows([]string{"id", "name", "eid", "ename"}).AddRow(1, "foo", 2, "bar").RowError(0, errors.New("scan error")))
-	mock.ExpectQuery(qry).WithArgs("foo").WillReturnRows(sqlmock.NewRows([]string{"id", "name", "eid", "ename"}).AddRow(1, "foo", 2, "bar"))
+	mock.ExpectQuery(qry).WithArgs("foo", 2).WillReturnError(errors.New("query error"))
+	mock.ExpectQuery(qry).WithArgs("foo", 2).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "eid", "ename"}))
+	mock.ExpectQuery(qry).WithArgs("foo", 2).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "eid", "ename"}).AddRow("foo", "bar", "baz", "qux"))
+	mock.ExpectQuery(qry).WithArgs("foo", 2).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "eid", "ename"}).AddRow(1, "foo", 2, "bar").RowError(0, errors.New("scan error")))
+	mock.ExpectQuery(qry).WithArgs("foo", 2).WillReturnRows(sqlmock.NewRows([]string{"id", "name", "eid", "ename"}).AddRow(1, "foo", 2, "bar"))
 
 	m, _ := New(ConnGetter(func() (*sql.DB, error) {
 		return db, nil
@@ -89,7 +89,7 @@ func TestGetCollectionByName(t *testing.T) {
 	}
 
 	for i := range tests {
-		v, err := m.GetCollectionByName("foo")
+		v, err := m.GetCollectionByName("foo", 2)
 		if err != nil {
 			if tests[i].err == nil {
 				t.Errorf("unexpected error for [%s], [%v]", tests[i].desc, err)

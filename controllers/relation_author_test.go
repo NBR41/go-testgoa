@@ -50,7 +50,7 @@ func TestRelationAuthorListClasses(t *testing.T) {
 
 func TestRelationAuthorListRoles(t *testing.T) {
 	m1, m2 := &model.Role{ID: 1, Name: "foo"}, &model.Role{ID: 2, Name: "bar"}
-	var authorID int = 123
+	var authorID = 123
 	mctrl := gomock.NewController(t)
 	defer mctrl.Finish()
 	mock := NewMockModeler(mctrl)

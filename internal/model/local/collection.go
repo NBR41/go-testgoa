@@ -18,9 +18,9 @@ func (db *Local) GetCollectionByID(id int) (*model.Collection, error) {
 	return db.getCollectionByID(id)
 }
 
-func (db *Local) getCollectionByName(name string) (*model.Collection, error) {
+func (db *Local) getCollectionByName(name string, editorID int) (*model.Collection, error) {
 	for i := range db.collections {
-		if db.collections[i].Name == name {
+		if db.collections[i].Name == name && db.collections[i].EditorID == int64(editorID) {
 			return db.collections[i], nil
 		}
 	}
@@ -28,17 +28,17 @@ func (db *Local) getCollectionByName(name string) (*model.Collection, error) {
 }
 
 //GetCollectionByName return a collection by name
-func (db *Local) GetCollectionByName(name string) (*model.Collection, error) {
+func (db *Local) GetCollectionByName(name string, editorID int) (*model.Collection, error) {
 	db.Lock()
 	defer db.Unlock()
-	return db.getCollectionByName(name)
+	return db.getCollectionByName(name, editorID)
 }
 
 //InsertCollection insert a collection and return it
 func (db *Local) InsertCollection(name string, editorID int) (*model.Collection, error) {
 	db.Lock()
 	defer db.Unlock()
-	if _, err := db.getCollectionByName(name); err == nil {
+	if _, err := db.getCollectionByName(name, editorID); err == nil {
 		return nil, model.ErrDuplicateKey
 	}
 	e, err := db.getEditorByID(editorID)
@@ -60,7 +60,7 @@ func (db *Local) UpdateCollection(id int, name *string, editorID *int) error {
 		return err
 	}
 	if name != nil {
-		if _, err = db.getCollectionByName(*name); err == nil {
+		if _, err = db.getCollectionByName(*name, int(c.EditorID)); err == nil {
 			return model.ErrDuplicateKey
 		}
 		c.Name = *name

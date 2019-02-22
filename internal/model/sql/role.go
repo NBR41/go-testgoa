@@ -97,3 +97,14 @@ func (m *Model) UpdateRole(id int, name string) error {
 func (m *Model) DeleteRole(id int) error {
 	return m.exec(qryDeleteRole, id)
 }
+
+func (m *Model) getOrInsertRole(name string) (*model.Role, error) {
+	role, err := m.GetRoleByName(name)
+	if err == model.ErrNotFound {
+		role, err = m.InsertRole(name)
+	}
+	if err != nil {
+		return nil, err
+	}
+	return role, nil
+}

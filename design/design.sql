@@ -212,7 +212,7 @@ CREATE TABLE IF NOT EXISTS `myinventory`.`collection` (
   `create_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX (`name` ASC),
+  UNIQUE INDEX (`name` ASC, `editor_id` ASC),
   INDEX (`editor_id` ASC),
   CONSTRAINT `fk_collection_1`
     FOREIGN KEY (`editor_id`)

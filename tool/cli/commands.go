@@ -109,6 +109,13 @@ type (
 		PrettyPrint bool
 	}
 
+	// IsbnSearchBooksCommand is the command line data structure for the isbnSearch action of books
+	IsbnSearchBooksCommand struct {
+		// Book ISBN
+		BookIsbn    string
+		PrettyPrint bool
+	}
+
 	// ListBooksCommand is the command line data structure for the list action of books
 	ListBooksCommand struct {
 		PrettyPrint bool
@@ -332,15 +339,6 @@ type (
 
 	// HealthHealthCommand is the command line data structure for the health action of health
 	HealthHealthCommand struct {
-		PrettyPrint bool
-	}
-
-	// AddOwnershipsCommand is the command line data structure for the add action of ownerships
-	AddOwnershipsCommand struct {
-		Payload     string
-		ContentType string
-		// Unique User ID
-		UserID      int
 		PrettyPrint bool
 	}
 
@@ -1200,131 +1198,6 @@ type (
 		PrettyPrint bool
 	}
 
-	// ListBooksRelationSeriesPrintsCommand is the command line data structure for the listBooks action of relationSeriesPrints
-	ListBooksRelationSeriesPrintsCommand struct {
-		// Unique Print ID
-		PrintID int
-		// Unique Series ID
-		SeriesID    int
-		PrettyPrint bool
-	}
-
-	// ListBooksByEditorRelationSeriesPrintsCommand is the command line data structure for the listBooksByEditor action of relationSeriesPrints
-	ListBooksByEditorRelationSeriesPrintsCommand struct {
-		// Unique Editor ID
-		EditorID int
-		// Unique Print ID
-		PrintID int
-		// Unique Series ID
-		SeriesID    int
-		PrettyPrint bool
-	}
-
-	// ListBooksByEditorCollectionRelationSeriesPrintsCommand is the command line data structure for the listBooksByEditorCollection action of relationSeriesPrints
-	ListBooksByEditorCollectionRelationSeriesPrintsCommand struct {
-		// Unique Collection ID
-		CollectionID int
-		// Unique Editor ID
-		EditorID int
-		// Unique Print ID
-		PrintID int
-		// Unique Series ID
-		SeriesID    int
-		PrettyPrint bool
-	}
-
-	// ListCollectionsRelationSeriesPrintsCommand is the command line data structure for the listCollections action of relationSeriesPrints
-	ListCollectionsRelationSeriesPrintsCommand struct {
-		// Unique Print ID
-		PrintID int
-		// Unique Series ID
-		SeriesID    int
-		PrettyPrint bool
-	}
-
-	// ListCollectionsByEditorRelationSeriesPrintsCommand is the command line data structure for the listCollectionsByEditor action of relationSeriesPrints
-	ListCollectionsByEditorRelationSeriesPrintsCommand struct {
-		// Unique Editor ID
-		EditorID int
-		// Unique Print ID
-		PrintID int
-		// Unique Series ID
-		SeriesID    int
-		PrettyPrint bool
-	}
-
-	// ListEditorsRelationSeriesPrintsCommand is the command line data structure for the listEditors action of relationSeriesPrints
-	ListEditorsRelationSeriesPrintsCommand struct {
-		// Unique Print ID
-		PrintID int
-		// Unique Series ID
-		SeriesID    int
-		PrettyPrint bool
-	}
-
-	// CreateSeriesCommand is the command line data structure for the create action of series
-	CreateSeriesCommand struct {
-		Payload     string
-		ContentType string
-		PrettyPrint bool
-	}
-
-	// DeleteSeriesCommand is the command line data structure for the delete action of series
-	DeleteSeriesCommand struct {
-		// Unique Series ID
-		SeriesID    int
-		PrettyPrint bool
-	}
-
-	// ListSeriesCommand is the command line data structure for the list action of series
-	ListSeriesCommand struct {
-		PrettyPrint bool
-	}
-
-	// ShowSeriesCommand is the command line data structure for the show action of series
-	ShowSeriesCommand struct {
-		// Unique Series ID
-		SeriesID    int
-		PrettyPrint bool
-	}
-
-	// UpdateSeriesCommand is the command line data structure for the update action of series
-	UpdateSeriesCommand struct {
-		Payload     string
-		ContentType string
-		// Unique Series ID
-		SeriesID    int
-		PrettyPrint bool
-	}
-
-	// ListBooksRelationSeriesCommand is the command line data structure for the listBooks action of relationSeries
-	ListBooksRelationSeriesCommand struct {
-		// Unique Series ID
-		SeriesID    int
-		PrettyPrint bool
-	}
-
-	// ListCollectionsRelationSeriesCommand is the command line data structure for the listCollections action of relationSeries
-	ListCollectionsRelationSeriesCommand struct {
-		// Unique Series ID
-		SeriesID    int
-		PrettyPrint bool
-	}
-
-	// ListEditorsRelationSeriesCommand is the command line data structure for the listEditors action of relationSeries
-	ListEditorsRelationSeriesCommand struct {
-		// Unique Series ID
-		SeriesID    int
-		PrettyPrint bool
-	}
-
-	// ListPrintsRelationSeriesCommand is the command line data structure for the listPrints action of relationSeries
-	ListPrintsRelationSeriesCommand struct {
-		// Unique Series ID
-		SeriesID    int
-		PrettyPrint bool
-	}
-
 	// ListBooksRelationSeriesCollectionsCommand is the command line data structure for the listBooks action of relationSeriesCollections
 	ListBooksRelationSeriesCollectionsCommand struct {
 		// Unique Collection ID
@@ -1451,6 +1324,68 @@ type (
 		PrettyPrint bool
 	}
 
+	// ListBooksRelationSeriesPrintsCommand is the command line data structure for the listBooks action of relationSeriesPrints
+	ListBooksRelationSeriesPrintsCommand struct {
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListBooksByEditorRelationSeriesPrintsCommand is the command line data structure for the listBooksByEditor action of relationSeriesPrints
+	ListBooksByEditorRelationSeriesPrintsCommand struct {
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListBooksByEditorCollectionRelationSeriesPrintsCommand is the command line data structure for the listBooksByEditorCollection action of relationSeriesPrints
+	ListBooksByEditorCollectionRelationSeriesPrintsCommand struct {
+		// Unique Collection ID
+		CollectionID int
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListCollectionsRelationSeriesPrintsCommand is the command line data structure for the listCollections action of relationSeriesPrints
+	ListCollectionsRelationSeriesPrintsCommand struct {
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListCollectionsByEditorRelationSeriesPrintsCommand is the command line data structure for the listCollectionsByEditor action of relationSeriesPrints
+	ListCollectionsByEditorRelationSeriesPrintsCommand struct {
+		// Unique Editor ID
+		EditorID int
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListEditorsRelationSeriesPrintsCommand is the command line data structure for the listEditors action of relationSeriesPrints
+	ListEditorsRelationSeriesPrintsCommand struct {
+		// Unique Print ID
+		PrintID int
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
 	// CreateRolesCommand is the command line data structure for the create action of roles
 	CreateRolesCommand struct {
 		Payload     string
@@ -1483,6 +1418,69 @@ type (
 		ContentType string
 		// Unique Role ID
 		RoleID      int
+		PrettyPrint bool
+	}
+
+	// CreateSeriesCommand is the command line data structure for the create action of series
+	CreateSeriesCommand struct {
+		Payload     string
+		ContentType string
+		PrettyPrint bool
+	}
+
+	// DeleteSeriesCommand is the command line data structure for the delete action of series
+	DeleteSeriesCommand struct {
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListSeriesCommand is the command line data structure for the list action of series
+	ListSeriesCommand struct {
+		PrettyPrint bool
+	}
+
+	// ShowSeriesCommand is the command line data structure for the show action of series
+	ShowSeriesCommand struct {
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// UpdateSeriesCommand is the command line data structure for the update action of series
+	UpdateSeriesCommand struct {
+		Payload     string
+		ContentType string
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListBooksRelationSeriesCommand is the command line data structure for the listBooks action of relationSeries
+	ListBooksRelationSeriesCommand struct {
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListCollectionsRelationSeriesCommand is the command line data structure for the listCollections action of relationSeries
+	ListCollectionsRelationSeriesCommand struct {
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListEditorsRelationSeriesCommand is the command line data structure for the listEditors action of relationSeries
+	ListEditorsRelationSeriesCommand struct {
+		// Unique Series ID
+		SeriesID    int
+		PrettyPrint bool
+	}
+
+	// ListPrintsRelationSeriesCommand is the command line data structure for the listPrints action of relationSeries
+	ListPrintsRelationSeriesCommand struct {
+		// Unique Series ID
+		SeriesID    int
 		PrettyPrint bool
 	}
 
@@ -1574,31 +1572,10 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 	command.AddCommand(sub)
 	app.AddCommand(command)
 	command = &cobra.Command{
-		Use:   "add",
-		Short: `Create new book and ownership by isbn`,
-	}
-	tmp2 := new(AddOwnershipsCommand)
-	sub = &cobra.Command{
-		Use:   `ownerships ["/users/USER_ID/ownerships/isbn"]`,
-		Short: ``,
-		Long: `
-
-Payload example:
-
-{
-   "book_isbn": "o4"
-}`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp2.Run(c, args) },
-	}
-	tmp2.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp2.PrettyPrint, "pp", false, "Pretty print response body")
-	command.AddCommand(sub)
-	app.AddCommand(command)
-	command = &cobra.Command{
 		Use:   "auth",
 		Short: `auth action`,
 	}
-	tmp3 := new(AuthAuthenticateCommand)
+	tmp2 := new(AuthAuthenticateCommand)
 	sub = &cobra.Command{
 		Use:   `authenticate ["/authenticate"]`,
 		Short: ``,
@@ -1607,29 +1584,29 @@ Payload example:
 Payload example:
 
 {
-   "login": "ape",
-   "password": "nx102j4z5w"
+   "login": "y2n",
+   "password": "j55q6ak74"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp3.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp2.Run(c, args) },
 	}
-	tmp3.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp3.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp2.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp2.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp4 := new(AuthTokenCommand)
+	tmp3 := new(AuthTokenCommand)
 	sub = &cobra.Command{
 		Use:   `token ["/token/auth"]`,
 		Short: ``,
-		RunE:  func(cmd *cobra.Command, args []string) error { return tmp4.Run(c, args) },
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp3.Run(c, args) },
 	}
-	tmp4.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp4.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp3.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp3.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
 	app.AddCommand(command)
 	command = &cobra.Command{
 		Use:   "create",
 		Short: `create action`,
 	}
-	tmp5 := new(CreateAuthorsCommand)
+	tmp4 := new(CreateAuthorsCommand)
 	sub = &cobra.Command{
 		Use:   `authors ["/authors"]`,
 		Short: ``,
@@ -1638,14 +1615,14 @@ Payload example:
 Payload example:
 
 {
-   "author_name": "f"
+   "author_name": "qqj1zy"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp5.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp4.Run(c, args) },
 	}
-	tmp5.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp5.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp4.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp4.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp6 := new(CreateAuthorshipsCommand)
+	tmp5 := new(CreateAuthorshipsCommand)
 	sub = &cobra.Command{
 		Use:   `authorships ["/authorships"]`,
 		Short: ``,
@@ -1658,12 +1635,12 @@ Payload example:
    "book_id": 1,
    "role_id": 1
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp6.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp5.Run(c, args) },
 	}
-	tmp6.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp6.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp5.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp5.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp7 := new(CreateBooksCommand)
+	tmp6 := new(CreateBooksCommand)
 	sub = &cobra.Command{
 		Use:   `books ["/books"]`,
 		Short: ``,
@@ -1672,16 +1649,16 @@ Payload example:
 Payload example:
 
 {
-   "book_isbn": "859xjhdbe",
-   "book_name": "kgwh0vj",
+   "book_isbn": "sfn",
+   "book_name": "wnwq53",
    "series_id": 1
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp7.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp6.Run(c, args) },
 	}
-	tmp7.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp7.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp6.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp6.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp8 := new(CreateCategoriesCommand)
+	tmp7 := new(CreateCategoriesCommand)
 	sub = &cobra.Command{
 		Use:   `categories ["/categories"]`,
 		Short: ``,
@@ -1690,14 +1667,14 @@ Payload example:
 Payload example:
 
 {
-   "category_name": "g3pur1t3p"
+   "category_name": "n84arf"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp8.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp7.Run(c, args) },
 	}
-	tmp8.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp8.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp7.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp7.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp9 := new(CreateClassesCommand)
+	tmp8 := new(CreateClassesCommand)
 	sub = &cobra.Command{
 		Use:   `classes ["/classes"]`,
 		Short: ``,
@@ -1706,31 +1683,14 @@ Payload example:
 Payload example:
 
 {
-   "class_name": "c"
+   "class_name": "oe46r3"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp9.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp8.Run(c, args) },
 	}
-	tmp9.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp9.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp8.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp8.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp10 := new(CreateSeriesCommand)
-	sub = &cobra.Command{
-		Use:   `series ["/series"]`,
-		Short: ``,
-		Long: `
-
-Payload example:
-
-{
-   "category_id": 1,
-   "series_name": "pdq00qlg"
-}`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp10.Run(c, args) },
-	}
-	tmp10.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp10.PrettyPrint, "pp", false, "Pretty print response body")
-	command.AddCommand(sub)
-	tmp11 := new(CreateClassificationsCommand)
+	tmp9 := new(CreateClassificationsCommand)
 	sub = &cobra.Command{
 		Use:   `classifications ["/series/SERIES_ID/classifications"]`,
 		Short: ``,
@@ -1741,12 +1701,12 @@ Payload example:
 {
    "class_id": 1
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp11.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp9.Run(c, args) },
 	}
-	tmp11.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp11.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp9.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp9.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp12 := new(CreateCollectionsCommand)
+	tmp10 := new(CreateCollectionsCommand)
 	sub = &cobra.Command{
 		Use:   `collections ["/collections"]`,
 		Short: ``,
@@ -1755,15 +1715,15 @@ Payload example:
 Payload example:
 
 {
-   "collection_name": "k74zn84ar",
+   "collection_name": "ekjw",
    "editor_id": 1
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp12.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp10.Run(c, args) },
 	}
-	tmp12.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp12.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp10.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp10.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp13 := new(CreateEditionsCommand)
+	tmp11 := new(CreateEditionsCommand)
 	sub = &cobra.Command{
 		Use:   `editions ["/editions"]`,
 		Short: ``,
@@ -1776,12 +1736,12 @@ Payload example:
    "collection_id": 1,
    "print_id": 1
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp13.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp11.Run(c, args) },
 	}
-	tmp13.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp13.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp11.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp11.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp14 := new(CreateEditorsCommand)
+	tmp12 := new(CreateEditorsCommand)
 	sub = &cobra.Command{
 		Use:   `editors ["/editors"]`,
 		Short: ``,
@@ -1790,14 +1750,14 @@ Payload example:
 Payload example:
 
 {
-   "editor_name": "r"
+   "editor_name": "fsq"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp14.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp12.Run(c, args) },
 	}
-	tmp14.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp14.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp12.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp12.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp15 := new(CreateOwnershipsCommand)
+	tmp13 := new(CreateOwnershipsCommand)
 	sub = &cobra.Command{
 		Use:   `ownerships ["/users/USER_ID/ownerships"]`,
 		Short: ``,
@@ -1808,12 +1768,12 @@ Payload example:
 {
    "book_id": 1
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp15.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp13.Run(c, args) },
 	}
-	tmp15.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp15.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp13.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp13.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp16 := new(CreatePrintsCommand)
+	tmp14 := new(CreatePrintsCommand)
 	sub = &cobra.Command{
 		Use:   `prints ["/prints"]`,
 		Short: ``,
@@ -1822,14 +1782,14 @@ Payload example:
 Payload example:
 
 {
-   "print_name": "fsq"
+   "print_name": "kgwh0vj"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp16.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp14.Run(c, args) },
 	}
-	tmp16.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp16.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp14.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp14.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp17 := new(CreateRolesCommand)
+	tmp15 := new(CreateRolesCommand)
 	sub = &cobra.Command{
 		Use:   `roles ["/roles"]`,
 		Short: ``,
@@ -1838,14 +1798,31 @@ Payload example:
 Payload example:
 
 {
-   "role_name": "i7lxy5"
+   "role_name": "flyhi166"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp17.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp15.Run(c, args) },
 	}
-	tmp17.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp17.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp15.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp15.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp18 := new(CreateUsersCommand)
+	tmp16 := new(CreateSeriesCommand)
+	sub = &cobra.Command{
+		Use:   `series ["/series"]`,
+		Short: ``,
+		Long: `
+
+Payload example:
+
+{
+   "category_id": 1,
+   "series_name": "7tpdq0"
+}`,
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp16.Run(c, args) },
+	}
+	tmp16.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp16.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp17 := new(CreateUsersCommand)
 	sub = &cobra.Command{
 		Use:   `users ["/users"]`,
 		Short: ``,
@@ -1855,162 +1832,176 @@ Payload example:
 
 {
    "email": "me@foo.bar",
-   "nickname": "0j8927",
-   "password": "vesdkxat"
+   "nickname": "ape",
+   "password": "nx102j4z5w"
 }`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp18.Run(c, args) },
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp17.Run(c, args) },
 	}
-	tmp18.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp18.PrettyPrint, "pp", false, "Pretty print response body")
+	tmp17.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp17.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
 	app.AddCommand(command)
 	command = &cobra.Command{
 		Use:   "delete",
 		Short: `delete action`,
 	}
-	tmp19 := new(DeleteAuthorsCommand)
+	tmp18 := new(DeleteAuthorsCommand)
 	sub = &cobra.Command{
 		Use:   `authors ["/authors/AUTHOR_ID"]`,
+		Short: ``,
+		RunE:  func(cmd *cobra.Command, args []string) error { return tmp18.Run(c, args) },
+	}
+	tmp18.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp18.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp19 := new(DeleteAuthorshipsCommand)
+	sub = &cobra.Command{
+		Use:   `authorships ["/authorships/AUTHORSHIP_ID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp19.Run(c, args) },
 	}
 	tmp19.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp19.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp20 := new(DeleteAuthorshipsCommand)
+	tmp20 := new(DeleteBooksCommand)
 	sub = &cobra.Command{
-		Use:   `authorships ["/authorships/AUTHORSHIP_ID"]`,
+		Use:   `books ["/books/BOOK_ID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp20.Run(c, args) },
 	}
 	tmp20.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp20.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp21 := new(DeleteBooksCommand)
+	tmp21 := new(DeleteCategoriesCommand)
 	sub = &cobra.Command{
-		Use:   `books ["/books/BOOK_ID"]`,
+		Use:   `categories ["/categories/CATEGORY_ID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp21.Run(c, args) },
 	}
 	tmp21.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp21.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp22 := new(DeleteCategoriesCommand)
+	tmp22 := new(DeleteClassesCommand)
 	sub = &cobra.Command{
-		Use:   `categories ["/categories/CATEGORY_ID"]`,
+		Use:   `classes ["/classes/CLASS_ID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp22.Run(c, args) },
 	}
 	tmp22.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp22.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp23 := new(DeleteClassesCommand)
+	tmp23 := new(DeleteClassificationsCommand)
 	sub = &cobra.Command{
-		Use:   `classes ["/classes/CLASS_ID"]`,
+		Use:   `classifications ["/series/SERIES_ID/classifications/CLASS_ID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp23.Run(c, args) },
 	}
 	tmp23.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp23.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp24 := new(DeleteSeriesCommand)
+	tmp24 := new(DeleteCollectionsCommand)
 	sub = &cobra.Command{
-		Use:   `series ["/series/SERIES_ID"]`,
+		Use:   `collections ["/collections/COLLECTION_ID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp24.Run(c, args) },
 	}
 	tmp24.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp24.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp25 := new(DeleteClassificationsCommand)
+	tmp25 := new(DeleteEditionsCommand)
 	sub = &cobra.Command{
-		Use:   `classifications ["/series/SERIES_ID/classifications/CLASS_ID"]`,
+		Use:   `editions ["/editions/EDITION_ID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp25.Run(c, args) },
 	}
 	tmp25.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp25.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp26 := new(DeleteCollectionsCommand)
+	tmp26 := new(DeleteEditorsCommand)
 	sub = &cobra.Command{
-		Use:   `collections ["/collections/COLLECTION_ID"]`,
+		Use:   `editors ["/editors/EDITOR_ID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp26.Run(c, args) },
 	}
 	tmp26.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp26.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp27 := new(DeleteEditionsCommand)
+	tmp27 := new(DeleteOwnershipsCommand)
 	sub = &cobra.Command{
-		Use:   `editions ["/editions/EDITION_ID"]`,
+		Use:   `ownerships ["/users/USER_ID/ownerships/BOOK_ID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp27.Run(c, args) },
 	}
 	tmp27.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp27.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp28 := new(DeleteEditorsCommand)
+	tmp28 := new(DeletePrintsCommand)
 	sub = &cobra.Command{
-		Use:   `editors ["/editors/EDITOR_ID"]`,
+		Use:   `prints ["/prints/PRINT_ID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp28.Run(c, args) },
 	}
 	tmp28.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp28.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp29 := new(DeleteOwnershipsCommand)
+	tmp29 := new(DeleteRolesCommand)
 	sub = &cobra.Command{
-		Use:   `ownerships ["/users/USER_ID/ownerships/BOOK_ID"]`,
+		Use:   `roles ["/roles/ROLE_ID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp29.Run(c, args) },
 	}
 	tmp29.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp29.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp30 := new(DeletePrintsCommand)
+	tmp30 := new(DeleteSeriesCommand)
 	sub = &cobra.Command{
-		Use:   `prints ["/prints/PRINT_ID"]`,
+		Use:   `series ["/series/SERIES_ID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp30.Run(c, args) },
 	}
 	tmp30.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp30.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp31 := new(DeleteRolesCommand)
+	tmp31 := new(DeleteUsersCommand)
 	sub = &cobra.Command{
-		Use:   `roles ["/roles/ROLE_ID"]`,
+		Use:   `users ["/users/USER_ID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp31.Run(c, args) },
 	}
 	tmp31.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp31.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp32 := new(DeleteUsersCommand)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "get",
+		Short: `get action`,
+	}
+	tmp32 := new(GetPasswordCommand)
 	sub = &cobra.Command{
-		Use:   `users ["/users/USER_ID"]`,
+		Use:   `password ["/password"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp32.Run(c, args) },
 	}
 	tmp32.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp32.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	app.AddCommand(command)
-	command = &cobra.Command{
-		Use:   "get",
-		Short: `get action`,
-	}
-	tmp33 := new(GetPasswordCommand)
+	tmp33 := new(GetValidationCommand)
 	sub = &cobra.Command{
-		Use:   `password ["/password"]`,
+		Use:   `validation ["/validation/USER_ID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp33.Run(c, args) },
 	}
 	tmp33.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp33.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp34 := new(GetValidationCommand)
+	app.AddCommand(command)
+	command = &cobra.Command{
+		Use:   "health",
+		Short: `Perform health check.`,
+	}
+	tmp34 := new(HealthHealthCommand)
 	sub = &cobra.Command{
-		Use:   `validation ["/validation/USER_ID"]`,
+		Use:   `health ["/_ah/health"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp34.Run(c, args) },
 	}
@@ -2019,12 +2010,12 @@ Payload example:
 	command.AddCommand(sub)
 	app.AddCommand(command)
 	command = &cobra.Command{
-		Use:   "health",
-		Short: `Perform health check.`,
+		Use:   "isbn-search",
+		Short: `search a book by ISBN`,
 	}
-	tmp35 := new(HealthHealthCommand)
+	tmp35 := new(IsbnSearchBooksCommand)
 	sub = &cobra.Command{
-		Use:   `health ["/_ah/health"]`,
+		Use:   `books ["/books/add"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp35.Run(c, args) },
 	}
@@ -2081,72 +2072,72 @@ Payload example:
 	tmp40.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp40.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp41 := new(ListSeriesCommand)
+	tmp41 := new(ListClassificationsCommand)
 	sub = &cobra.Command{
-		Use:   `series ["/series"]`,
+		Use:   `classifications ["/series/SERIES_ID/classifications"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp41.Run(c, args) },
 	}
 	tmp41.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp41.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp42 := new(ListClassificationsCommand)
+	tmp42 := new(ListCollectionsCommand)
 	sub = &cobra.Command{
-		Use:   `classifications ["/series/SERIES_ID/classifications"]`,
+		Use:   `collections ["/collections"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp42.Run(c, args) },
 	}
 	tmp42.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp42.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp43 := new(ListCollectionsCommand)
+	tmp43 := new(ListEditionsCommand)
 	sub = &cobra.Command{
-		Use:   `collections ["/collections"]`,
+		Use:   `editions ["/editions"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp43.Run(c, args) },
 	}
 	tmp43.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp43.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp44 := new(ListEditionsCommand)
+	tmp44 := new(ListEditorsCommand)
 	sub = &cobra.Command{
-		Use:   `editions ["/editions"]`,
+		Use:   `editors ["/editors"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp44.Run(c, args) },
 	}
 	tmp44.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp44.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp45 := new(ListEditorsCommand)
+	tmp45 := new(ListOwnershipsCommand)
 	sub = &cobra.Command{
-		Use:   `editors ["/editors"]`,
+		Use:   `ownerships ["/users/USER_ID/ownerships"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp45.Run(c, args) },
 	}
 	tmp45.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp45.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp46 := new(ListOwnershipsCommand)
+	tmp46 := new(ListPrintsCommand)
 	sub = &cobra.Command{
-		Use:   `ownerships ["/users/USER_ID/ownerships"]`,
+		Use:   `prints ["/prints"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp46.Run(c, args) },
 	}
 	tmp46.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp46.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp47 := new(ListPrintsCommand)
+	tmp47 := new(ListRolesCommand)
 	sub = &cobra.Command{
-		Use:   `prints ["/prints"]`,
+		Use:   `roles ["/roles"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp47.Run(c, args) },
 	}
 	tmp47.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp47.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp48 := new(ListRolesCommand)
+	tmp48 := new(ListSeriesCommand)
 	sub = &cobra.Command{
-		Use:   `roles ["/roles"]`,
+		Use:   `series ["/series"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp48.Run(c, args) },
 	}
@@ -3304,72 +3295,72 @@ Payload example:
 	tmp157.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp157.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp158 := new(ShowSeriesCommand)
+	tmp158 := new(ShowClassificationsCommand)
 	sub = &cobra.Command{
-		Use:   `series ["/series/SERIES_ID"]`,
+		Use:   `classifications ["/series/SERIES_ID/classifications/CLASS_ID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp158.Run(c, args) },
 	}
 	tmp158.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp158.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp159 := new(ShowClassificationsCommand)
+	tmp159 := new(ShowCollectionsCommand)
 	sub = &cobra.Command{
-		Use:   `classifications ["/series/SERIES_ID/classifications/CLASS_ID"]`,
+		Use:   `collections ["/collections/COLLECTION_ID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp159.Run(c, args) },
 	}
 	tmp159.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp159.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp160 := new(ShowCollectionsCommand)
+	tmp160 := new(ShowEditionsCommand)
 	sub = &cobra.Command{
-		Use:   `collections ["/collections/COLLECTION_ID"]`,
+		Use:   `editions ["/editions/EDITION_ID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp160.Run(c, args) },
 	}
 	tmp160.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp160.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp161 := new(ShowEditionsCommand)
+	tmp161 := new(ShowEditorsCommand)
 	sub = &cobra.Command{
-		Use:   `editions ["/editions/EDITION_ID"]`,
+		Use:   `editors ["/editors/EDITOR_ID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp161.Run(c, args) },
 	}
 	tmp161.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp161.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp162 := new(ShowEditorsCommand)
+	tmp162 := new(ShowOwnershipsCommand)
 	sub = &cobra.Command{
-		Use:   `editors ["/editors/EDITOR_ID"]`,
+		Use:   `ownerships ["/users/USER_ID/ownerships/BOOK_ID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp162.Run(c, args) },
 	}
 	tmp162.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp162.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp163 := new(ShowOwnershipsCommand)
+	tmp163 := new(ShowPrintsCommand)
 	sub = &cobra.Command{
-		Use:   `ownerships ["/users/USER_ID/ownerships/BOOK_ID"]`,
+		Use:   `prints ["/prints/PRINT_ID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp163.Run(c, args) },
 	}
 	tmp163.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp163.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp164 := new(ShowPrintsCommand)
+	tmp164 := new(ShowRolesCommand)
 	sub = &cobra.Command{
-		Use:   `prints ["/prints/PRINT_ID"]`,
+		Use:   `roles ["/roles/ROLE_ID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp164.Run(c, args) },
 	}
 	tmp164.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp164.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp165 := new(ShowRolesCommand)
+	tmp165 := new(ShowSeriesCommand)
 	sub = &cobra.Command{
-		Use:   `roles ["/roles/ROLE_ID"]`,
+		Use:   `series ["/series/SERIES_ID"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp165.Run(c, args) },
 	}
@@ -3399,7 +3390,7 @@ Payload example:
 Payload example:
 
 {
-   "author_name": "9wnw"
+   "author_name": "p62yt"
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp167.Run(c, args) },
 	}
@@ -3415,7 +3406,7 @@ Payload example:
 Payload example:
 
 {
-   "book_name": "n1l",
+   "book_name": "9jeu2g3kb",
    "series_id": 1
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp168.Run(c, args) },
@@ -3432,7 +3423,7 @@ Payload example:
 Payload example:
 
 {
-   "category_name": "flyhi166"
+   "category_name": "37e1a9vh"
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp169.Run(c, args) },
 	}
@@ -3448,14 +3439,96 @@ Payload example:
 Payload example:
 
 {
-   "class_name": "y2n0j55q"
+   "class_name": "xt6vyzo"
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp170.Run(c, args) },
 	}
 	tmp170.RegisterFlags(sub, c)
 	sub.PersistentFlags().BoolVar(&tmp170.PrettyPrint, "pp", false, "Pretty print response body")
 	command.AddCommand(sub)
-	tmp171 := new(UpdateSeriesCommand)
+	tmp171 := new(UpdateCollectionsCommand)
+	sub = &cobra.Command{
+		Use:   `collections ["/collections/COLLECTION_ID"]`,
+		Short: ``,
+		Long: `
+
+Payload example:
+
+{
+   "collection_name": "n",
+   "editor_id": 1
+}`,
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp171.Run(c, args) },
+	}
+	tmp171.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp171.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp172 := new(UpdateEditorsCommand)
+	sub = &cobra.Command{
+		Use:   `editors ["/editors/EDITOR_ID"]`,
+		Short: ``,
+		Long: `
+
+Payload example:
+
+{
+   "editor_name": "xbvma0ty4p"
+}`,
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp172.Run(c, args) },
+	}
+	tmp172.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp172.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp173 := new(UpdatePasswordCommand)
+	sub = &cobra.Command{
+		Use:   `password ["/password"]`,
+		Short: ``,
+		Long: `
+
+Payload example:
+
+{
+   "password": "59xjh",
+   "token": "be"
+}`,
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp173.Run(c, args) },
+	}
+	tmp173.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp173.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp174 := new(UpdatePrintsCommand)
+	sub = &cobra.Command{
+		Use:   `prints ["/prints/PRINT_ID"]`,
+		Short: ``,
+		Long: `
+
+Payload example:
+
+{
+   "print_name": "yn1lq8t"
+}`,
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp174.Run(c, args) },
+	}
+	tmp174.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp174.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp175 := new(UpdateRolesCommand)
+	sub = &cobra.Command{
+		Use:   `roles ["/roles/ROLE_ID"]`,
+		Short: ``,
+		Long: `
+
+Payload example:
+
+{
+   "role_name": "c"
+}`,
+		RunE: func(cmd *cobra.Command, args []string) error { return tmp175.Run(c, args) },
+	}
+	tmp175.RegisterFlags(sub, c)
+	sub.PersistentFlags().BoolVar(&tmp175.PrettyPrint, "pp", false, "Pretty print response body")
+	command.AddCommand(sub)
+	tmp176 := new(UpdateSeriesCommand)
 	sub = &cobra.Command{
 		Use:   `series ["/series/SERIES_ID"]`,
 		Short: ``,
@@ -3465,89 +3538,7 @@ Payload example:
 
 {
    "category_id": 1,
-   "series_name": "2"
-}`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp171.Run(c, args) },
-	}
-	tmp171.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp171.PrettyPrint, "pp", false, "Pretty print response body")
-	command.AddCommand(sub)
-	tmp172 := new(UpdateCollectionsCommand)
-	sub = &cobra.Command{
-		Use:   `collections ["/collections/COLLECTION_ID"]`,
-		Short: ``,
-		Long: `
-
-Payload example:
-
-{
-   "collection_name": "37e1a9vh",
-   "editor_id": 1
-}`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp172.Run(c, args) },
-	}
-	tmp172.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp172.PrettyPrint, "pp", false, "Pretty print response body")
-	command.AddCommand(sub)
-	tmp173 := new(UpdateEditorsCommand)
-	sub = &cobra.Command{
-		Use:   `editors ["/editors/EDITOR_ID"]`,
-		Short: ``,
-		Long: `
-
-Payload example:
-
-{
-   "editor_name": "oxt6vy"
-}`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp173.Run(c, args) },
-	}
-	tmp173.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp173.PrettyPrint, "pp", false, "Pretty print response body")
-	command.AddCommand(sub)
-	tmp174 := new(UpdatePasswordCommand)
-	sub = &cobra.Command{
-		Use:   `password ["/password"]`,
-		Short: ``,
-		Long: `
-
-Payload example:
-
-{
-   "password": "kjwr4nt",
-   "token": "mp"
-}`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp174.Run(c, args) },
-	}
-	tmp174.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp174.PrettyPrint, "pp", false, "Pretty print response body")
-	command.AddCommand(sub)
-	tmp175 := new(UpdatePrintsCommand)
-	sub = &cobra.Command{
-		Use:   `prints ["/prints/PRINT_ID"]`,
-		Short: ``,
-		Long: `
-
-Payload example:
-
-{
-   "print_name": "xbvma0ty4p"
-}`,
-		RunE: func(cmd *cobra.Command, args []string) error { return tmp175.Run(c, args) },
-	}
-	tmp175.RegisterFlags(sub, c)
-	sub.PersistentFlags().BoolVar(&tmp175.PrettyPrint, "pp", false, "Pretty print response body")
-	command.AddCommand(sub)
-	tmp176 := new(UpdateRolesCommand)
-	sub = &cobra.Command{
-		Use:   `roles ["/roles/ROLE_ID"]`,
-		Short: ``,
-		Long: `
-
-Payload example:
-
-{
-   "role_name": "ho2v7wul"
+   "series_name": "lg5o2"
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp176.Run(c, args) },
 	}
@@ -3563,7 +3554,7 @@ Payload example:
 Payload example:
 
 {
-   "nickname": "b05ip23"
+   "nickname": "g3pur1t3p"
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp177.Run(c, args) },
 	}
@@ -3584,7 +3575,7 @@ Payload example:
 Payload example:
 
 {
-   "token": "53r"
+   "token": "mn5"
 }`,
 		RunE: func(cmd *cobra.Command, args []string) error { return tmp178.Run(c, args) },
 	}
@@ -4140,6 +4131,32 @@ func (cmd *DeleteBooksCommand) Run(c *client.Client, args []string) error {
 func (cmd *DeleteBooksCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	var bookID int
 	cc.Flags().IntVar(&cmd.BookID, "book_id", bookID, `Unique Book ID`)
+}
+
+// Run makes the HTTP request corresponding to the IsbnSearchBooksCommand command.
+func (cmd *IsbnSearchBooksCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = "/books/add"
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.IsbnSearchBooks(ctx, path, cmd.BookIsbn)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *IsbnSearchBooksCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var bookIsbn string
+	cc.Flags().StringVar(&cmd.BookIsbn, "book_isbn", bookIsbn, `Book ISBN`)
 }
 
 // Run makes the HTTP request corresponding to the ListBooksCommand command.
@@ -5051,41 +5068,6 @@ func (cmd *HealthHealthCommand) Run(c *client.Client, args []string) error {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *HealthHealthCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-}
-
-// Run makes the HTTP request corresponding to the AddOwnershipsCommand command.
-func (cmd *AddOwnershipsCommand) Run(c *client.Client, args []string) error {
-	var path string
-	if len(args) > 0 {
-		path = args[0]
-	} else {
-		path = fmt.Sprintf("/users/%v/ownerships/isbn", cmd.UserID)
-	}
-	var payload client.AddOwnershipsPayload
-	if cmd.Payload != "" {
-		err := json.Unmarshal([]byte(cmd.Payload), &payload)
-		if err != nil {
-			return fmt.Errorf("failed to deserialize payload: %s", err)
-		}
-	}
-	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.AddOwnerships(ctx, path, &payload, cmd.ContentType)
-	if err != nil {
-		goa.LogError(ctx, "failed", "err", err)
-		return err
-	}
-
-	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
-	return nil
-}
-
-// RegisterFlags registers the command flags with the command line.
-func (cmd *AddOwnershipsCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
-	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
-	var userID int
-	cc.Flags().IntVar(&cmd.UserID, "user_id", userID, `Unique User ID`)
 }
 
 // Run makes the HTTP request corresponding to the CreateOwnershipsCommand command.
@@ -7666,60 +7648,6 @@ func (cmd *ListEditorsByCollectionRelationPrintsSeriesCommand) RegisterFlags(cc 
 	cc.Flags().IntVar(&cmd.SeriesID, "series_id", seriesID, `Unique Series ID`)
 }
 
-// Run makes the HTTP request corresponding to the ListAuthorsRelationRoleCommand command.
-func (cmd *ListAuthorsRelationRoleCommand) Run(c *client.Client, args []string) error {
-	var path string
-	if len(args) > 0 {
-		path = args[0]
-	} else {
-		path = fmt.Sprintf("/roles/%v/authors", cmd.RoleID)
-	}
-	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.ListAuthorsRelationRole(ctx, path)
-	if err != nil {
-		goa.LogError(ctx, "failed", "err", err)
-		return err
-	}
-
-	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
-	return nil
-}
-
-// RegisterFlags registers the command flags with the command line.
-func (cmd *ListAuthorsRelationRoleCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	var roleID int
-	cc.Flags().IntVar(&cmd.RoleID, "role_id", roleID, `Unique Role ID`)
-}
-
-// Run makes the HTTP request corresponding to the ListSeriesByAuthorRelationRoleCommand command.
-func (cmd *ListSeriesByAuthorRelationRoleCommand) Run(c *client.Client, args []string) error {
-	var path string
-	if len(args) > 0 {
-		path = args[0]
-	} else {
-		path = fmt.Sprintf("/roles/%v/authors/%v/series", cmd.RoleID, cmd.AuthorID)
-	}
-	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
-	ctx := goa.WithLogger(context.Background(), logger)
-	resp, err := c.ListSeriesByAuthorRelationRole(ctx, path)
-	if err != nil {
-		goa.LogError(ctx, "failed", "err", err)
-		return err
-	}
-
-	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
-	return nil
-}
-
-// RegisterFlags registers the command flags with the command line.
-func (cmd *ListSeriesByAuthorRelationRoleCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	var authorID int
-	cc.Flags().IntVar(&cmd.AuthorID, "author_id", authorID, `Unique Author ID`)
-	var roleID int
-	cc.Flags().IntVar(&cmd.RoleID, "role_id", roleID, `Unique Role ID`)
-}
-
 // Run makes the HTTP request corresponding to the ListBooksRelationSeriesCommand command.
 func (cmd *ListBooksRelationSeriesCommand) Run(c *client.Client, args []string) error {
 	var path string
@@ -8494,6 +8422,60 @@ func (cmd *UpdateRolesCommand) Run(c *client.Client, args []string) error {
 func (cmd *UpdateRolesCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
 	cc.Flags().StringVar(&cmd.Payload, "payload", "", "Request body encoded in JSON")
 	cc.Flags().StringVar(&cmd.ContentType, "content", "", "Request content type override, e.g. 'application/x-www-form-urlencoded'")
+	var roleID int
+	cc.Flags().IntVar(&cmd.RoleID, "role_id", roleID, `Unique Role ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListAuthorsRelationRoleCommand command.
+func (cmd *ListAuthorsRelationRoleCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/roles/%v/authors", cmd.RoleID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListAuthorsRelationRole(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListAuthorsRelationRoleCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var roleID int
+	cc.Flags().IntVar(&cmd.RoleID, "role_id", roleID, `Unique Role ID`)
+}
+
+// Run makes the HTTP request corresponding to the ListSeriesByAuthorRelationRoleCommand command.
+func (cmd *ListSeriesByAuthorRelationRoleCommand) Run(c *client.Client, args []string) error {
+	var path string
+	if len(args) > 0 {
+		path = args[0]
+	} else {
+		path = fmt.Sprintf("/roles/%v/authors/%v/series", cmd.RoleID, cmd.AuthorID)
+	}
+	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
+	ctx := goa.WithLogger(context.Background(), logger)
+	resp, err := c.ListSeriesByAuthorRelationRole(ctx, path)
+	if err != nil {
+		goa.LogError(ctx, "failed", "err", err)
+		return err
+	}
+
+	goaclient.HandleResponse(c.Client, resp, cmd.PrettyPrint)
+	return nil
+}
+
+// RegisterFlags registers the command flags with the command line.
+func (cmd *ListSeriesByAuthorRelationRoleCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
+	var authorID int
+	cc.Flags().IntVar(&cmd.AuthorID, "author_id", authorID, `Unique Author ID`)
 	var roleID int
 	cc.Flags().IntVar(&cmd.RoleID, "role_id", roleID, `Unique Role ID`)
 }

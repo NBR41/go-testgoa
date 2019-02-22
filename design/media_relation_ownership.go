@@ -70,28 +70,6 @@ var _ = Resource("ownerships", func() {
 		Response(BadRequest, ErrorMedia)
 	})
 
-	Action("add", func() {
-		Description("Create new book and ownership by isbn")
-		Routing(POST("/isbn"))
-		Payload(func() {
-			attrBookISBN()
-			Required("book_isbn")
-		})
-		Security(JWTAuth)
-		// Unauthorized
-		Response(Unauthorized)
-		// OK
-		Response(Created, "/books/[0-9]+")
-		// user NotFound
-		Response(NotFound)
-		// App error
-		Response(UnprocessableEntity, ErrorMedia)
-		// Errors
-		Response(InternalServerError)
-		Response(ServiceUnavailable)
-		Response(BadRequest, ErrorMedia)
-	})
-
 	Action("show", func() {
 		Description("Get user ownerships by ids")
 		Routing(GET(bookIDPath))

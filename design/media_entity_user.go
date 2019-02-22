@@ -72,8 +72,8 @@ var _ = Resource("users", func() {
 		Description("Get users, optionnaly filtering by nickname or email ")
 		Routing(GET(""))
 		Params(func() {
-			Param("nickname")
-			Param("email")
+			attrUserNickname()
+			attrUserEmail()
 		})
 		Security(JWTAuth)
 		Response(OK, CollectionOf(UserMedia, func() {

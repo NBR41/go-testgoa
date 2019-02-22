@@ -6,6 +6,7 @@ package controllers
 
 import (
 	context "context"
+	api "github.com/NBR41/go-testgoa/internal/api"
 	model "github.com/NBR41/go-testgoa/internal/model"
 	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
@@ -44,6 +45,32 @@ func (m *MockModeler) Close() error {
 // Close indicates an expected call of Close
 func (mr *MockModelerMockRecorder) Close() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Close", reflect.TypeOf((*MockModeler)(nil).Close))
+}
+
+// GetBookDetail mocks base method
+func (m *MockModeler) GetBookDetail(isbn string) (*model.BookDetail, error) {
+	ret := m.ctrl.Call(m, "GetBookDetail", isbn)
+	ret0, _ := ret[0].(*model.BookDetail)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetBookDetail indicates an expected call of GetBookDetail
+func (mr *MockModelerMockRecorder) GetBookDetail(isbn interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBookDetail", reflect.TypeOf((*MockModeler)(nil).GetBookDetail), isbn)
+}
+
+// InsertBookDetail mocks base method
+func (m *MockModeler) InsertBookDetail(isbn string, book *api.BookDetail) (*model.BookDetail, error) {
+	ret := m.ctrl.Call(m, "InsertBookDetail", isbn, book)
+	ret0, _ := ret[0].(*model.BookDetail)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// InsertBookDetail indicates an expected call of InsertBookDetail
+func (mr *MockModelerMockRecorder) InsertBookDetail(isbn, book interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InsertBookDetail", reflect.TypeOf((*MockModeler)(nil).InsertBookDetail), isbn, book)
 }
 
 // GetAuthorByID mocks base method
@@ -377,16 +404,16 @@ func (mr *MockModelerMockRecorder) GetCollectionByID(id interface{}) *gomock.Cal
 }
 
 // GetCollectionByName mocks base method
-func (m *MockModeler) GetCollectionByName(name string) (*model.Collection, error) {
-	ret := m.ctrl.Call(m, "GetCollectionByName", name)
+func (m *MockModeler) GetCollectionByName(name string, editorID int) (*model.Collection, error) {
+	ret := m.ctrl.Call(m, "GetCollectionByName", name, editorID)
 	ret0, _ := ret[0].(*model.Collection)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetCollectionByName indicates an expected call of GetCollectionByName
-func (mr *MockModelerMockRecorder) GetCollectionByName(name interface{}) *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCollectionByName", reflect.TypeOf((*MockModeler)(nil).GetCollectionByName), name)
+func (mr *MockModelerMockRecorder) GetCollectionByName(name, editorID interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCollectionByName", reflect.TypeOf((*MockModeler)(nil).GetCollectionByName), name, editorID)
 }
 
 // ListCollectionsByIDs mocks base method
@@ -780,6 +807,19 @@ func (m *MockModeler) ListAuthorships() ([]*model.Authorship, error) {
 // ListAuthorships indicates an expected call of ListAuthorships
 func (mr *MockModelerMockRecorder) ListAuthorships() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAuthorships", reflect.TypeOf((*MockModeler)(nil).ListAuthorships))
+}
+
+// ListAuthorshipsByBookID mocks base method
+func (m *MockModeler) ListAuthorshipsByBookID(bookID int) ([]*model.Authorship, error) {
+	ret := m.ctrl.Call(m, "ListAuthorshipsByBookID", bookID)
+	ret0, _ := ret[0].([]*model.Authorship)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListAuthorshipsByBookID indicates an expected call of ListAuthorshipsByBookID
+func (mr *MockModelerMockRecorder) ListAuthorshipsByBookID(bookID interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListAuthorshipsByBookID", reflect.TypeOf((*MockModeler)(nil).ListAuthorshipsByBookID), bookID)
 }
 
 // InsertAuthorship mocks base method
@@ -1183,7 +1223,7 @@ func (m *MockTokenHelper) GetAccessToken(userID int64, isAdmin bool) (string, er
 	return ret0, ret1
 }
 
-// GetAccessToken indicates an expected call of GetAuthToken
+// GetAccessToken indicates an expected call of GetAccessToken
 func (mr *MockTokenHelperMockRecorder) GetAccessToken(userID, isAdmin interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAccessToken", reflect.TypeOf((*MockTokenHelper)(nil).GetAccessToken), userID, isAdmin)
 }
@@ -1320,17 +1360,17 @@ func (m *MockAPIHelper) EXPECT() *MockAPIHelperMockRecorder {
 	return m.recorder
 }
 
-// GetBookName mocks base method
-func (m *MockAPIHelper) GetBookName(isbn string) (string, error) {
-	ret := m.ctrl.Call(m, "GetBookName", isbn)
-	ret0, _ := ret[0].(string)
+// GetBookDetail mocks base method
+func (m *MockAPIHelper) GetBookDetail(isbn string) (*api.BookDetail, error) {
+	ret := m.ctrl.Call(m, "GetBookDetail", isbn)
+	ret0, _ := ret[0].(*api.BookDetail)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetBookName indicates an expected call of GetBookName
-func (mr *MockAPIHelperMockRecorder) GetBookName(isbn interface{}) *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBookName", reflect.TypeOf((*MockAPIHelper)(nil).GetBookName), isbn)
+// GetBookDetail indicates an expected call of GetBookDetail
+func (mr *MockAPIHelperMockRecorder) GetBookDetail(isbn interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBookDetail", reflect.TypeOf((*MockAPIHelper)(nil).GetBookDetail), isbn)
 }
 
 // MockLister is a mock of Lister interface

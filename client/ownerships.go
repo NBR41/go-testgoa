@@ -19,61 +19,6 @@ import (
 	"strconv"
 )
 
-// AddOwnershipsPayload is the ownerships add action payload.
-type AddOwnershipsPayload struct {
-	// Book ISBN
-	BookIsbn string `form:"book_isbn" json:"book_isbn" yaml:"book_isbn" xml:"book_isbn"`
-}
-
-// AddOwnershipsPath computes a request path to the add action of ownerships.
-func AddOwnershipsPath(userID int) string {
-	param0 := strconv.Itoa(userID)
-
-	return fmt.Sprintf("/users/%s/ownerships/isbn", param0)
-}
-
-// Create new book and ownership by isbn
-func (c *Client) AddOwnerships(ctx context.Context, path string, payload *AddOwnershipsPayload, contentType string) (*http.Response, error) {
-	req, err := c.NewAddOwnershipsRequest(ctx, path, payload, contentType)
-	if err != nil {
-		return nil, err
-	}
-	return c.Client.Do(ctx, req)
-}
-
-// NewAddOwnershipsRequest create the request corresponding to the add action endpoint of the ownerships resource.
-func (c *Client) NewAddOwnershipsRequest(ctx context.Context, path string, payload *AddOwnershipsPayload, contentType string) (*http.Request, error) {
-	var body bytes.Buffer
-	if contentType == "" {
-		contentType = "*/*" // Use default encoder
-	}
-	err := c.Encoder.Encode(payload, &body, contentType)
-	if err != nil {
-		return nil, fmt.Errorf("failed to encode body: %s", err)
-	}
-	scheme := c.Scheme
-	if scheme == "" {
-		scheme = "http"
-	}
-	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
-	req, err := http.NewRequest("POST", u.String(), &body)
-	if err != nil {
-		return nil, err
-	}
-	header := req.Header
-	if contentType == "*/*" {
-		header.Set("Content-Type", "application/json")
-	} else {
-		header.Set("Content-Type", contentType)
-	}
-	if c.JWTSecSigner != nil {
-		if err := c.JWTSecSigner.Sign(req); err != nil {
-			return nil, err
-		}
-	}
-	return req, nil
-}
-
 // CreateOwnershipsPayload is the ownerships create action payload.
 type CreateOwnershipsPayload struct {
 	// Unique Book ID

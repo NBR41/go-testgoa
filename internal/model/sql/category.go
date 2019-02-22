@@ -105,3 +105,14 @@ func (m *Model) UpdateCategory(id int, name string) error {
 func (m *Model) DeleteCategory(id int) error {
 	return m.exec(qryDeleteCategory, id)
 }
+
+func (m *Model) getOrInsertCategory(name string) (*model.Category, error) {
+	category, err := m.GetCategoryByName(name)
+	if err == model.ErrNotFound {
+		category, err = m.InsertCategory(name)
+	}
+	if err != nil {
+		return nil, err
+	}
+	return category, nil
+}

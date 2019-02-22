@@ -22,7 +22,8 @@ JOIN role ON (authorship.role_id = role.id)
 JOIN book ON (authorship.book_id = book.id)`
 	qryInsertAuthorship = `
 INSERT INTO authorship (id, author_id, book_id, role_id, create_ts, update_ts)
-VALUES (null, ?, ?, ?, NOW(), NOW())`
+VALUES (null, ?, ?, ?, NOW(), NOW())
+ON DUPLICATE KEY UPDATE update_ts = VALUES(update_ts)`
 	qryDeleteAuthorship = `DELETE FROM authorship WHERE id = ?`
 )
 
@@ -74,6 +75,11 @@ func (m *Model) GetAuthorshipByID(id int) (*model.Authorship, error) {
 //ListAuthorships list all authorships
 func (m *Model) ListAuthorships() ([]*model.Authorship, error) {
 	return m.listAuthorships(qryListAuthorships)
+}
+
+//ListAuthorshipsByBookID list all authorships for a book
+func (m *Model) ListAuthorshipsByBookID(bookID int) ([]*model.Authorship, error) {
+	return m.listAuthorships(qryListAuthorships+` WHERE authorship.book_id = ?`, bookID)
 }
 
 //InsertAuthorship insert an authorship

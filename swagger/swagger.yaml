@@ -4,33 +4,19 @@ consumes:
 - application/gob
 - application/x-gob
 definitions:
-  AddOwnershipsPayload:
-    example:
-      book_isbn: o4
-    properties:
-      book_isbn:
-        description: Book ISBN
-        example: o4
-        maxLength: 128
-        minLength: 1
-        type: string
-    required:
-    - book_isbn
-    title: AddOwnershipsPayload
-    type: object
   AuthenticatePayload:
     example:
-      login: ape
-      password: nx102j4z5w
+      login: n0j
+      password: 5q6ak74z
     properties:
       login:
         description: email or nickname
-        example: ape
+        example: n0j
         minLength: 1
         type: string
       password:
         description: user password
-        example: nx102j4z5w
+        example: 5q6ak74z
         maxLength: 32
         minLength: 1
         type: string
@@ -183,6 +169,62 @@ definitions:
         role_id: 1
         role_name: ol5djbut
       role_id: 1
+    - author:
+        author_id: 1
+        author_name: 8rt
+        href: Autem est eaque itaque sed aut debitis.
+      author_id: 1
+      authorship_id: 1
+      book:
+        book_id: 1
+        book_isbn: 8y
+        book_name: gerdmc
+        href: Quia recusandae.
+        series:
+          category:
+            category_id: 1
+            category_name: j6033t41m5
+            href: Inventore error.
+          category_id: 1
+          href: Eligendi omnis voluptas.
+          series_id: 1
+          series_name: psp0
+        series_id: 1
+      book_id: 1
+      href: Incidunt tempore quisquam corporis ut.
+      role:
+        href: Dicta molestias doloribus exercitationem molestiae sed.
+        role_id: 1
+        role_name: ol5djbut
+      role_id: 1
+    - author:
+        author_id: 1
+        author_name: 8rt
+        href: Autem est eaque itaque sed aut debitis.
+      author_id: 1
+      authorship_id: 1
+      book:
+        book_id: 1
+        book_isbn: 8y
+        book_name: gerdmc
+        href: Quia recusandae.
+        series:
+          category:
+            category_id: 1
+            category_name: j6033t41m5
+            href: Inventore error.
+          category_id: 1
+          href: Eligendi omnis voluptas.
+          series_id: 1
+          series_name: psp0
+        series_id: 1
+      book_id: 1
+      href: Incidunt tempore quisquam corporis ut.
+      role:
+        href: Dicta molestias doloribus exercitationem molestiae sed.
+        role_id: 1
+        role_name: ol5djbut
+      role_id: 1
     items:
       $ref: '#/definitions/Authorship'
     title: 'Mediatype identifier: application/vnd.authorship+json; type=collection;
@@ -272,6 +314,114 @@ definitions:
     - href
     title: 'Mediatype identifier: application/vnd.book+json; view=default'
     type: object
+  Book_detail:
+    description: A Book Detail (default view)
+    example:
+      authors:
+      - author:
+          author_id: 1
+          author_name: 8rt
+          href: Autem est eaque itaque sed aut debitis.
+        author_id: 1
+        authorship_id: 1
+        book:
+          book_id: 1
+          book_isbn: 8y
+          book_name: gerdmc
+          href: Quia recusandae.
+          series:
+            category:
+              category_id: 1
+              category_name: j6033t41m5
+              href: Inventore error.
+            category_id: 1
+            href: Eligendi omnis voluptas.
+            series_id: 1
+            series_name: psp0
+          series_id: 1
+        book_id: 1
+        href: Incidunt tempore quisquam corporis ut.
+        role:
+          href: Dicta molestias doloribus exercitationem molestiae sed.
+          role_id: 1
+          role_name: ol5djbut
+        role_id: 1
+      book:
+        book_id: 1
+        book_isbn: 8y
+        book_name: gerdmc
+        href: Quia recusandae.
+        series:
+          category:
+            category_id: 1
+            category_name: j6033t41m5
+            href: Inventore error.
+          category_id: 1
+          href: Eligendi omnis voluptas.
+          series_id: 1
+          series_name: psp0
+        series_id: 1
+      classes:
+      - class:
+          class_id: 1
+          class_name: msgucc9ijv
+          href: Eius dolorem quae quo neque.
+        href: Sit nostrum.
+      - class:
+          class_id: 1
+          class_name: msgucc9ijv
+          href: Eius dolorem quae quo neque.
+        href: Sit nostrum.
+      edition:
+        book:
+          book_id: 1
+          book_isbn: 8y
+          book_name: gerdmc
+          href: Quia recusandae.
+          series:
+            category:
+              category_id: 1
+              category_name: j6033t41m5
+              href: Inventore error.
+            category_id: 1
+            href: Eligendi omnis voluptas.
+            series_id: 1
+            series_name: psp0
+          series_id: 1
+        book_id: 1
+        collection:
+          collection_id: 1
+          collection_name: 5da
+          editor:
+            editor_id: 1
+            editor_name: 02u
+            href: Occaecati esse minus praesentium possimus quod dignissimos.
+          editor_id: 1
+          href: Consequuntur corrupti sunt.
+        collection_id: 1
+        edition_id: 1
+        href: Rem eveniet.
+        print:
+          href: Ut atque sint officia voluptatem eaque maxime.
+          print_id: 1
+          print_name: ppu8vo4ph
+        print_id: 1
+    properties:
+      authors:
+        $ref: '#/definitions/AuthorshipCollection'
+      book:
+        $ref: '#/definitions/Book'
+      classes:
+        $ref: '#/definitions/ClassificationCollection'
+      edition:
+        $ref: '#/definitions/Edition'
+    required:
+    - book
+    - edition
+    - authors
+    - classes
+    title: 'Mediatype identifier: application/vnd.book_detail+json; view=default'
+    type: object
   BookCollection:
     description: BookCollection is the media type for an array of Book (default view)
     example:
@@ -342,12 +492,6 @@ definitions:
     - category_id: 1
       category_name: j6033t41m5
       href: Inventore error.
-    - category_id: 1
-      category_name: j6033t41m5
-      href: Inventore error.
-    - category_id: 1
-      category_name: j6033t41m5
-      href: Inventore error.
     items:
       $ref: '#/definitions/Category'
     title: 'Mediatype identifier: application/vnd.category+json; type=collection;
@@ -357,8 +501,8 @@ definitions:
     description: A Class (default view)
     example:
       class_id: 1
-      class_name: 5x6o2
-      href: Nostrum rerum adipisci.
+      class_name: msgucc9ijv
+      href: Eius dolorem quae quo neque.
     properties:
       class_id:
         description: Unique Class ID
@@ -367,13 +511,13 @@ definitions:
         type: integer
       class_name:
         description: Class Name (Thriller/Romance/...)
-        example: 5x6o2
+        example: msgucc9ijv
         maxLength: 128
         minLength: 1
         type: string
       href:
         description: API href for making requests
-        example: Nostrum rerum adipisci.
+        example: Eius dolorem quae quo neque.
         type: string
     required:
     - class_id
@@ -386,8 +530,11 @@ definitions:
       view)
     example:
     - class_id: 1
-      class_name: 5x6o2
-      href: Nostrum rerum adipisci.
+      class_name: msgucc9ijv
+      href: Eius dolorem quae quo neque.
+    - class_id: 1
+      class_name: msgucc9ijv
+      href: Eius dolorem quae quo neque.
     items:
       $ref: '#/definitions/Class'
     title: 'Mediatype identifier: application/vnd.class+json; type=collection; view=default'
@@ -397,15 +544,15 @@ definitions:
     example:
       class:
         class_id: 1
-        class_name: 5x6o2
-        href: Nostrum rerum adipisci.
-      href: Aut libero aut libero.
+        class_name: msgucc9ijv
+        href: Eius dolorem quae quo neque.
+      href: Sit nostrum.
     properties:
       class:
         $ref: '#/definitions/Class'
       href:
         description: API href for making requests
-        example: Aut libero aut libero.
+        example: Sit nostrum.
         type: string
     required:
     - class
@@ -418,19 +565,19 @@ definitions:
     example:
     - class:
         class_id: 1
-        class_name: 5x6o2
-        href: Nostrum rerum adipisci.
-      href: Aut libero aut libero.
+        class_name: msgucc9ijv
+        href: Eius dolorem quae quo neque.
+      href: Sit nostrum.
     - class:
         class_id: 1
-        class_name: 5x6o2
-        href: Nostrum rerum adipisci.
-      href: Aut libero aut libero.
+        class_name: msgucc9ijv
+        href: Eius dolorem quae quo neque.
+      href: Sit nostrum.
     - class:
         class_id: 1
-        class_name: 5x6o2
-        href: Nostrum rerum adipisci.
-      href: Aut libero aut libero.
+        class_name: msgucc9ijv
+        href: Eius dolorem quae quo neque.
+      href: Sit nostrum.
     items:
       $ref: '#/definitions/Classification'
     title: 'Mediatype identifier: application/vnd.classification+json; type=collection;
@@ -440,13 +587,13 @@ definitions:
     description: A Collection (default view)
     example:
       collection_id: 1
-      collection_name: m194r3n
+      collection_name: 5da
       editor:
         editor_id: 1
-        editor_name: x3py7was
-        href: Animi ut atque.
+        editor_name: 02u
+        href: Occaecati esse minus praesentium possimus quod dignissimos.
       editor_id: 1
-      href: Voluptatem eaque maxime voluptatum.
+      href: Consequuntur corrupti sunt.
     properties:
       collection_id:
         description: Unique Collection ID
@@ -455,7 +602,7 @@ definitions:
         type: integer
       collection_name:
         description: Collection Name (Découverte/Shonen)
-        example: m194r3n
+        example: 5da
         maxLength: 128
         minLength: 1
         type: string
@@ -468,7 +615,7 @@ definitions:
         type: integer
       href:
         description: API href for making requests
-        example: Voluptatem eaque maxime voluptatum.
+        example: Consequuntur corrupti sunt.
         type: string
     required:
     - collection_id
@@ -482,21 +629,13 @@ definitions:
       (default view)
     example:
     - collection_id: 1
-      collection_name: m194r3n
+      collection_name: 5da
       editor:
         editor_id: 1
-        editor_name: x3py7was
-        href: Animi ut atque.
+        editor_name: 02u
+        href: Occaecati esse minus praesentium possimus quod dignissimos.
       editor_id: 1
-      href: Voluptatem eaque maxime voluptatum.
-    - collection_id: 1
-      collection_name: m194r3n
-      editor:
-        editor_id: 1
-        editor_name: x3py7was
-        href: Animi ut atque.
-      editor_id: 1
-      href: Voluptatem eaque maxime voluptatum.
+      href: Consequuntur corrupti sunt.
     items:
       $ref: '#/definitions/Collection'
     title: 'Mediatype identifier: application/vnd.collection+json; type=collection;
@@ -504,11 +643,11 @@ definitions:
     type: array
   CreateAuthorsPayload:
     example:
-      author_name: f
+      author_name: j1zy6
     properties:
       author_name:
         description: Author Name
-        example: f
+        example: j1zy6
         maxLength: 128
         minLength: 1
         type: string
@@ -545,19 +684,19 @@ definitions:
     type: object
   CreateBooksPayload:
     example:
-      book_isbn: 859xjhdbe
-      book_name: kgwh0vj
+      book_isbn: nwq
+      book_name: 3rm9jeu2g3
       series_id: 1
     properties:
       book_isbn:
         description: Book ISBN
-        example: 859xjhdbe
+        example: nwq
         maxLength: 128
         minLength: 1
         type: string
       book_name:
         description: Book Name
-        example: kgwh0vj
+        example: 3rm9jeu2g3
         maxLength: 128
         minLength: 1
         type: string
@@ -574,11 +713,11 @@ definitions:
     type: object
   CreateCategoriesPayload:
     example:
-      category_name: g3pur1t3p
+      category_name: 84arft37
     properties:
       category_name:
         description: Category Name (Shonen/Shojo/Seinen)
-        example: g3pur1t3p
+        example: 84arft37
         maxLength: 128
         minLength: 1
         type: string
@@ -588,11 +727,11 @@ definitions:
     type: object
   CreateClassesPayload:
     example:
-      class_name: c
+      class_name: r
     properties:
       class_name:
         description: Class Name (Thriller/Romance/...)
-        example: c
+        example: r
         maxLength: 128
         minLength: 1
         type: string
@@ -615,12 +754,12 @@ definitions:
     type: object
   CreateCollectionsPayload:
     example:
-      collection_name: k74zn84ar
+      collection_name: "4"
       editor_id: 1
     properties:
       collection_name:
         description: Collection Name (Découverte/Shonen)
-        example: k74zn84ar
+        example: "4"
         maxLength: 128
         minLength: 1
         type: string
@@ -663,11 +802,11 @@ definitions:
     type: object
   CreateEditorsPayload:
     example:
-      editor_name: r
+      editor_name: sqbxbvma
     properties:
       editor_name:
         description: Editor Name (Glénat/Delcourt)
-        example: r
+        example: sqbxbvma
         maxLength: 128
         minLength: 1
         type: string
@@ -690,11 +829,11 @@ definitions:
     type: object
   CreatePrintsPayload:
     example:
-      print_name: fsq
+      print_name: wh0vjiyn1
     properties:
       print_name:
         description: Print Name (Deluxe/Ultimate/Pocket)
-        example: fsq
+        example: wh0vjiyn1
         maxLength: 128
         minLength: 1
         type: string
@@ -704,11 +843,11 @@ definitions:
     type: object
   CreateRolesPayload:
     example:
-      role_name: i7lxy5
+      role_name: 37tpdq00q
     properties:
       role_name:
         description: Role Name (Author/Scenarist/Cartoonist)
-        example: i7lxy5
+        example: 37tpdq00q
         maxLength: 128
         minLength: 1
         type: string
@@ -719,7 +858,7 @@ definitions:
   CreateSeriesPayload:
     example:
       category_id: 1
-      series_name: pdq00qlg
+      series_name: lyhi
     properties:
       category_id:
         description: Unique Category ID
@@ -728,7 +867,7 @@ definitions:
         type: integer
       series_name:
         description: Series Name (Akira/Dragon ball)
-        example: pdq00qlg
+        example: lyhi
         maxLength: 128
         minLength: 1
         type: string
@@ -758,20 +897,20 @@ definitions:
       book_id: 1
       collection:
         collection_id: 1
-        collection_name: m194r3n
+        collection_name: 5da
         editor:
           editor_id: 1
-          editor_name: x3py7was
-          href: Animi ut atque.
+          editor_name: 02u
+          href: Occaecati esse minus praesentium possimus quod dignissimos.
         editor_id: 1
-        href: Voluptatem eaque maxime voluptatum.
+        href: Consequuntur corrupti sunt.
       collection_id: 1
       edition_id: 1
-      href: Impedit vero corporis quas.
+      href: Rem eveniet.
       print:
-        href: Esse voluptatem laudantium vel.
+        href: Ut atque sint officia voluptatem eaque maxime.
         print_id: 1
-        print_name: 94atz
+        print_name: ppu8vo4ph
       print_id: 1
     properties:
       book:
@@ -795,7 +934,7 @@ definitions:
         type: integer
       href:
         description: API href for making requests
-        example: Impedit vero corporis quas.
+        example: Rem eveniet.
         type: string
       print:
         $ref: '#/definitions/Print'
@@ -834,20 +973,20 @@ definitions:
       book_id: 1
       collection:
         collection_id: 1
-        collection_name: m194r3n
+        collection_name: 5da
         editor:
           editor_id: 1
-          editor_name: x3py7was
-          href: Animi ut atque.
+          editor_name: 02u
+          href: Occaecati esse minus praesentium possimus quod dignissimos.
         editor_id: 1
-        href: Voluptatem eaque maxime voluptatum.
+        href: Consequuntur corrupti sunt.
       collection_id: 1
       edition_id: 1
-      href: Impedit vero corporis quas.
+      href: Rem eveniet.
       print:
-        href: Esse voluptatem laudantium vel.
+        href: Ut atque sint officia voluptatem eaque maxime.
         print_id: 1
-        print_name: 94atz
+        print_name: ppu8vo4ph
       print_id: 1
     items:
       $ref: '#/definitions/Edition'
@@ -857,8 +996,8 @@ definitions:
     description: An Editor (default view)
     example:
       editor_id: 1
-      editor_name: x3py7was
-      href: Animi ut atque.
+      editor_name: 02u
+      href: Occaecati esse minus praesentium possimus quod dignissimos.
     properties:
       editor_id:
         description: Unique Editor ID
@@ -867,13 +1006,13 @@ definitions:
         type: integer
       editor_name:
         description: Editor Name (Glénat/Delcourt)
-        example: x3py7was
+        example: 02u
         maxLength: 128
         minLength: 1
         type: string
       href:
         description: API href for making requests
-        example: Animi ut atque.
+        example: Occaecati esse minus praesentium possimus quod dignissimos.
         type: string
     required:
     - editor_id
@@ -886,14 +1025,14 @@ definitions:
       view)
     example:
     - editor_id: 1
-      editor_name: x3py7was
-      href: Animi ut atque.
+      editor_name: 02u
+      href: Occaecati esse minus praesentium possimus quod dignissimos.
     - editor_id: 1
-      editor_name: x3py7was
-      href: Animi ut atque.
+      editor_name: 02u
+      href: Occaecati esse minus praesentium possimus quod dignissimos.
     - editor_id: 1
-      editor_name: x3py7was
-      href: Animi ut atque.
+      editor_name: 02u
+      href: Occaecati esse minus praesentium possimus quod dignissimos.
     items:
       $ref: '#/definitions/Editor'
     title: 'Mediatype identifier: application/vnd.editor+json; type=collection; view=default'
@@ -917,7 +1056,7 @@ definitions:
           series_name: psp0
         series_id: 1
       book_id: 1
-      href: In omnis reiciendis maxime quia dolorem nobis.
+      href: Quia aut est similique dicta dolores consequatur.
       user_id: 1
     properties:
       book:
@@ -929,7 +1068,7 @@ definitions:
         type: integer
       href:
         description: API href for making requests
-        example: In omnis reiciendis maxime quia dolorem nobis.
+        example: Quia aut est similique dicta dolores consequatur.
         type: string
       user_id:
         description: Unique User ID
@@ -962,43 +1101,7 @@ definitions:
           series_name: psp0
         series_id: 1
       book_id: 1
-      href: In omnis reiciendis maxime quia dolorem nobis.
-      user_id: 1
-    - book:
-        book_id: 1
-        book_isbn: 8y
-        book_name: gerdmc
-        href: Quia recusandae.
-        series:
-          category:
-            category_id: 1
-            category_name: j6033t41m5
-            href: Inventore error.
-          category_id: 1
-          href: Eligendi omnis voluptas.
-          series_id: 1
-          series_name: psp0
-        series_id: 1
-      book_id: 1
-      href: In omnis reiciendis maxime quia dolorem nobis.
-      user_id: 1
-    - book:
-        book_id: 1
-        book_isbn: 8y
-        book_name: gerdmc
-        href: Quia recusandae.
-        series:
-          category:
-            category_id: 1
-            category_name: j6033t41m5
-            href: Inventore error.
-          category_id: 1
-          href: Eligendi omnis voluptas.
-          series_id: 1
-          series_name: psp0
-        series_id: 1
-      book_id: 1
-      href: In omnis reiciendis maxime quia dolorem nobis.
+      href: Quia aut est similique dicta dolores consequatur.
       user_id: 1
     items:
       $ref: '#/definitions/Ownership'
@@ -1007,18 +1110,18 @@ definitions:
     type: array
   PasswordChangePayload:
     example:
-      password: kjwr4nt
-      token: mp
+      password: pe859xjhd
+      token: eik
     properties:
       password:
         description: user password
-        example: kjwr4nt
+        example: pe859xjhd
         maxLength: 32
         minLength: 1
         type: string
       token:
         description: token
-        example: mp
+        example: eik
         minLength: 1
         type: string
     required:
@@ -1029,13 +1132,13 @@ definitions:
   Print:
     description: A Print (default view)
     example:
-      href: Esse voluptatem laudantium vel.
+      href: Ut atque sint officia voluptatem eaque maxime.
       print_id: 1
-      print_name: 94atz
+      print_name: ppu8vo4ph
     properties:
       href:
         description: API href for making requests
-        example: Esse voluptatem laudantium vel.
+        example: Ut atque sint officia voluptatem eaque maxime.
         type: string
       print_id:
         description: Unique Print ID
@@ -1044,7 +1147,7 @@ definitions:
         type: integer
       print_name:
         description: Print Name (Deluxe/Ultimate/Pocket)
-        example: 94atz
+        example: ppu8vo4ph
         maxLength: 128
         minLength: 1
         type: string
@@ -1058,12 +1161,15 @@ definitions:
     description: PrintCollection is the media type for an array of Print (default
       view)
     example:
-    - href: Esse voluptatem laudantium vel.
+    - href: Ut atque sint officia voluptatem eaque maxime.
       print_id: 1
-      print_name: 94atz
-    - href: Esse voluptatem laudantium vel.
+      print_name: ppu8vo4ph
+    - href: Ut atque sint officia voluptatem eaque maxime.
       print_id: 1
-      print_name: 94atz
+      print_name: ppu8vo4ph
+    - href: Ut atque sint officia voluptatem eaque maxime.
+      print_id: 1
+      print_name: ppu8vo4ph
     items:
       $ref: '#/definitions/Print'
     title: 'Mediatype identifier: application/vnd.print+json; type=collection; view=default'
@@ -1099,6 +1205,9 @@ definitions:
   RoleCollection:
     description: RoleCollection is the media type for an array of Role (default view)
     example:
+    - href: Dicta molestias doloribus exercitationem molestiae sed.
+      role_id: 1
+      role_name: ol5djbut
     - href: Dicta molestias doloribus exercitationem molestiae sed.
       role_id: 1
       role_name: ol5djbut
@@ -1170,14 +1279,6 @@ definitions:
       href: Eligendi omnis voluptas.
       series_id: 1
       series_name: psp0
-    - category:
-        category_id: 1
-        category_name: j6033t41m5
-        href: Inventore error.
-      category_id: 1
-      href: Eligendi omnis voluptas.
-      series_id: 1
-      series_name: psp0
     items:
       $ref: '#/definitions/Series'
     title: 'Mediatype identifier: application/vnd.series+json; type=collection; view=default'
@@ -1185,11 +1286,11 @@ definitions:
   Token:
     description: A token (default view)
     example:
-      token: giw
+      token: es
     properties:
       token:
         description: token
-        example: giw
+        example: es
         minLength: 1
         type: string
     required:
@@ -1198,11 +1299,11 @@ definitions:
     type: object
   UpdateAuthorsPayload:
     example:
-      author_name: 9wnw
+      author_name: "62"
     properties:
       author_name:
         description: Author Name
-        example: 9wnw
+        example: "62"
         maxLength: 128
         minLength: 1
         type: string
@@ -1212,12 +1313,12 @@ definitions:
     type: object
   UpdateBooksPayload:
     example:
-      book_name: n1l
+      book_name: "74"
       series_id: 1
     properties:
       book_name:
         description: Book Name
-        example: n1l
+        example: "74"
         maxLength: 128
         minLength: 1
         type: string
@@ -1230,11 +1331,11 @@ definitions:
     type: object
   UpdateCategoriesPayload:
     example:
-      category_name: flyhi166
+      category_name: 1a9vhroe4
     properties:
       category_name:
         description: Category Name (Shonen/Shojo/Seinen)
-        example: flyhi166
+        example: 1a9vhroe4
         maxLength: 128
         minLength: 1
         type: string
@@ -1244,11 +1345,11 @@ definitions:
     type: object
   UpdateClassesPayload:
     example:
-      class_name: y2n0j55q
+      class_name: oxt6vy
     properties:
       class_name:
         description: Class Name (Thriller/Romance/...)
-        example: y2n0j55q
+        example: oxt6vy
         maxLength: 128
         minLength: 1
         type: string
@@ -1258,12 +1359,12 @@ definitions:
     type: object
   UpdateCollectionsPayload:
     example:
-      collection_name: 37e1a9vh
+      collection_name: kjwr4nt
       editor_id: 1
     properties:
       collection_name:
         description: Collection Name (Découverte/Shonen)
-        example: 37e1a9vh
+        example: kjwr4nt
         maxLength: 128
         minLength: 1
         type: string
@@ -1276,11 +1377,11 @@ definitions:
     type: object
   UpdateEditorsPayload:
     example:
-      editor_name: oxt6vy
+      editor_name: t
     properties:
       editor_name:
         description: Editor Name (Glénat/Delcourt)
-        example: oxt6vy
+        example: t
         maxLength: 128
         minLength: 1
         type: string
@@ -1290,11 +1391,11 @@ definitions:
     type: object
   UpdatePrintsPayload:
     example:
-      print_name: xbvma0ty4p
+      print_name: q8tesfn9
     properties:
       print_name:
         description: Print Name (Deluxe/Ultimate/Pocket)
-        example: xbvma0ty4p
+        example: q8tesfn9
         maxLength: 128
         minLength: 1
         type: string
@@ -1304,11 +1405,11 @@ definitions:
     type: object
   UpdateRolesPayload:
     example:
-      role_name: ho2v7wul
+      role_name: g5o2
     properties:
       role_name:
         description: Role Name (Author/Scenarist/Cartoonist)
-        example: ho2v7wul
+        example: g5o2
         maxLength: 128
         minLength: 1
         type: string
@@ -1319,7 +1420,7 @@ definitions:
   UpdateSeriesPayload:
     example:
       category_id: 1
-      series_name: "2"
+      series_name: 6yc5y
     properties:
       category_id:
         description: Unique Category ID
@@ -1328,7 +1429,7 @@ definitions:
         type: integer
       series_name:
         description: Series Name (Akira/Dragon ball)
-        example: "2"
+        example: 6yc5y
         maxLength: 128
         minLength: 1
         type: string
@@ -1336,11 +1437,11 @@ definitions:
     type: object
   UpdateUsersPayload:
     example:
-      nickname: b05ip23
+      nickname: g3pur1t3p
     properties:
       nickname:
         description: user nickname
-        example: b05ip23
+        example: g3pur1t3p
         maxLength: 32
         minLength: 1
         type: string
@@ -1409,8 +1510,8 @@ definitions:
   UserCreatePayload:
     example:
       email: me@foo.bar
-      nickname: 0j8927
-      password: vesdkxat
+      nickname: ape
+      password: nx102j4z5w
     properties:
       email:
         description: user email
@@ -1419,13 +1520,13 @@ definitions:
         type: string
       nickname:
         description: user nickname
-        example: 0j8927
+        example: ape
         maxLength: 32
         minLength: 1
         type: string
       password:
         description: user password
-        example: vesdkxat
+        example: nx102j4z5w
         maxLength: 32
         minLength: 1
         type: string
@@ -1437,11 +1538,11 @@ definitions:
     type: object
   ValidateValidationPayload:
     example:
-      token: 53r
+      token: te
     properties:
       token:
         description: token
-        example: 53r
+        example: te
         minLength: 1
         type: string
     required:
@@ -2243,6 +2344,41 @@ paths:
       security:
       - JWTSec: []
       summary: update books
+      tags:
+      - books
+  /books/add:
+    get:
+      description: search a book by ISBN
+      operationId: books#isbnSearch
+      parameters:
+      - description: Book ISBN
+        in: query
+        maxLength: 128
+        minLength: 1
+        name: book_isbn
+        required: true
+        type: string
+      produces:
+      - application/vnd.book_detail+json
+      - application/vnd.goa.error
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Book_detail'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Service Unavailable
+      schemes:
+      - http
+      summary: isbnSearch books
       tags:
       - books
   /categories:
@@ -7775,55 +7911,6 @@ paths:
       security:
       - JWTSec: []
       summary: show ownerships
-      tags:
-      - ownerships
-  /users/{user_id}/ownerships/isbn:
-    post:
-      description: Create new book and ownership by isbn
-      operationId: ownerships#add
-      parameters:
-      - description: Unique User ID
-        in: path
-        minimum: 1
-        name: user_id
-        required: true
-        type: integer
-      - in: body
-        name: payload
-        required: true
-        schema:
-          $ref: '#/definitions/AddOwnershipsPayload'
-      produces:
-      - application/vnd.goa.error
-      responses:
-        "201":
-          description: Resource created
-          headers:
-            Location:
-              description: href to created resource
-              pattern: /books/[0-9]+
-              type: string
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/error'
-        "401":
-          description: Unauthorized
-        "404":
-          description: Not Found
-        "422":
-          description: Unprocessable Entity
-          schema:
-            $ref: '#/definitions/error'
-        "500":
-          description: Internal Server Error
-        "503":
-          description: Service Unavailable
-      schemes:
-      - http
-      security:
-      - JWTSec: []
-      summary: add ownerships
       tags:
       - ownerships
   /validation:

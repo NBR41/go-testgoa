@@ -10,14 +10,16 @@ import (
 // BooksController implements the books resource.
 type BooksController struct {
 	*goa.Controller
-	fm Fmodeler
+	fm  Fmodeler
+	api APIHelper
 }
 
 // NewBooksController creates a books controller.
-func NewBooksController(service *goa.Service, fm Fmodeler) *BooksController {
+func NewBooksController(service *goa.Service, fm Fmodeler, api APIHelper) *BooksController {
 	return &BooksController{
 		Controller: service.NewController("BooksController"),
 		fm:         fm,
+		api:        api,
 	}
 }
 
@@ -146,4 +148,34 @@ func (c *BooksController) Update(ctx *app.UpdateBooksContext) error {
 
 	return ctx.NoContent()
 	// BooksController_Update: end_implement
+}
+
+// IsbnSearch runs the isbn search action.
+func (c *BooksController) IsbnSearch(ctx *app.IsbnSearchBooksContext) error {
+	// BooksController_IsbnSearch: start_implement
+	m, err := c.fm()
+	if err != nil {
+		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
+		return ctx.ServiceUnavailable()
+	}
+	defer func() { m.Close() }()
+
+	b, err := m.GetBookDetail(ctx.BookIsbn)
+	if err != nil {
+		if err == model.ErrNotFound {
+			return ctx.NotFound()
+		}
+
+		ab, err := c.api.GetBookDetail(ctx.BookIsbn)
+		if err != nil {
+			return ctx.InternalServerError()
+		}
+
+		b, err = m.InsertBookDetail(ctx.BookIsbn, ab)
+		if err != nil {
+			return ctx.InternalServerError()
+		}
+	}
+	return ctx.OK(convert.ToBookDetailMedia(b))
+	// BooksController_IsbnSearch: end_implement
 }

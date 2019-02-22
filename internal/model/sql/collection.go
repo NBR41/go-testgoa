@@ -17,7 +17,7 @@ WHERE collection.id = ?`
 SELECT collection.id, collection.name, editor.id, editor.name
 FROM collection
 JOIN editor ON (editor.id = collection.editor_id)
-WHERE collection.name = ?`
+WHERE collection.name = ? and editor.id = ?`
 	qryInsertCollection = `
 INSERT INTO collection (id, name, editor_id, create_ts, update_ts)
 VALUES (null, ?, ?, NOW(), NOW())`
@@ -66,8 +66,8 @@ func (m *Model) GetCollectionByID(id int) (*model.Collection, error) {
 }
 
 //GetCollectionByName return a collection by name
-func (m *Model) GetCollectionByName(name string) (*model.Collection, error) {
-	return m.getCollection(qryGetCollectionByName, name)
+func (m *Model) GetCollectionByName(name string, editorID int) (*model.Collection, error) {
+	return m.getCollection(qryGetCollectionByName, name, editorID)
 }
 
 //ListCollectionsByIDs list classes by editor id or print id or series id
@@ -136,4 +136,15 @@ func (m *Model) UpdateCollection(id int, name *string, editorID *int) error {
 //DeleteCollection delete a collection
 func (m *Model) DeleteCollection(id int) error {
 	return m.exec(qryDeleteCollection, id)
+}
+
+func (m *Model) getOrInsertCollection(name string, editorID int) (*model.Collection, error) {
+	collection, err := m.GetCollectionByName(name, editorID)
+	if err == model.ErrNotFound {
+		collection, err = m.InsertCollection(name, editorID)
+	}
+	if err != nil {
+		return nil, err
+	}
+	return collection, nil
 }

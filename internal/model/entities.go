@@ -4,6 +4,12 @@ import (
 	"github.com/pkg/errors"
 )
 
+// Undefined entities infos
+const (
+	UndefinedID   = 1
+	UndefinedName = "undefined"
+)
+
 // List of errors
 var (
 	ErrNotFound           = errors.New("not found")
@@ -14,6 +20,7 @@ var (
 	ErrDuplicateNickname  = errors.New("duplicate nickname")
 )
 
+//Passworder interface for password helper
 type Passworder interface {
 	CryptPassword(password string) ([]byte, []byte, error)
 	ComparePassword(password string, salt, hash []byte) (bool, error)
@@ -119,4 +126,12 @@ type Book struct {
 	URL      string
 	SeriesID int64
 	Series   *Series
+}
+
+//BookDetail struct for book detail
+type BookDetail struct {
+	Book    *Book
+	Classes []*Class
+	Edition *Edition
+	Authors []*Authorship
 }

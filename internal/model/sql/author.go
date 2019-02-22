@@ -104,3 +104,14 @@ func (m *Model) UpdateAuthor(id int, name string) error {
 func (m *Model) DeleteAuthor(id int) error {
 	return m.exec(qryDeleteAuthor, id)
 }
+
+func (m *Model) getOrInsertAuthor(name string) (*model.Author, error) {
+	author, err := m.GetAuthorByName(name)
+	if err == model.ErrNotFound {
+		author, err = m.InsertAuthor(name)
+	}
+	if err != nil {
+		return nil, err
+	}
+	return author, nil
+}

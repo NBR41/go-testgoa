@@ -20,6 +20,7 @@ func TestBooksCreate(t *testing.T) {
 	mctrl := gomock.NewController(t)
 	defer mctrl.Finish()
 	mock := NewMockModeler(mctrl)
+	apimock := NewMockAPIHelper(mctrl)
 	gomock.InOrder(
 		mock.EXPECT().InsertBook("foo", "bar", 1).Return(nil, errors.New("insert error")),
 		mock.EXPECT().Close(),
@@ -35,7 +36,7 @@ func TestBooksCreate(t *testing.T) {
 	ctx := goa.WithLogger(context.Background(), goa.NewLogger(log.New(logbuf, "", 0)))
 	ctrl := NewBooksController(service, Fmodeler(func() (Modeler, error) {
 		return nil, errors.New("model error")
-	}))
+	}), apimock)
 	test.CreateBooksServiceUnavailable(t, ctx, service, ctrl, &app.CreateBooksPayload{BookIsbn: "foo", BookName: "bar", SeriesID: 1})
 	exp := "[EROR] unable to get model error=model error\n"
 	if exp != logbuf.String() {
@@ -44,7 +45,7 @@ func TestBooksCreate(t *testing.T) {
 
 	ctrl = NewBooksController(service, Fmodeler(func() (Modeler, error) {
 		return mock, nil
-	}))
+	}), apimock)
 
 	logbuf.Reset()
 	test.CreateBooksInternalServerError(t, ctx, service, ctrl, &app.CreateBooksPayload{BookIsbn: "foo", BookName: "bar", SeriesID: 1})
@@ -80,6 +81,7 @@ func TestBooksDelete(t *testing.T) {
 	mctrl := gomock.NewController(t)
 	defer mctrl.Finish()
 	mock := NewMockModeler(mctrl)
+	apimock := NewMockAPIHelper(mctrl)
 	gomock.InOrder(
 		mock.EXPECT().DeleteBook(123).Return(errors.New("delete error")),
 		mock.EXPECT().Close(),
@@ -93,7 +95,7 @@ func TestBooksDelete(t *testing.T) {
 	ctx := goa.WithLogger(context.Background(), goa.NewLogger(log.New(logbuf, "", 0)))
 	ctrl := NewBooksController(service, Fmodeler(func() (Modeler, error) {
 		return nil, errors.New("model error")
-	}))
+	}), apimock)
 	test.DeleteBooksServiceUnavailable(t, ctx, service, ctrl, 123)
 	exp := "[EROR] unable to get model error=model error\n"
 	if exp != logbuf.String() {
@@ -102,7 +104,7 @@ func TestBooksDelete(t *testing.T) {
 
 	ctrl = NewBooksController(service, Fmodeler(func() (Modeler, error) {
 		return mock, nil
-	}))
+	}), apimock)
 
 	logbuf.Reset()
 	test.DeleteBooksInternalServerError(t, ctx, service, ctrl, 123)
@@ -130,6 +132,7 @@ func TestBooksList(t *testing.T) {
 	mctrl := gomock.NewController(t)
 	defer mctrl.Finish()
 	mock := NewMockModeler(mctrl)
+	apimock := NewMockAPIHelper(mctrl)
 	gomock.InOrder(
 		mock.EXPECT().ListBooksByIDs(nil, nil, nil, nil).Return(nil, errors.New("list error")),
 		mock.EXPECT().Close(),
@@ -141,7 +144,7 @@ func TestBooksList(t *testing.T) {
 	ctx := goa.WithLogger(context.Background(), goa.NewLogger(log.New(logbuf, "", 0)))
 	ctrl := NewBooksController(service, Fmodeler(func() (Modeler, error) {
 		return nil, errors.New("model error")
-	}))
+	}), apimock)
 	test.ListBooksServiceUnavailable(t, ctx, service, ctrl)
 	exp := "[EROR] unable to get model error=model error\n"
 	if exp != logbuf.String() {
@@ -150,7 +153,7 @@ func TestBooksList(t *testing.T) {
 
 	ctrl = NewBooksController(service, Fmodeler(func() (Modeler, error) {
 		return mock, nil
-	}))
+	}), apimock)
 
 	logbuf.Reset()
 	test.ListBooksInternalServerError(t, ctx, service, ctrl)
@@ -173,6 +176,7 @@ func TestBooksShow(t *testing.T) {
 	mctrl := gomock.NewController(t)
 	defer mctrl.Finish()
 	mock := NewMockModeler(mctrl)
+	apimock := NewMockAPIHelper(mctrl)
 	gomock.InOrder(
 		mock.EXPECT().GetBookByID(123).Return(nil, errors.New("get error")),
 		mock.EXPECT().Close(),
@@ -186,7 +190,7 @@ func TestBooksShow(t *testing.T) {
 	ctx := goa.WithLogger(context.Background(), goa.NewLogger(log.New(logbuf, "", 0)))
 	ctrl := NewBooksController(service, Fmodeler(func() (Modeler, error) {
 		return nil, errors.New("model error")
-	}))
+	}), apimock)
 	test.ShowBooksServiceUnavailable(t, ctx, service, ctrl, 123)
 	exp := "[EROR] unable to get model error=model error\n"
 	if exp != logbuf.String() {
@@ -195,7 +199,7 @@ func TestBooksShow(t *testing.T) {
 
 	ctrl = NewBooksController(service, Fmodeler(func() (Modeler, error) {
 		return mock, nil
-	}))
+	}), apimock)
 
 	logbuf.Reset()
 	test.ShowBooksInternalServerError(t, ctx, service, ctrl, 123)
@@ -227,6 +231,8 @@ func TestBooksUpdate(t *testing.T) {
 	mctrl := gomock.NewController(t)
 	defer mctrl.Finish()
 	mock := NewMockModeler(mctrl)
+	apimock := NewMockAPIHelper(mctrl)
+
 	bookName := "foo"
 	seriesID := 2
 	gomock.InOrder(
@@ -246,7 +252,7 @@ func TestBooksUpdate(t *testing.T) {
 	ctx := goa.WithLogger(context.Background(), goa.NewLogger(log.New(logbuf, "", 0)))
 	ctrl := NewBooksController(service, Fmodeler(func() (Modeler, error) {
 		return nil, errors.New("model error")
-	}))
+	}), apimock)
 	test.UpdateBooksServiceUnavailable(t, ctx, service, ctrl, 123, &app.UpdateBooksPayload{BookName: &bookName, SeriesID: &seriesID})
 	exp := "[EROR] unable to get model error=model error\n"
 	if exp != logbuf.String() {
@@ -255,7 +261,7 @@ func TestBooksUpdate(t *testing.T) {
 
 	ctrl = NewBooksController(service, Fmodeler(func() (Modeler, error) {
 		return mock, nil
-	}))
+	}), apimock)
 
 	logbuf.Reset()
 	test.UpdateBooksInternalServerError(t, ctx, service, ctrl, 123, &app.UpdateBooksPayload{BookName: &bookName, SeriesID: &seriesID})

@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/NBR41/go-testgoa/internal/api"
 	"github.com/NBR41/go-testgoa/internal/model"
 	"github.com/goadesign/goa"
 )
@@ -19,6 +20,9 @@ type Fmodeler func() (Modeler, error)
 // Modeler interface for model
 type Modeler interface {
 	Close() error
+
+	GetBookDetail(isbn string) (*model.BookDetail, error)
+	InsertBookDetail(isbn string, book *api.BookDetail) (*model.BookDetail, error)
 
 	GetAuthorByID(id int) (*model.Author, error)
 	GetAuthorByName(name string) (*model.Author, error)
@@ -50,7 +54,7 @@ type Modeler interface {
 	DeleteClass(id int) error
 
 	GetCollectionByID(id int) (*model.Collection, error)
-	GetCollectionByName(name string) (*model.Collection, error)
+	GetCollectionByName(name string, editorID int) (*model.Collection, error)
 	ListCollectionsByIDs(editorID, printID, seriesID *int) ([]*model.Collection, error)
 	InsertCollection(name string, editorID int) (*model.Collection, error)
 	UpdateCollection(id int, name *string, editorID *int) error
@@ -87,6 +91,7 @@ type Modeler interface {
 
 	GetAuthorshipByID(id int) (*model.Authorship, error)
 	ListAuthorships() ([]*model.Authorship, error)
+	ListAuthorshipsByBookID(bookID int) ([]*model.Authorship, error)
 	InsertAuthorship(authorID, bookID, roleID int) (*model.Authorship, error)
 	DeleteAuthorship(id int) error
 
@@ -140,7 +145,7 @@ type MailSender interface {
 
 //APIHelper interface to get book informations
 type APIHelper interface {
-	GetBookName(isbn string) (string, error)
+	GetBookDetail(isbn string) (*api.BookDetail, error)
 }
 
 //Lister interface to process list requests

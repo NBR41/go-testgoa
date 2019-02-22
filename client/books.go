@@ -112,6 +112,38 @@ func (c *Client) NewDeleteBooksRequest(ctx context.Context, path string) (*http.
 	return req, nil
 }
 
+// IsbnSearchBooksPath computes a request path to the isbnSearch action of books.
+func IsbnSearchBooksPath() string {
+
+	return fmt.Sprintf("/books/add")
+}
+
+// search a book by ISBN
+func (c *Client) IsbnSearchBooks(ctx context.Context, path string, bookIsbn string) (*http.Response, error) {
+	req, err := c.NewIsbnSearchBooksRequest(ctx, path, bookIsbn)
+	if err != nil {
+		return nil, err
+	}
+	return c.Client.Do(ctx, req)
+}
+
+// NewIsbnSearchBooksRequest create the request corresponding to the isbnSearch action endpoint of the books resource.
+func (c *Client) NewIsbnSearchBooksRequest(ctx context.Context, path string, bookIsbn string) (*http.Request, error) {
+	scheme := c.Scheme
+	if scheme == "" {
+		scheme = "http"
+	}
+	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
+	values := u.Query()
+	values.Set("book_isbn", bookIsbn)
+	u.RawQuery = values.Encode()
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
 // ListBooksPath computes a request path to the list action of books.
 func ListBooksPath() string {
 

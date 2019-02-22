@@ -164,3 +164,14 @@ func (m *Model) UpdateSeries(id int, name *string, categoryID *int) error {
 func (m *Model) DeleteSeries(id int) error {
 	return m.exec(qryDeleteSeries, id)
 }
+
+func (m *Model) getOrInsertSeries(name string, categoryID int) (*model.Series, error) {
+	series, err := m.GetSeriesByName(name)
+	if err == model.ErrNotFound {
+		series, err = m.InsertSeries(name, categoryID)
+	}
+	if err != nil {
+		return nil, err
+	}
+	return series, nil
+}

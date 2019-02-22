@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"github.com/NBR41/go-testgoa/app"
-	"github.com/NBR41/go-testgoa/internal/api"
 	"github.com/NBR41/go-testgoa/internal/convert"
 	"github.com/NBR41/go-testgoa/internal/model"
 	"github.com/goadesign/goa"
@@ -11,16 +10,14 @@ import (
 // OwnershipsController implements the ownerships resource.
 type OwnershipsController struct {
 	*goa.Controller
-	fm  Fmodeler
-	api APIHelper
+	fm Fmodeler
 }
 
 // NewOwnershipsController creates a ownerships controller.
-func NewOwnershipsController(service *goa.Service, fm Fmodeler, api APIHelper) *OwnershipsController {
+func NewOwnershipsController(service *goa.Service, fm Fmodeler) *OwnershipsController {
 	return &OwnershipsController{
 		Controller: service.NewController("OwnershipsController"),
 		fm:         fm,
-		api:        api,
 	}
 }
 
@@ -53,72 +50,6 @@ func (c *OwnershipsController) Create(ctx *app.CreateOwnershipsContext) error {
 	ctx.ResponseData.Header().Set("Location", app.OwnershipsHref(ctx.UserID, o.BookID))
 	return ctx.Created()
 	// OwnershipsController_Create: end_implement
-}
-
-// Add runs the add action.
-func (c *OwnershipsController) Add(ctx *app.AddOwnershipsContext) error {
-	// OwnershipsController_Add: start_implement
-	m, err := c.fm()
-	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to get model`, `error`, err.Error())
-		return ctx.ServiceUnavailable()
-	}
-	defer func() { m.Close() }()
-
-	book, err := m.GetBookByISBN(ctx.Payload.BookIsbn)
-	if err != nil {
-		if err == model.ErrNotFound {
-			// Get the book name
-			var bookName string
-			bookName, err = c.api.GetBookName(ctx.Payload.BookIsbn)
-			if err != nil {
-				goa.ContextLogger(ctx).Error(`unable to get book name`, `error`, err.Error())
-				if err == api.ErrNoResult {
-					return ctx.UnprocessableEntity(err)
-				}
-				return ctx.InternalServerError()
-			}
-
-			//TODO set series id
-			var seriesID int
-
-			// insert the new book
-			book, err = m.InsertBook(ctx.Payload.BookIsbn, bookName, seriesID)
-			if err != nil {
-				goa.ContextLogger(ctx).Error(`unable to insert book`, `error`, err.Error())
-				switch err {
-				case model.ErrInvalidID:
-					return ctx.UnprocessableEntity(err)
-				case model.ErrDuplicateKey:
-					return ctx.UnprocessableEntity(err)
-				default:
-					return ctx.InternalServerError()
-				}
-			}
-		} else {
-			goa.ContextLogger(ctx).Error(`unable to get book by isbn`, `error`, err.Error())
-			return ctx.InternalServerError()
-		}
-	}
-
-	_, err = m.InsertOwnership(ctx.UserID, int(book.ID))
-	if err != nil {
-		goa.ContextLogger(ctx).Error(`unable to insert ownership`, `error`, err.Error())
-		switch err {
-		case model.ErrNotFound:
-			return ctx.NotFound()
-		case model.ErrInvalidID:
-			return ctx.UnprocessableEntity(err)
-		case model.ErrDuplicateKey:
-			return ctx.UnprocessableEntity(err)
-		default:
-			return ctx.InternalServerError()
-		}
-	}
-
-	ctx.ResponseData.Header().Set("Location", app.OwnershipsHref(ctx.UserID, book.ID))
-	return ctx.Created()
-	// OwnershipsController_Add: end_implement
 }
 
 // Delete runs the delete action.
